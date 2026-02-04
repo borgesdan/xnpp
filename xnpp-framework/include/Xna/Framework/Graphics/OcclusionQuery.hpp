@@ -1,0 +1,8 @@
+#ifndef XNA_FRAMEWORK_GRAPHICS_OCCLUSIONQUERY_HPP
+#define XNA_FRAMEWORK_GRAPHICS_OCCLUSIONQUERY_HPP
+
+namespace Xna {
+	class OcclusionQuery {};
+}
+
+#endif

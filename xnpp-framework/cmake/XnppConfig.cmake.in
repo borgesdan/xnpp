@@ -1,0 +1,9 @@
+@PACKAGE_INIT@
+
+include(CMakeFindDependencyMacro)
+
+find_dependency(directxtk CONFIG)
+
+include("${CMAKE_CURRENT_LIST_DIR}/XnppTargets.cmake")
+
+check_required_components(Xnpp)

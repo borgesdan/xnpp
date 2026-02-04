@@ -1,0 +1,8 @@
+#ifndef XNA_FRAMEWORK_GRAPHICS_MODELMASHPART_HPP
+#define XNA_FRAMEWORK_GRAPHICS_MODELMASHPART_HPP
+
+namespace Xna {
+	class ModelMashPart {};
+}
+
+#endif

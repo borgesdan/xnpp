@@ -1,0 +1,8 @@
+#ifndef XNA_FRAMEWORK_GRAPHICS_RENDERTARGETBUFFER_HPP
+#define XNA_FRAMEWORK_GRAPHICS_RENDERTARGETBUFFER_HPP
+
+namespace Xna {
+	class RenderTargetCube {};
+}
+
+#endif

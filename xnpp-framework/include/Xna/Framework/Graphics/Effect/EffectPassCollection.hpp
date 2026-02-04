@@ -1,0 +1,8 @@
+#ifndef XNA_FRAMEWORK_GRAPHICS_EFFECTPASSCOLLECTION_HPP
+#define XNA_FRAMEWORK_GRAPHICS_EFFECTPASSCOLLECTION_HPP
+
+namespace Xna {
+	class EffectPassCollection {};
+}
+
+#endif

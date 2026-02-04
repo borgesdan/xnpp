@@ -1,0 +1,8 @@
+#ifndef XNA_FRAMEWORK_GRAPHICS_RENDERTARGETBINDING_HPP
+#define XNA_FRAMEWORK_GRAPHICS_RENDERTARGETBINDING_HPP
+
+namespace Xna {
+	class RenderTargetBinding {};
+}
+
+#endif

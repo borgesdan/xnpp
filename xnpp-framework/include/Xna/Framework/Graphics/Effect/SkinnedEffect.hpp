@@ -1,0 +1,8 @@
+#ifndef XNA_FRAMEWORK_GRAPHICS_SKINNEDEFFECT_HPP
+#define XNA_FRAMEWORK_GRAPHICS_SKINNEDEFFECT_HPP
+
+namespace Xna {
+	class SkinnedEffect {};
+}
+
+#endif

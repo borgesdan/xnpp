@@ -1,0 +1,6 @@
+#include "Framework/Media/Album.hpp"
+#include "Framework/Media/Artist.hpp"
+#include "Framework/Media/Genre.hpp"
+#include "Framework/Media/MediaPlayer.hpp"
+#include "Framework/Media/Song.hpp"
+#include "Framework/Media/VisualizationData.hpp"

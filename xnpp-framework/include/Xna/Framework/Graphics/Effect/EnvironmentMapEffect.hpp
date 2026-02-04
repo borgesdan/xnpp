@@ -1,0 +1,8 @@
+#ifndef XNA_FRAMEWORK_GRAPHICS_ENVIROMENTMAPEFFECT_HPP
+#define XNA_FRAMEWORK_GRAPHICS_ENVIROMENTMAPEFFECT_HPP
+
+namespace Xna {
+	class EnviromenteMapEffect {};
+}
+
+#endif

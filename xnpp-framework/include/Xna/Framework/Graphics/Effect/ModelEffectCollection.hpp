@@ -1,0 +1,8 @@
+#ifndef XNA_FRAMEWORK_GRAPHICS_MODELEFFECTCOLLECTION_HPP
+#define XNA_FRAMEWORK_GRAPHICS_MODELEFFECTCOLLECTION_HPP
+
+namespace Xna {
+	class ModelEffectCollection {};
+}
+
+#endif
