@@ -28,22 +28,22 @@ namespace Xna {
 		}
 
 		//Checks whether the Ray intersects a specified plane or bounding volume. 
-		inline std::optional<float> Intersects(BoundingBox const& box) const {
+		constexpr std::optional<float> Intersects(BoundingBox const& box) const {
 			return box.Intersects(*this);
 		}
 
 		//Checks whether the Ray intersects a specified plane or bounding volume. 
-		inline std::optional<float> Intersects(BoundingFrustum const& frustum) const {
+		constexpr std::optional<float> Intersects(BoundingFrustum const& frustum) const {
 			return frustum.Intersects(*this);
 		}
 
 		//Checks whether the Ray intersects a specified plane or bounding volume. 
-		inline std::optional<float> Intersects(Plane const& plane) const {
+		constexpr std::optional<float> Intersects(Plane const& plane) const {
 			return plane.Intersects(*this);
 		}
 
 		//Checks whether the Ray intersects a specified plane or bounding volume. 
-		inline std::optional<float> Intersects(BoundingSphere const& sphere) const {
+		constexpr std::optional<float> Intersects(BoundingSphere const& sphere) const {
 			return sphere.Intersects(*this);
 		}
 	};

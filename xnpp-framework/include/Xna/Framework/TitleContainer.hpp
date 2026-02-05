@@ -2,12 +2,13 @@
 #define XNA_FRAMEWORK_TITLECONTAINER_HPP
 
 #include "Xna/CSharp/IO/Stream.hpp"
+#include "Xna/Internal/Export.hpp"
 #include <memory>
 #include <filesystem>
 
 namespace Xna {
 	//Provides file stream access to the title's default storage location.
-	struct TitleContainer final {
+	struct XNPP_API TitleContainer final {
 	public:
 		//Returns a stream to an existing file in the default title storage location.
 		static std::unique_ptr<CSharp::Stream> OpenStream(std::filesystem::path const& name);
@@ -26,8 +27,6 @@ namespace Xna {
 
 		static int32_t CollapseParentDirectory(std::string& path, int32_t position, size_t removeLength);
 		static inline bool IsCleanPathAbsolute(std::filesystem::path const& path) { return path.is_absolute(); }
-		static constexpr char badCharacters[7] = { ':','*','?','"','<','>','|' };
-		static constexpr int badCharactersSize = 7;
 
 		friend class ContentManager;
 		friend class ContentReader;

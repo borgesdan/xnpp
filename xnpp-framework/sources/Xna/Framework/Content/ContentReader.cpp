@@ -3,7 +3,7 @@
 #include "Xna/Framework/Content/ContentTypeReaderManager.hpp"
 #include "Xna/Framework/Content/ContentManager.hpp"
 #include "Xna/CSharp/Path.hpp"
-#include "Xna/Framework/TitleLocation.hpp"
+#include "../TitleLocation.hpp"
 #include "Xna/Framework/TitleContainer.hpp"
 
 using Xna::CSharp::InvalidOperationException;

@@ -40,10 +40,10 @@ namespace Xna {
 		}
 
 		//Calculates the length of a Quaternion.
-		inline float Length() const { return std::sqrt(LengthSquared()); }
+		constexpr float Length() const { return MathHelper::Extensions::Sqrt(LengthSquared()); }
 
 		//Divides each component of a quaternion by the length of the quaternion.
-		inline void Normalize() {
+		constexpr void Normalize() {
 			const auto num = 1.0F / Length();
 			X *= num;
 			Y *= num;
@@ -52,7 +52,7 @@ namespace Xna {
 		}
 
 		//Divides each component of a quaternion by the length of the quaternion.
-		static inline Quaternion Normalize(Quaternion quaternion) {
+		static constexpr Quaternion Normalize(Quaternion quaternion) {
 			quaternion.Normalize();
 			return quaternion;
 		}
