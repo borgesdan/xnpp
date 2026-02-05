@@ -7,6 +7,7 @@
 #include <unordered_map>
 #include <optional>
 
+
 namespace Xna {
 	struct ContentTypeReaderManager::Implementation {
 		std::optional<ContentReader> contentReader;

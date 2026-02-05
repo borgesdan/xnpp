@@ -5,7 +5,7 @@
 #include <exception>
 #include "Xna/Platform/Platform.hpp"
 #include "Xna/Framework/FrameworkDispatcher.hpp"
-#include "Xna/App.hpp"
+#include "Xna/Internal/App.hpp"
 
 using Xna::CSharp::TimeSpan;
 

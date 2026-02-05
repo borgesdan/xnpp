@@ -7,6 +7,7 @@
 #include "GraphicsResource.hpp"
 #include "Xna/Platform/Platform.hpp"
 #include "VertexBuffer.hpp"
+#include "Xna/Internal/Export.hpp"
 
 namespace Xna {
 	//Represents a list of 3D vertices to be streamed to the graphics device. 
@@ -14,7 +15,7 @@ namespace Xna {
 	class DynamicVertexBuffer final : public VertexBuffer {
 	public:	
 		//Initializes a new instance of DynamicVertexBuffer with the specified parameters.		
-		DynamicVertexBuffer(GraphicsDevice const& graphicsDevice, Xna::VertexDeclaration const& vertexDeclaration, size_t vertexCount, Xna::BufferUsage usage);
+		XNPP_API DynamicVertexBuffer(GraphicsDevice const& graphicsDevice, Xna::VertexDeclaration const& vertexDeclaration, size_t vertexCount, Xna::BufferUsage usage);
 
 		~DynamicVertexBuffer() override {}
 

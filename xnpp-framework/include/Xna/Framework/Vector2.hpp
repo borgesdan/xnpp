@@ -4,6 +4,7 @@
 #include <optional>
 #include <vector>
 #include "MathHelper.hpp"
+#include "Xna/Internal/Export.hpp"
 
 namespace Xna {
 	struct Matrix;
@@ -46,7 +47,7 @@ namespace Xna {
 
 		//Divides a vector by a scalar or another vector.
 		static constexpr inline float Distance(Vector2 const& value1, Vector2 const& value2) {
-			return static_cast<float>(MathHelper::Extensions::Sqrt(DistanceSquared(value1, value2)));
+			return MathHelper::Extensions::Sqrt(DistanceSquared(value1, value2));
 		}
 
 		//Calculates the distance between two vectors squared.
@@ -165,32 +166,32 @@ namespace Xna {
 		//Transforms a single Vector2, or the vector normal (x, y, 0, 0), by a specified Quaternion rotation.
 		static constexpr Vector2 Transform(Vector2 const& value, Quaternion const& rotation);
 		//Transforms an array of Vector2s by a specified Matrix.
-		static void Transform(Vector2 const* sourceArray, size_t sourceArrayLength, Matrix const& matrix, Vector2* destinationArray, size_t destinationArrayLength);
+		XNPP_API static void Transform(Vector2 const* sourceArray, size_t sourceArrayLength, Matrix const& matrix, Vector2* destinationArray, size_t destinationArrayLength);
 		//Transforms an array of Vector2s by a specified Matrix.
-		static void Transform(std::vector<Vector2> sourceArray, Matrix const& matrix, std::vector<Vector2>& destinationArray);
+		XNPP_API static void Transform(std::vector<Vector2> sourceArray, Matrix const& matrix, std::vector<Vector2>& destinationArray);
 		//Transforms a specified range in an array of Vector2s by a specified Matrix and places the results in a specified range in a destination array.
-		static void Transform(Vector2 const* sourceArray, size_t sourceArrayLength, size_t sourceIndex, Matrix const& matrix,
+		XNPP_API static void Transform(Vector2 const* sourceArray, size_t sourceArrayLength, size_t sourceIndex, Matrix const& matrix,
 			Vector2* destinationArray, size_t destinationArrayLength, size_t destinationIndex, size_t length);
 		//Transforms a specified range in an array of Vector2s by a specified Matrix and places the results in a specified range in a destination array.
-		static void Transform(std::vector<Vector2> const& sourceArray, size_t sourceIndex, Matrix const& matrix, std::vector<Vector2>& destinationArray, size_t destinationIndex, size_t length);
+		XNPP_API static void Transform(std::vector<Vector2> const& sourceArray, size_t sourceIndex, Matrix const& matrix, std::vector<Vector2>& destinationArray, size_t destinationIndex, size_t length);
 		//Transforms an array of Vector2 vector normals by a specified Matrix.
-		static void TransformNormal(Vector2 const* sourceArray, size_t sourceArrayLength, Matrix const& matrix, Vector2* destinationArray, size_t destinationArrayLength);
+		XNPP_API static void TransformNormal(Vector2 const* sourceArray, size_t sourceArrayLength, Matrix const& matrix, Vector2* destinationArray, size_t destinationArrayLength);
 		//Transforms an array of Vector2 vector normals by a specified Matrix.
-		static void TransformNormal(std::vector<Vector2> const& sourceArray, Matrix const& matrix, std::vector<Vector2>& destinationArray);
+		XNPP_API static void TransformNormal(std::vector<Vector2> const& sourceArray, Matrix const& matrix, std::vector<Vector2>& destinationArray);
 		//Transforms a specified range in an array of Vector2 vector normals by a specified Matrix and places the results in a specified range in a destination array.
-		static void TransformNormal(Vector2 const* sourceArray, size_t sourceArrayLength, size_t sourceIndex, Matrix const& matrix,
+		XNPP_API static void TransformNormal(Vector2 const* sourceArray, size_t sourceArrayLength, size_t sourceIndex, Matrix const& matrix,
 			Vector2* destinationArray, size_t destinationArrayLength, size_t destinationIndex, size_t length);
 		//Transforms a specified range in an array of Vector2 vector normals by a specified Matrix and places the results in a specified range in a destination array.
-		static void TransformNormal(std::vector<Vector2> const& sourceArray, size_t sourceIndex, Matrix const& matrix, std::vector<Vector2>& destinationArray, size_t destinationIndex, size_t length);
+		XNPP_API static void TransformNormal(std::vector<Vector2> const& sourceArray, size_t sourceIndex, Matrix const& matrix, std::vector<Vector2>& destinationArray, size_t destinationIndex, size_t length);
 		////Transforms a specified range in an array of Vector2s by a specified Quaternion and places the results in a specified range in a destination array.
-		static void Transform(Vector2 const* sourceArray, size_t sourceArrayLength, Quaternion const& rotation, Vector2* destinationArray, size_t destinationArrayLength);
+		XNPP_API static void Transform(Vector2 const* sourceArray, size_t sourceArrayLength, Quaternion const& rotation, Vector2* destinationArray, size_t destinationArrayLength);
 		//Transforms a specified range in an array of Vector2s by a specified Quaternion and places the results in a specified range in a destination array.
-		static void Transform(std::vector<Vector2> const& sourceArray, Quaternion const& rotation, std::vector<Vector2>& destinationArray);
+		XNPP_API static void Transform(std::vector<Vector2> const& sourceArray, Quaternion const& rotation, std::vector<Vector2>& destinationArray);
 		//Transforms an array of Vector2s by a specified Matrix.
-		static void Transform(Vector2 const* sourceArray, size_t sourceArrayLength, size_t sourceIndex, Quaternion const& rotation,
+		XNPP_API static void Transform(Vector2 const* sourceArray, size_t sourceArrayLength, size_t sourceIndex, Quaternion const& rotation,
 			Vector2* destinationArray, size_t destinationArrayLength, size_t destinationIndex, size_t length);
 		//Transforms a specified range in an array of Vector2s by a specified Quaternion and places the results in a specified range in a destination array.
-		static void Transform(std::vector<Vector2> const& sourceArray, size_t sourceIndex, Quaternion const& rotation, std::vector<Vector2>& destinationArray, size_t destinationIndex, size_t length);
+		XNPP_API static void Transform(std::vector<Vector2> const& sourceArray, size_t sourceIndex, Quaternion const& rotation, std::vector<Vector2>& destinationArray, size_t destinationIndex, size_t length);
 
 		//Returns a vector pointing in the opposite direction.
 		static constexpr Vector2 Negate(Vector2 const& value) {

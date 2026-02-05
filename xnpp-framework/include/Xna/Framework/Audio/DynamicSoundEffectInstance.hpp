@@ -4,24 +4,25 @@
 #include "SoundEffectInstance.hpp"
 #include "AudioFormat.hpp"
 #include "Xna/Platform/Platform.hpp"
+#include "Xna/Internal/Export.hpp"
 
 namespace Xna {
 	class DynamicSoundEffectInstance final : public SoundEffectInstance {
 	public:
-		DynamicSoundEffectInstance(size_t sampleRate, AudioChannels channels);		
+		XNPP_API DynamicSoundEffectInstance(size_t sampleRate, AudioChannels channels);
 		
 		inline void SubmitBuffer(std::vector<uint8_t> const& buffer) {
 			SubmitBuffer(buffer, 0, buffer.size());
 		}
 
-		void SubmitBuffer(std::vector<uint8_t> const& buffer, size_t offset, size_t count);
-		CSharp::TimeSpan GetSampleDuration(size_t sizeInBytes);
-		size_t GetSampleSizeInBytes(CSharp::TimeSpan duration);
+		XNPP_API void SubmitBuffer(std::vector<uint8_t> const& buffer, size_t offset, size_t count);
+		XNPP_API CSharp::TimeSpan GetSampleDuration(size_t sizeInBytes);
+		XNPP_API size_t GetSampleSizeInBytes(CSharp::TimeSpan duration);
 
 		inline bool IsLooped() const override { return false; }
 		inline void IsLooped(bool value) override { CSharp::InvalidOperationException("InvalidCall"); }
 		
-		void Play() override;
+		XNPP_API void Play() override;
 		//TODO: verificar Stop, Pause e Resume
 		
 		inline int32_t PendingBufferCount() const { return GetPendingBufferCount(); }

@@ -7,23 +7,24 @@
 #include "DisplayMode.hpp"
 #include "DisplayModeCollection.hpp"
 #include "Xna/Platform/Platform.hpp"
+#include "Xna/Internal/Export.hpp"
 
 namespace Xna {
 	//Provides methods to retrieve and manipulate graphics adapters.
 	class GraphicsAdapter final {
 	public:				
 		//Collection of available adapters on the system.
-		static std::vector<std::optional<GraphicsAdapter>> Adapters();
+		XNPP_API static std::vector<std::optional<GraphicsAdapter>> Adapters();
 		//Gets the current display mode.
-		DisplayMode CurrentDisplayMode() const;
+		XNPP_API DisplayMode CurrentDisplayMode() const;
 		//Gets the default adapter. 
-		static GraphicsAdapter DefaultAdapter();
+		XNPP_API static GraphicsAdapter DefaultAdapter();
 		//Retrieves a string used for presentation to the user.
 		inline std::string Description() const { return impl->description; }
 		//Retrieves a value that is used to help identify a particular chip set. 
 		inline uint32_t DeviceId() const { return impl->deviceId; }
 		//Retrieves a string that contains the device name.
-		std::string DeviceName() const { return impl->deviceName; }
+		inline std::string DeviceName() const { return impl->deviceName; }
 		//Determines if this instance of GraphicsAdapter is the default adapter.
 		inline bool IsDefaultAdapter() const {
 			return impl->isDefaultAdapter;
@@ -39,7 +40,7 @@ namespace Xna {
 		//Retrieves a value used to identify the subsystem.
 		inline uint32_t SubSystemId() const { return impl->subSystemId; }
 		//Returns a collection of supported display modes for the current adapter.
-		DisplayModeCollection SupportedDisplayModes() const;
+		XNPP_API DisplayModeCollection SupportedDisplayModes() const;
 		//Retrieves a value used to identify the manufacturer.
 		inline uint32_t VendorId() const { return impl->vendorId; }
 

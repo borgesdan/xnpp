@@ -135,7 +135,7 @@ namespace Xna {
 		}
 
 		//Linearly interpolate a color.
-		static Color Lerp(Color const& value1, Color const& value2, float amount) {
+		static constexpr Color Lerp(Color const& value1, Color const& value2, float amount) {
 			const auto _amount = MathHelper::Clamp(amount, 0.0f, 1.0f);
 			return Color(
 				static_cast<int32_t>(MathHelper::Lerp(value1.R(), value2.R(), amount)),

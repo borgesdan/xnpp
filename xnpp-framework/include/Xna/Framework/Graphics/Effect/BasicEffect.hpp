@@ -8,11 +8,12 @@
 #include "Xna/Platform/Platform.hpp"
 #include <memory>
 #include <optional>
+#include "Xna/Internal/Export.hpp"
 
 namespace Xna {
 	class BasicEffect final : Effect, IEffectMatrices, IEffectLights, IEffectFog {
 	public:
-		BasicEffect(GraphicsDevice const& device);
+		XNPP_API BasicEffect(GraphicsDevice const& device);
 		~BasicEffect() override = default;
 
 		//
@@ -22,9 +23,9 @@ namespace Xna {
 		inline Matrix World() const override { return impl->world; }
 		inline Matrix View() const override { return impl->view; }
 		inline Matrix Projection() const override { return impl->projection; }
-		void World(Matrix const& value) override;
-		void View(Matrix const& value) override;
-		void Projection(Matrix const& value) override;
+		XNPP_API void World(Matrix const& value) override;
+		XNPP_API void View(Matrix const& value) override;
+		XNPP_API void Projection(Matrix const& value) override;
 
 		//
 		// IEffectLights
@@ -35,9 +36,9 @@ namespace Xna {
 		inline DirectionalLight DirectionalLight2() const override { return impl->light2; }
 		inline Vector3 AmbientLightColor() const override { return impl->ambientLightColor; }
 		inline bool LightingEnabled() const override { return impl->lightingEnabled; }
-		void AmbientLightColor(Vector3 const& value) override;
-		void LightingEnabled(bool const& value) override;
-		void EnableDefaultLighting() override;
+		XNPP_API void AmbientLightColor(Vector3 const& value) override;
+		XNPP_API void LightingEnabled(bool const& value) override;
+		XNPP_API void EnableDefaultLighting() override;
 
 		//
 		// IEffectFog
@@ -50,10 +51,10 @@ namespace Xna {
 			return impl->fogColor;
 			//TODO: [!] get => this.fogColorParam.GetValueVector3();
 		}
-		void FogEnabled(bool value) override;
-		void FogStart(bool value) override;
-		void FogEnd(bool value) override;
-		void FogColor(Vector3 const& value) override;
+		XNPP_API void FogEnabled(bool value) override;
+		XNPP_API void FogStart(bool value) override;
+		XNPP_API void FogEnd(bool value) override;
+		XNPP_API void FogColor(Vector3 const& value) override;
 
 		//
 		// BasicEffect
@@ -77,17 +78,17 @@ namespace Xna {
 			//TODO: [!] get => this.textureParam.GetValueTexture2D();
 		}
 		inline bool VertexColorEnabled() const { return impl->vertexColorEnabled; }
-		void DiffuseColor(Vector3 const& value);
-		void EmissiveColor(Vector3 const& value);
-		void SpecularColor(Vector3 const& value);
-		void SpecularPower(float value);
-		void Alpha(float value);
-		void PreferPerPixelLighting(bool value);
-		void TextureEnabled(bool value);
+		XNPP_API void DiffuseColor(Vector3 const& value);
+		XNPP_API void EmissiveColor(Vector3 const& value);
+		XNPP_API void SpecularColor(Vector3 const& value);
+		XNPP_API void SpecularPower(float value);
+		XNPP_API void Alpha(float value);
+		XNPP_API void PreferPerPixelLighting(bool value);
+		XNPP_API void TextureEnabled(bool value);
 		void Texture(Texture2D const& value) {
 			//TODO: [!] set => this.textureParam.SetValue((Microsoft.Xna.Framework.Graphics.Texture) value);
 		}
-		void VertexColorEnabled(bool value);
+		XNPP_API void VertexColorEnabled(bool value);
 
 		inline BasicEffect(std::nullptr_t) : Effect(nullptr) { impl = nullptr; }
 		inline bool operator==(BasicEffect const& other) const noexcept { return impl == other.impl; }

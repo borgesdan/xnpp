@@ -6,32 +6,33 @@
 #include <optional>
 #include "_Game.hpp"
 #include "Xna/CSharp/Event.hpp"
+#include "Xna/Internal/Export.hpp"
 
 namespace Xna {
 	class GameHost {
 	public:
-		GameHost(Game const& game);
+		XNPP_API GameHost(Game const& game);
 
-		GameWindow Window() const;
-		void Run();
-		void RunOneFrame();
-		void StartGameLoop();
-		void Exit();
+		XNPP_API GameWindow Window() const;
+		XNPP_API void Run();
+		XNPP_API void RunOneFrame();
+		XNPP_API void StartGameLoop();
+		XNPP_API void Exit();
 
-		CSharp::Event<CSharp::EventArgs> Suspend() const;
-		CSharp::Event<CSharp::EventArgs> Resume() const;
-		CSharp::Event<CSharp::EventArgs> Activated() const;
-		CSharp::Event<CSharp::EventArgs> Deactivated() const;
-		CSharp::Event<CSharp::EventArgs> Idle() const;
-		CSharp::Event<CSharp::EventArgs> Exiting() const;
+		XNPP_API CSharp::Event<CSharp::EventArgs> Suspend() const;
+		XNPP_API CSharp::Event<CSharp::EventArgs> Resume() const;
+		XNPP_API CSharp::Event<CSharp::EventArgs> Activated() const;
+		XNPP_API CSharp::Event<CSharp::EventArgs> Deactivated() const;
+		XNPP_API CSharp::Event<CSharp::EventArgs> Idle() const;
+		XNPP_API CSharp::Event<CSharp::EventArgs> Exiting() const;
 
 	protected:
-		void OnSuspend();
-		void OnResume();
-		void OnActivated();
-		void OnDeactivated();
-		void OnIdle();
-		void OnExiting();
+		XNPP_API void OnSuspend();
+		XNPP_API void OnResume();
+		XNPP_API void OnActivated();
+		XNPP_API void OnDeactivated();
+		XNPP_API void OnIdle();
+		XNPP_API void OnExiting();
 
 	private:
 		struct Implementation {

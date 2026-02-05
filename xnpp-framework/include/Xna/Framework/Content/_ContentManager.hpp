@@ -4,6 +4,7 @@
 #include <memory>
 #include "Xna/CSharp/IO/FileStream.hpp"
 #include "Xna/Framework/Game/GameServiceContainer.hpp"
+#include "Xna/Internal/Export.hpp"
 
 namespace Xna {
 	class ContentReader;
@@ -12,16 +13,16 @@ namespace Xna {
 	class ContentManager {
 	public:
 		//Initializes a new instance of ContentManager.
-		ContentManager(GameServiceContainer const& serviceProvider);
+		XNPP_API ContentManager(GameServiceContainer const& serviceProvider);
 		//Initializes a new instance of ContentManager.
-		ContentManager(GameServiceContainer const& serviceProvider, std::filesystem::path const& rootDirectory);
+		XNPP_API ContentManager(GameServiceContainer const& serviceProvider, std::filesystem::path const& rootDirectory);
 
-		GameServiceContainer ServiceProvider() const;
+		XNPP_API GameServiceContainer ServiceProvider() const;
 
 		//Gets or sets the root directory associated with this ContentManager.
-		std::filesystem::path RootDirectory() const;
+		XNPP_API std::filesystem::path RootDirectory() const;
 		//Gets or sets the root directory associated with this ContentManager.
-		void RootDirectory(std::filesystem::path const& value);
+		XNPP_API void RootDirectory(std::filesystem::path const& value);
 
 		//Disposes all data that was loaded by this ContentManager.
 		virtual void Unload() {}
@@ -36,7 +37,7 @@ namespace Xna {
 
 	protected:
 		template <typename T> T ReadAsset(std::filesystem::path const& assetName);
-		std::unique_ptr<CSharp::Stream> OpenStream(std::filesystem::path const& assetName);
+		XNPP_API std::unique_ptr<CSharp::Stream> OpenStream(std::filesystem::path const& assetName);
 
 	public:
 		struct Implementation;

@@ -7,6 +7,7 @@
 #include "GraphicsResource.hpp"
 #include "Xna/Framework/Color.hpp"
 #include "Xna/Platform/Platform.hpp"
+#include "Xna/Internal/Export.hpp"
 
 namespace Xna {
 	//Contains blend state for the device. 
@@ -19,16 +20,16 @@ namespace Xna {
 
 		//A built-in state object with settings for opaque blend,
 		//that is overwriting the source with the destination data.
-		static BlendState Opaque();
+		XNPP_API static BlendState Opaque();
 		//A built-in state object with settings for alpha blend, 
 		//that is blending the source and destination data using alpha.
-		static BlendState AlphaBlend();
+		XNPP_API static BlendState AlphaBlend();
 		//A built-in state object with settings for additive blend, 
 		//that is adding the destination data to the source data without using alpha.
-		static BlendState Additive();
+		XNPP_API static BlendState Additive();
 		//A built-in state object with settings for blending with non-premultipled alpha, 
 		//that is blending source and destination data using alpha while assuming the color data contains no alpha information.
-		static BlendState NonPremultiplied();
+		XNPP_API static BlendState NonPremultiplied();
 
 		//Gets or sets the arithmetic operation when blending alpha values. The default is BlendFunction.Add. 
 		inline BlendOperation AlphaBlendFunction() const { return impl->alphaBlendFunction; }

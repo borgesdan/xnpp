@@ -5,6 +5,7 @@
 #include <bit>
 #include "Shared.hpp"
 #include "Xna/CSharp/TimeSpan.hpp"
+#include "Xna/Internal/Export.hpp"
 
 namespace Xna {
 	struct AudioHelper final {
@@ -24,11 +25,11 @@ namespace Xna {
 
 			return value;
 		}
-		static std::vector<uint8_t> MakeFormat(int32_t sampleRate, AudioChannels channels, int16_t bitDepth);
-		static std::vector<uint8_t> LocalizeFormat(std::vector<uint8_t> const& source);
+		XNPP_API static std::vector<uint8_t> MakeFormat(int32_t sampleRate, AudioChannels channels, int16_t bitDepth);
+		XNPP_API static std::vector<uint8_t> LocalizeFormat(std::vector<uint8_t> const& source);
 
-		static CSharp::TimeSpan GetSampleDuration(int32_t sizeInBytes, int32_t sampleRate, AudioChannels channels);
-		static int32_t GetSampleSizeInBytes(CSharp::TimeSpan const& duration, int32_t sampleRate, AudioChannels channels);
+		XNPP_API static CSharp::TimeSpan GetSampleDuration(int32_t sizeInBytes, int32_t sampleRate, AudioChannels channels);
+		XNPP_API static int32_t GetSampleSizeInBytes(CSharp::TimeSpan const& duration, int32_t sampleRate, AudioChannels channels);
 
 	public:
 		static constexpr int32_t waveFormatExSize = 18;

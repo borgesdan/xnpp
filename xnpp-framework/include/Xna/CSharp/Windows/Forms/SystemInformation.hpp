@@ -3,9 +3,10 @@
 
 #include "../../Drawing/Rectangle.hpp"
 #include <cstdint>
+#include "Xna/Internal/Export.hpp"
 
 namespace Xna::CSharp {
-	struct SystemInformation {
+	struct XNPP_API SystemInformation {
 		static bool MultiMonitorSupport();
 		static Rectangle VirtualScreen();
 		static Size PrimaryMonitorSize();

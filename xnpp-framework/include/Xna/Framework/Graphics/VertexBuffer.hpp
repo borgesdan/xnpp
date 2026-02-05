@@ -8,13 +8,14 @@
 #include "Xna/Platform/Platform.hpp"
 #include <memory>
 #include <vector>
+#include "Xna/Internal/Export.hpp"
 
 namespace Xna {
 	//Represents a list of 3D vertices to be streamed to the graphics device.
 	class VertexBuffer : public GraphicsResource {
 	public:
 		//Initializes a new instance of the VertexBuffer class.
-		VertexBuffer(
+		XNPP_API VertexBuffer(
 			GraphicsDevice const& graphicsDevice,
 			Xna::VertexDeclaration const& vertexDeclaration,
 			size_t vertexCount,

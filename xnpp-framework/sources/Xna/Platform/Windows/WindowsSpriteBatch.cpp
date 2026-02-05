@@ -3,7 +3,7 @@
 #include "Xna/Framework/Graphics/GraphicsDevice.hpp"
 #include "Xna/Framework/Graphics/SpriteBatch.hpp"
 #include "Xna/Framework/Graphics/SpriteFont.hpp"
-#include "Xna/Misc.hpp"
+#include "Xna/Internal/Misc.hpp"
 
 namespace Xna {
 	//

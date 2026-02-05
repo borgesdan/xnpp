@@ -4,6 +4,7 @@
 #include <memory>
 #include <string>
 #include <optional>
+#include "Xna/Internal/Export.hpp"
 
 namespace Xna {
 	class EffectAnnotationCollection;
@@ -13,7 +14,7 @@ namespace Xna {
 	public:
 		inline std::string Name() const;
 		inline EffectAnnotationCollection Annotations() const;
-		void Apply();
+		XNPP_API void Apply();
 
 		inline EffectPass(std::nullptr_t) { impl = nullptr; }
 		inline bool operator==(EffectPass const& other) const noexcept { return impl == other.impl; }
@@ -21,7 +22,7 @@ namespace Xna {
 		inline explicit operator bool() const noexcept { return impl != nullptr; }
 
 	private:
-		EffectPass(EffectTechnique const& technique);
+		XNPP_API EffectPass(EffectTechnique const& technique);
 
 		struct Implementation;
 		std::shared_ptr<Implementation> impl;

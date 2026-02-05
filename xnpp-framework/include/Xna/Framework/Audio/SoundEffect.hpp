@@ -10,6 +10,7 @@
 #include "Xna/CSharp/TimeSpan.hpp"
 #include "Xna/CSharp/IO/Stream.hpp"
 #include "Xna/Platform/Platform.hpp"
+#include "Xna/Internal/Export.hpp"
 
 namespace Xna {
 	class SoundEffectInstance;
@@ -23,7 +24,7 @@ namespace Xna {
 		}
 		
 		//Initializes a new instance of SoundEffect based on an audio buffer, sample rate, and number of audio channels.
-		SoundEffect(std::vector<uint8_t> const& buffer, int32_t sampleRate, AudioChannels channels);
+		XNPP_API SoundEffect(std::vector<uint8_t> const& buffer, int32_t sampleRate, AudioChannels channels);
 
 		//nitializes a new instance of SoundEffect with specified parameters such as audio sample rate, channels, looping criteria, and a buffer to hold the audio.
 		inline SoundEffect(
@@ -38,21 +39,21 @@ namespace Xna {
 		}
 		
 		//Creates a new SoundEffectInstance for this SoundEffect.
-		std::shared_ptr<SoundEffectInstance> CreateInstance();
+		XNPP_API std::shared_ptr<SoundEffectInstance> CreateInstance();
 		
 		//Plays a sound.
 		inline bool Play() { return Play(1.0f, 0, 0); }
 		//Plays a sound.
-		bool Play(float volume, float pitch, float pan);
+		XNPP_API bool Play(float volume, float pitch, float pan);
 
 		//Returns the size of the audio sample based on duration, sample rate, and audio channels.
-		static int GetSampleSizeInBytes(
+		XNPP_API static int GetSampleSizeInBytes(
 			CSharp::TimeSpan const& duration,
 			int32_t sampleRate,
 			AudioChannels channels);
 
 		//Returns the sample duration based on the specified sample size and sample rate.
-		static CSharp::TimeSpan GetSampleDuration(
+		XNPP_API static CSharp::TimeSpan GetSampleDuration(
 			int32_t sizeInBytes,
 			int32_t sampleRate,
 			AudioChannels channels);
@@ -68,22 +69,22 @@ namespace Xna {
 		//Gets or sets the master volume that affects all SoundEffectInstance sounds.
 		inline static float MasterVolume() { Implementation::currentVolume; }
 		//Gets or sets the master volume that affects all SoundEffectInstance sounds.
-		static void MasterVolume(float value);
+		XNPP_API static void MasterVolume(float value);
 
 		//Returns the speed of sound: 343.5 meters per second.
-		static float SpeedOfSound() { return Implementation::speedOfSound; }
+		inline static float SpeedOfSound() { return Implementation::speedOfSound; }
 		//Returns the speed of sound: 343.5 meters per second.
-		static void SpeedOfSound(float value);
+		XNPP_API static void SpeedOfSound(float value);
 
 		//Gets or sets a value that adjusts the effect of doppler calculations on the sound (emitter).
-		static float DopplerScale() { return Implementation::dopplerScale; }
+		inline static float DopplerScale() { return Implementation::dopplerScale; }
 		//Gets or sets a value that adjusts the effect of doppler calculations on the sound (emitter).
-		static void DopplerScale(float value);
+		XNPP_API static void DopplerScale(float value);
 
 		//Gets or sets a value that adjusts the effect of distance calculations on the sound (emitter).
-		static float DistanceScale() { return Implementation::distanceScale; }
+		inline static float DistanceScale() { return Implementation::distanceScale; }
 		//Gets or sets a value that adjusts the effect of distance calculations on the sound (emitter).
-		static void DistanceScale(float value);
+		XNPP_API static void DistanceScale(float value);
 
 		//Internal constructor
 		inline SoundEffect() { impl = std::make_shared<Implementation>(); }

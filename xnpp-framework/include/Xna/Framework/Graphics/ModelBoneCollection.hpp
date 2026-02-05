@@ -5,14 +5,15 @@
 #include "_ModelBone.hpp"
 #include <string>
 #include <optional>
+#include "Xna/Internal/Export.hpp"
 
 namespace Xna {
 	struct ModelBoneCollection final : public CSharp::Collection<std::optional<ModelBone>>{
 	public:
 		~ModelBoneCollection() override {}
 
-		ModelBone operator[](std::string const& boneName);
-		bool TryGetValue(std::string const& boneName, ModelBone& value);
+		XNPP_API ModelBone operator[](std::string const& boneName);
+		XNPP_API bool TryGetValue(std::string const& boneName, ModelBone& value);
 
 	private:		
 		ModelBoneCollection(std::vector<std::optional<ModelBone>>& bones)

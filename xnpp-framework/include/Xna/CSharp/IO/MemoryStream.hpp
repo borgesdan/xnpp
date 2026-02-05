@@ -2,6 +2,7 @@
 #define CSHARP_IO_MEMORYSTREAM_HPP
 
 #include "Stream.hpp"
+#include "Xna/Internal/Export.hpp"
 
 namespace Xna::CSharp {
 	class MemoryStream : public Stream {
@@ -9,43 +10,43 @@ namespace Xna::CSharp {
 		~MemoryStream() override = default;
 
 		inline MemoryStream() : MemoryStream(0) {}
-		MemoryStream(int32_t capacity);		
+		XNPP_API MemoryStream(int32_t capacity);
 		inline MemoryStream(std::vector<uint8_t> const& buffer) : MemoryStream(buffer, true) {}
-		MemoryStream(std::vector<uint8_t> const& buffer, bool writable);
+		XNPP_API MemoryStream(std::vector<uint8_t> const& buffer, bool writable);
 		inline MemoryStream(std::vector<uint8_t> const& buffer, int32_t index, int32_t count) : MemoryStream(buffer, index, count, true, false) {}
 		inline MemoryStream(std::vector<uint8_t> const& buffer, int32_t index, int32_t count, bool writable) : MemoryStream(buffer, index, count, writable, false) {}
-		MemoryStream(std::vector<uint8_t> const& buffer, int32_t index, int32_t count, bool writable, bool publiclyVisible);
+		XNPP_API MemoryStream(std::vector<uint8_t> const& buffer, int32_t index, int32_t count, bool writable, bool publiclyVisible);
 
 		inline MemoryStream(std::vector<uint8_t>& buffer) : MemoryStream(buffer, true) {}
-		MemoryStream(std::vector<uint8_t>& buffer, bool writable);
+		XNPP_API MemoryStream(std::vector<uint8_t>& buffer, bool writable);
 		inline MemoryStream(std::vector<uint8_t>& buffer, int32_t index, int32_t count) : MemoryStream(buffer, index, count, true, false) {}
 		inline MemoryStream(std::vector<uint8_t>& buffer, int32_t index, int32_t count, bool writable) : MemoryStream(buffer, index, count, writable, false) {}
-		MemoryStream(std::vector<uint8_t>& buffer, int32_t index, int32_t count, bool writable, bool publiclyVisible);
+		XNPP_API MemoryStream(std::vector<uint8_t>& buffer, int32_t index, int32_t count, bool writable, bool publiclyVisible);
 
-		bool CanRead() const override { return impl->_isOpen; }
-		bool CanSeek() const override { return impl->_isOpen; }
-		bool CanWrite() const override { return impl->_writable; }
-		void Flush() override {}
-		virtual std::vector<uint8_t>& GetBuffer();
-		virtual bool TryGetBuffer(std::vector<uint8_t>& buffer);
-		virtual int32_t Capacity() const;
-		virtual void Capacity(int32_t value);
-		int64_t Length() const override;
-		int64_t Position() const override;
-		void Position(int64_t value) override;
-		int32_t Read(uint8_t* buffer, int32_t bufferLength, int32_t offset, int32_t count) override;
-		int32_t Read(uint8_t* buffer, int32_t bufferLength) override;
-		int32_t ReadByte() override;
-		void CopyTo(Stream& destination, int32_t bufferLength) override;
-		int32_t InternalEmulateRead(int32_t count);
-		int64_t Seek(int64_t offset, SeekOrigin loc) override;
-		void SetLength(int64_t value) override;
-		void Write(uint8_t const* buffer, int32_t bufferLength, int32_t offset, int32_t count) override;
-		void Write(uint8_t const* buffer, int32_t bufferLength) override;
-		void WriteByte(uint8_t value) override;
-		virtual void WriteTo(Stream& stream);
+		inline bool CanRead() const override { return impl->_isOpen; }
+		inline bool CanSeek() const override { return impl->_isOpen; }
+		inline bool CanWrite() const override { return impl->_writable; }
+		XNPP_API void Flush() override {}
+		XNPP_API virtual std::vector<uint8_t>& GetBuffer();
+		XNPP_API virtual bool TryGetBuffer(std::vector<uint8_t>& buffer);
+		XNPP_API virtual int32_t Capacity() const;
+		XNPP_API virtual void Capacity(int32_t value);
+		XNPP_API int64_t Length() const override;
+		XNPP_API int64_t Position() const override;
+		XNPP_API void Position(int64_t value) override;
+		XNPP_API int32_t Read(uint8_t* buffer, int32_t bufferLength, int32_t offset, int32_t count) override;
+		XNPP_API int32_t Read(uint8_t* buffer, int32_t bufferLength) override;
+		XNPP_API int32_t ReadByte() override;
+		XNPP_API void CopyTo(Stream& destination, int32_t bufferLength) override;
+		XNPP_API int32_t InternalEmulateRead(int32_t count);
+		XNPP_API int64_t Seek(int64_t offset, SeekOrigin loc) override;
+		XNPP_API void SetLength(int64_t value) override;
+		XNPP_API void Write(uint8_t const* buffer, int32_t bufferLength, int32_t offset, int32_t count) override;
+		XNPP_API void Write(uint8_t const* buffer, int32_t bufferLength) override;
+		XNPP_API void WriteByte(uint8_t value) override;
+		XNPP_API virtual void WriteTo(Stream& stream);
 
-		void Close() override {
+		inline void Close() override {
 			if (!impl->_isOpen)
 				return;
 
@@ -55,7 +56,7 @@ namespace Xna::CSharp {
 			impl->_buffer.clear();
 		}
 
-		std::vector<uint8_t> CloseAndMove();
+		XNPP_API std::vector<uint8_t> CloseAndMove();
 
 		inline MemoryStream(std::nullptr_t) { impl = nullptr; }
 		inline bool operator==(MemoryStream const& other) const noexcept { return impl == other.impl; }

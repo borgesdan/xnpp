@@ -7,6 +7,7 @@
 #include "Shared.hpp"
 #include "Xna/Framework/Vector4.hpp"
 #include "Xna/Framework/Matrix.hpp"
+#include "Xna/Internal/Export.hpp"
 
 namespace Xna {
 	class EffectAnnotation final {
@@ -32,7 +33,7 @@ namespace Xna {
 		inline explicit operator bool() const noexcept { return impl != nullptr; }
 
 	private:
-		EffectAnnotation(EffectParameterTypeVariant const& variant);
+		XNPP_API EffectAnnotation(EffectParameterTypeVariant const& variant);
 
 		struct Implementation;
 		std::shared_ptr<Implementation> impl;

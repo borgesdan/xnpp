@@ -4,6 +4,7 @@
 #include <memory>
 #include "Xna/CSharp/TimeSpan.hpp"
 #include "Xna/CSharp/Event.hpp"
+#include "Xna/Internal/Export.hpp"
 
 namespace Xna {
 	struct GameComponentCollectionEventArgs;
@@ -19,91 +20,91 @@ namespace Xna {
 	class Game {
 	public:
 		//Initializes a new instance of this class, which provides basic graphics device initialization, game logic, rendering code, and a game loop.
-		Game();
+		XNPP_API Game();
 
 		//Gets the collection of GameComponents owned by the game.
 		inline GameComponentCollection Components() const;
 		//Gets or sets the current ContentManager.
-		ContentManager Content() const;
+		XNPP_API ContentManager Content() const;
 		//Gets or sets the current ContentManager.
 		void Content(ContentManager const& value);
 		//Gets the current GraphicsDevice.
-		Xna::GraphicsDevice GraphicsDevice() const;
+		XNPP_API Xna::GraphicsDevice GraphicsDevice() const;
 		//Gets or sets the time to sleep when the game is inactive.
-		CSharp::TimeSpan InactiveSleepTime() const;
+		XNPP_API CSharp::TimeSpan InactiveSleepTime() const;
 		//Gets or sets the time to sleep when the game is inactive.
-		void InactiveSleepTime(CSharp::TimeSpan const& value);
+		XNPP_API void InactiveSleepTime(CSharp::TimeSpan const& value);
 		//Indicates whether the game is currently the active application.
-		bool IsActive() const;
+		XNPP_API bool IsActive() const;
 		//Gets or sets a value indicating whether to use fixed time steps.
-		bool IsFixedTimeStep() const;
+		XNPP_API bool IsFixedTimeStep() const;
 		//Gets or sets a value indicating whether to use fixed time steps.
-		void IsFixedTimeStep(bool value);
+		XNPP_API void IsFixedTimeStep(bool value);
 		//Gets or sets a value indicating whether the mouse cursor should be visible.
-		bool IsMouseVisible() const;
+		XNPP_API bool IsMouseVisible() const;
 		//Gets or sets a value indicating whether the mouse cursor should be visible.
-		void IsMouseVisible(bool value);
+		XNPP_API void IsMouseVisible(bool value);
 		//Gets the start up parameters in LaunchParameters.
-		Xna::LaunchParameters LaunchParameters() const;
+		XNPP_API Xna::LaunchParameters LaunchParameters() const;
 		//Gets the start up parameters in LaunchParameters.
-		void LaunchParameters(Xna::LaunchParameters const& value);
+		XNPP_API void LaunchParameters(Xna::LaunchParameters const& value);
 		//Gets the GameServiceContainer holding all the service providers attached to the Game.
-		GameServiceContainer Services() const;
+		XNPP_API GameServiceContainer Services() const;
 		//Gets or sets the target time between calls to Update when IsFixedTimeStep is true.
-		CSharp::TimeSpan TargetElapsedTime() const;
+		XNPP_API CSharp::TimeSpan TargetElapsedTime() const;
 		//Gets or sets the target time between calls to Update when IsFixedTimeStep is true.
-		void TargetElapsedTime(CSharp::TimeSpan const& value);
+		XNPP_API void TargetElapsedTime(CSharp::TimeSpan const& value);
 		//Gets the underlying operating system window.
-		std::optional<GameWindow> Window() const;
+		XNPP_API std::optional<GameWindow> Window() const;
 
 		//Exits the game.
-		void Exit();
+		XNPP_API void Exit();
 		//Resets the elapsed time counter.
-		void ResetElapsedTime();
+		XNPP_API void ResetElapsedTime();
 		//Call this method to initialize the game, begin running the game loop, and start processing events for the game.
-		void Run();
+		XNPP_API void Run();
 		//Run the game through what would happen in a single tick of the game clock; this method is designed for debugging only.
-		void RunOneFrame();
+		XNPP_API void RunOneFrame();
 		//Prevents calls to Draw until the next Update.
-		void SuppressDraw();
+		XNPP_API void SuppressDraw();
 		//Updates the game's clock and calls Update and Draw.
-		void Tick();
+		XNPP_API void Tick();
 
 		//Raised when the game gains focus.
-		CSharp::Event<CSharp::EventArgs> Activated() const;
+		XNPP_API CSharp::Event<CSharp::EventArgs> Activated() const;
 		//Raised when the game loses focus.
-		CSharp::Event<CSharp::EventArgs> Deactivated() const;
+		XNPP_API CSharp::Event<CSharp::EventArgs> Deactivated() const;
 		//Raised when the game is being disposed.
-		CSharp::Event<CSharp::EventArgs> Disposed() const;
+		XNPP_API CSharp::Event<CSharp::EventArgs> Disposed() const;
 		//Raised when the game is exiting.
-		CSharp::Event<CSharp::EventArgs> Exiting() const;
+		XNPP_API CSharp::Event<CSharp::EventArgs> Exiting() const;
 
 	protected:
 		//Starts the drawing of a frame. This method is followed by calls to Draw and EndDraw.
-		virtual bool BeginDraw();
+		XNPP_API virtual bool BeginDraw();
 		//Called after all components are initialized but before the first update in the game loop.
-		virtual void BeginRun(){}
+		XNPP_API virtual void BeginRun(){}
 		//Called when the game determines it is time to draw a frame.
-		virtual void Draw(GameTime& gameTime);
+		XNPP_API virtual void Draw(GameTime& gameTime);
 		//Ends the drawing of a frame. This method is preceeded by calls to Draw and BeginDraw.
-		virtual void EndDraw();
+		XNPP_API virtual void EndDraw();
 		//Called after the game loop has stopped running before exiting.
-		virtual void EndRun(){}
+		XNPP_API virtual void EndRun(){}
 		//Called after the Game and GraphicsDevice are created, but before LoadContent.
-		virtual void Initialize();
+		XNPP_API virtual void Initialize();
 		//Called when graphics resources need to be loaded.
-		virtual void LoadContent(){}
+		XNPP_API virtual void LoadContent(){}
 		//Called when graphics resources need to be unloaded. Override this method to unload any game-specific graphics resources.
-		virtual void UnloadContent(){}
+		XNPP_API virtual void UnloadContent(){}
 		//Called when the game has determined that game logic needs to be processed.
-		virtual void Update(GameTime& gameTime);
+		XNPP_API virtual void Update(GameTime& gameTime);
 
 		//Raises the Activated event. Override this method to add code to handle when the game gains focus.
-		virtual void OnActivated(void* sender, CSharp::EventArgs args);
+		XNPP_API virtual void OnActivated(void* sender, CSharp::EventArgs args);
 		//Raises the Deactivated event. Override this method to add code to handle when the game loses focus.
-		virtual void OnDeactivated(void* sender, CSharp::EventArgs args);
+		XNPP_API virtual void OnDeactivated(void* sender, CSharp::EventArgs args);
 		//Raises an Exiting event. Override this method to add code to handle when the game is exiting.
-		virtual void OnExiting(void* sender, CSharp::EventArgs args);		
+		XNPP_API virtual void OnExiting(void* sender, CSharp::EventArgs args);
 
 		inline Game(std::nullptr_t) { impl = nullptr; }
 		inline bool operator==(Game const& other) const noexcept { return impl == other.impl; }

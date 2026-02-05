@@ -6,6 +6,7 @@
 #include "IGameComponent.hpp"
 #include "Xna/CSharp/Event.hpp"
 #include "Xna/CSharp/Collection.hpp"
+#include "Xna/Internal/Export.hpp"
 
 namespace Xna {
 	struct GameComponentCollectionEventArgs : public CSharp::EventArgs {
@@ -37,14 +38,14 @@ namespace Xna {
 		inline explicit operator bool() const noexcept { return impl != nullptr; }
 
 	protected:
-		void InsertItem(size_t index, std::shared_ptr<IGameComponent> const& item);
-		void RemoveItem(size_t index) override;
-		void SetItem(size_t index, std::shared_ptr<IGameComponent> const& item);
-		void ClearItems() override;
+		XNPP_API void InsertItem(size_t index, std::shared_ptr<IGameComponent> const& item);
+		XNPP_API void RemoveItem(size_t index) override;
+		XNPP_API void SetItem(size_t index, std::shared_ptr<IGameComponent> const& item);
+		XNPP_API void ClearItems() override;
 
 	private:
-		void OnComponentAdded(GameComponentCollectionEventArgs const& eventArgs);
-		void OnComponentRemoved(GameComponentCollectionEventArgs const& eventArgs);
+		XNPP_API void OnComponentAdded(GameComponentCollectionEventArgs const& eventArgs);
+		XNPP_API void OnComponentRemoved(GameComponentCollectionEventArgs const& eventArgs);
 
 		struct Implementation {
 			CSharp::Event<GameComponentCollectionEventArgs> componentAdded;

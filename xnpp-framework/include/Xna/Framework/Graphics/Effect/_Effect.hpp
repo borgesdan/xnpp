@@ -4,6 +4,7 @@
 #include "../GraphicsResource.hpp"
 #include <memory>
 #include <vector>
+#include "Xna/Internal/Export.hpp"
 
 namespace Xna {
 	class EffectTechnique;
@@ -15,7 +16,7 @@ namespace Xna {
 	public:
 		~Effect() = default;
 
-		Effect(GraphicsDevice const& graphicsDevice, std::vector<uint8_t> const& effectCode);
+		XNPP_API Effect(GraphicsDevice const& graphicsDevice, std::vector<uint8_t> const& effectCode);
 
 		inline EffectTechnique CurrentTechnique() const;
 		inline void CurrentTechnique(EffectTechnique const& value);

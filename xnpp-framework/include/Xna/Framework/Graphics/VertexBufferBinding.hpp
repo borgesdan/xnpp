@@ -2,6 +2,7 @@
 #define XNA_FRAMEWORK_GRAPHICS_VERTEXBUFFERBINDING_HPP
 
 #include "VertexBuffer.hpp"
+#include "Xna/Internal/Export.hpp"
 
 namespace Xna {
 	//Binding structure that specifies a vertex buffer and other per-vertex parameters (such as offset and instancing) for a graphics device.
@@ -9,9 +10,9 @@ namespace Xna {
 		//Creates an instance of this object.
 		constexpr VertexBufferBinding() = default;
 		//Creates an instance of this object.
-		VertexBufferBinding(Xna::VertexBuffer const& vertexBuffer, size_t vertexOffset, size_t instanceFrequency);
+		XNPP_API VertexBufferBinding(Xna::VertexBuffer const& vertexBuffer, size_t vertexOffset, size_t instanceFrequency);
 		//Creates an instance of this object.
-		VertexBufferBinding(Xna::VertexBuffer const& vertexBuffer, size_t vertexOffset);
+		XNPP_API VertexBufferBinding(Xna::VertexBuffer const& vertexBuffer, size_t vertexOffset);
 		//Creates an instance of this object.
 		inline VertexBufferBinding(Xna::VertexBuffer const& vertexBuffer) 
 			: vertexBuffer(vertexBuffer) {}

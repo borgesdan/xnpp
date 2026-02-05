@@ -5,14 +5,15 @@
 #include "_Effect.hpp"
 #include <memory>
 #include <vector>
+#include "Xna/Internal/Export.hpp"
 
 namespace Xna {
 	class EffectTechniqueCollection final {
 	public:
 		inline size_t Count() const {return impl->techniques.size(); }
 
-		EffectTechnique operator[](size_t index);
-		EffectTechnique operator[](std::string const& name);
+		XNPP_API EffectTechnique operator[](size_t index);
+		XNPP_API EffectTechnique operator[](std::string const& name);
 
 		inline std::vector<EffectTechnique>::iterator begin() { return impl->techniques.begin(); }
 		inline std::vector<EffectTechnique>::iterator end() { return impl->techniques.end(); }
@@ -25,7 +26,7 @@ namespace Xna {
 		inline explicit operator bool() const noexcept { return impl != nullptr; }
 
 	private:		
-		EffectTechniqueCollection(Effect const& effect, size_t count);
+		XNPP_API EffectTechniqueCollection(Effect const& effect, size_t count);
 
 		struct Implementation {
 			std::vector<EffectTechnique> techniques;

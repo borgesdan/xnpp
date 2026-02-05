@@ -2,7 +2,7 @@
 #include "Xna/CSharp/Exception.hpp"
 #include "Xna/Framework/Content/ContentTypeActivator.hpp"
 #include "Xna/Framework/Content/ContentTypeReader.hpp"
-#include "Xna/App.hpp"
+#include "Xna/Internal/App.hpp"
 
 namespace Xna {
 	ContentTypeReaderManager::ContentTypeReaderManager(ContentReader const& contentReader) {

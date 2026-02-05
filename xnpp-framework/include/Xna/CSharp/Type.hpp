@@ -9,6 +9,7 @@
 #include <string>
 #include <optional>
 #include <functional>
+#include "Xna/Internal/Export.hpp"
 
 namespace Xna::CSharp {
     class Type {
@@ -48,7 +49,7 @@ namespace Xna::CSharp {
         const std::type_info* info_;        
 
     public:     
-        static std::map<std::string, Type>& NamedTypes();
+        static XNPP_API std::map<std::string, Type>& NamedTypes();
     };
 }
 

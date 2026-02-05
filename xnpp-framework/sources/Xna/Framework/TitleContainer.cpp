@@ -1,7 +1,7 @@
-#include "Xna/Framework/TitleContainer.hpp"
-#include "Xna/Framework/TitleLocation.hpp"
-#include "Xna/CSharp/Path.hpp"
+#include "TitleLocation.hpp"
 #include "Xna/CSharp/IO/FileStream.hpp"
+#include "Xna/CSharp/Path.hpp"
+#include "Xna/Framework/TitleContainer.hpp"
 
 namespace Xna {
 	std::unique_ptr<CSharp::Stream> TitleContainer::OpenStream(std::filesystem::path const& name) {

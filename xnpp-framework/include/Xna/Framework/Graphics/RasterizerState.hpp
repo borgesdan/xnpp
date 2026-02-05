@@ -5,6 +5,7 @@
 #include "GraphicsResource.hpp"
 #include <memory>
 #include "Xna/Platform/Platform.hpp"
+#include "Xna/Internal/Export.hpp"
 
 namespace Xna {
 	//Contains rasterizer state, which determines how to convert vector data (shapes) into raster data (pixels). 
@@ -48,11 +49,11 @@ namespace Xna {
 		inline void ScissorTestEnable(bool value) { impl->scissorTestEnable = value; }
 
 		//A built-in state object with settings for not culling any primitives.
-		static RasterizerState CullNone();
+		XNPP_API static RasterizerState CullNone();
 		//A built-in state object with settings for culling primitives with clockwise winding order.
-		static RasterizerState CullClockwise();
+		XNPP_API static RasterizerState CullClockwise();
 		//A built-in state object with settings for culling primitives with counter-clockwise winding order.
-		static RasterizerState CullCounterClockwise();		
+		XNPP_API static RasterizerState CullCounterClockwise();
 
 		inline RasterizerState(std::nullptr_t) { impl = nullptr; }
 		inline bool operator==(RasterizerState const& other) const noexcept { return impl == other.impl; }

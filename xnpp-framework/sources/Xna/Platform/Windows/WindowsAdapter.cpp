@@ -1,6 +1,6 @@
 #include "Xna/Platform/Platform.hpp"
 #ifdef PLATFORM_WINDOWS
-#include "Xna/Misc.hpp"
+#include "Xna/Internal/Misc.hpp"
 #include "Xna/Framework/Graphics/GraphicsDevice.hpp"
 #include "Xna/Framework/Game/GraphicsDeviceManager.hpp"
 

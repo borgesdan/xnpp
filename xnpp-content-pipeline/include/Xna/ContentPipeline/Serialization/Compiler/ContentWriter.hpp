@@ -7,7 +7,7 @@
 #include "_ContentWriter.hpp"
 #include <Xna/CSharp/IO/MemoryStream.hpp>
 #include <Xna/CSharp/Exception.hpp>
-#include <Xna/Misc.hpp>
+#include <Xna/Internal/Misc.hpp>
 #include "_ContentCompiler.hpp"
 #include "ContentTypeWriter.hpp"
 #include "Xna/ContentPipeline/ExternalReference.hpp"

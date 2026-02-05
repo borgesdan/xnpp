@@ -5,13 +5,14 @@
 #include <vector>
 #include "Texture.hpp"
 #include "Xna/Platform/Platform.hpp"
+#include "Xna/Internal/Export.hpp"
 
 namespace Xna {
 	//Represents a 3D volume of texels.
 	class Texture3D final : public Texture {
 	public:
 		//Initializes a new instance of the Texture3D class.
-		Texture3D(
+		XNPP_API Texture3D(
 			GraphicsDevice& graphicsDevice,
 			size_t width,
 			size_t height,

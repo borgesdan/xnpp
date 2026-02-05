@@ -9,6 +9,7 @@
 #include "AudioListener.hpp"
 #include "SoundEffect.hpp"
 #include "Xna/Platform/Platform.hpp"
+#include "Xna/Internal/Export.hpp"
 
 namespace Xna {
 
@@ -16,14 +17,14 @@ namespace Xna {
 	class SoundEffectInstance {
 	public:
 		//Plays or resumes a SoundEffectInstance.
-		virtual void Play();
+		XNPP_API virtual void Play();
 		//Stops playing a SoundEffectInstance.
 		inline void Stop() { Stop(true); }
-		void Stop(bool immediate);
+		XNPP_API void Stop(bool immediate);
 		//Pauses a SoundEffectInstance.
-		void Pause();
+		XNPP_API void Pause();
 		//Resumes playback for a SoundEffectInstance.
-		void Resume();
+		XNPP_API void Resume();
 
 		//Applys 3D positioning to the sound using a single listener.
 		void Apply3D(AudioListener listener, AudioEmitter emitter) {
@@ -31,22 +32,22 @@ namespace Xna {
 		}
 
 		//Applys 3D position to the sound using multiple listeners.
-		void Apply3D(std::vector<AudioListener> const& listener, AudioEmitter emitter);
+		XNPP_API void Apply3D(std::vector<AudioListener> const& listener, AudioEmitter emitter);
 		
 		//Gets or sets the volume of the SoundEffectInstance.
 		inline float Volume() const { return impl->currentVolume; }
 		//Gets or sets the volume of the SoundEffectInstance.
-		void Volume(float value);
+		XNPP_API void Volume(float value);
 		
 		//Gets or sets the pitch adjustment for the SoundEffectInstance.
 		inline float Pitch() const { return impl->currentPitch; }
 		//Gets or sets the pitch adjustment for the SoundEffectInstance.
-		void Pitch(float value);
+		XNPP_API void Pitch(float value);
 
 		//Gets or sets the panning for the SoundEffectInstance.
 		inline float Pan() const { return impl->currentPan; }
 		//Gets or sets the panning for the SoundEffectInstance.
-		void Pan(float value);
+		XNPP_API void Pan(float value);
 
 		//Gets or sets a value that indicates whether looping is enabled for the SoundEffectInstance.
 		inline virtual bool IsLooped() const { return impl->looped; }
@@ -54,7 +55,7 @@ namespace Xna {
 		inline virtual void IsLooped(bool value) { impl->looped = value; }
 		
 		//Gets the current state (playing, paused, or stopped) of the SoundEffectInstance.
-		SoundState State() const;
+		XNPP_API SoundState State() const;
 
 		inline SoundEffectInstance(std::nullptr_t) { impl = nullptr; }
 		inline bool operator==(SoundEffectInstance const& other) const noexcept { return impl == other.impl; }

@@ -2,7 +2,7 @@
 #include "Xna/ContentPipeline/PathUtils.hpp"
 #include <algorithm>
 #include <format>
-#include <Xna/Misc.hpp>
+#include <Xna/Internal/Misc.hpp>
 
 namespace Xna {
     struct Resources {

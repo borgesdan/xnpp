@@ -5,13 +5,13 @@
 #include <memory>
 #include <vector>
 #include <optional>
-
+#include "Xna/Internal/Export.hpp"
 
 namespace Xna {
 	//Manipulates a collection of DisplayMode structures. 
 	struct DisplayModeCollection {	
-		DisplayMode& operator[](size_t index);
-		std::vector<std::optional<DisplayMode>> operator[](SurfaceFormat surfaceFormat);
+		XNPP_API DisplayMode& operator[](size_t index);
+		XNPP_API std::vector<std::optional<DisplayMode>> operator[](SurfaceFormat surfaceFormat);
 
 		constexpr auto begin() { return displayModes.begin(); }
 		constexpr auto end() { return displayModes.end(); }

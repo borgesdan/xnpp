@@ -2,6 +2,7 @@
 #define XNA_FRAMEWORK_VECTOR4_HPP
 
 #include "Vector3.hpp"
+#include "Xna/Internal/Export.hpp"
 
 namespace Xna {
 	//Defines a vector with four components.
@@ -62,7 +63,7 @@ namespace Xna {
 		}
 
 		//Calculates the distance between two vectors.
-		inline static float Distance(Vector4 const& value1, Vector4 const& value2) {
+		static constexpr float Distance(Vector4 const& value1, Vector4 const& value2) {
 			return MathHelper::Extensions::Sqrt(DistanceSquared(value1, value2));
 		}
 
@@ -209,21 +210,21 @@ namespace Xna {
 		static constexpr Vector4 Transform(Vector3 const& value, Quaternion const& rotation);
 
 		//Transforms an array of Vector4s by a specified Matrix.
-		static void Transform(Vector4 const* sourceArray, size_t sourceLength, Matrix const& matrix, Vector4* destinationArray, size_t destinationLength);
+		XNPP_API static void Transform(Vector4 const* sourceArray, size_t sourceLength, Matrix const& matrix, Vector4* destinationArray, size_t destinationLength);
 		//Transforms an array of Vector4s by a specified Matrix.
-		static void Transform(std::vector<Vector4> const& sourceArray, size_t sourceLength, Matrix const& matrix, std::vector<Vector4>& destinationArray);
+		XNPP_API static void Transform(std::vector<Vector4> const& sourceArray, size_t sourceLength, Matrix const& matrix, std::vector<Vector4>& destinationArray);
 		//Transforms a specified range in an array of Vector4s by a specified Matrix into a specified range in a destination array.
-		static void Transform(Vector4 const* sourceArray, size_t sourceLength, size_t sourceIndex, Matrix const& matrix, Vector4* destinationArray, size_t destinationLength, size_t destinationIndex, size_t length);
+		XNPP_API static void Transform(Vector4 const* sourceArray, size_t sourceLength, size_t sourceIndex, Matrix const& matrix, Vector4* destinationArray, size_t destinationLength, size_t destinationIndex, size_t length);
 		////Transforms a specified range in an array of Vector4s by a specified Matrix into a specified range in a destination array.
-		static void Transform(std::vector<Vector4> const& sourceArray, size_t sourceIndex, Matrix const& matrix, std::vector<Vector4>& destinationArray, size_t destinationIndex, size_t length);
+		XNPP_API static void Transform(std::vector<Vector4> const& sourceArray, size_t sourceIndex, Matrix const& matrix, std::vector<Vector4>& destinationArray, size_t destinationIndex, size_t length);
 		//Transforms an array of Vector4s by a specified Quaternion.
-		static void Transform(Vector4 const* sourceArray, size_t sourceLength, Quaternion const& rotation, Vector4* destinationArray, size_t destinationLength);
+		XNPP_API static void Transform(Vector4 const* sourceArray, size_t sourceLength, Quaternion const& rotation, Vector4* destinationArray, size_t destinationLength);
 		//Transforms an array of Vector4s by a specified Quaternion.
-		static void Transform(std::vector<Vector4> const& sourceArray, Quaternion const& rotation, std::vector<Vector4>& destinationArray);
+		XNPP_API static void Transform(std::vector<Vector4> const& sourceArray, Quaternion const& rotation, std::vector<Vector4>& destinationArray);
 		//Transforms a specified range in an array of Vector4s by a specified Quaternion into a specified range in a destination array.
-		static void Transform(Vector4 const* sourceArray, size_t sourceLength, size_t sourceIndex, Quaternion const& rotation, Vector4* destinationArray, size_t destinationLength, size_t destinationIndex, size_t length);
+		XNPP_API static void Transform(Vector4 const* sourceArray, size_t sourceLength, size_t sourceIndex, Quaternion const& rotation, Vector4* destinationArray, size_t destinationLength, size_t destinationIndex, size_t length);
 		//Transforms a specified range in an array of Vector4s by a specified Quaternion into a specified range in a destination array.
-		static void Transform(std::vector<Vector4> const& sourceArray, size_t sourceIndex, Quaternion const& rotation, std::vector<Vector4>& destinationArray, size_t destinationIndex, size_t length);
+		XNPP_API static void Transform(std::vector<Vector4> const& sourceArray, size_t sourceIndex, Quaternion const& rotation, std::vector<Vector4>& destinationArray, size_t destinationIndex, size_t length);
 
 		//Returns a vector pointing in the opposite direction.
 		static constexpr Vector4 Negate(Vector4 const& value) {

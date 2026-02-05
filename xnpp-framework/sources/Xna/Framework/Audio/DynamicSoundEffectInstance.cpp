@@ -1,6 +1,6 @@
 #include "Xna/Framework/Audio/DynamicSoundEffectInstance.hpp"
 #include "Xna/CSharp/Exception.hpp"
-#include "Xna/Misc.hpp"
+#include "Xna/Internal/Misc.hpp"
 
 namespace Xna {
 	DynamicSoundEffectInstance::DynamicSoundEffectInstance(size_t sampleRate, AudioChannels channels) {

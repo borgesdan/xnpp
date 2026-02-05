@@ -3,8 +3,6 @@
 #include "Xna/Platform/Platform.hpp"
 
 namespace Xna::CSharp {
-	int Screen::s_primaryMonitor = 65537;	
-
 	Screen::Screen(intptr_t monitor, intptr_t hdc) {
 		if (!SystemInformation::MultiMonitorSupport() || monitor == s_primaryMonitor) {
 			_bounds = SystemInformation::VirtualScreen();

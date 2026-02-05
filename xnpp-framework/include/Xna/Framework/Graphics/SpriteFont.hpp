@@ -9,6 +9,7 @@
 #include "GraphicsResource.hpp"
 #include "Xna/Framework/Vector2.hpp"
 #include "Xna/Framework/Vector3.hpp"
+#include "Xna/Internal/Export.hpp"
 
 namespace Xna {
 	//Represents a font texture.
@@ -16,9 +17,9 @@ namespace Xna {
 		~SpriteFont() override = default;
 
 		// Returns the width and height of a string.
-		Vector2 MeasureString(std::string const& text, bool ignoreWhiteSpace = true);
+		XNPP_API Vector2 MeasureString(std::string const& text, bool ignoreWhiteSpace = true);
 		// Returns the width and height of a string.
-		Vector2 MeasureString(std::wstring const& text, bool ignoreWhiteSpace = true);
+		XNPP_API Vector2 MeasureString(std::wstring const& text, bool ignoreWhiteSpace = true);
 
 		//Gets or sets the default character for the font.
 		inline std::optional<char32_t> DefaultCharacter() const { return impl->defaultCharacter; }

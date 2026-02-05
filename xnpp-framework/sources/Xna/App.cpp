@@ -1,4 +1,4 @@
-#include "Xna/App.hpp"
+#include "Xna/Internal/App.hpp"
 #include "Xna/Framework/Content/ContentTypeActivator.hpp"
 #include "Xna/Framework/Content/Readers/ArrayReader.hpp"
 #include "Xna/Framework/Content/Readers/BooleanReader.hpp"

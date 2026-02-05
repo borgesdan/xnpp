@@ -2,10 +2,11 @@
 #define XNA_FRAMEWORK_PACKUTILS_HPP
 
 #include <cstdint>
+#include "Xna/Internal/Export.hpp"
 
 namespace Xna {
 	//Internal class
-	struct PackUtils {
+	struct PackUtils final {
 
 		static constexpr float UnpackUNorm(uint32_t bitmask, uint32_t value) {
 			value &= bitmask;
@@ -33,11 +34,11 @@ namespace Xna {
 			return static_cast<int32_t>(value) / num2;
 		}
 
-		static uint32_t PackUnsigned(float bitmask, float value);
-		static uint32_t PackSigned(uint32_t bitmask, float value);
-		static uint32_t PackUNorm(float bitmask, float value);
-		static uint32_t PackSNorm(uint32_t bitmask, float value);
-		static double ClampAndRound(float value, float min, float max);
+		XNPP_API static uint32_t PackUnsigned(float bitmask, float value);
+		XNPP_API static uint32_t PackSigned(uint32_t bitmask, float value);
+		XNPP_API static uint32_t PackUNorm(float bitmask, float value);
+		XNPP_API static uint32_t PackSNorm(uint32_t bitmask, float value);
+		XNPP_API static double ClampAndRound(float value, float min, float max);
 	};
 }
 
