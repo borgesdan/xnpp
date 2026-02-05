@@ -4,17 +4,18 @@
 #include <memory>
 #include <cstdint>
 #include "Stream.hpp"
+#include "Xna/Internal/Export.hpp"
 
 namespace Xna::CSharp {
     class BinaryWriter {
 	public:
-		BinaryWriter(std::shared_ptr<Stream> const& output)
+		inline BinaryWriter(std::shared_ptr<Stream> const& output)
 			: BinaryWriter(output, true) {
 		}
 
-		BinaryWriter(std::shared_ptr<Stream> const& output, bool leaveOpen);
+		XNPP_API BinaryWriter(std::shared_ptr<Stream> const& output, bool leaveOpen);
 
-		void Close() const;
+		XNPP_API void Close() const;
 
 		inline virtual std::shared_ptr<Stream> BaseStream() {
 			Flush();
@@ -54,8 +55,8 @@ namespace Xna::CSharp {
 			impl->outStream->Write(&byte, 1);
 		}
 
-		virtual void Write(char* chars, int32_t charsLength);
-		virtual void Write(char* chars, int32_t charsLength, int32_t index, int32_t count);
+		XNPP_API virtual void Write(char* chars, int32_t charsLength);
+		XNPP_API virtual void Write(char* chars, int32_t charsLength, int32_t index, int32_t count);
 
 		inline virtual void Write(double value) {
 			WriteNumeric(value);
@@ -89,10 +90,10 @@ namespace Xna::CSharp {
 			WriteNumeric(value);
 		}
 
-		virtual void Write(std::string const& value);
+		XNPP_API virtual void Write(std::string const& value);
 
-		void Write7BitEncodedInt(int32_t value);
-		void Write7BitEncodedInt(int64_t value);
+		XNPP_API void Write7BitEncodedInt(int32_t value);
+		XNPP_API void Write7BitEncodedInt(int64_t value);
 
 		inline BinaryWriter(std::nullptr_t) { impl = nullptr; }
 		inline bool operator==(BinaryWriter const& other) const noexcept { return impl == other.impl; }

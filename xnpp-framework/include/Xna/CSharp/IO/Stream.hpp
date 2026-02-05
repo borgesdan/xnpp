@@ -7,6 +7,7 @@
 #include <limits>
 #include <fstream>
 #include <string>
+#include "Xna/Internal/Export.hpp"
 
 namespace Xna::CSharp {
 	// Provides seek reference points.  To seek to the end of a stream,
@@ -53,14 +54,14 @@ namespace Xna::CSharp {
 			CopyTo(destination, GetCopybufferLength());
 		}
 
-		virtual void CopyTo(Stream& destination, int32_t bufferLength);
+		XNPP_API virtual void CopyTo(Stream& destination, int32_t bufferLength);
 		virtual void Close() {}
 		virtual void Flush() = 0;
 		virtual int64_t Seek(int64_t offset, SeekOrigin origin) = 0;
 		virtual void SetLength(int64_t value) = 0;
 		virtual int32_t Read(uint8_t* buffer, int32_t bufferLength, int32_t offset, int32_t count) = 0;
-		virtual int32_t Read(uint8_t* buffer, int32_t bufferLength);
-		virtual int32_t ReadByte();
+		XNPP_API virtual int32_t Read(uint8_t* buffer, int32_t bufferLength);
+		XNPP_API virtual int32_t ReadByte();
 
 		void ReadExactly(uint8_t* buffer, int32_t bufferLength) {
 			ReadAtLeastCore(buffer, bufferLength, bufferLength, true);
@@ -75,7 +76,7 @@ namespace Xna::CSharp {
 		}
 
 		virtual void Write(uint8_t const* buffer, int32_t bufferLength, int32_t offset, int32_t count) = 0;
-		virtual void Write(uint8_t const* buffer, int32_t bufferLength);
+		XNPP_API virtual void Write(uint8_t const* buffer, int32_t bufferLength);
 		virtual void WriteByte(uint8_t value) = 0;	
 
 	protected:

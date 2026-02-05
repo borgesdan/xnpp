@@ -4,6 +4,7 @@
 #include "Stream.hpp"
 #include <fstream>
 #include <filesystem>
+#include "Xna/Internal/Export.hpp"
 
 namespace Xna::CSharp {
 	// Contains constants for specifying how the OS should open a file.
@@ -110,10 +111,12 @@ namespace Xna::CSharp {
 
 	class FileStream : public Stream {
 	public:
-		FileStream(std::filesystem::path const& path, FileMode mode) : FileStream(path, mode, FileShare::None, 0) {}
-		FileStream(std::filesystem::path const& path, FileMode mode, FileAccess access) : FileStream(path, mode, FileShare::None, 0) {}
-		FileStream(std::filesystem::path const& path, FileMode mode, FileShare shared) : FileStream(path, mode, shared, 0) {}
-		FileStream(std::filesystem::path const& path, FileMode mode, FileShare shared, int32_t bufferLength);
+		inline ~FileStream() = default;
+
+		inline FileStream(std::filesystem::path const& path, FileMode mode) : FileStream(path, mode, FileShare::None, 0) {}
+		inline FileStream(std::filesystem::path const& path, FileMode mode, FileAccess access) : FileStream(path, mode, FileShare::None, 0) {}
+		inline FileStream(std::filesystem::path const& path, FileMode mode, FileShare shared) : FileStream(path, mode, shared, 0) {}
+		XNPP_API FileStream(std::filesystem::path const& path, FileMode mode, FileShare shared, int32_t bufferLength);
 
 		constexpr bool CanRead() const override {
 			return true;
@@ -127,20 +130,20 @@ namespace Xna::CSharp {
 			return true;
 		}
 
-		int64_t Length() const override;
-		int64_t Position() const override;
-		void Position(int64_t value) override;
-		void CopyTo(Stream& destination, int32_t bufferLength) override;
-		void Close() override;
-		void Flush() override { impl->stream.flush(); }
-		int64_t Seek(int64_t offset, SeekOrigin origin) override;
-		void SetLength(int64_t value) override;
-		int32_t Read(uint8_t* buffer, int32_t bufferLength, int32_t offset, int32_t count) override;
-		int32_t Read(uint8_t* buffer, int32_t bufferLength) override;
-		int32_t ReadByte() override;
-		void Write(uint8_t const* buffer, int32_t bufferLength, int32_t offset, int32_t count) override;
-		void Write(uint8_t const* buffer, int32_t bufferLength) override;
-		void WriteByte(uint8_t value) override;		
+		XNPP_API int64_t Length() const override;
+		XNPP_API int64_t Position() const override;
+		XNPP_API void Position(int64_t value) override;
+		XNPP_API void CopyTo(Stream& destination, int32_t bufferLength) override;
+		XNPP_API void Close() override;
+		XNPP_API void Flush() override { impl->stream.flush(); }
+		XNPP_API int64_t Seek(int64_t offset, SeekOrigin origin) override;
+		XNPP_API void SetLength(int64_t value) override;
+		XNPP_API int32_t Read(uint8_t* buffer, int32_t bufferLength, int32_t offset, int32_t count) override;
+		XNPP_API int32_t Read(uint8_t* buffer, int32_t bufferLength) override;
+		XNPP_API int32_t ReadByte() override;
+		XNPP_API void Write(uint8_t const* buffer, int32_t bufferLength, int32_t offset, int32_t count) override;
+		XNPP_API void Write(uint8_t const* buffer, int32_t bufferLength) override;
+		XNPP_API void WriteByte(uint8_t value) override;		
 
 		inline FileStream(std::nullptr_t) { impl = nullptr; }
 		inline bool operator==(FileStream const& other) const noexcept { return impl == other.impl; }
