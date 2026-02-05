@@ -3,4 +3,4 @@
 #include "Framework/Content/ContentTypeActivator.hpp"
 #include "Framework/Content/ContentTypeReader.hpp"
 #include "Framework/Content/ContentTypeReaderManager.hpp"
-#include "Framework/Content/ContentSerializerAttribute.hpp.hpp"
+#include "Framework/Content/ContentSerializerAttribute.hpp"
