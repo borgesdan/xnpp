@@ -15,7 +15,7 @@ namespace Xna {
 	class GameWindow {
 	public:
 		//Gets and sets the title of the system window.
-		void Title(std::string const& value);
+		XNPP_API void Title(std::string const& value);
 		//The screen dimensions of the game window's client rectangle.
 		inline Rectangle ClientBounds() const { return Platform::GameWindow_ClientBounds(*this); }
 		//Gets the current display orientation, which reflects the physical orientation of the phone in the user's hand.
@@ -23,14 +23,14 @@ namespace Xna {
 		//Gets the handle to the system window.
 		inline intptr_t Handle() const { return impl->handle; }
 		//Gets the device name of the screen the window is currently in.
-		std::string ScreenDeviceName() const;
+		XNPP_API std::string ScreenDeviceName() const;
 		//Gets and sets the title of the system window.
 		inline std::string Title() const { return impl->title; }
 
 		//Specifies whether to allow the user to resize the game window.
 		bool AllowUserResizing() const { return impl->allowUserResizing; }
 		//Specifies whether to allow the user to resize the game window.
-		void AllowUserResizing(bool value);
+		XNPP_API void AllowUserResizing(bool value);
 
 		CSharp::Event<CSharp::EventArgs> ScreenDeviceNameChanged() { return impl->ScreenDeviceNameChanged; }
 		CSharp::Event<CSharp::EventArgs> ClientSizeChanged() { return impl->ClientSizeChanged; }
@@ -50,13 +50,13 @@ namespace Xna {
 		bool (IsMinimized)() const { return Platform::GameWindow_WindowIsMinimized(*this); }
 		void (IsMinimized)(bool value) { Platform::GameWindow_MinimizeWindow(*this, value); }
 
-		void BeginScreenDeviceChange(bool willBeFullScreen) { Platform::GameWindow_BeginScreenDeviceChange(*this, willBeFullScreen); }
+		inline void BeginScreenDeviceChange(bool willBeFullScreen) { Platform::GameWindow_BeginScreenDeviceChange(*this, willBeFullScreen); }
 
-		void EndScreenDeviceChange(std::string const& screenDeviceName, int32_t clientWidth, int32_t clientHeight) { 
+		inline void EndScreenDeviceChange(std::string const& screenDeviceName, int32_t clientWidth, int32_t clientHeight) { 
 			Platform::GameWindow_EndScreenDeviceChange(*this, screenDeviceName, clientWidth, clientHeight); 
 		}
 		
-		void EndScreenDeviceChange(std::string const& screenDeviceName) {
+		inline void EndScreenDeviceChange(std::string const& screenDeviceName) {
 			const auto clientBounds = ClientBounds();
 			EndScreenDeviceChange(screenDeviceName, clientBounds.Width, clientBounds.Height);
 		}

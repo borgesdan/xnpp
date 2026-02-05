@@ -3,6 +3,7 @@
 
 #include "Xna/CSharp/TimeSpan.hpp"
 #include <cstdint>
+#include "Xna/Internal/Export.hpp"
 
 namespace Xna {
 	//Internal game clock
@@ -14,15 +15,15 @@ namespace Xna {
 		constexpr CSharp::TimeSpan ElapsedTime() const { return elapsedTime; }
 		constexpr CSharp::TimeSpan ElapsedAdjustedTime() const { return elapsedAdjustedTime; }
 
-		void Reset();
-		void Step();
-		void Suspend();
-		void Resume();
+		XNPP_API void Reset();
+		XNPP_API void Step();
+		XNPP_API void Suspend();
+		XNPP_API void Resume();
 
-		static int64_t Counter();
-		static int64_t Frequency();
+		XNPP_API static int64_t Counter();
+		XNPP_API static int64_t Frequency();
 
-		static CSharp::TimeSpan CounterToTimeSpan(int64_t delta);
+		XNPP_API static CSharp::TimeSpan CounterToTimeSpan(int64_t delta);
 
 	private:
 		int64_t baseRealTime{ 0 };

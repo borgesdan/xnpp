@@ -13,6 +13,7 @@
 #include "Xna/CSharp/Exception.hpp"
 #include "GraphicsDeviceInformation.hpp"
 #include "Xna/Framework/Game/Game.hpp"
+#include "Xna/Internal/Export.hpp"
 
 namespace Xna {
 	class Game;
@@ -33,7 +34,7 @@ namespace Xna {
 		~GraphicsDeviceManager() override = default;
 
 		//Creates a new GraphicsDeviceManager and registers it to handle the configuration and management of the graphics device for the specified Game.
-		GraphicsDeviceManager(Game const& game);
+		XNPP_API GraphicsDeviceManager(Game const& game);
 
 		//Gets the GraphicsDevice associated with the GraphicsDeviceManager.
 		inline std::optional<Xna::GraphicsDevice> GraphicsDevice() const override { return impl->device; }
@@ -123,9 +124,9 @@ namespace Xna {
 		}
 
 		//Applies any changes to device-related properties, changing the graphics device as necessary.
-		void ApplyChanges();
+		XNPP_API void ApplyChanges();
 		//Toggles between full screen and windowed mode.
-		void ToggleFullScreen();
+		XNPP_API void ToggleFullScreen();
 
 		inline CSharp::Event<CSharp::EventArgs> DeviceCreated() const override {
 			return impl->deviceCreated;
@@ -159,17 +160,17 @@ namespace Xna {
 
 	protected:
 		//Determines whether the given GraphicsDeviceInformation is compatible with the existing graphics device.
-		bool CanResetDevice(GraphicsDeviceInformation const& newDeviceInfo);
+		XNPP_API bool CanResetDevice(GraphicsDeviceInformation const& newDeviceInfo);
 		//Finds the best device configuration that is compatible with the current device preferences.
-		GraphicsDeviceInformation FindBestDevice(bool anySuitableDevice);
+		XNPP_API GraphicsDeviceInformation FindBestDevice(bool anySuitableDevice);
 		//Ranks the given list of devices that satisfy the given preferences.
-		void RankDevices(std::vector<GraphicsDeviceInformation>& foundDevices);
+		XNPP_API void RankDevices(std::vector<GraphicsDeviceInformation>& foundDevices);
 
-		void OnDeviceCreated(void* sender, CSharp::EventArgs const& e);
-		void OnDeviceDisposing(void* sender, CSharp::EventArgs const& e);
-		void OnDeviceReset(void* sender, CSharp::EventArgs const& e);
-		void OnDeviceResetting(void* sender, CSharp::EventArgs const& e);
-		void OnPreparingDeviceSettings(void* sender, PreparingDeviceSettingsEventArgs const& e);
+		XNPP_API void OnDeviceCreated(void* sender, CSharp::EventArgs const& e);
+		XNPP_API void OnDeviceDisposing(void* sender, CSharp::EventArgs const& e);
+		XNPP_API void OnDeviceReset(void* sender, CSharp::EventArgs const& e);
+		XNPP_API void OnDeviceResetting(void* sender, CSharp::EventArgs const& e);
+		XNPP_API void OnPreparingDeviceSettings(void* sender, PreparingDeviceSettingsEventArgs const& e);
 
 	private:
 		void GameWindowScreenDeviceNameChanged(void* sender, CSharp::EventArgs const& e);
@@ -196,9 +197,9 @@ namespace Xna {
 		void ValidateGraphicsDeviceInformation(GraphicsDeviceInformation const& devInfo);
 
 	public:
-		virtual void CreateDevice() override { ChangeDevice(true); };
-		virtual bool BeginDraw() override;
-		virtual void EndDraw() override;
+		inline virtual void CreateDevice() override { ChangeDevice(true); };
+		XNPP_API virtual bool BeginDraw() override;
+		XNPP_API virtual void EndDraw() override;
 
 	public:
 		struct Implementation {
@@ -237,9 +238,9 @@ namespace Xna {
 
 		GraphicsDeviceInformationComparer(GraphicsDeviceManager const& graphicsComponent) : graphics(graphicsComponent){}
 
-		bool operator()(GraphicsDeviceInformation const& d1, GraphicsDeviceInformation const& d2) const;
+		XNPP_API bool operator()(GraphicsDeviceInformation const& d1, GraphicsDeviceInformation const& d2) const;
 
-		int RankFormat(SurfaceFormat format) const
+		inline int RankFormat(SurfaceFormat format) const
 		{
 			if (format == graphics->PreferredBackBufferFormat())
 				return 0;
@@ -247,7 +248,7 @@ namespace Xna {
 			return SurfaceFormatBitDepth(format) == SurfaceFormatBitDepth(graphics->PreferredBackBufferFormat()) ? 1 : 99;//int.MaxValue
 		}
 
-		inline static int SurfaceFormatBitDepth(SurfaceFormat format)
+		static constexpr int SurfaceFormatBitDepth(SurfaceFormat format)
 		{
 			switch (format)
 			{
