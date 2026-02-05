@@ -13,6 +13,7 @@
 #include <algorithm>
 #include <any>
 #include <typeindex>
+#include "Export.hpp"
 
 namespace Xna::Misc {
 	template <typename TENUM>
@@ -148,7 +149,7 @@ namespace Xna::Misc {
 	}	
 
 	template <typename T>
-	static void Erase(std::vector<T>& v, T const& item) {
+	static  void Erase(std::vector<T>& v, T const& item) {
 		auto it = std::find(v.begin(), v.end(), item);
 
 		if (it != v.end())
