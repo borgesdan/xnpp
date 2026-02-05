@@ -5,6 +5,7 @@
 #include <optional>
 #include <memory>
 #include "Xna/CSharp/TimeSpan.hpp"
+#include "Xna/Internal/Export.hpp"
 
 namespace Xna {	
 	//Provides methods and properties to access and control the queue of playing songs.
@@ -16,17 +17,17 @@ namespace Xna {
 		inline int32_t ActiveSongIndex() { return impl->activeSongIndex; }		
 		//Gets the current Song in the queue of playing songs.
 		inline std::optional<Song> ActiveSong() { return impl->activeSong; }
-		Song operator[](size_t index);		
+		XNPP_API Song operator[](size_t index);
 
 	private:
 		inline MediaQueue() { impl = std::make_shared<Implementation>(); }
 
-		void Play(Song const& song);
-		void Play(SongCollection const& songs);
-		void Play(SongCollection const& songs, size_t index);
-		void MoveNext();
-		void MovePrevious();
-		CSharp::TimeSpan PlayPosition() const;
+		XNPP_API void Play(Song const& song);
+		XNPP_API void Play(SongCollection const& songs);
+		XNPP_API void Play(SongCollection const& songs, size_t index);
+		XNPP_API void MoveNext();
+		XNPP_API void MovePrevious();
+		XNPP_API CSharp::TimeSpan PlayPosition() const;
 
 		struct Implementation {
 			std::optional<SongCollection> songCollection;

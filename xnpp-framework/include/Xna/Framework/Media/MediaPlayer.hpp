@@ -1,11 +1,12 @@
 #ifndef XNA_FRAMEWORK_MEDIA_MEDIAPLAYER_HPP
 #define XNA_FRAMEWORK_MEDIA_MEDIAPLAYER_HPP
 
-#include "Song.hpp"
 #include "MediaQueue.hpp"
+#include "Song.hpp"
 #include "VisualizationData.hpp"
 #include "Xna/CSharp/Event.hpp"
 #include "Xna/CSharp/TimeSpan.hpp"
+#include "Xna/Internal/Export.hpp"
 
 namespace Xna {
 	//Media playback state (playing, paused, or stopped).
@@ -24,23 +25,23 @@ namespace Xna {
 	struct MediaPlayer final {
 	public:
 		//Plays a song or collection of songs.
-		static void Play(Song const& song);
+		XNPP_API static void Play(Song const& song);
 		//Plays a song or collection of songs.
-		static void Play(SongCollection const& songs);
+		XNPP_API static void Play(SongCollection const& songs);
 		//Plays a song or collection of songs.
-		static void Play(SongCollection const& songs, size_t index);
+		XNPP_API static void Play(SongCollection const& songs, size_t index);
 		
 		//Pauses the currently playing song.
-		static void Pause();
+		XNPP_API static void Pause();
 		//Resumes a paused song.
-		static void Resume();
+		XNPP_API static void Resume();
 		// Stops playing a song.
-		static void Stop();
+		XNPP_API static void Stop();
 		
 		//Moves to the next song in the queue of playing songs.
-		static void MoveNext();
+		XNPP_API static void MoveNext();
 		//Moves to the previous song in the queue of playing songs.
-		static void MovePrevious();
+		XNPP_API static void MovePrevious();
 		
 		//Gets or sets the repeat setting for the media player.
 		static inline bool IsRepeating() { return isRepeating; }

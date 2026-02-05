@@ -1,16 +1,17 @@
 #ifndef XNA_FRAMEWORK_MEDIA_SONG_HPP
 #define XNA_FRAMEWORK_MEDIA_SONG_HPP
 
+#include "Album.hpp"
+#include "Artist.hpp"
+#include "Genre.hpp"
+#include "Xna/CSharp/Collection.hpp"
+#include "Xna/CSharp/TimeSpan.hpp"
+#include "Xna/Internal/Export.hpp"
+#include "Xna/Platform/Platform.hpp"
 #include <cstdint>
-#include <string>
 #include <filesystem>
 #include <memory>
-#include "Artist.hpp"
-#include "Album.hpp"
-#include "Genre.hpp"
-#include "Xna/CSharp/TimeSpan.hpp"
-#include "Xna/Platform/Platform.hpp"
-#include "Xna/CSharp/Collection.hpp"
+#include <string>
 
 namespace Xna {
 	struct Album;
@@ -28,26 +29,26 @@ namespace Xna {
 		//Gets the name of the Song.
 		inline std::string Name() const { return impl->name; }
 		//Gets the Album on which the Song appears.
-		Xna::Album Album() const;
+		XNPP_API Xna::Album Album() const;
 		//Gets the Genre of the Song.
-		Xna::Genre Genre() const;
+		XNPP_API Xna::Genre Genre() const;
 		//Gets the Artist of the Song.
-		Xna::Artist Artist() const;
+		XNPP_API Xna::Artist Artist() const;
 		//Gets the duration of the Song.
-		CSharp::TimeSpan Duration() const;
+		XNPP_API CSharp::TimeSpan Duration() const;
 		//Gets a value that indicates whether the song has been rated by the user.
 		bool IsRated() const { return Rating() > 0; }
 		//Gets the user's rating for the Song.		
-		int32_t Rating() const;
+		XNPP_API int32_t Rating() const;
 		//Gets the song play count.		
-		size_t PlayCount() const;
+		XNPP_API size_t PlayCount() const;
 		//Gets the track number of the song on the song's Album.
-		int32_t TrackNumber() const;
+		XNPP_API int32_t TrackNumber() const;
 		//Gets a value that indicates whether the song is DRM protected content.		
-		bool IsProtected() const;
+		XNPP_API bool IsProtected() const;
 
 		//Internal
-		Song(std::string const& name, std::filesystem::path const& filename, size_t duration);
+		XNPP_API Song(std::string const& name, std::filesystem::path const& filename, size_t duration);
 		//Internal
 		Song() { impl = std::make_shared<Implementation>(); }		
 
