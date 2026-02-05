@@ -29,7 +29,7 @@ namespace Xna {
 		//Gets the height of this texture resource, in pixels.
 		size_t Height() const { return impl->height; }
 		//Gets the number of texture levels in a multilevel texture. 
-		int32_t LevelCount() const override;
+		XNPP_API int32_t LevelCount() const override;
 		//Gets the width of this texture resource, in pixels.
 		size_t Width() const{ return impl->width; }
 

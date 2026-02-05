@@ -179,7 +179,7 @@ namespace Xna {
 
 		bool EnsureDevice();
 		void CreateDevice(GraphicsDeviceInformation& newInfo);
-		void ChangeDevice(bool forceCreate);
+		XNPP_API void ChangeDevice(bool forceCreate);
 		void MassagePresentParameters(PresentationParameters& pp);
 		static void ConfigureTouchInput(PresentationParameters const& pp);
 
