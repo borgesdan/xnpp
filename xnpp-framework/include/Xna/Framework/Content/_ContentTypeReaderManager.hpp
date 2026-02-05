@@ -6,6 +6,7 @@
 #include <string>
 #include <map>
 #include "Xna/CSharp/Type.hpp"
+#include "Xna/Internal/Export.hpp"
 
 namespace Xna {
 	class ContentTypeReader;
@@ -15,7 +16,7 @@ namespace Xna {
 	class ContentTypeReaderManager {
 	public:
 		//Looks up a reader for the specified type.
-		std::shared_ptr<ContentTypeReader> GetTypeReader(CSharp::Type const& targetType);
+		XNPP_API std::shared_ptr<ContentTypeReader> GetTypeReader(CSharp::Type const& targetType);
 
 	private:
 		static std::vector<std::shared_ptr<ContentTypeReader>> ReadTypeManifest(size_t typeCount, ContentReader& contentReader);

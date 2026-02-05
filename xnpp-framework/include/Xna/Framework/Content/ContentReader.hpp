@@ -16,6 +16,7 @@
 #include "Xna/Framework/Quaternion.hpp"
 #include "Xna/Framework/Color.hpp"
 #include "_ContentTypeReaderManager.hpp"
+#include "Xna/Internal/Export.hpp"
 
 namespace Xna {
 	class ContentTypeReader;
@@ -24,7 +25,7 @@ namespace Xna {
 	class ContentReader : public CSharp::BinaryReader {
 	public:
 		//Gets the ContentManager associated with the ContentReader.
-		Xna::ContentManager ContentManager() const;
+		XNPP_API Xna::ContentManager ContentManager() const;
 
 		//Gets the name of the asset currently being read by this ContentReader.
 		inline std::filesystem::path AssetName() const;
@@ -85,17 +86,17 @@ namespace Xna {
 		template <typename T> T ReadExternalReference();
 
 		//Reads a Vector2 value from the current stream.
-		Vector2 ReadVector2();
+		XNPP_API Vector2 ReadVector2();
 		//Reads a Vector3 value from the current stream.
-		Vector3 ReadVector3();
+		XNPP_API Vector3 ReadVector3();
 		// 	Reads a Vector4 value from the current stream.
-		Vector4 ReadVector4();
+		XNPP_API Vector4 ReadVector4();
 		//Reads a Matrix value from the currently open stream.
-		Matrix ReadMatrix();
+		XNPP_API Matrix ReadMatrix();
 		//Reads a Quaternion value from the current stream.
-		Quaternion ReadQuaternion();
+		XNPP_API Quaternion ReadQuaternion();
 		//Reads a Color value from the currently open stream.
-		Color ReadColor();
+		XNPP_API Color ReadColor();
 
 		//Reads a float value from the currently open stream.
 		float ReadSingle() {
@@ -109,7 +110,7 @@ namespace Xna {
 			return *(double*)&int64;
 		}
 
-		std::shared_ptr<std::vector<uint8_t>> ReadByteBuffer(size_t size);
+		XNPP_API std::shared_ptr<std::vector<uint8_t>> ReadByteBuffer(size_t size);
 
 		inline ContentReader(std::nullptr_t) : CSharp::BinaryReader(nullptr) { impl = nullptr; }
 		inline bool operator==(ContentReader const& other) const noexcept { return impl == other.impl; }
@@ -157,8 +158,8 @@ namespace Xna {
 		}
 
 	public:
-		std::filesystem::path GetPathToReference(std::filesystem::path const& referenceName);
-		std::filesystem::path GetAbsolutePathToReference(std::filesystem::path const& referenceName);
+		XNPP_API std::filesystem::path GetPathToReference(std::filesystem::path const& referenceName);
+		XNPP_API std::filesystem::path GetAbsolutePathToReference(std::filesystem::path const& referenceName);
 
 	public:
 		struct Implementation;
