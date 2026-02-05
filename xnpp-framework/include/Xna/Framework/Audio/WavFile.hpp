@@ -10,13 +10,12 @@
 #include "AudioFormat.hpp"
 #include "Xna/CSharp/IO/BinaryReader.hpp"
 #include "LoopRegion.hpp"
+#include "Xna/Internal/Export.hpp"
 
 namespace Xna {
     class WavFile final {
     public:
-        WavFile(std::shared_ptr<CSharp::Stream> const& source);
-
-        static WavFile Open(std::shared_ptr<CSharp::Stream> const& stream) {
+        inline static WavFile Open(std::shared_ptr<CSharp::Stream> const& stream) {
             return WavFile(stream);
         }
 
@@ -39,6 +38,8 @@ namespace Xna {
         constexpr CSharp::TimeSpan Duration() const { return format->DurationFromSize(buffer->size()); }
 
     private:
+        WavFile(std::shared_ptr<CSharp::Stream> const& source);
+
         struct RiffChunk {
             int32_t id{};
             std::vector<uint8_t> data;

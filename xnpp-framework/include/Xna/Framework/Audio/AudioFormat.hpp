@@ -5,12 +5,13 @@
 #include <cstdint>
 #include "Shared.hpp"
 #include "Xna/CSharp/TimeSpan.hpp"
+#include "Xna/Internal/Export.hpp"
 
 namespace Xna {
 	class AudioFormat {
 	public:
-        static AudioFormat Create(int32_t sampleRate, AudioChannels channels, int16_t bitDepth);
-        AudioFormat(std::vector<uint8_t> const& buffer);
+        XNPP_API static AudioFormat Create(int32_t sampleRate, AudioChannels channels, int16_t bitDepth);
+        XNPP_API AudioFormat(std::vector<uint8_t> const& buffer);
 
         constexpr bool IsAligned(int32_t value) const {
             return (value % static_cast<int32_t>(BlockAlign)) == 0;
