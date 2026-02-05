@@ -33,7 +33,3 @@
 #include "Framework/Game/IGraphicsDeviceManager.hpp"
 #include "Framework/Game/IUpdateable.hpp"
 #include "Framework/Game/LaunchParameters.hpp"
-
-//Internal
-#include "App.hpp"
-#include "Misc.hpp"
