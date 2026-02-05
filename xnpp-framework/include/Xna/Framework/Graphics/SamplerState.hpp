@@ -8,6 +8,7 @@
 #include <vector>
 #include <optional>
 #include "Xna/Platform/Platform.hpp"
+#include "Xna/Internal/Export.hpp"
 
 namespace Xna {
 	enum class SamplerStateApplyType {
@@ -60,17 +61,17 @@ namespace Xna {
 		inline float MinMipLevel() const {	return impl->minMipLevel; }
 
 		//Contains default state for point filtering and texture coordinate wrapping.
-		static SamplerState PoinWrap();
+		XNPP_API static SamplerState PoinWrap();
 		//Contains default state for point filtering and texture coordinate clamping.
-		static SamplerState PointClamp();
+		XNPP_API static SamplerState PointClamp();
 		//Contains default state for linear filtering and texture coordinate wrapping.
-		static SamplerState LinearWrap();
+		XNPP_API static SamplerState LinearWrap();
 		//Contains default state for linear filtering and texture coordinate clamping.
-		static SamplerState LinearClamp();
+		XNPP_API static SamplerState LinearClamp();
 		//Contains default state for anisotropic filtering and texture coordinate wrapping.
-		static SamplerState AnisotropicWrap();
+		XNPP_API static SamplerState AnisotropicWrap();
 		//Contains default state for anisotropic filtering and texture coordinate clamping.
-		static SamplerState AnisotropicClamp();		
+		XNPP_API static SamplerState AnisotropicClamp();
 
 		inline SamplerState(std::nullptr_t) { impl = nullptr; }
 		inline bool operator==(SamplerState const& other) const noexcept { return impl == other.impl; }

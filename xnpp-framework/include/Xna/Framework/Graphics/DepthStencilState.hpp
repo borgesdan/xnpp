@@ -6,6 +6,7 @@
 #include <cstdint>
 #include <memory>
 #include "Xna/Platform/Platform.hpp"
+#include "Xna/Internal/Export.hpp"
 
 namespace Xna {
 
@@ -19,11 +20,11 @@ namespace Xna {
 		~DepthStencilState() override {}
 
 		//A built-in state object with default settings for using a depth stencil buffer.
-		static DepthStencilState Default();
+		XNPP_API static DepthStencilState Default();
 		//A built-in state object with settings for enabling a read-only depth stencil buffer.
-		static DepthStencilState DepthRead();
+		XNPP_API static DepthStencilState DepthRead();
 		//A built-in state object with settings for not using a depth stencil buffer.
-		static DepthStencilState None();
+		XNPP_API static DepthStencilState None();
 
 		//Gets or sets the stencil operation to perform if the stencil test passes and the depth-buffer test fails for a counterclockwise triangle.
 		//The default is StencilOperation.Keep. 

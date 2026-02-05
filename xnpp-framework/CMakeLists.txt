@@ -37,7 +37,7 @@ add_library(xnpp
         "sources/Xna/Framework/Graphics/SamplerState.cpp"
         "sources/Xna/Framework/Graphics/Texture3D.cpp"
         "sources/Xna/Framework/Graphics/Texture2D.cpp"
-        "sources/Xna/Framework/Graphics/SwapChain.cpp"
+        
         "sources/Xna/Framework/Graphics/GraphicsDevice.cpp"
         "sources/Xna/Framework/Graphics/RenderTarget2D.cpp"
         "sources/Xna/Framework/Graphics/IndexBuffer.cpp"
@@ -86,7 +86,7 @@ add_library(xnpp
         "sources/Xna/Framework/Media/Song.cpp" 
         "sources/Xna/Framework/Media/MediaPlayer.cpp"
         "sources/Xna/Framework/Media/MediaQueue.cpp"
-         "sources/Xna/CSharp/Type.cpp")
+         "sources/Xna/CSharp/Type.cpp" "sources/Xna/Framework/Content/Readers/Texture2DReader.cpp")
 
 target_compile_features(xnpp PUBLIC cxx_std_20)
 

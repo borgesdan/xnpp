@@ -4,6 +4,7 @@
 #include <memory>
 #include <optional>
 #include <string>
+#include "Xna/Internal/Export.hpp"
 
 namespace Xna {
 	struct EffectPassCollection;
@@ -22,7 +23,7 @@ namespace Xna {
 		inline explicit operator bool() const noexcept { return impl != nullptr; }
 
 	private:
-		EffectTechnique(Effect const& effect);
+		XNPP_API EffectTechnique(Effect const& effect);
 
 		struct Implementation;
 		std::shared_ptr<Implementation> impl;

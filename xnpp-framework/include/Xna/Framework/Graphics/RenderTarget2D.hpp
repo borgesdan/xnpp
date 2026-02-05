@@ -4,6 +4,7 @@
 #include "Texture2D.hpp"
 #include "Xna/Platform/Platform.hpp"
 #include "IDynamicGraphicsResource.hpp"
+#include "Xna/Internal/Export.hpp"
 
 namespace Xna {
 	//Contains a 2D texture that can be used as a render target. 
@@ -29,7 +30,7 @@ namespace Xna {
 			preferredFormat, preferredDepthFormat, 0, Xna::RenderTargetUsage::DiscardContents) {}
 
 		//Initializes a new instance of this class.
-		RenderTarget2D(
+		XNPP_API RenderTarget2D(
 			GraphicsDevice& graphicsDevice,
 			size_t width,
 			size_t height,

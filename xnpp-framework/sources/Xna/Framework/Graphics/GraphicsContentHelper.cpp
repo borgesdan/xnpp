@@ -1,4 +1,4 @@
-#include "Xna/Framework/Graphics/GraphicsContentHelper.hpp"
+#include "GraphicsContentHelper.hpp"
 #include "Xna/Framework/Graphics/GraphicsDevice.hpp"
 #include "Xna/Framework/Graphics/IGraphicsDeviceService.hpp"
 #include "Xna/Framework/Content/ContentReader.hpp"

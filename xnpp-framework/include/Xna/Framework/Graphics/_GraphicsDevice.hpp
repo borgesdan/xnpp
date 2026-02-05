@@ -10,6 +10,7 @@
 #include "Xna/CSharp/Exception.hpp"
 #include "Xna/CSharp/Event.hpp"
 #include "PresentationParameters.hpp"
+#include "Xna/Internal/Export.hpp"
 
 namespace Xna {
 	struct Color;
@@ -47,7 +48,7 @@ namespace Xna {
 		//
 
 		//Creates an instance of this object.
-		GraphicsDevice(GraphicsAdapter const& adapter, GraphicsProfile const& graphicsProfile, PresentationParameters const& presentationParameters);
+		XNPP_API GraphicsDevice(GraphicsAdapter const& adapter, GraphicsProfile const& graphicsProfile, PresentationParameters const& presentationParameters);
 
 		//
 		//Properties
@@ -58,41 +59,41 @@ namespace Xna {
 		//Gets or sets a system-defined instance of a blend state object initialized for alpha blending. The default value is BlendState.Opaque. 
 		inline Xna::BlendState BlendState() const;
 		//Gets or sets a system-defined instance of a blend state object initialized for alpha blending. The default value is BlendState.Opaque. 
-		void BlendState(Xna::BlendState const& value);
+		XNPP_API void BlendState(Xna::BlendState const& value);
 		//Gets or sets the color used for a constant-blend factor during alpha blending. The default value is White.
 		inline Color BlendFactor() const;
 		//Gets or sets the color used for a constant-blend factor during alpha blending. The default value is White.
-		void BlendFactor(Color const& color);
+		XNPP_API void BlendFactor(Color const& color);
 		//Gets or sets a system-defined instance of a depth-stencil state object. The default value is DepthStencilState.Default.
 		inline Xna::DepthStencilState DepthStencilState() const;
 		//Gets or sets a system-defined instance of a depth-stencil state object. The default value is DepthStencilState.Default.
-		void DepthStencilState(Xna::DepthStencilState const& value);
+		XNPP_API void DepthStencilState(Xna::DepthStencilState const& value);
 		//Gets or sets a bitmask controlling modification of the samples in a multisample render target. The default value is -1 (0xffffffff).
 		inline int32_t MultiSampleMask() const;
 		//Gets or sets a bitmask controlling modification of the samples in a multisample render target. The default value is -1 (0xffffffff).
-		void MultiSampleMask(int32_t value);
+		XNPP_API void MultiSampleMask(int32_t value);
 		//Gets the presentation parameters associated with this graphics device.
 		inline Xna::PresentationParameters& PresentationParameters();
 		//Gets or sets rasterizer state. The default value is RasterizerState.CullCounterClockwise.
 		inline Xna::RasterizerState RasterizerState() const;
 		//Gets or sets rasterizer state. The default value is RasterizerState.CullCounterClockwise.
-		void RasterizerState(Xna::RasterizerState const& value);
+		XNPP_API void RasterizerState(Xna::RasterizerState const& value);
 		//Gets or sets a reference value for stencil testing. The default value is zero.
 		inline int32_t ReferenceStencil() const;
 		//Gets or sets a reference value for stencil testing. The default value is zero.
-		void ReferenceStencil(int32_t value);
+		XNPP_API void ReferenceStencil(int32_t value);
 		//Retrieves a collection of SamplerState objects for the current GraphicsDevice. 
 		inline SamplerStateCollection SamplerStates() const;
 		//Gets or sets the rectangle used for scissor testing. By default, the size matches the render target size.
 		inline Rectangle ScissorRectangle() const;
 		//Gets or sets the rectangle used for scissor testing. By default, the size matches the render target size.
-		void ScissorRectangle(Rectangle const& value);
+		XNPP_API void ScissorRectangle(Rectangle const& value);
 		//Gets the collection of textures that have been assigned to the texture stages of the device.
 		inline TextureCollection Textures() const;
 		//Gets or sets a viewport identifying the portion of the render target to receive draw calls. 
 		inline Xna::Viewport Viewport() const;
 		//Gets or sets a viewport identifying the portion of the render target to receive draw calls. 
-		void Viewport(Xna::Viewport const& viewport);
+		XNPP_API void Viewport(Xna::Viewport const& viewport);
 
 		inline Xna::GraphicsProfile GraphicsProfile() const { return Xna::GraphicsProfile::HiDef; }
 		//
@@ -102,7 +103,7 @@ namespace Xna {
 		//Clears resource buffers. 
 		inline void Clear(Color const& color);
 		//Clears resource buffers. 
-		void Clear(ClearOptions options, Color const& color, float depth, int32_t stencil);
+		XNPP_API void Clear(ClearOptions options, Color const& color, float depth, int32_t stencil);
 		//Renders the specified geometric primitive, based on indexing into an array of vertices.
 		void DrawIndexedPrimitives(PrimitiveType primitiveType, int32_t baseVertex, int32_t minVertexIndex, int32_t numVertices, int32_t startIndex, int32_t primitiveCount) {} // TODO
 		//Draws a series of instanced models.
@@ -130,9 +131,9 @@ namespace Xna {
 		//Presents the display with the contents of the next buffer in the sequence of back buffers owned by the GraphicsDevice.
 		inline void Present() { Present(std::nullopt, std::nullopt, 0); }
 		//Specifies the window target for a presentation and presents the display with the contents of the next buffer in the sequence of back buffers owned by the GraphicsDevice.
-		void Present(intptr_t overrideWindowHandle) { Present(std::nullopt, std::nullopt, overrideWindowHandle); }
+		inline void Present(intptr_t overrideWindowHandle) { Present(std::nullopt, std::nullopt, overrideWindowHandle); }
 		//Specifies the window target for a presentation and presents the display with the contents of the next buffer in the sequence of back buffers owned by the GraphicsDevice.
-		void Present(std::optional<Rectangle> const& sourceRec, std::optional<Rectangle> const& destination, intptr_t overrideWindowHandle);
+		XNPP_API void Present(std::optional<Rectangle> const& sourceRec, std::optional<Rectangle> const& destination, intptr_t overrideWindowHandle);
 		
 		//Resets the presentation parameters for the current GraphicsDevice.
 		inline void Reset();

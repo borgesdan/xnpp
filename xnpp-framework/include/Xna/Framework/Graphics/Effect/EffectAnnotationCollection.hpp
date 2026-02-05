@@ -4,14 +4,15 @@
 #include <memory>
 #include <vector>
 #include "_EffectAnnotation.hpp"
+#include "Xna/Internal/Export.hpp"
 
 namespace Xna {
 	class EffectAnnotationCollection final{
 	public:
 		inline size_t Count() const { return impl->annotations.size(); }
 
-		EffectAnnotation operator[](size_t index);
-		EffectAnnotation operator[](std::string const& name);
+		XNPP_API EffectAnnotation operator[](size_t index);
+		XNPP_API EffectAnnotation operator[](std::string const& name);
 
 		inline std::vector<EffectAnnotation>::iterator begin() { return impl->annotations.begin(); }
 		inline std::vector<EffectAnnotation>::iterator end() { return impl->annotations.end(); }
@@ -23,7 +24,7 @@ namespace Xna {
 		inline bool operator==(std::nullptr_t) const noexcept { return impl == nullptr; }
 		inline explicit operator bool() const noexcept { return impl != nullptr; }
 	private:
-		EffectAnnotationCollection(size_t count);
+		XNPP_API EffectAnnotationCollection(size_t count);
 
 		struct Implementation {
 			std::vector<EffectAnnotation> annotations;

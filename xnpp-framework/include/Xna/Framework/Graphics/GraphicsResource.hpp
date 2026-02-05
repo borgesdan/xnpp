@@ -3,6 +3,7 @@
 
 #include <optional>
 #include "_GraphicsDevice.hpp"
+#include "Xna/Internal/Export.hpp"
 
 namespace Xna {
 	//Queries and prepares resources. 
@@ -12,8 +13,8 @@ namespace Xna {
 
 	protected:
 		constexpr GraphicsResource() = default;
-		std::optional<GraphicsDevice> GetGraphicsDevice() const;
-		void Bind(std::optional<GraphicsDevice> const& device);
+		XNPP_API std::optional<GraphicsDevice> GetGraphicsDevice() const;
+		XNPP_API void Bind(std::optional<GraphicsDevice> const& device);
 
 	private:
 		std::optional<GraphicsDevice> baseGraphicsDevice{};
