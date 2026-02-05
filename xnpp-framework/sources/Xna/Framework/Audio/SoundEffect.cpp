@@ -3,7 +3,7 @@
 #include "Xna/Framework/Audio/WavFile.hpp"
 #include "Xna/Framework/Audio/AudioHelper.hpp"
 #include <limits>
-#include "Xna/Misc.hpp"
+#include "Xna/Internal/Misc.hpp"
 
 namespace Xna {
 	SoundEffect::SoundEffect(std::shared_ptr<CSharp::Stream> const& stream) {

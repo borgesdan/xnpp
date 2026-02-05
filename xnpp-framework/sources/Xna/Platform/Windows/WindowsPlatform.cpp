@@ -5,7 +5,7 @@
 #include "Xna/CSharp/IO/Stream.hpp"
 #include "Xna/CSharp/Exception.hpp"
 #include "Xna/CSharp/Windows/Forms/Screen.hpp"
-#include "Xna/Misc.hpp"
+#include "Xna/Internal/Misc.hpp"
 #include <cstdint>
 #include <algorithm>
 
