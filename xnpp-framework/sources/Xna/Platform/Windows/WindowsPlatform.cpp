@@ -471,7 +471,7 @@ namespace Xna {
 			path = std::filesystem::path(buffer, buffer + length);
 	}
 
-	static BOOL MonitorEnumProcCallback(HMONITOR hmonitor, HDC hdc, LPRECT lprect, LPARAM lparam) {
+	static BOOL CALLBACK MonitorEnumProcCallback(HMONITOR hmonitor, HDC hdc, LPRECT lprect, LPARAM lparam) {
 		auto handlers = (std::vector<std::tuple<intptr_t, intptr_t>>*)lparam;
 		handlers->push_back({reinterpret_cast<intptr_t>(hmonitor), reinterpret_cast<intptr_t>(hdc) });
 
