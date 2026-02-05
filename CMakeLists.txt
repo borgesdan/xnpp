@@ -3,12 +3,12 @@
 project("XnppFramework" VERSION 0.1.0 LANGUAGES CXX)
 
 option(XNPP_BUILD_LIB "Build Xnpp library" ON)
-option(XNPP_BUILD_APP "Build Xnpp app" ON)
+option(XNPP_BUILD_CONTENTPIPELINE "Build Xnpp ContentPipeline" ON)
 
 if (XNPP_BUILD_LIB)
 	add_subdirectory("xnpp-framework")
 endif()
 
-if (XNPP_BUILD_APP)
+if (XNPP_BUILD_CONTENTPIPELINE)
 	add_subdirectory("xnpp-content-pipeline")
 endif()

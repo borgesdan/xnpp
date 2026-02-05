@@ -49,7 +49,7 @@ target_include_directories(XnppContentPipeline
 
 target_link_libraries(XnppContentPipeline
         PRIVATE
-        Xnpp
+        xnpp
         lua
         nlohmann_json::nlohmann_json   
         pugixml::pugixml
@@ -80,6 +80,6 @@ target_include_directories(XnppContentPipeline
 
 add_custom_command(TARGET XnppContentPipeline POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_if_different
-        $<TARGET_FILE:Xnpp>
+        $<TARGET_FILE:xnpp>
         $<TARGET_FILE_DIR:XnppContentPipeline>
 )

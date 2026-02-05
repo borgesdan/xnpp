@@ -8,7 +8,7 @@ endif ()
 set(PROJECT_INCLUDES_DIR "${CMAKE_CURRENT_SOURCE_DIR}/include")
 
 # Add source to this project's executable.
-add_library(Xnpp SHARED
+add_library(xnpp
         "sources/Xna/CSharp/IO/MemoryStream.cpp"
         "sources/Xna/CSharp/IO/Stream.cpp"
         "sources/Xna/CSharp/IO/FileStream.cpp"
@@ -88,19 +88,13 @@ add_library(Xnpp SHARED
         "sources/Xna/Framework/Media/MediaQueue.cpp"
          "sources/Xna/CSharp/Type.cpp")
 
+target_compile_features(xnpp PUBLIC cxx_std_20)
 
-set_target_properties(Xnpp PROPERTIES WINDOWS_EXPORT_ALL_SYMBOLS ON)
-
-target_compile_features(Xnpp PUBLIC cxx_std_20)
-
-#Add tests and install targets
-
-target_compile_definitions(Xnpp PRIVATE USING_XINPUT)
-target_compile_definitions(Xnpp PRIVATE MYLIB_EXPORT_DLL)
+target_compile_definitions(xnpp PRIVATE USING_XINPUT)
 
 find_package(directxtk CONFIG REQUIRED)
 
-target_link_libraries(Xnpp
+target_link_libraries(xnpp
         PUBLIC
             Microsoft::DirectXTK 
             dxgi.lib
@@ -116,21 +110,21 @@ target_link_libraries(Xnpp
             Propsys.lib
 )
 
-target_include_directories(Xnpp
+target_include_directories(xnpp
     PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
         $<INSTALL_INTERFACE:include>
 )
 
-set_target_properties(Xnpp PROPERTIES
-    EXPORT_NAME Xnpp
+set_target_properties(xnpp PROPERTIES
+    EXPORT_NAME xnpp
 )
 
 include(GNUInstallDirs)
 
 install(
-    TARGETS Xnpp
-    EXPORT XnppTargets
+    TARGETS xnpp
+    EXPORT xnppTargets
     ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
@@ -142,29 +136,29 @@ install(
 )
 
 install(
-    EXPORT XnppTargets
-    FILE XnppTargets.cmake
-    NAMESPACE Xnpp::
-    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/Xnpp
+    EXPORT xnppTargets
+    FILE xnppTargets.cmake
+    NAMESPACE xnpp::
+    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/xnpp
 )
 
 include(CMakePackageConfigHelpers)
 
 write_basic_package_version_file(
-    "${CMAKE_CURRENT_BINARY_DIR}/XnppConfigVersion.cmake"
+    "${CMAKE_CURRENT_BINARY_DIR}/xnppConfigVersion.cmake"
     VERSION ${PROJECT_VERSION}
     COMPATIBILITY SameMajorVersion
 )
 
 configure_package_config_file(
-    "${CMAKE_CURRENT_SOURCE_DIR}/cmake/XnppConfig.cmake.in"
-    "${CMAKE_CURRENT_BINARY_DIR}/XnppConfig.cmake"
-    INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/Xnpp
+    "${CMAKE_CURRENT_SOURCE_DIR}/cmake/xnppConfig.cmake.in"
+    "${CMAKE_CURRENT_BINARY_DIR}/xnppConfig.cmake"
+    INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/xnpp
 )
 
 install(
     FILES
-        "${CMAKE_CURRENT_BINARY_DIR}/XnppConfig.cmake"
-        "${CMAKE_CURRENT_BINARY_DIR}/XnppConfigVersion.cmake"
-    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/Xnpp
+        "${CMAKE_CURRENT_BINARY_DIR}/xnppConfig.cmake"
+        "${CMAKE_CURRENT_BINARY_DIR}/xnppConfigVersion.cmake"
+    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/xnpp
 )

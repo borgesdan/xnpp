@@ -11,6 +11,9 @@ namespace Xna {
 	class TypeRegistry {
 	public:
 		template <typename T> void Add(T const& value) {
+			if (Contains(typeid(T)))
+				return;
+
 			auto pReader = std::make_shared<T>(value);
 			auto pBase = dynamic_pointer_cast<TBASE>(pReader);
 
@@ -27,15 +30,18 @@ namespace Xna {
 				CSharp::Type::NamedTypes().emplace(typeName, CSharp::Type(typeid(T)));
 
 			needUpdate = true;
-		}		
+		}
 
 		template <typename T> void Add(T const& value, std::vector<std::string> const& friendlyNames) {
+			if (Contains(typeid(T)))
+				return;
+
 			auto pReader = std::make_shared<T>(value);
 			auto pBase = dynamic_pointer_cast<TBASE>(pReader);
 
 			auto internal = InternalType();
 			internal.value = pBase;
-			internal.type = CSharp::Type(typeid(T));			
+			internal.type = CSharp::Type(typeid(T));
 			internal.friendlyNames = friendlyNames;
 
 			values.push_back(internal);
@@ -49,9 +55,20 @@ namespace Xna {
 			for (const auto& friendlyName : friendlyNames) {
 				if (CSharp::Type::NamedTypes().find(friendlyName) == CSharp::Type::NamedTypes().end())
 					CSharp::Type::NamedTypes().emplace(friendlyName, CSharp::Type(typeid(T)));
-			}		
+			}
 
 			needUpdate = true;
+		}
+
+		template <typename T> bool AddFriendlyName(T const& value, std::string const& friendlyName) {
+			InternalType internalType;
+			
+			if (!Contains(typeid(T), internalType))
+				return false;
+
+			internalType.friendlyName.push_back(friendlyName);
+
+			return true;
 		}
 
 		std::shared_ptr<TBASE> CreateInstance(CSharp::Type const& type) {
@@ -73,7 +90,7 @@ namespace Xna {
 				for (const auto& friendly : value.friendlyNames) {
 					if (friendly == name)
 						return value.value;
-				}					
+				}
 			}
 
 			return nullptr;
@@ -116,6 +133,27 @@ namespace Xna {
 					objs.push_back(value.value);
 				}
 			}
+		}
+
+		bool Contains(CSharp::Type const& type) {
+			for (const auto& v : values) {
+				if (v.type == type) {
+					return true;
+				}
+			}
+
+			return false;
+		}
+
+		bool Contains(CSharp::Type const& type, InternalType& internalType) {
+			for (const auto& v : values) {
+				if (v.type == type) {
+					internalType = v;
+					return true;
+				}
+			}
+
+			return false;
 		}
 	};
 }
