@@ -13,7 +13,8 @@
 
 namespace Xna {
 	//Represents a font texture.
-	class SpriteFont final : public GraphicsResource{
+	class SpriteFont final : public GraphicsResource {
+	public:
 		~SpriteFont() override = default;
 
 		// Returns the width and height of a string.
@@ -33,6 +34,11 @@ namespace Xna {
 		inline float Spacing() const { return impl->spacing; }
 		//Gets or sets the spacing of the font characters.
 		inline void Spacing(float value) { impl->spacing = value; }
+
+		inline SpriteFont(std::nullptr_t) { impl = nullptr; }
+		inline bool operator==(SpriteFont const& other) const noexcept { return impl == other.impl; }
+		inline bool operator==(std::nullptr_t) const noexcept { return impl == nullptr; }
+		inline explicit operator bool() const noexcept { return impl != nullptr; }
 
 	private:
 		SpriteFont(

@@ -111,9 +111,11 @@ namespace Xna {
 		
 		//Flushes the sprite batch and restores the device state to how it was before Begin was called.
 		XNPP_API void End();
-
-		//Empty constructor
-		SpriteBatch(std::nullptr_t n) {};
+		
+		inline SpriteBatch(std::nullptr_t) { impl = nullptr; }
+		inline bool operator==(SpriteBatch const& other) const noexcept { return impl == other.impl; }
+		inline bool operator==(std::nullptr_t) const noexcept { return impl == nullptr; }
+		inline explicit operator bool() const noexcept { return impl != nullptr; }
 
 	private:
 		struct Implementation {		
