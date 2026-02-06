@@ -118,11 +118,11 @@ namespace Xna {
 		inline explicit operator bool() const noexcept { return impl != nullptr; }
 
 	private:
-		static ContentReader Create(Xna::ContentManager& contentManager, std::shared_ptr<CSharp::Stream> const& input, std::filesystem::path const& assetName);
+		XNPP_API static ContentReader Create(Xna::ContentManager& contentManager, std::shared_ptr<CSharp::Stream> const& input, std::filesystem::path const& assetName);
 
-		ContentReader(Xna::ContentManager& contentManager, std::shared_ptr<CSharp::Stream> const& input, std::filesystem::path const& assetName, int32_t graphicsProfile);
+		XNPP_API ContentReader(Xna::ContentManager& contentManager, std::shared_ptr<CSharp::Stream> const& input, std::filesystem::path const& assetName, int32_t graphicsProfile);
 
-		static void PrepareStream(std::shared_ptr<CSharp::Stream> const& input, std::filesystem::path const& assetName, int32_t& graphicsProfile);
+		XNPP_API static void PrepareStream(std::shared_ptr<CSharp::Stream> const& input, std::filesystem::path const& assetName, int32_t& graphicsProfile);
 
 		template <typename T> T ReadAsset() {
 			const auto sharedResourceCount = ReadHeader();
@@ -130,7 +130,7 @@ namespace Xna {
 			return obj;
 		}
 
-		int32_t ReadHeader();
+		XNPP_API int32_t ReadHeader();
 
 		template <typename T> T ReadObjectInternal(T* existingInstance);
 
