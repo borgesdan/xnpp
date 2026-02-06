@@ -7,6 +7,7 @@
 #include <vector>
 #include "ModelBone.hpp"
 #include "Xna/Framework/BoundingSphere.hpp"
+#include "Xna/Internal/Export.hpp"
 
 namespace Xna {
 	class ModelMeshPart;
@@ -32,7 +33,7 @@ namespace Xna {
 		void Tag(std::any const& value);
 		
 		//Draws all of the ModelMeshPart objects in this mesh, using their current Effect settings.
-		void Draw();
+		XNPP_API void Draw();
 
 		inline ModelMesh(std::nullptr_t) { impl = nullptr; }
 		inline bool operator==(ModelMesh const& other) const noexcept { return impl == other.impl; }
@@ -40,7 +41,7 @@ namespace Xna {
 		inline explicit operator bool() const noexcept { return impl != nullptr; }
 
 	private:
-		ModelMesh(std::string const& name, ModelBone const& parentBone,
+		XNPP_API ModelMesh(std::string const& name, ModelBone const& parentBone,
 			Xna::BoundingSphere boundingSphere, std::vector<ModelMeshPart> const& meshParts,
 			std::any const& tag);
 
