@@ -138,8 +138,18 @@ namespace Xna {
 
 		auto find = Implementation::targetTypeToReader.find(targetType);
 
-		if (find == Implementation::targetTypeToReader.end())
-			throw CSharp::InvalidOperationException("TypeReaderNotRegistered");
+		if (find == Implementation::targetTypeToReader.end()) {
+			auto registries = App::GetContentTypeReaderActivator();
+			auto instance = registries.CreateInstance(targetType);
+
+			if (instance == nullptr) {
+				std::string error("TypeReader not registered: ");
+				error.append(targetType.Name());
+				throw CSharp::InvalidOperationException(error);
+			}
+
+			Implementation::targetTypeToReader[targetType] = instance;
+		}
 
 		return find->second;
 	}

@@ -7,7 +7,8 @@
 namespace Xna {
 	template <typename T>
 	struct ListWriter : public BuiltinTypeWriter<std::vector<T>> {
-		ListWriter(std::string const& friendlyTypeName) : friendlyTypeName(friendlyTypeName){}
+		ListWriter(std::string const& friendlyTypeName) 
+			: BuiltinTypeWriter<std::vector<T>>(true, { CSharp::Type(typeid(T)) }), friendlyTypeName(friendlyTypeName) {}
 
 		std::string GetRuntimeReader(TargetPlatform targetPlatform) override {
 			std::string reader = "ListReader<";
