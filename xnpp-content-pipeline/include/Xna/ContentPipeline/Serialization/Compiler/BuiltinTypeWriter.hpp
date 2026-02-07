@@ -8,11 +8,7 @@
 namespace Xna {
 	template <typename T>
 	struct BuiltinTypeWriter : public ContentTypeWriterT<T> {
-	protected:	
-		BuiltinTypeWriter(){}
-		BuiltinTypeWriter(bool isGenericType, std::vector<CSharp::Type> genericTypes)
-			: ContentTypeWriterT<T>(isGenericType, genericTypes) { }
-		
+	protected:			
 		~BuiltinTypeWriter() override = default;
 
 		virtual std::string GetRuntimeReader(TargetPlatform targetPlatform) = 0;

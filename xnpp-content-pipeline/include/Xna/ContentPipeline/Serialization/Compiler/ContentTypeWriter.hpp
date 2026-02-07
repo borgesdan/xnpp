@@ -63,10 +63,7 @@ namespace Xna {
 	protected:
 		ContentTypeWriterT()
 			: ContentTypeWriter(typeid(T)) {
-		}
-
-		ContentTypeWriterT(bool isGenericType, std::vector<CSharp::Type> genericTypes = {})
-			: ContentTypeWriter(typeid(T), isGenericType, genericTypes) {}
+		}		
 		
 		virtual void WriteT(ContentWriter& output, const T* value) = 0;
 

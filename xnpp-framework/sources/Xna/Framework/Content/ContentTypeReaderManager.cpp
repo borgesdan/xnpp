@@ -139,7 +139,7 @@ namespace Xna {
 		auto find = Implementation::targetTypeToReader.find(targetType);
 
 		if (find == Implementation::targetTypeToReader.end()) {
-			auto registries = App::GetContentTypeReaderActivator();
+			auto& registries = App::GetContentTypeReaderActivator();
 			auto instance = registries.CreateInstance(targetType);
 
 			if (instance == nullptr) {
