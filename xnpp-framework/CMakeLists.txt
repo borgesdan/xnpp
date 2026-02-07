@@ -86,7 +86,10 @@ add_library(xnpp
         "sources/Xna/Framework/Media/Song.cpp" 
         "sources/Xna/Framework/Media/MediaPlayer.cpp"
         "sources/Xna/Framework/Media/MediaQueue.cpp"
-         "sources/Xna/CSharp/Type.cpp" "sources/Xna/Framework/Content/Readers/Texture2DReader.cpp")
+        "sources/Xna/CSharp/Type.cpp" 
+        "sources/Xna/Framework/Content/Readers/BasicReaders.cpp" 
+         
+        )
 
 target_compile_features(xnpp PUBLIC cxx_std_20)
 
