@@ -4,6 +4,14 @@
 #include "Xna/Internal/App.hpp"
 
 namespace Xna {
+	struct ContentTypeReaderManager::Implementation {
+		std::optional<ContentReader> contentReader;
+
+		static inline auto nameToReader = std::map<std::string, std::shared_ptr<ContentTypeReader>>();
+		static inline auto targetTypeToReader = std::map<CSharp::Type, std::shared_ptr<ContentTypeReader>>();
+		static inline auto readerTypeToReader = std::map<CSharp::Type, std::shared_ptr<ContentTypeReader>>();
+	};
+
 	struct ContentTypeReaderParser {
 		static inline CSharp::Type* Parse(std::string const& csharpTypeName) {
 			auto sub = csharpTypeName.substr(0, csharpTypeName.find(","));
@@ -17,8 +25,8 @@ namespace Xna {
 	};
 
 	ContentTypeReaderManager::ContentTypeReaderManager(ContentReader const& contentReader) {
-		internalContentTypeReaderManager = std::make_shared<ContentTypeReaderManager::Implementation>();
-		internalContentTypeReaderManager->contentReader = contentReader;
+		impl = std::make_shared<ContentTypeReaderManager::Implementation>();
+		impl->contentReader = contentReader;
 	}
 
 	std::vector<std::shared_ptr<ContentTypeReader>> ContentTypeReaderManager::ReadTypeManifest(size_t typeCount, ContentReader& contentReader) {
@@ -46,7 +54,7 @@ namespace Xna {
 	}
 
 	std::shared_ptr<ContentTypeReader> ContentTypeReaderManager::GetTypeReader(CSharp::Type const& targetType) {
-		return GetTypeReader(targetType, *internalContentTypeReaderManager->contentReader);
+		return GetTypeReader(targetType, *impl->contentReader);
 	}
 
 	std::shared_ptr<ContentTypeReader> ContentTypeReaderManager::GetTypeReader(std::string const& readerTypeName, ContentReader const& contentReader,

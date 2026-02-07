@@ -7,16 +7,7 @@
 #include <unordered_map>
 #include <optional>
 
-
 namespace Xna {
-	struct ContentTypeReaderManager::Implementation {
-		std::optional<ContentReader> contentReader;
-		
-		static inline auto nameToReader = std::map<std::string, std::shared_ptr<ContentTypeReader>>();
-		static inline auto targetTypeToReader = std::map<CSharp::Type, std::shared_ptr<ContentTypeReader>>();
-		static inline auto readerTypeToReader = std::map<CSharp::Type, std::shared_ptr<ContentTypeReader>>();
-	};
-
 	template <typename T>
 	void ContentTypeReaderManager::RollbackAddReader(std::map<T, std::shared_ptr<ContentTypeReader>>& dictionary, ContentTypeReader const& reader) {	
 		

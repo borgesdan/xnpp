@@ -18,6 +18,11 @@ namespace Xna {
 		//Looks up a reader for the specified type.
 		XNPP_API std::shared_ptr<ContentTypeReader> GetTypeReader(CSharp::Type const& targetType);
 
+		inline ContentTypeReaderManager(std::nullptr_t) { impl = nullptr; }
+		inline bool operator==(ContentTypeReaderManager const& other) const noexcept { return impl == other.impl; }
+		inline bool operator==(std::nullptr_t) const noexcept { return impl == nullptr; }
+		inline explicit operator bool() const noexcept { return impl != nullptr; }
+
 	private:
 		static std::vector<std::shared_ptr<ContentTypeReader>> ReadTypeManifest(size_t typeCount, ContentReader& contentReader);
 
@@ -43,7 +48,7 @@ namespace Xna {
 
 	public:
 		struct Implementation;
-		std::shared_ptr<Implementation> internalContentTypeReaderManager;
+		std::shared_ptr<Implementation> impl;
 		friend class ContentReader;
 	};
 }
