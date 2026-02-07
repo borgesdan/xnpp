@@ -51,6 +51,8 @@ namespace Xna {
 		GetContentTypeReaderActivator().Add(Texture2DReader(), { "Texture2DReader", "Microsoft.Xna.Framework.Content.Texture2DReader" });
 		GetContentTypeReaderActivator().Add(SoundEffectReader(), { "SoundEffectReader", "Microsoft.Xna.Framework.Content.SoundEffectReader" });
 		GetContentTypeReaderActivator().Add(SongReader(), { "SongReader", "Microsoft.Xna.Framework.Content.SongReader" });
+		GetContentTypeReaderActivator().Add(SpriteFontReader(), { "SpriteFontReader", "Microsoft.Xna.Framework.Content.SongReader" });
+
 		GetContentTypeReaderActivator().Add(ListReader<bool>(), { "ListReader<bool>", "Microsoft.Xna.Framework.Content.ListReader`1[[System.Boolean" });
 		GetContentTypeReaderActivator().Add(ListReader<char>(), { "ListReader<char>", "Microsoft.Xna.Framework.Content.ListReader`1[[System.Char" });
 		GetContentTypeReaderActivator().Add(ListReader<uint8_t>(), { "ListReader<uint8_t>", "Microsoft.Xna.Framework.Content.ListReader`1[[System.Byte" });
