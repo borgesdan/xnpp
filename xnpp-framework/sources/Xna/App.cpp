@@ -1,5 +1,4 @@
 #include "Framework/Content/Readers/BasicReaders.hpp"
-#include "Xna/Framework/Content/ContentTypeActivator.hpp"
 #include "Xna/Framework/Content/Readers/ArrayReader.hpp"
 #include "Xna/Framework/Content/Readers/DictionaryReader.hpp"
 #include "Xna/Framework/Content/Readers/ListReader.hpp"

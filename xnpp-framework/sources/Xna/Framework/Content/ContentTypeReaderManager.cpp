@@ -1,10 +1,21 @@
 #include "Xna/Framework/Content/ContentTypeReaderManager.hpp"
 #include "Xna/CSharp/Exception.hpp"
-#include "Xna/Framework/Content/ContentTypeActivator.hpp"
 #include "Xna/Framework/Content/ContentTypeReader.hpp"
 #include "Xna/Internal/App.hpp"
 
 namespace Xna {
+	struct ContentTypeReaderParser {
+		static inline CSharp::Type* Parse(std::string const& csharpTypeName) {
+			auto sub = csharpTypeName.substr(0, csharpTypeName.find(","));
+
+			if (CSharp::Type::NamedTypes().contains(sub)) {
+				return &CSharp::Type::NamedTypes()[sub];
+			}
+
+			return nullptr;
+		}
+	};
+
 	ContentTypeReaderManager::ContentTypeReaderManager(ContentReader const& contentReader) {
 		internalContentTypeReaderManager = std::make_shared<ContentTypeReaderManager::Implementation>();
 		internalContentTypeReaderManager->contentReader = contentReader;
