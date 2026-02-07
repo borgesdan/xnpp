@@ -98,4 +98,25 @@ namespace Xna {
 
 		return texture2D;
 	}
+
+	SpriteFont SpriteFontReader::Read(ContentReader& input, SpriteFont& existingInstance) {
+		auto texture = input.ReadObject<Texture2D>();
+		auto glyphs = input.ReadObject<std::vector<Rectangle>>();
+		auto cropping = input.ReadObject<std::vector<Rectangle>>();
+		auto charMap = input.ReadObject<std::vector<uint32_t>>();
+		const auto lineSpacing = input.ReadInt32();
+		const auto spacing = input.ReadSingle();
+		auto kerning = input.ReadObject<std::vector<Vector3>>();
+		std::optional<char32_t> defaultCharacter;
+		
+		if (input.ReadBoolean())
+			defaultCharacter = static_cast<char32_t>(input.ReadUInt32()); //input.ReadChar
+
+		std::vector<char32_t> chars(charMap.size());
+		
+		for (size_t i = 0; i < charMap.size(); ++i)
+			chars[i] = static_cast<char32_t>(charMap[i]);
+
+		return SpriteFont(texture, glyphs, cropping, chars, lineSpacing, spacing, kerning, defaultCharacter);
+	}
 }

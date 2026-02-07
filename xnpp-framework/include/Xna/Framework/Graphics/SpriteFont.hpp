@@ -40,8 +40,7 @@ namespace Xna {
 		inline bool operator==(std::nullptr_t) const noexcept { return impl == nullptr; }
 		inline explicit operator bool() const noexcept { return impl != nullptr; }
 
-	private:
-		SpriteFont(
+		XNPP_API SpriteFont(
 			Texture2D const& texture,
 			std::vector<Rectangle> const& glyphs,
 			std::vector<Rectangle> const& cropping,
@@ -50,7 +49,9 @@ namespace Xna {
 			float spacing,
 			std::vector<Vector3> const& kerning,
 			std::optional<char32_t> const& defaultCharacter);
-
+		
+		inline SpriteFont() { impl = std::shared_ptr<Implementation>(); }
+	private:
 		struct Implementation {
 			
 			std::optional<char32_t> defaultCharacter;

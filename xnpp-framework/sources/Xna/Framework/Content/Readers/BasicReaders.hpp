@@ -1,31 +1,32 @@
 #ifndef XNA_BASICREADERS_HPP
 #define XNA_BASICREADERS_HPP
 
-#include "Xna/Framework/Content/ContentTypeReader.hpp"
-#include "Xna/Framework/Content/ContentReader.hpp"
-#include <vector>
-#include <cstdint>
-#include <any>
-#include <string>
-#include "Xna/Framework/Color.hpp"
-#include "Xna/Framework/Curve.hpp"
+#include "Xna/CSharp/Exception.hpp"
+#include "Xna/CSharp/IO/BinaryReader.hpp"
+#include "Xna/CSharp/TimeSpan.hpp"
+#include "Xna/Framework/Audio/SoundEffect.hpp"
 #include "Xna/Framework/BoundingBox.hpp"
 #include "Xna/Framework/BoundingSphere.hpp"
+#include "Xna/Framework/Color.hpp"
+#include "Xna/Framework/Content/ContentReader.hpp"
+#include "Xna/Framework/Content/ContentTypeReader.hpp"
+#include "Xna/Framework/Curve.hpp"
+#include "Xna/Framework/Graphics/Texture2D.hpp"
 #include "Xna/Framework/Matrix.hpp"
-#include "Xna/CSharp/Exception.hpp"
+#include "Xna/Framework/Media/Song.hpp"
 #include "Xna/Framework/Plane.hpp"
 #include "Xna/Framework/Point.hpp"
 #include "Xna/Framework/Quaternion.hpp"
 #include "Xna/Framework/Ray.hpp"
 #include "Xna/Framework/Rectangle.hpp"
-#include "Xna/Framework/Media/Song.hpp"
-#include "Xna/CSharp/IO/BinaryReader.hpp"
-#include "Xna/Framework/Audio/SoundEffect.hpp"
-#include "Xna/Framework/Graphics/Texture2D.hpp"
-#include "Xna/CSharp/TimeSpan.hpp"
 #include "Xna/Framework/Vector2.hpp"
 #include "Xna/Framework/Vector3.hpp"
 #include "Xna/Framework/Vector4.hpp"
+#include "Xna/Framework/Graphics/SpriteFont.hpp"
+#include <any>
+#include <cstdint>
+#include <string>
+#include <vector>
 
 namespace Xna {
 	struct BooleanReader : public ContentTypeReaderT<bool> {
@@ -192,6 +193,11 @@ namespace Xna {
 	struct SoundEffectReader : public ContentTypeReaderT<SoundEffect> {
 	protected:
 		SoundEffect Read(ContentReader& input, SoundEffect& existingInstance) override;
+	};
+
+	struct SpriteFontReader : public ContentTypeReaderT<SpriteFont> {
+	protected:
+		SpriteFont Read(ContentReader& input, SpriteFont& existingInstance) override;
 	};
 
 	struct StringReader : public ContentTypeReaderT<std::string> {

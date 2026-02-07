@@ -1,19 +1,19 @@
 #ifndef XNA_FRAMEWORK_GAME_GRAPHICSDEVICEMANAGER_HPP
 #define XNA_FRAMEWORK_GAME_GRAPHICSDEVICEMANAGER_HPP
 
-#include "Xna/Framework/Graphics/GraphicsDevice.hpp"
-#include "Xna/Framework/Graphics/Shared.hpp"
+#include "GraphicsDeviceInformation.hpp"
 #include "IGraphicsDeviceManager.hpp"
+#include "Xna/CSharp/Exception.hpp"
+#include "Xna/CSharp/TimeSpan.hpp"
+#include "Xna/Framework/Game/Game.hpp"
+#include "Xna/Framework/Graphics/GraphicsDevice.hpp"
 #include "Xna/Framework/Graphics/IGraphicsDeviceService.hpp"
+#include "Xna/Framework/Graphics/Shared.hpp"
 #include "Xna/Framework/Shared.hpp"
+#include "Xna/Internal/Export.hpp"
 #include <cstdint>
 #include <memory>
 #include <optional>
-#include "Xna/CSharp/TimeSpan.hpp"
-#include "Xna/CSharp/Exception.hpp"
-#include "GraphicsDeviceInformation.hpp"
-#include "Xna/Framework/Game/Game.hpp"
-#include "Xna/Internal/Export.hpp"
 
 namespace Xna {
 	class Game;
