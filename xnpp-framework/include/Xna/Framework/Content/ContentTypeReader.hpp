@@ -31,7 +31,7 @@ namespace Xna {
 		virtual bool CanDeserializeIntoExistingObject() const { return false; }
 
 		virtual CSharp::Type GetType() const {
-			return CSharp::Type(typeid(ContentTypeReader));
+			return CSharp::typeof<ContentTypeReader>();
 		}
 
 	private:
@@ -44,7 +44,7 @@ namespace Xna {
 	template <typename T>
 	class ContentTypeReaderT : public ContentTypeReader {
 	protected:
-		ContentTypeReaderT() : ContentTypeReader(CSharp::Type(typeid(T))){}
+		ContentTypeReaderT() : ContentTypeReader(CSharp::typeof<T>()){}
 
 		virtual std::any Read(ContentReader& input, std::any& existingInstance) override {
 			if (!existingInstance.has_value())
@@ -61,7 +61,7 @@ namespace Xna {
 		virtual T Read(ContentReader& input, T& existingInstance) = 0;
 
 		virtual CSharp::Type GetType() const override {
-			return CSharp::Type(typeid(ContentTypeReaderT<T>));
+			return CSharp::typeof<ContentTypeReaderT<T>>();
 		}
 
 		friend class ContentReader;

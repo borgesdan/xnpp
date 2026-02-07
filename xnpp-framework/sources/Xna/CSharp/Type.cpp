@@ -5,4 +5,13 @@ namespace Xna::CSharp {
         static std::map<std::string, Type> namedTypes;
         return namedTypes;
     }
+
+    Type* Type::GetType(std::string const& typeName) {
+        auto find = NamedTypes().find(typeName);
+
+        if (find != NamedTypes().end())
+            return &find->second;
+
+        return nullptr;
+    }    
 }

@@ -11,7 +11,9 @@ namespace Xna {
 	class TypeRegistry {
 	public:
 		template <typename T> void Add(T const& value) {
-			if (Contains(typeid(T)))
+			const auto type = CSharp::typeof<T>();
+
+			if (Contains(type))
 				return;
 
 			auto pReader = std::make_shared<T>(value);
@@ -19,21 +21,23 @@ namespace Xna {
 
 			auto internal = InternalType();
 			internal.value = pBase;
-			internal.type = typeid(T);
+			internal.type = type;
 
 			values.push_back(internal);
 
-			const auto typeName = typeid(T).name();
+			const auto typeName = type.Name();
 			auto find = CSharp::Type::NamedTypes().find(typeName);
 
 			if (find == CSharp::Type::NamedTypes().end())
-				CSharp::Type::NamedTypes().emplace(typeName, CSharp::Type(typeid(T)));
+				CSharp::Type::NamedTypes().emplace(typeName, CSharp::typeof<T>());
 
 			needUpdate = true;
 		}
 
 		template <typename T> void Add(T const& value, std::vector<std::string> const& friendlyNames) {
-			if (Contains(typeid(T)))
+			const auto type = CSharp::typeof<T>();
+			
+			if (Contains(type))
 				return;
 
 			auto pReader = std::make_shared<T>(value);
@@ -41,20 +45,20 @@ namespace Xna {
 
 			auto internal = InternalType();
 			internal.value = pBase;
-			internal.type = CSharp::Type(typeid(T));
+			internal.type = type;
 			internal.friendlyNames = friendlyNames;
 
 			values.push_back(internal);
 
-			const auto typeName = typeid(T).name();
+			const auto typeName = type.Name();
 			auto find = CSharp::Type::NamedTypes().find(typeName);
 
 			if (find == CSharp::Type::NamedTypes().end())
-				CSharp::Type::NamedTypes().emplace(typeName, CSharp::Type(typeid(T)));
+				CSharp::Type::NamedTypes().emplace(typeName, CSharp::typeof<T>());
 
 			for (const auto& friendlyName : friendlyNames) {
 				if (CSharp::Type::NamedTypes().find(friendlyName) == CSharp::Type::NamedTypes().end())
-					CSharp::Type::NamedTypes().emplace(friendlyName, CSharp::Type(typeid(T)));
+					CSharp::Type::NamedTypes().emplace(friendlyName, CSharp::typeof<T>());
 			}
 
 			needUpdate = true;

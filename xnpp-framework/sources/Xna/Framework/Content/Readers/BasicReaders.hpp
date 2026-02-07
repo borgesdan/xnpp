@@ -149,7 +149,7 @@ namespace Xna {
 
 	struct ObjectReader : public ContentTypeReader {
 	public:
-		ObjectReader() : ContentTypeReader(typeid(std::any)) {}
+		ObjectReader() : ContentTypeReader(CSharp::typeof<std::any>()) {}
 	protected:
 		inline std::any Read(ContentReader& input, std::any& existingInstance) override {
 			throw CSharp::NotSupportedException();

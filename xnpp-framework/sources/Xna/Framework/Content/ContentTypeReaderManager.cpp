@@ -110,7 +110,7 @@ namespace Xna {
 
 		const auto targetType = reader->TargetType();
 
-		if (targetType != CSharp::Type(typeid(nullptr))) {
+		if (targetType != CSharp::Type::Empty()) {
 			if (Implementation::targetTypeToReader.find(targetType) != Implementation::targetTypeToReader.end())
 				return; //TODO: throw CSharp::InvalidOperationException("TypeReaderDuplicate");
 
@@ -133,7 +133,7 @@ namespace Xna {
 	}
 
 	std::shared_ptr<ContentTypeReader> ContentTypeReaderManager::GetTypeReader(CSharp::Type const& targetType, ContentReader const& contentReader) {
-		if (targetType == CSharp::Type(typeid(nullptr)))
+		if (targetType == CSharp::Type::Empty())
 			throw CSharp::ArgumentException("targetType");
 
 		auto find = Implementation::targetTypeToReader.find(targetType);

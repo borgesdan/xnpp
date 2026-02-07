@@ -58,9 +58,9 @@ namespace Xna {
 
 	protected:
 		inline ContentTypeSerializerT() 
-			: ContentTypeSerializer(CSharp::Type(typeid(T))) {}
+			: ContentTypeSerializer(CSharp::typeof<T>()) {}
 		inline ContentTypeSerializerT(std::string const& xmlTypeName)
-			: ContentTypeSerializer(CSharp::Type(typeid(T)), xmlTypeName) {
+			: ContentTypeSerializer(CSharp::typeof<T>(), xmlTypeName) {
 		}
 
 		virtual void Serialize(IntermediateWriter output, T& value, ContentSerializerAttribute const& format) = 0;
