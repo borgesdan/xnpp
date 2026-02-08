@@ -20,7 +20,7 @@ namespace Xna {
 		virtual int32_t TypeVersion() const { return 0; }
 		
 		//TODO: [!] avaliar
-		virtual inline bool TargetIsValueType() const { return targetIsValueType; };
+		virtual inline bool TargetIsValueType() const { return targetType.IsValueType(); };
 
 		inline CSharp::Type TargetType() const { return targetType; }
 
@@ -48,7 +48,6 @@ namespace Xna {
 		void DoInitialize(ContentCompiler& compiler);
 	private:
 		CSharp::Type targetType;
-		bool targetIsValueType{ true };
 		bool isGenericType{ false };
 		std::vector<CSharp::Type> genericArgumentWriters;
 

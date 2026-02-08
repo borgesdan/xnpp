@@ -13,8 +13,8 @@
 #include "Xna/Internal/Misc.hpp"
 
 namespace Xna::CSharp {
-    enum class TypeFlags {        
-        Interface = 1 << 0,
+    enum class TypeFlags {
+        None = 1 << 0,   
         Array = 1 << 1,//2
         Pointer = 1 << 2, //4
         Class = 1 << 3, //8
@@ -23,6 +23,7 @@ namespace Xna::CSharp {
         ValueType = 1 << 6, //64
         SmartPointer = 1 << 7, //128
         ReferenceType = 1 << 8, //256
+        Interface = 1 << 9, //512
     };
 
     class Type {
@@ -52,7 +53,7 @@ namespace Xna::CSharp {
 
     private:        
         const std::type_info* info_;
-        int flags{ -1 };
+        int flags{ 0 };
 
     public:     
         static XNPP_API std::map<std::string, Type>& NamedTypes();
@@ -62,7 +63,7 @@ namespace Xna::CSharp {
     template <class T> Type typeof(T const& _) { return Type::FromTemplate<T>(); }
 
     template <class T> static constexpr Type Type::FromTemplate() {
-        int flags{ -1 };
+        int flags{ 0 };
         
         if constexpr (std::is_arithmetic<T>::value) {
             Xna::Misc::SetFlag(flags, TypeFlags::Primitive, TypeFlags::ValueType);
@@ -71,10 +72,10 @@ namespace Xna::CSharp {
             Xna::Misc::SetFlag(flags, TypeFlags::Class);
 
             if constexpr (std::is_constructible_v<T, std::nullptr_t>) {
-                Xna::Misc::SetFlag(flags, TypeFlags::ValueType);
+                Xna::Misc::SetFlag(flags, TypeFlags::ReferenceType);
             }
             else {
-                Xna::Misc::SetFlag(flags, TypeFlags::ReferenceType);
+                Xna::Misc::SetFlag(flags, TypeFlags::ValueType);
             }
 
             if constexpr (std::is_abstract<T>::value) {
