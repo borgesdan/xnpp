@@ -25,8 +25,10 @@ namespace Xna {
 	}
 
 	std::shared_ptr<ContentTypeWriter> ContentWriter::GetTypeWriter(CSharp::Type const& type, int32_t& typeIndex) {
-		if (impl->typeTable.contains(type))
+		if (impl->typeTable.contains(type)) {
+			typeIndex = impl->typeTable[type];
 			return impl->typeWriters[static_cast<size_t>(impl->typeTable[type])];
+		}
 
 		//TODO: [!] não implementado
 		std::vector<CSharp::Type> dependencies;

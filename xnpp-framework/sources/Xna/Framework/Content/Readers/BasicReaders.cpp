@@ -107,7 +107,7 @@ namespace Xna {
 		const auto lineSpacing = input.ReadInt32();
 		const auto spacing = input.ReadSingle();
 		auto kerning = input.ReadObject<std::vector<Vector3>>();
-		std::optional<char32_t> defaultCharacter;
+		std::optional<char32_t> defaultCharacter = std::nullopt;
 		
 		if (input.ReadBoolean())
 			defaultCharacter = static_cast<char32_t>(input.ReadUInt32()); //input.ReadChar
