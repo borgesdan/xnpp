@@ -7,7 +7,8 @@
 namespace Xna {
 	template <typename T>
 	struct ListWriter : public BuiltinTypeWriter<std::vector<T>> {
-		ListWriter(std::string const& friendlyTypeName) : friendlyTypeName(friendlyTypeName){}
+		ListWriter(std::string const& friendlyTypeName) 
+			: friendlyTypeName(friendlyTypeName) {}
 
 		std::string GetRuntimeReader(TargetPlatform targetPlatform) override {
 			std::string reader = "ListReader<";
@@ -19,7 +20,7 @@ namespace Xna {
 
 	protected:
 		void Initialize(ContentCompiler& compiler) override {
-			elementWriter = compiler.GetTypeWriter(typeid(T));
+			elementWriter = compiler.GetTypeWriter(CSharp::typeof<T>());
 
 			if (!elementWriter)
 				throw std::runtime_error("ElementeWriter not founded.");

@@ -108,7 +108,7 @@ namespace Xna {
 			throw CSharp::ArgumentNullException("value");
 
 		int32_t _{ 0 };
-		auto typeWriter = GetTypeWriter(CSharp::Type(typeid(T)), _);
+		auto typeWriter = GetTypeWriter(CSharp::typeof<T>(), _);
 		InvokeWriter(value, *typeWriter);
 	}
 
@@ -132,7 +132,7 @@ namespace Xna {
 			typeWriter = GetTypeWriter(value->type(), typeIndex);
 		}
 		else {
-			typeWriter = GetTypeWriter(CSharp::Type(typeid(T)), typeIndex);
+			typeWriter = GetTypeWriter(CSharp::typeof<T>(), typeIndex);
 		}	
 
 		if (!typeWriter)

@@ -10,7 +10,7 @@ namespace Xna {
 	struct NullableReader : public ContentTypeReaderT<std::optional<T>> {
 	protected:
 		inline void Initialize(ContentTypeReaderManager& manager) override {
-			underlyingTypeReader = manager.GetTypeReader(CSharp::Type(typeid(T)));
+			underlyingTypeReader = manager.GetTypeReader(CSharp::typeof<T>());
 		}
 
 		inline std::optional<T> Read(ContentReader& input, std::optional<T>& existingInstance) override {

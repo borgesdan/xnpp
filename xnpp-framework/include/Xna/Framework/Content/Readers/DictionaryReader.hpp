@@ -10,8 +10,8 @@ namespace Xna {
 	struct DictionaryReader : public ContentTypeReaderT<std::unordered_map<Key, Value>> {
 	protected:
 		void Initialize(ContentTypeReaderManager& manager) override {
-			keyReader = manager.GetTypeReader(CSharp::Type(typeid(Key)));
-			valueReader = manager.GetTypeReader(CSharp::Type(typeid(Value)));
+			keyReader = manager.GetTypeReader(CSharp::typeof<Key>());
+			valueReader = manager.GetTypeReader(CSharp::typeof<Value>());
 		}
 
 		inline std::unordered_map<Key, Value> Read(ContentReader& input, std::unordered_map<Key, Value>& existingInstance) override {

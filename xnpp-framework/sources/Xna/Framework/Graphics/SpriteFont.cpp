@@ -15,7 +15,7 @@ namespace Xna {
 		if (cropping.size() != glyphs.size() || charMap.size() != glyphs.size() || (!kerning.empty() && kerning.size() != glyphs.size()))
 			throw CSharp::InvalidOperationException("Cropping, charmap and kerning (if not empty) must all be the same size.");
 
-		impl = std::shared_ptr<Implementation>();
+		impl = std::make_shared<Implementation>();
 		impl->defaultCharacter = defaultCharacter;
 		impl->lineSpacing = lineSpacing;
 		impl->spacing = spacing;

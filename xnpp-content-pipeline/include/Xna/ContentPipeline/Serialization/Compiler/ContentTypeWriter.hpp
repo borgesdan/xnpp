@@ -4,6 +4,7 @@
 #include <string>
 #include <cstdint>
 #include <any>
+#include <vector>
 #include <Xna/Framework/Content/Pipeline/Shared.hpp>
 #include <Xna/CSharp/Type.hpp>
 #include <Xna/CSharp/Exception.hpp>
@@ -19,7 +20,7 @@ namespace Xna {
 		virtual int32_t TypeVersion() const { return 0; }
 		
 		//TODO: [!] avaliar
-		virtual inline bool TargetIsValueType() const { return targetIsValueType; };
+		virtual inline bool TargetIsValueType() const { return targetType.IsValueType(); };
 
 		inline CSharp::Type TargetType() const { return targetType; }
 
@@ -28,8 +29,13 @@ namespace Xna {
 		}
 
 	protected:
-		ContentTypeWriter(CSharp::Type const& targetType) : targetType(targetType) {
-			
+		ContentTypeWriter(CSharp::Type const& targetType) : targetType(targetType){}
+
+		ContentTypeWriter(
+			CSharp::Type const& targetType,
+			bool isGenericType,
+			std::vector<CSharp::Type> genericTypes)
+			: targetType(targetType), isGenericType(isGenericType), genericArgumentWriters(genericTypes) {
 		}
 
 		virtual void Initialize(ContentCompiler& compiler) {
@@ -39,14 +45,11 @@ namespace Xna {
 		virtual void Write(ContentWriter& output, std::any const& value) = 0;		
 
 	private:
-		inline void DoInitialize(ContentCompiler& compiler) {
-			//TODO: [!] implementar
-			Initialize(compiler);
-		}		
-
+		void DoInitialize(ContentCompiler& compiler);
 	private:
 		CSharp::Type targetType;
-		bool targetIsValueType{ true };
+		bool isGenericType{ false };
+		std::vector<CSharp::Type> genericArgumentWriters;
 
 		friend class ContentWriter;
 		friend class ContentCompiler;
@@ -57,7 +60,9 @@ namespace Xna {
 		~ContentTypeWriterT() override = default;
 
 	protected:
-		ContentTypeWriterT() : ContentTypeWriter(CSharp::Type(typeid(T))) {}
+		ContentTypeWriterT()
+			: ContentTypeWriter(CSharp::typeof<T>()) {
+		}		
 		
 		virtual void WriteT(ContentWriter& output, const T* value) = 0;
 

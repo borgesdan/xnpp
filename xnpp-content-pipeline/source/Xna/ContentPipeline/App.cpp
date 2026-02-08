@@ -55,7 +55,7 @@ namespace Xna {
 		App::GetWriterRegistry().Add(Texture2DWriter(), { "Texture2DWriter" });
 		App::GetWriterRegistry().Add(SpriteFontWriter(), { "SpriteFontWriter" });
 		App::GetWriterRegistry().Add(ListWriter<Rectangle>("Rectangle"), { "ListWriter<Rectangle>" });
-		App::GetWriterRegistry().Add(ListWriter<uint32_t>("Uint32"), { "ListWriter<uint32_t>" });
+		App::GetWriterRegistry().Add(ListWriter<uint32_t>("uint32_t"), { "ListWriter<uint32_t>" });
 		App::GetWriterRegistry().Add(ListWriter<Vector3>("Vector3"), { "ListWriter<Vector3>" });
 		
 		App::GetWriterRegistry().Add(SoundEffectWriter(), {"SoundEffectWriter"});

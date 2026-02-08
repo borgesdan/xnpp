@@ -28,7 +28,7 @@ add_executable(XnppContentPipeline "source.cpp"
         "source/Xna/ContentPipeline/Processors/TextureProcessor.cpp"
         "source/Xna/ContentPipeline/Importers/FontDescriptionImporter.cpp" 
         "source/Xna/ContentPipeline/Graphics/FontDescription.cpp"
-        "source/Xna/ContentPipeline/Processors/FontDescriptionProcessor.cpp" "source/Xna/ContentPipeline/Audio/AudioFormat.cpp" "source/Xna/ContentPipeline/Importers/WavImporter.cpp" "source/Xna/ContentPipeline/Processors/SoundEffectProcessor.cpp" "source/Xna/ContentPipeline/Serialization/Compiler/SoundEffectWriter.cpp" "source/Xna/ContentPipeline/Audio/AudioHelper.cpp" "source/Xna/ContentPipeline/Importers/WmaImporter.cpp" "source/Xna/ContentPipeline/Processors/SongProcessor.cpp" "source/Xna/ContentPipeline/Serialization/Compiler/SongWriter.cpp")
+        "source/Xna/ContentPipeline/Processors/FontDescriptionProcessor.cpp" "source/Xna/ContentPipeline/Audio/AudioFormat.cpp" "source/Xna/ContentPipeline/Importers/WavImporter.cpp" "source/Xna/ContentPipeline/Processors/SoundEffectProcessor.cpp" "source/Xna/ContentPipeline/Serialization/Compiler/SoundEffectWriter.cpp" "source/Xna/ContentPipeline/Audio/AudioHelper.cpp" "source/Xna/ContentPipeline/Importers/WmaImporter.cpp" "source/Xna/ContentPipeline/Processors/SongProcessor.cpp" "source/Xna/ContentPipeline/Serialization/Compiler/SongWriter.cpp" "source/Xna/ContentPipeline/Serialization/Compiler/ContentTypeWriter.cpp")
 
 target_compile_features(XnppContentPipeline PUBLIC cxx_std_20)
 

@@ -4,6 +4,14 @@
 #include "Xna/Internal/App.hpp"
 
 namespace Xna {
+	struct ContentTypeReaderManager::Implementation {
+		std::optional<ContentReader> contentReader;
+
+		static inline auto nameToReader = std::map<std::string, std::shared_ptr<ContentTypeReader>>();
+		static inline auto targetTypeToReader = std::map<CSharp::Type, std::shared_ptr<ContentTypeReader>>();
+		static inline auto readerTypeToReader = std::map<CSharp::Type, std::shared_ptr<ContentTypeReader>>();
+	};
+
 	struct ContentTypeReaderParser {
 		static inline CSharp::Type* Parse(std::string const& csharpTypeName) {
 			auto sub = csharpTypeName.substr(0, csharpTypeName.find(","));
@@ -17,8 +25,8 @@ namespace Xna {
 	};
 
 	ContentTypeReaderManager::ContentTypeReaderManager(ContentReader const& contentReader) {
-		internalContentTypeReaderManager = std::make_shared<ContentTypeReaderManager::Implementation>();
-		internalContentTypeReaderManager->contentReader = contentReader;
+		impl = std::make_shared<ContentTypeReaderManager::Implementation>();
+		impl->contentReader = contentReader;
 	}
 
 	std::vector<std::shared_ptr<ContentTypeReader>> ContentTypeReaderManager::ReadTypeManifest(size_t typeCount, ContentReader& contentReader) {
@@ -46,7 +54,7 @@ namespace Xna {
 	}
 
 	std::shared_ptr<ContentTypeReader> ContentTypeReaderManager::GetTypeReader(CSharp::Type const& targetType) {
-		return GetTypeReader(targetType, *internalContentTypeReaderManager->contentReader);
+		return GetTypeReader(targetType, *impl->contentReader);
 	}
 
 	std::shared_ptr<ContentTypeReader> ContentTypeReaderManager::GetTypeReader(std::string const& readerTypeName, ContentReader const& contentReader,
@@ -102,7 +110,7 @@ namespace Xna {
 
 		const auto targetType = reader->TargetType();
 
-		if (targetType != CSharp::Type(typeid(nullptr))) {
+		if (targetType != CSharp::Type::Empty()) {
 			if (Implementation::targetTypeToReader.find(targetType) != Implementation::targetTypeToReader.end())
 				return; //TODO: throw CSharp::InvalidOperationException("TypeReaderDuplicate");
 
@@ -125,13 +133,25 @@ namespace Xna {
 	}
 
 	std::shared_ptr<ContentTypeReader> ContentTypeReaderManager::GetTypeReader(CSharp::Type const& targetType, ContentReader const& contentReader) {
-		if (targetType == CSharp::Type(typeid(nullptr)))
+		if (targetType == CSharp::Type::Empty())
 			throw CSharp::ArgumentException("targetType");
 
 		auto find = Implementation::targetTypeToReader.find(targetType);
 
-		if (find == Implementation::targetTypeToReader.end())
-			throw CSharp::InvalidOperationException("TypeReaderNotRegistered");
+		if (find == Implementation::targetTypeToReader.end()) {
+			auto& activator = App::GetContentTypeReaderActivator();
+			auto& registries = activator.GetRegistries();
+
+			for (const auto& reg : registries) {
+				if (reg->TargetType() == targetType) {
+					return reg;
+				}
+			}			
+
+			std::string error("TypeReader not registered: ");
+			error.append(targetType.Name());
+			throw CSharp::InvalidOperationException(error);
+		}
 
 		return find->second;
 	}

@@ -37,7 +37,7 @@ namespace Xna {
 		bool RemoveItem(std::string const& key) override;
 		void SetItem(std::string const& key, std::any const& value) override;
 		inline CSharp::Type DefaultSerializerType() const override {
-			return typeid(std::string);
+			return CSharp::typeof<std::string>();
 		}
 
 	private:
