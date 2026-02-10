@@ -1,4 +1,5 @@
 #include "Xna/Framework/Graphics/Effect/EffectAnnotationCollection.hpp"
+#include "Xna/Framework/Graphics/Effect/EffectAnnotation.hpp"
 
 namespace Xna {
 	EffectAnnotationCollection::EffectAnnotationCollection(size_t count) {
