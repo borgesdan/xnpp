@@ -12,20 +12,20 @@
 namespace Xna {
 	class EffectAnnotation final {
 	public:
-		std::string Name() const;
-		std::string Semantic() const;
-		size_t RowCount() const;
-		size_t ColumnCount() const;
-		EffectParameterClass ParameterClass() const;
-		EffectParameterType ParameterType() const;
-		bool GetValueBoolean();
-		int32_t GetValueInt32();
-		float GetValueSingle();
-		Vector2 GetValueVector2();
-		Vector3 GetValueVector3();
-		Vector4 GetValueVector4();
-		Matrix GetValueMatrix(); 
-		std::string GetValueString();
+		inline std::string Name() const;
+		inline std::string Semantic() const;
+		inline size_t RowCount() const;
+		inline size_t ColumnCount() const;
+		inline EffectParameterClass ParameterClass() const;
+		inline EffectParameterType ParameterType() const;
+		XNPP_API bool GetValueBoolean();
+		XNPP_API int32_t GetValueInt32();
+		XNPP_API float GetValueSingle();
+		XNPP_API Vector2 GetValueVector2();
+		XNPP_API Vector3 GetValueVector3();
+		XNPP_API Vector4 GetValueVector4();
+		XNPP_API Matrix GetValueMatrix(); 
+		XNPP_API std::string GetValueString();
 
 		inline EffectAnnotation(std::nullptr_t) { impl = nullptr; }
 		inline bool operator==(EffectAnnotation const& other) const noexcept { return impl == other.impl; }

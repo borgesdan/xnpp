@@ -16,12 +16,12 @@ namespace Xna {
         PlatformImpl::EffectAnnotationImpl platformImpl;
 	};
 
-	std::string EffectAnnotation::Name() const { return impl->name; }
-	std::string EffectAnnotation::Semantic() const { return impl->semantic; }
-	size_t EffectAnnotation::RowCount() const { return impl->rows; }
-	size_t EffectAnnotation::ColumnCount() const { return impl->columns; }
-	EffectParameterClass EffectAnnotation::ParameterClass() const { return impl->paramClass; }
-	EffectParameterType EffectAnnotation::ParameterType() const { return impl->paramType; }
+	inline std::string EffectAnnotation::Name() const { return impl->name; }
+	inline std::string EffectAnnotation::Semantic() const { return impl->semantic; }
+	inline size_t EffectAnnotation::RowCount() const { return impl->rows; }
+	inline size_t EffectAnnotation::ColumnCount() const { return impl->columns; }
+	inline EffectParameterClass EffectAnnotation::ParameterClass() const { return impl->paramClass; }
+	inline EffectParameterType EffectAnnotation::ParameterType() const { return impl->paramType; }
 }
 
 #endif
