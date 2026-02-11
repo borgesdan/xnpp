@@ -24,14 +24,14 @@ namespace Xna {
 	public:		
 		//Gets the current state of a game pad controller. As an option, it specifies a dead zone processing method for the analog sticks.
 		inline static GamePadState GetState(PlayerIndex index, GamePadDeadZone deadZone = GamePadDeadZone::IndependentAxes) {
-			Platform::GamePad_GetState(index, deadZone);
+			return Platform::GamePad_GetState(index, deadZone);
 		}
 
 		//Retrieves the capabilities of an Xbox Controller.
-		static inline GamePadCapabilities GetCapabilities(PlayerIndex index) { Platform::GamePad_GetCapabilities(index); }
+		static inline GamePadCapabilities GetCapabilities(PlayerIndex index) { return Platform::GamePad_GetCapabilities(index); }
 		//Sets the vibration motor speeds on an Xbox Controller.
 		static inline bool SetVibration(PlayerIndex index, float leftMotor, float rightMotor, float leftTrigger = 0, float rightTrigger = 0) {
-			Platform::GamePad_SetVibration(index, leftMotor, rightMotor, leftTrigger, rightTrigger);
+			return Platform::GamePad_SetVibration(index, leftMotor, rightMotor, leftTrigger, rightTrigger);
 		}
 	
 		GamePad() = delete;
