@@ -46,7 +46,7 @@ namespace Xna {
 		//Gets or sets the repeat setting for the media player.
 		static inline bool IsRepeating() { return isRepeating; }
 		//Gets or sets the repeat setting for the media player.
-		static void IsRepeating(bool value);
+		XNPP_API static void IsRepeating(bool value);
 		
 		//Gets or sets the shuffle setting for the media player.
 		static inline bool IsShuffled() { return false; }
@@ -61,12 +61,12 @@ namespace Xna {
 		//Gets or sets the media player volume.
 		static inline float Volume() { return volume; }
 		//Gets or sets the media player volume.
-		static void Volume(float value);
+		XNPP_API static void Volume(float value);
 		
 		//Gets or set the muted setting for the media player.
 		static inline bool IsMuted() { return isMuted; }
 		//Gets or set the muted setting for the media player.
-		static void IsMuted(bool value);
+		XNPP_API static void IsMuted(bool value);
 
 		//Gets or sets the visualization enabled setting for the media player.
 		//TODO: [!] Not implemented.
@@ -97,8 +97,8 @@ namespace Xna {
 		MediaPlayer(MediaPlayer&&) = delete;
 
 	private:
-		static void OnActiveSongChanged(CSharp::EventArgs const& args);
-		static void OnMediaStateChanged(CSharp::EventArgs const& args);
+		XNPP_API static void OnActiveSongChanged(CSharp::EventArgs const& args);
+		XNPP_API static void OnMediaStateChanged(CSharp::EventArgs const& args);
 
 		static inline MediaState state = MediaState::Stopped;
 		static inline MediaQueue queue = MediaQueue();
