@@ -12,7 +12,7 @@ namespace Xna {
     static void CropGlyphs(const std::vector<PixelBitmapContent<Color>>& bitmaps, std::vector<Rectangle>& cropping, const std::vector<int>& yValues, const std::vector<int>& heights, int lineSpacing);
     static PixelBitmapContent<Color> ArrangeGlyphs(const std::vector<PixelBitmapContent<Color>>& bitmaps, std::vector<Rectangle>& glyphRects);
     static std::unique_ptr<Dxt3BitmapContent> CompressFontTexture(PixelBitmapContent<Color> const& source);
-    static void CompressFontTextureBlock(PixelBitmapContent<Color> const& source, size_t blockX, size_t blockY, std::vector<uint8_t>& outputData, size_t outputPosition);
+    static void CompressFontTextureBlock(PixelBitmapContent<Color> const& source, int32_t blockX, int32_t blockY, std::vector<uint8_t>& outputData, int32_t outputPosition);
     
     static void ReleaseFontLibrary(FT_Library ft, FT_Face face) {
         if(face)
@@ -156,9 +156,9 @@ namespace Xna {
                 // O XNA SpriteFont por padrão usa cores brancas com o valor do alpha
                 // vindo da rasterização (ou R=G=B=A como no seu código C# original)
                 Color color;
-                color.R(alpha);
-                color.G(alpha);
-                color.B(alpha);
+                color.R(255);
+                color.G(255);
+                color.B(255);
                 color.A(alpha);                
 
                 xna.SetPixel(x, y, color);
@@ -224,9 +224,9 @@ namespace Xna {
     static std::unique_ptr<Dxt3BitmapContent> CompressFontTexture(PixelBitmapContent<Color> const& source) {
         std::vector<uint8_t> numArray;
         numArray.resize(source.Width * source.Height);
-        size_t outputPosition = 0;
-        for (size_t blockY = 0; blockY < source.Height; blockY += 4) {
-            for (size_t blockX = 0; blockX < source.Width; blockX += 4) {
+        int32_t outputPosition = 0;
+        for (int32_t blockY = 0; blockY < source.Height; blockY += 4) {
+            for (int32_t blockX = 0; blockX < source.Width; blockX += 4) {
                 CompressFontTextureBlock(source, blockX, blockY, numArray, outputPosition);
                 outputPosition += 16 /*0x10*/;
             }
@@ -237,16 +237,16 @@ namespace Xna {
         return dxt3BitmapContent;
     }
 
-    static void CompressFontTextureBlock(PixelBitmapContent<Color> const& source, size_t blockX, size_t blockY, std::vector<uint8_t>& outputData, size_t outputPosition) {
-        uint32_t num1 = 0;
+    static void CompressFontTextureBlock(PixelBitmapContent<Color> const& source, int32_t blockX, int32_t blockY, std::vector<uint8_t>& outputData, int32_t outputPosition) {
+        int64_t num1 = 0;
         int32_t num2 = 0;
         int32_t num3 = 0;
         for (size_t index1 = 0; index1 < 4; ++index1)
         {
             for (size_t index2 = 0; index2 < 4; ++index2)
             {
-                auto a = (int32_t)source.GetPixel(blockX + index2, blockY + index1).A();
-                uint32_t num4;
+                auto a = static_cast<int32_t>(source.GetPixel(blockX + index2, blockY + index1).A());
+                int64_t num4;
                 int32_t num5;
                 if (a < 42) {
                     num4 = 0L;
@@ -269,15 +269,15 @@ namespace Xna {
                 ++num3;
             }
         }
-        for (size_t index = 0; index < 8; ++index)
+        for (int32_t index = 0; index < 8; ++index)
             outputData[outputPosition + index] = static_cast<uint8_t>(num1 >> index * 8);
 
-        outputData[outputPosition + 8] = std::numeric_limits<uint8_t>::max();
-        outputData[outputPosition + 9] = std::numeric_limits<uint8_t>::max();
+        outputData[outputPosition + 8] = 255; //byte.MaxValue
+        outputData[outputPosition + 9] = 255; //byte.MaxValue
         outputData[outputPosition + 10] = 0;
         outputData[outputPosition + 11] = 0;
         
-        for (size_t index = 0; index < 4; ++index)
+        for (int32_t index = 0; index < 4; ++index)
             outputData[outputPosition + 12 + index] = static_cast<uint8_t>(num2 >> index * 8);
     }
 }

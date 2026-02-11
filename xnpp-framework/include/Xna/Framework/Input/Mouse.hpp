@@ -11,11 +11,11 @@ namespace Xna {
 	class Mouse final {
 	public:
 		//Gets the current state of the mouse, including mouse position and buttons pressed. 
-		static MouseState GetState();
+		static MouseState GetState() { return Platform::Mouse_GetState(); }
 
 		//Gets or sets the window used for mouse processing. 
 		//Mouse coordinates returned by GetState are relative to the upper-left corner of this window. 
-		static intptr_t WindowHandle() { Platform::Mouse_GetWindowHandle(); }
+		static intptr_t WindowHandle() { return Platform::Mouse_GetWindowHandle(); }
 
 		//Gets or sets the window used for mouse processing. 
 		//Mouse coordinates returned by GetState are relative to the upper-left corner of this window. 
