@@ -26,4 +26,12 @@ namespace Xna {
 
 		return {};
 	}
+
+	size_t Platform::System_GetClockCounter() {
+		return static_cast<size_t>(SDL_GetPerformanceCounter());
+	}
+
+	size_t Platform::System_GetClockFrequency() {
+		return static_cast<size_t>(SDL_GetPerformanceFrequency());
+	}
 }

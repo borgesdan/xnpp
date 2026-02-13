@@ -301,19 +301,10 @@ namespace Xna {
 
 	//
 	//System
-	//		
+	//	
+	
 
-	size_t Platform::System_GetClockCounter() {
-		LARGE_INTEGER counter;
-		QueryPerformanceCounter(&counter);
-		return static_cast<size_t>(counter.QuadPart);
-	}
-
-	size_t Platform::System_GetClockFrequency() {
-		LARGE_INTEGER frequency;
-		QueryPerformanceFrequency(&frequency);
-		return static_cast<size_t>(frequency.QuadPart);
-	}
+	
 
 	bool Platform::System_MultiMonitorSupport() {
 		return GetSystemMetrics(SM_CMONITORS) != 0;
