@@ -4,11 +4,24 @@
 namespace Xna {
 	PlatformRectangle Platform::System_ClientRect(intptr_t hwnd) {
 		auto window = reinterpret_cast<SDL_Window*>(hwnd);
-		int width, height;
-
 		if (window) {
+			int width, height;
 			SDL_GetWindowSizeInPixels(window, &width, &height);
 			return { 0,0, width, height };
+		}
+
+		return {};
+	}
+
+	PlatformRectangle Platform::System_WindowRect(intptr_t hwnd) {
+		auto window = reinterpret_cast<SDL_Window*>(hwnd);		
+
+		if (window) {
+			int x, y, w, h;
+			SDL_GetWindowPosition(window, &x, &y);			
+			SDL_GetWindowSize(window, &w, &h);
+
+			return PlatformRectangle(x, y, x + w, y + h);
 		}
 
 		return {};
