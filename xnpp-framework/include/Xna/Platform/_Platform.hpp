@@ -199,7 +199,32 @@ namespace Xna {
 		struct DynamicVertexBufferImpl;
 	};		
 
-	struct Platform {
+	struct PlatformRectangle {		
+		int Left{ 0 };		
+		int Top{ 0 };		
+		int Right{ 0 };		
+		int Bottom{ 0 };
+
+		constexpr PlatformRectangle() = default;
+		constexpr PlatformRectangle(int x, int y, int l, int b)
+			:Left(x), Top(y), Right(l), Bottom(b){ }
+
+		constexpr int X() const noexcept { return Left; }
+		constexpr int Y() const noexcept { return Top; }
+		constexpr int W() const noexcept { return Right - Left; }
+		constexpr int H() const noexcept { return Bottom - Top; }
+	};
+
+	struct PlatformSize {
+		int Width{ 0 };
+		int Height{ 0 };
+
+		constexpr PlatformSize() = default;
+		constexpr PlatformSize(int w, int h):Width(w), Height(h){}
+	};
+
+	struct Platform {		
+
 		struct InputProcessMessage;
 		static size_t MaxSamplerStates;	
 		
@@ -220,15 +245,15 @@ namespace Xna {
 		XNPP_API static void System_ProcessException(std::exception& ex);
 		XNPP_API static void System_GetExecutablePath(std::filesystem::path& path);
 		XNPP_API static bool System_MultiMonitorSupport();
-		XNPP_API static std::tuple<int32_t, int32_t, int32_t, int32_t> System_VirtualScreen();
-		XNPP_API static std::tuple<int32_t, int32_t> System_PrimaryMonitorSize();
-		XNPP_API static std::tuple<int32_t, int32_t, int32_t, int32_t> System_WorkingArea();
-		XNPP_API static std::tuple<int32_t, int32_t, int32_t, int32_t> System_MonitorWorkingArea(intptr_t hMonitor);
+		XNPP_API static PlatformRectangle System_VirtualScreen();
+		XNPP_API static PlatformSize System_PrimaryMonitorSize();
+		XNPP_API static PlatformRectangle System_WorkingArea();
+		XNPP_API static PlatformRectangle System_MonitorWorkingArea(intptr_t hMonitor);
 		XNPP_API static intptr_t System_MonitorFromHandle(intptr_t hwnd);
 		XNPP_API static intptr_t System_MonitorFromRect(int32_t left, int32_t top, int32_t right, int32_t bottom);
 		XNPP_API static intptr_t System_MonitorFromPoint(int32_t x, int32_t y);
 		XNPP_API static std::string System_MonitorDeviceName(intptr_t monitor);
-		XNPP_API static std::tuple<int32_t, int32_t, int32_t, int32_t> System_MonitorArea(intptr_t monitor);
+		XNPP_API static PlatformRectangle System_MonitorArea(intptr_t monitor);
 		XNPP_API static bool System_MonitorIsPrimary(intptr_t monitor);
 		XNPP_API static int32_t System_MonitorBitDepth(intptr_t monitor, intptr_t hdc);
 		//XNPP_API static void System_GetAllScreens(std::vector<CSharp::Screen>& scren);

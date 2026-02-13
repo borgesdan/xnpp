@@ -11,13 +11,7 @@ namespace Xna::CSharp {
 		}
 		else {
 			auto info = Platform::System_MonitorArea(monitor);
-
-			_bounds = Rectangle::FromLTRB(
-				std::get<0>(info),
-				std::get<1>(info),
-				std::get<2>(info),
-				std::get<3>(info));
-
+			_bounds = Rectangle::FromLTRB(info.Left, info.Top, info.Right, info.Bottom);
 			_primary = Platform::System_MonitorIsPrimary(monitor);			
 		}
 
@@ -75,12 +69,7 @@ namespace Xna::CSharp {
 			}
 			else {
 				auto monitor = Platform::System_MonitorWorkingArea(_hmonitor);
-
-				_workingArea = Rectangle::FromLTRB(
-					get<0>(monitor),
-					get<1>(monitor),
-					get<2>(monitor),
-					get<3>(monitor));
+				_workingArea = Rectangle::FromLTRB(monitor.Left, monitor.Top, monitor.Right, monitor.Bottom);
 			}
 		}
 

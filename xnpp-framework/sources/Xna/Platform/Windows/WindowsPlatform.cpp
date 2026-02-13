@@ -22,6 +22,10 @@
 using Microsoft::WRL::ComPtr;
 
 namespace Xna {
+	static PlatformRectangle RECTtoPRectangle(RECT const& r) {
+		return { r.left, r.top, r.left, r.right };
+	}
+
 	std::string WindowsHelpers::LPWSTRToString(LPWSTR lpwstr) {
 		if (!lpwstr)
 			return std::string();
@@ -327,7 +331,7 @@ namespace Xna {
 		return GetSystemMetrics(SM_CMONITORS) != 0;
 	}
 
-	std::tuple<int32_t, int32_t, int32_t, int32_t> Platform::System_VirtualScreen() {
+	PlatformRectangle Platform::System_VirtualScreen() {
 		const auto x = GetSystemMetrics(SM_XVIRTUALSCREEN);
 		const auto y = GetSystemMetrics(SM_YVIRTUALSCREEN);
 		const auto w = GetSystemMetrics(SM_CXVIRTUALSCREEN);
@@ -336,32 +340,28 @@ namespace Xna {
 		return { x, y, w, h };
 	}
 
-	std::tuple<int32_t, int32_t> Platform::System_PrimaryMonitorSize() {
+	PlatformSize Platform::System_PrimaryMonitorSize() {
 		const auto x = GetSystemMetrics(SM_CXSCREEN);
 		const auto y = GetSystemMetrics(SM_CYSCREEN);
 
 		return { x, y };
-	}
+	}	
 
-	std::tuple<int32_t, int32_t, int32_t, int32_t> Platform::System_WorkingArea() {
+	PlatformRectangle Platform::System_WorkingArea() {
 		RECT workingArea{};
 		SystemParametersInfo(SPI_GETWORKAREA, NULL, &workingArea, NULL);
 
-		return { workingArea.left, workingArea.top, workingArea.left, workingArea.bottom };
+		return RECTtoPRectangle(workingArea);
 	}
 
-	std::tuple<int32_t, int32_t, int32_t, int32_t> Platform::System_MonitorWorkingArea(intptr_t hMonitor) {
+	PlatformRectangle Platform::System_MonitorWorkingArea(intptr_t hMonitor) {
 		MONITORINFOEXW info{};
 		info.cbSize = sizeof(MONITORINFOEXW);
 
 		auto hmonitor = reinterpret_cast<HMONITOR>(hMonitor);
 		auto monitorInfo = reinterpret_cast<MONITORINFO*>(&info);
 		GetMonitorInfo(hmonitor, monitorInfo);
-		return{
-			info.rcWork.left,
-			info.rcWork.top,
-			info.rcWork.right,
-			info.rcWork.top };
+		return RECTtoPRectangle(info.rcWork);
 	}
 
 	intptr_t Platform::System_MonitorFromHandle(intptr_t hwnd) {
@@ -401,15 +401,12 @@ namespace Xna {
 		return std::string(info.szDevice);
 	}
 
-	std::tuple<int32_t, int32_t, int32_t, int32_t> Platform::System_MonitorArea(intptr_t monitor) {
+	PlatformRectangle Platform::System_MonitorArea(intptr_t monitor) {
 		MONITORINFOEX info{};
 		info.cbSize = sizeof(MONITORINFOEX);
 		auto hmonitor = reinterpret_cast<HMONITOR>(monitor);
 		GetMonitorInfo(hmonitor, &info);
-		return { info.rcMonitor.left,
-				info.rcMonitor.top,
-				info.rcMonitor.right,
-				info.rcMonitor.bottom };
+		return RECTtoPRectangle(info.rcMonitor);
 	}
 
 	bool Platform::System_MonitorIsPrimary(intptr_t monitor) {
