@@ -7,30 +7,27 @@
 #include <Xna/Audio.hpp>
 #include <Xna/Input.hpp>
 
-using namespace std;
-using namespace Xna;
-using namespace Xna::CSharp;
 
-class Game1 : public Game {
-	using base = Game;
+class Game1 : public Xna::Game{
+	using base = Xna::Game;
 public:
-	Game1() : Game() {
+	Game1() : Xna::Game() {
 		graphics = Xna::GraphicsDeviceManager(*this);
 		Content().RootDirectory("Content");
 	}
 
-	void Initialize() override {
+	void Initialize() override {		
 		base::Initialize();
 	}
 
 	void LoadContent() override {
-		spriteBatch = SpriteBatch(GraphicsDevice());
+		auto device = GraphicsDevice();
+		spriteBatch = Xna::SpriteBatch(nullptr);
 
 		base::LoadContent();
 	}
 
 	void Update(Xna::GameTime& gameTime) override {
-
 		base::Update(gameTime);
 	}
 
@@ -41,9 +38,9 @@ public:
 	}
 
 private:
-	GraphicsDeviceManager graphics = nullptr;
-	SpriteBatch spriteBatch = nullptr;
-
+	Xna::GraphicsDeviceManager graphics = nullptr;
+	Xna::SpriteBatch spriteBatch = nullptr;
+	bool one = false;
 };
 
 

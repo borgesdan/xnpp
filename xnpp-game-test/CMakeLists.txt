@@ -8,16 +8,14 @@ endif ()
 set(PROJECT_INCLUDES_DIR "${CMAKE_CURRENT_SOURCE_DIR}/include")
 
 # Add source to this project's executable.
-add_executable(GameTest WIN32 Game.cpp
-    
-)
+add_executable(GameTest WIN32 Game.cpp)
 
 target_compile_features(GameTest PUBLIC cxx_std_20)
 
 #Add tests and install targets
 
 target_link_libraries(GameTest
-        PRIVATE
+        PUBLIC
         xnpp
 )
 
