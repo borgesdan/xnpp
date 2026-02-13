@@ -1,4 +1,5 @@
 #include "Xna/Platform/Platform.hpp"
+#include <algorithm>
 #include <SDL3/SDL.h>
 
 namespace Xna {
@@ -43,5 +44,42 @@ namespace Xna {
 			SDL_free(displays);
 
 		return count > 1;
+	}
+
+	PlatformRectangle Platform::System_VirtualScreen() {
+		int count = 0;
+		auto displays = SDL_GetDisplays(&count);
+
+		if (!displays || count == 0) {
+			return {};
+		}
+
+		int minX = 0;
+		int minY = 0;
+		int maxX = 0;
+		int maxY = 0;
+
+		for (size_t i = 0; i < count; ++i) {
+			SDL_Rect rect;
+			
+			if (SDL_GetDisplayBounds(displays[i], &rect)) {
+				if (i == 0) {
+					minX = rect.x;
+					minY = rect.y;
+					maxX = rect.x + rect.w;
+					maxY = rect.y + rect.h;
+				}
+				else {
+					minX = std::min(minX, rect.x);
+					minY = std::min(minY, rect.y);
+					maxX = std::max(maxX, rect.x + rect.w);
+					maxY = std::max(maxY, rect.y + rect.h);
+				}
+			}
+		}
+
+		SDL_free(displays);
+
+		return PlatformRectangle(minX, minY, maxX, maxY);
 	}
 }

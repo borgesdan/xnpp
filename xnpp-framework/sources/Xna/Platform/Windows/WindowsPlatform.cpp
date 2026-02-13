@@ -301,16 +301,7 @@ namespace Xna {
 
 	//
 	//System
-	//	
-
-	PlatformRectangle Platform::System_VirtualScreen() {
-		const auto x = GetSystemMetrics(SM_XVIRTUALSCREEN);
-		const auto y = GetSystemMetrics(SM_YVIRTUALSCREEN);
-		const auto w = GetSystemMetrics(SM_CXVIRTUALSCREEN);
-		const auto h = GetSystemMetrics(SM_CYVIRTUALSCREEN);
-
-		return { x, y, w, h };
-	}
+	//		
 
 	PlatformSize Platform::System_PrimaryMonitorSize() {
 		const auto x = GetSystemMetrics(SM_CXSCREEN);
