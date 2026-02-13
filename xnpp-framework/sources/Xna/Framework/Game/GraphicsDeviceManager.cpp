@@ -191,8 +191,8 @@ namespace Xna {
 		int32_t bottom{ 0 };
 
 		const auto rect = Platform::System_ClientRect(hWnd);
-		right = rect.Right();
-		bottom = rect.Bottom();
+		right = rect.Right;
+		bottom = rect.Bottom;
 
 		if (flag1 && right == 0)
 			pp.BackBufferWidth = 1;

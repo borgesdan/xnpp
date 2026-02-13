@@ -89,7 +89,7 @@ add_library(xnpp
         "sources/Xna/CSharp/Type.cpp" 
         "sources/Xna/Framework/Content/Readers/BasicReaders.cpp" 
          
-        )
+         "sources/Xna/Platform/SDL/System.cpp")
 
 target_compile_features(xnpp PUBLIC cxx_std_20)
 
@@ -97,6 +97,7 @@ target_compile_definitions(xnpp PRIVATE USING_XINPUT)
 target_compile_definitions(xnpp PRIVATE XNPP_EXPORT_DLL)
 
 find_package(directxtk CONFIG REQUIRED)
+find_package(SDL3 CONFIG REQUIRED)
 
 target_link_libraries(xnpp
         PUBLIC
@@ -112,6 +113,7 @@ target_link_libraries(xnpp
             Oleaut32.lib
             Ole32.lib
             Propsys.lib
+            SDL3::SDL3
 )
 
 target_include_directories(xnpp
