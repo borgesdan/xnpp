@@ -301,14 +301,7 @@ namespace Xna {
 
 	//
 	//System
-	//		
-
-	PlatformSize Platform::System_PrimaryMonitorSize() {
-		const auto x = GetSystemMetrics(SM_CXSCREEN);
-		const auto y = GetSystemMetrics(SM_CYSCREEN);
-
-		return { x, y };
-	}	
+	//			
 
 	PlatformRectangle Platform::System_WorkingArea() {
 		RECT workingArea{};

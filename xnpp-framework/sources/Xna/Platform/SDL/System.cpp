@@ -15,11 +15,11 @@ namespace Xna {
 	}
 
 	PlatformRectangle Platform::System_WindowRect(intptr_t hwnd) {
-		auto window = reinterpret_cast<SDL_Window*>(hwnd);		
+		auto window = reinterpret_cast<SDL_Window*>(hwnd);
 
 		if (window) {
 			int x, y, w, h;
-			SDL_GetWindowPosition(window, &x, &y);			
+			SDL_GetWindowPosition(window, &x, &y);
 			SDL_GetWindowSize(window, &w, &h);
 
 			return PlatformRectangle(x, y, x + w, y + h);
@@ -37,10 +37,10 @@ namespace Xna {
 	}
 
 	bool Platform::System_MultiMonitorSupport() {
-		int count = 0;		
+		int count = 0;
 		auto displays = SDL_GetDisplays(&count);
-		
-		if (displays) 
+
+		if (displays)
 			SDL_free(displays);
 
 		return count > 1;
@@ -61,7 +61,7 @@ namespace Xna {
 
 		for (size_t i = 0; i < count; ++i) {
 			SDL_Rect rect;
-			
+
 			if (SDL_GetDisplayBounds(displays[i], &rect)) {
 				if (i == 0) {
 					minX = rect.x;
@@ -81,5 +81,13 @@ namespace Xna {
 		SDL_free(displays);
 
 		return PlatformRectangle(minX, minY, maxX, maxY);
+	}
+
+	PlatformSize Platform::System_PrimaryMonitorSize() {
+		SDL_Rect rect;
+		if (SDL_GetDisplayBounds(SDL_GetPrimaryDisplay(), &rect)) {
+			return { rect.w, rect.h };
+		}
+		return {};
 	}
 }
