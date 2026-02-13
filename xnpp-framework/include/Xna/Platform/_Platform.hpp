@@ -142,7 +142,7 @@ namespace Xna {
 	class EffectAnnotation;
 	class BasicEffect;
 	class VertexBuffer;
-	class DynamicVertexBuffer;	
+	class DynamicVertexBuffer;
 
 	struct Color;
 	struct DisplayMode;
@@ -183,31 +183,24 @@ namespace Xna {
 		struct SpriteBatchImpl;
 		struct SpriteFontImpl;
 		struct GameWindowImpl;
-		struct KeyboardImpl;
-		struct MouseImpl;
-		struct GamePadImpl;
 		struct SoundEffectImpl;
 		struct SoundEffectInstanceImpl;
 		struct DynamicSoundEffectInstanceImpl;
-		struct SongImpl;
-		struct EffectImpl;
-		struct EffectPassImpl;
-		struct EffectTechniqueImpl;
-		struct EffectAnnotationImpl;
-		struct BasicEffectImpl;
 		struct VertexBufferImpl;
 		struct DynamicVertexBufferImpl;
-	};		
+		struct BasicEffectImpl;
+	};
 
-	struct PlatformRectangle {		
-		int Left{ 0 };		
-		int Top{ 0 };		
-		int Right{ 0 };		
+	struct PlatformRectangle {
+		int Left{ 0 };
+		int Top{ 0 };
+		int Right{ 0 };
 		int Bottom{ 0 };
 
 		constexpr PlatformRectangle() = default;
 		constexpr PlatformRectangle(int x, int y, int l, int b)
-			:Left(x), Top(y), Right(l), Bottom(b){ }
+			:Left(x), Top(y), Right(l), Bottom(b) {
+		}
 
 		constexpr int X() const noexcept { return Left; }
 		constexpr int Y() const noexcept { return Top; }
@@ -220,18 +213,18 @@ namespace Xna {
 		int Height{ 0 };
 
 		constexpr PlatformSize() = default;
-		constexpr PlatformSize(int w, int h):Width(w), Height(h){}
+		constexpr PlatformSize(int w, int h) :Width(w), Height(h) {}
 	};
 
-	struct Platform {		
+	struct Platform {
 
 		struct InputProcessMessage;
-		static size_t MaxSamplerStates;	
-		
+		static size_t MaxSamplerStates;
+
 		//Platform
 
 		XNPP_API static void Initialize();
-		XNPP_API static void Dispose();	
+		XNPP_API static void Dispose();
 		XNPP_API static void Update();
 		XNPP_API static void Suspend();
 		XNPP_API static void Resume();
@@ -275,7 +268,7 @@ namespace Xna {
 
 		//GameHost
 
-		XNPP_API static void GameHost_Tick(GameHost& gh);						
+		XNPP_API static void GameHost_Tick(GameHost& gh);
 
 		//Input
 		XNPP_API static KeyboardState Keyboard_GetState();
@@ -291,22 +284,22 @@ namespace Xna {
 		XNPP_API static GamePadCapabilities GamePad_GetCapabilities(PlayerIndex index);
 		XNPP_API static bool GamePad_SetVibration(PlayerIndex index, float leftMotor, float rightMotor, float leftTrigger, float rightTrigger);
 		XNPP_API static void GamePad_Suspend();
-		XNPP_API static void GamePad_Resume();		
+		XNPP_API static void GamePad_Resume();
 
 		//States
 
 		XNPP_API static void BlendState_Apply(BlendState const& blendState, GraphicsDevice& device);
 		XNPP_API static void DepthStencilState_Apply(DepthStencilState const& depthStencil, GraphicsDevice& device);
 		XNPP_API static void RasterizerState_Apply(RasterizerState const& state, GraphicsDevice& device);
-		XNPP_API static void SamplerState_Apply(SamplerState const& state, GraphicsDevice& device, size_t samplerIndex, SamplerStateApplyType type);				
-		
+		XNPP_API static void SamplerState_Apply(SamplerState const& state, GraphicsDevice& device, size_t samplerIndex, SamplerStateApplyType type);
+
 		//GraphicsAdapter
 
 		XNPP_API static std::vector<std::optional<GraphicsAdapter>> GraphicsAdapter_GetAllGraphicsAdapters();
 		XNPP_API static void GraphicsAdapter_SupportedDisplayModes(GraphicsAdapter const& adapter);
 		XNPP_API static void GraphicsAdapter_CurrentDisplayMode(GraphicsAdapter const& adapter);
 		XNPP_API static bool GraphicsAdapter_IsProfileSupported(GraphicsAdapter const& adapter, GraphicsProfile graphicsProfile);
-		XNPP_API static bool GraphicsAdapter_QueryBackBufferFormat(GraphicsAdapter const& adapter, GraphicsProfile graphicsProfile, SurfaceFormat format, 
+		XNPP_API static bool GraphicsAdapter_QueryBackBufferFormat(GraphicsAdapter const& adapter, GraphicsProfile graphicsProfile, SurfaceFormat format,
 			DepthFormat depthFormat, int32_t multiSampleCount, SurfaceFormat& selectedFormat, DepthFormat& selectedDepthFormat, int32_t& selectedMultiSampleCount);
 		XNPP_API static bool GraphicsAdapter_QueryRenderTargetFormat(GraphicsAdapter const& adapter, GraphicsProfile graphicsProfile, SurfaceFormat format,
 			DepthFormat depthFormat, int32_t multiSampleCount, SurfaceFormat& selectedFormat, DepthFormat& selectedDepthFormat, int32_t& selectedMultiSampleCount);
@@ -324,7 +317,7 @@ namespace Xna {
 		XNPP_API static void GraphicsDevice_SetRenderTargets(GraphicsDevice const& graphicsDevice);
 		XNPP_API static void GraphicsDevice_Reset(GraphicsDevice& device, Xna::PresentationParameters const& presentationParameters, GraphicsAdapter const& graphicsAdapter);
 		XNPP_API static void GraphicsDevice_LazyInitialization(GraphicsDevice& device, intptr_t windowHandle);
-		
+
 
 		//Texture2D
 
@@ -338,7 +331,7 @@ namespace Xna {
 		XNPP_API static void Texture2D_SaveFile(Texture2D& texture, CSharp::Stream& stream, size_t width, size_t height, Texture2D_SaveFileType type);
 		XNPP_API static int32_t Texture2D_LevelCount(Texture2D const& texture);
 		XNPP_API static void Texture2D_SetData(Texture2D& texture, size_t level, std::optional<Rectangle> const& rect, const void* data, size_t startIndex, size_t elementCount, bool hasMipMap, size_t sizeOfData);
-		XNPP_API static void Texture2D_GetData(Texture2D& texture, size_t level, std::optional<Rectangle> const& rect, void* data, size_t startIndex, size_t elementCount, size_t sizeOfData);		
+		XNPP_API static void Texture2D_GetData(Texture2D& texture, size_t level, std::optional<Rectangle> const& rect, void* data, size_t startIndex, size_t elementCount, size_t sizeOfData);
 
 		//Texture3D
 
@@ -409,7 +402,7 @@ namespace Xna {
 		XNPP_API static void MediaPlayer_SetIsRepeating(bool value);
 		XNPP_API static double MediaPlayer_GetPlayPosition();
 		XNPP_API static double MediaPlayer_GetDuration();
-		
+
 		enum class MediaPlayer_MediaProperty {
 			Album,
 			Genre,
@@ -422,7 +415,7 @@ namespace Xna {
 		};
 
 		XNPP_API static void MediaPlayer_SetProperty(Song const& song, MediaPlayer_MediaProperty prop);
-		
+
 		//Effects
 
 		XNPP_API static void Effect_EffectPass_Apply(EffectPass const& p);
@@ -448,9 +441,9 @@ namespace Xna {
 			size_t startIndex,
 			size_t elementCount,
 			size_t vertexStride
-			);
-		
-	};	
+		);
+
+	};
 }
 
 #endif

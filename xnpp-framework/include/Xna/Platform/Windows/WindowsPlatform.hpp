@@ -14,9 +14,6 @@ namespace Xna {
 	//
 	// IMPLS
 	//
-	struct KeyboardImpl{};
-	struct MouseImpl{};
-	struct GamePadImpl{};
 
 	struct PlatformImpl::BlendStateImpl {
 		Microsoft::WRL::ComPtr<ID3D11BlendState> blendState{ nullptr };
