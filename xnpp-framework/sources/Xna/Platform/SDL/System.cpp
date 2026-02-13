@@ -95,7 +95,18 @@ namespace Xna {
 		SDL_Rect rect;
 
 		if (SDL_GetDisplayUsableBounds(SDL_GetPrimaryDisplay(), &rect)) {
-			return { rect.x, rect.y, rect.y + rect.w, rect.y + rect.h };
+			return { rect.x, rect.y, rect.x + rect.w, rect.y + rect.h };
+		}
+		
+		return {};
+	}
+
+	PlatformRectangle Platform::System_MonitorWorkingArea(intptr_t displayID) {
+		SDL_Rect rect;
+		const auto id = static_cast<SDL_DisplayID>(displayID);
+		
+		if (SDL_GetDisplayUsableBounds(id, &rect)) {
+			return { rect.x, rect.y, rect.x + rect.w, rect.y + rect.h };
 		}
 		
 		return {};

@@ -301,17 +301,7 @@ namespace Xna {
 
 	//
 	//System
-	//				
-
-	PlatformRectangle Platform::System_MonitorWorkingArea(intptr_t hMonitor) {
-		MONITORINFOEXW info{};
-		info.cbSize = sizeof(MONITORINFOEXW);
-
-		auto hmonitor = reinterpret_cast<HMONITOR>(hMonitor);
-		auto monitorInfo = reinterpret_cast<MONITORINFO*>(&info);
-		GetMonitorInfo(hmonitor, monitorInfo);
-		return RECTtoPRectangle(info.rcWork);
-	}
+	//					
 
 	intptr_t Platform::System_MonitorFromHandle(intptr_t hwnd) {
 		const auto handle = reinterpret_cast<HWND>(hwnd);
