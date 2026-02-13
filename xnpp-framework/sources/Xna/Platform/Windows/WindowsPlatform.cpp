@@ -301,14 +301,7 @@ namespace Xna {
 
 	//
 	//System
-	//					
-
-	intptr_t Platform::System_MonitorFromHandle(intptr_t hwnd) {
-		const auto handle = reinterpret_cast<HWND>(hwnd);
-		const auto monitor = MonitorFromWindow(handle, MONITOR_DEFAULTTONEAREST);
-		const auto i_monitor = reinterpret_cast<intptr_t>(monitor);
-		return i_monitor;
-	}
+	//						
 
 	intptr_t Platform::System_MonitorFromRect(int32_t left, int32_t top, int32_t right, int32_t bottom) {
 		RECT r{};

@@ -111,4 +111,11 @@ namespace Xna {
 		
 		return {};
 	}
+
+	intptr_t Platform::System_MonitorFromHandle(intptr_t windowPtr) {
+		auto window = reinterpret_cast<SDL_Window*>(windowPtr);		
+		SDL_DisplayID displayID = SDL_GetDisplayForWindow(window);
+
+		return static_cast<intptr_t>(displayID);
+	}
 }
