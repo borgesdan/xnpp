@@ -229,14 +229,12 @@ namespace Xna {
 		XNPP_API static void Suspend();
 		XNPP_API static void Resume();
 
-		//System
+		//System		
 
 		XNPP_API static PlatformRectangle System_ClientRect(intptr_t hwnd);
 		XNPP_API static PlatformRectangle System_WindowRect(intptr_t hwnd);
 		XNPP_API static size_t System_GetClockCounter();
-		XNPP_API static size_t System_GetClockFrequency();
-		XNPP_API static void System_ProcessException(std::string const& exception);
-		XNPP_API static void System_GetExecutablePath(std::filesystem::path& path);
+		XNPP_API static size_t System_GetClockFrequency();		
 		XNPP_API static bool System_MultiMonitorSupport();
 		XNPP_API static PlatformRectangle System_VirtualScreen();
 		XNPP_API static PlatformSize System_PrimaryMonitorSize();
@@ -248,9 +246,12 @@ namespace Xna {
 		XNPP_API static std::string System_MonitorDeviceName(intptr_t monitor);
 		XNPP_API static PlatformRectangle System_MonitorArea(intptr_t monitor);
 		XNPP_API static bool System_MonitorIsPrimary(intptr_t monitor);
-		XNPP_API static int32_t System_MonitorBitDepth(intptr_t monitor, intptr_t hdc);
-		//XNPP_API static void System_GetAllScreens(std::vector<CSharp::Screen>& scren);
+		XNPP_API static int32_t System_MonitorBitDepth(intptr_t monitor, intptr_t hdc);		
 		XNPP_API static std::vector<std::tuple<intptr_t, intptr_t>> System_GetAllMonitorHandlers();
+
+		//platform dependent
+		XNPP_API static void System_ProcessException(std::string const& exception);
+		XNPP_API static void System_GetExecutablePath(std::filesystem::path& path);
 
 		//GameWindow
 

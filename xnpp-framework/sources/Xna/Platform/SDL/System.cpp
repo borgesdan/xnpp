@@ -34,4 +34,14 @@ namespace Xna {
 	size_t Platform::System_GetClockFrequency() {
 		return static_cast<size_t>(SDL_GetPerformanceFrequency());
 	}
+
+	bool Platform::System_MultiMonitorSupport() {
+		int count = 0;		
+		auto displays = SDL_GetDisplays(&count);
+		
+		if (displays) 
+			SDL_free(displays);
+
+		return count > 1;
+	}
 }

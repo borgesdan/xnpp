@@ -302,13 +302,6 @@ namespace Xna {
 	//
 	//System
 	//	
-	
-
-	
-
-	bool Platform::System_MultiMonitorSupport() {
-		return GetSystemMetrics(SM_CMONITORS) != 0;
-	}
 
 	PlatformRectangle Platform::System_VirtualScreen() {
 		const auto x = GetSystemMetrics(SM_XVIRTUALSCREEN);
