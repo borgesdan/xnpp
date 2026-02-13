@@ -198,8 +198,8 @@ namespace Xna {
 		int Bottom{ 0 };
 
 		constexpr PlatformRectangle() = default;
-		constexpr PlatformRectangle(int x, int y, int l, int b)
-			:Left(x), Top(y), Right(l), Bottom(b) {
+		constexpr PlatformRectangle(int x, int y, int right, int bottom)
+			:Left(x), Top(y), Right(right), Bottom(bottom) {
 		}
 
 		constexpr int X() const noexcept { return Left; }
@@ -232,7 +232,7 @@ namespace Xna {
 		//System
 
 		XNPP_API static PlatformRectangle System_ClientRect(intptr_t hwnd);
-		XNPP_API static Rectangle System_WindowRect(intptr_t hwnd);
+		XNPP_API static PlatformRectangle System_WindowRect(intptr_t hwnd);
 		XNPP_API static size_t System_GetClockCounter();
 		XNPP_API static size_t System_GetClockFrequency();
 		XNPP_API static void System_ProcessException(std::exception& ex);
