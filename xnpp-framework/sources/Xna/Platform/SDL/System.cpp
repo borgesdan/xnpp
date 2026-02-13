@@ -90,4 +90,14 @@ namespace Xna {
 		}
 		return {};
 	}
+
+	PlatformRectangle Platform::System_WorkingArea() {
+		SDL_Rect rect;
+
+		if (SDL_GetDisplayUsableBounds(SDL_GetPrimaryDisplay(), &rect)) {
+			return { rect.x, rect.y, rect.y + rect.w, rect.y + rect.h };
+		}
+		
+		return {};
+	}
 }

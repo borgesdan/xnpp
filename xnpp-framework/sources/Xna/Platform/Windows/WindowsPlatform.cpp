@@ -301,14 +301,7 @@ namespace Xna {
 
 	//
 	//System
-	//			
-
-	PlatformRectangle Platform::System_WorkingArea() {
-		RECT workingArea{};
-		SystemParametersInfo(SPI_GETWORKAREA, NULL, &workingArea, NULL);
-
-		return RECTtoPRectangle(workingArea);
-	}
+	//				
 
 	PlatformRectangle Platform::System_MonitorWorkingArea(intptr_t hMonitor) {
 		MONITORINFOEXW info{};
