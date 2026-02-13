@@ -70,7 +70,6 @@ namespace Xna {
 			int32_t trackNumber{ 0 };
 			std::optional<bool> restricted;
 			int32_t playCount{ 0 };
-			PlatformImpl::SongImpl platformImpl;
 		};
 
 		std::shared_ptr<Implementation> impl;

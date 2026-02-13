@@ -10,7 +10,6 @@ namespace Xna {
 	struct EffectPass::Implementation {
 		std::string name;
 		std::optional<EffectAnnotationCollection> annotations;
-		PlatformImpl::EffectPassImpl platformImpl;
 	};
 
 	inline std::string EffectPass::Name() const { return impl->name; }

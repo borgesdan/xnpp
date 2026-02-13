@@ -122,27 +122,7 @@ namespace Xna {
 
 	struct PlatformImpl::DynamicSoundEffectInstanceImpl {
 		std::unique_ptr<DirectX::DynamicSoundEffectInstance> dynamicSoundEffectInstance = nullptr;
-	};
-
-	struct PlatformImpl::SongImpl {
-		//TODO: Nada a fazer
-	};
-
-	struct PlatformImpl::EffectPassImpl {
-		//TODO: nada a fazer?
-	};
-
-	struct PlatformImpl::EffectTechniqueImpl {
-		//TODO: nada a fazer?
-	};
-
-	struct PlatformImpl::EffectAnnotationImpl {
-		//TODO: nada a fazer?
-	};
-
-	struct PlatformImpl::EffectImpl {
-		//TODO: nada a fazer?
-	};
+	};	
 
 	struct PlatformImpl::BasicEffectImpl {
 		std::unique_ptr<DirectX::BasicEffect> basicEffect;
