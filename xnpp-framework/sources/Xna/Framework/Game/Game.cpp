@@ -57,7 +57,22 @@ namespace Xna {
             RunGame(true);            
         }
         catch (std::exception& ex) {
-            Platform::System_ProcessException(ex);
+            auto _ex = dynamic_cast<CSharp::Exception*>(&ex);
+
+            std::string message;
+
+            if (_ex == nullptr) {
+                message = ex.what();
+            }
+            else {
+#if DEBUG || _DEBUG
+                message = _ex->FullMessage();
+#else
+                message = _ex->Message();
+#endif
+            }
+
+            Platform::System_ProcessException(message);
         }        
 
         Platform::Dispose();

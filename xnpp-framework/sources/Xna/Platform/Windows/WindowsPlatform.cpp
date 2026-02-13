@@ -420,23 +420,9 @@ namespace Xna {
 
 		return bitDepth;
 	}
-	void Platform::System_ProcessException(std::exception& ex) {
-		auto _ex = dynamic_cast<CSharp::Exception*>(&ex);
 
-		std::string message;
-
-		if (_ex == nullptr) {
-			message = ex.what();
-		}
-		else {
-#if DEBUG || _DEBUG
-			message = _ex->FullMessage();
-#else
-			message = _ex->Message();
-#endif
-		}
-
-		MessageBox(nullptr, message.c_str(), "XN++", MB_OK);
+	void Platform::System_ProcessException(std::string const& exception) {
+		MessageBox(nullptr, exception.c_str(), "XN++", MB_OK);
 	}
 
 	void Platform::System_GetExecutablePath(std::filesystem::path& path) {

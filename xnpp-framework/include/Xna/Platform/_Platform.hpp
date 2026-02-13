@@ -235,7 +235,7 @@ namespace Xna {
 		XNPP_API static PlatformRectangle System_WindowRect(intptr_t hwnd);
 		XNPP_API static size_t System_GetClockCounter();
 		XNPP_API static size_t System_GetClockFrequency();
-		XNPP_API static void System_ProcessException(std::exception& ex);
+		XNPP_API static void System_ProcessException(std::string const& exception);
 		XNPP_API static void System_GetExecutablePath(std::filesystem::path& path);
 		XNPP_API static bool System_MultiMonitorSupport();
 		XNPP_API static PlatformRectangle System_VirtualScreen();
