@@ -301,13 +301,7 @@ namespace Xna {
 
 	//
 	//System
-	//	
-
-	Rectangle Platform::System_WindowRect(intptr_t hwnd) {
-		RECT rect{};
-		GetWindowRect(reinterpret_cast<HWND>(hwnd), &rect);
-		return Rectangle(rect.left, rect.top, rect.right - rect.left, rect.bottom - rect.top);
-	}
+	//		
 
 	size_t Platform::System_GetClockCounter() {
 		LARGE_INTEGER counter;
