@@ -188,4 +188,11 @@ namespace Xna {
 
 		return PlatformRectangle(rect.x, rect.y, rect.x + rect.w, rect.y + rect.h);
 	}
+
+	bool Platform::System_MonitorIsPrimary(intptr_t monitor) {
+		SDL_DisplayID id = static_cast<SDL_DisplayID>(monitor);
+		const auto primary = SDL_GetPrimaryDisplay();
+
+		return id == 0 || id == primary;
+	}
 }

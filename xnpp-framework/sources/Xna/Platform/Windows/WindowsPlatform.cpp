@@ -304,14 +304,6 @@ namespace Xna {
 	//System
 	//								
 
-	bool Platform::System_MonitorIsPrimary(intptr_t monitor) {
-		MONITORINFOEX info{};
-		info.cbSize = sizeof(MONITORINFOEX);
-		auto hmonitor = reinterpret_cast<HMONITOR>(monitor);
-		GetMonitorInfo(hmonitor, &info);
-		return ((info.dwFlags & MONITORINFOF_PRIMARY) != 0);
-	}	
-
 	int32_t Platform::System_MonitorBitDepth(intptr_t monitor, intptr_t hdc) {
 		HDC screenDC = reinterpret_cast<HDC>(hdc);
 
