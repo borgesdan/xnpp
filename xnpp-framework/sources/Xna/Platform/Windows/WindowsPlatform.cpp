@@ -302,15 +302,7 @@ namespace Xna {
 
 	//
 	//System
-	//							
-
-	PlatformRectangle Platform::System_MonitorArea(intptr_t monitor) {
-		MONITORINFOEX info{};
-		info.cbSize = sizeof(MONITORINFOEX);
-		auto hmonitor = reinterpret_cast<HMONITOR>(monitor);
-		GetMonitorInfo(hmonitor, &info);
-		return RECTtoPRectangle(info.rcMonitor);
-	}
+	//								
 
 	bool Platform::System_MonitorIsPrimary(intptr_t monitor) {
 		MONITORINFOEX info{};

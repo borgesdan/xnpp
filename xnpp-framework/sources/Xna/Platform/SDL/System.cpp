@@ -174,4 +174,18 @@ namespace Xna {
 
 		return {};
 	}
+
+	PlatformRectangle Platform::System_MonitorArea(intptr_t monitor) {
+		SDL_DisplayID id = static_cast<SDL_DisplayID>(monitor);
+
+		if (id == 0)
+			id = SDL_GetPrimaryDisplay();
+
+		SDL_Rect rect;
+		
+		if (!SDL_GetDisplayBounds(id, &rect))
+			return {};
+
+		return PlatformRectangle(rect.x, rect.y, rect.x + rect.w, rect.y + rect.h);
+	}
 }
