@@ -41,6 +41,12 @@ namespace Xna {
 		inline bool operator==(std::nullptr_t) const noexcept { return impl == nullptr; }
 		inline explicit operator bool() const noexcept { return impl != nullptr; }
 
+		enum class Style {
+			Fullscreen,
+			Windowed,
+			Borderless,
+		};
+
 	protected:
 		virtual void SetSupportedOrientations(DisplayOrientation orientations) {};
 
@@ -50,15 +56,19 @@ namespace Xna {
 		bool (IsMinimized)() const { return Platform::GameWindow_WindowIsMinimized(*this); }
 		void (IsMinimized)(bool value) { Platform::GameWindow_MinimizeWindow(*this, value); }
 
-		inline void BeginScreenDeviceChange(bool willBeFullScreen) { Platform::GameWindow_BeginScreenDeviceChange(*this, willBeFullScreen); }
-
-		inline void EndScreenDeviceChange(std::string const& screenDeviceName, int32_t clientWidth, int32_t clientHeight) { 
-			Platform::GameWindow_EndScreenDeviceChange(*this, screenDeviceName, clientWidth, clientHeight); 
+		inline void BeginScreenDeviceChange(bool willBeFullScreen) { 
+			impl->style = willBeFullScreen ? Style::Fullscreen : Style::Windowed;
 		}
-		
+
 		inline void EndScreenDeviceChange(std::string const& screenDeviceName) {
 			const auto clientBounds = ClientBounds();
 			EndScreenDeviceChange(screenDeviceName, clientBounds.Width, clientBounds.Height);
+		}
+
+		inline void EndScreenDeviceChange(std::string const& screenDeviceName, int32_t clientWidth, int32_t clientHeight) { 
+			impl->height = clientHeight;
+			impl->width = clientWidth;
+			Platform::GameWindow_Update(*this);
 		}
 
 		void Close();
@@ -86,6 +96,9 @@ namespace Xna {
 			DisplayOrientation displayOrientation{ DisplayOrientation::Default };
 			bool allowUserResizing{ false };
 			bool isMouseVisible{ false };
+			int32_t width{ 800 };
+			int32_t height{ 480 };
+			Style style{ Style::Windowed };
 
 			CSharp::Event<CSharp::EventArgs> ScreenDeviceNameChanged;
 			CSharp::Event<CSharp::EventArgs> ClientSizeChanged;

@@ -272,9 +272,7 @@ namespace Xna {
 		XNPP_API static void GameWindow_SetMouseVisible(GameWindow const& gw, bool value);
 		XNPP_API static void GameWindow_AllowUserResizing(GameWindow const& gw, bool value);
 		XNPP_API static Rectangle GameWindow_ClientBounds(GameWindow const& gw);
-		XNPP_API static void GameWindow_SetTitle(GameWindow const& gw, std::string const& title);
-		XNPP_API static void GameWindow_BeginScreenDeviceChange(GameWindow const& gw, bool willBeFullScreen);
-		XNPP_API static void GameWindow_EndScreenDeviceChange(GameWindow const& gw, std::string const& screenDeviceName, int32_t clientWidth, int32_t clientHeight);
+		XNPP_API static void GameWindow_SetTitle(GameWindow const& gw, std::string const& title);		
 
 		//GameHost
 

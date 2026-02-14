@@ -9,6 +9,7 @@
 #include "WindowsPlatformHelpers.hpp"
 #include <vector>
 #include <memory>
+#include <SDL3/SDL.h>
 
 namespace Xna {
 	//
@@ -133,10 +134,145 @@ namespace Xna {
 		Microsoft::WRL::ComPtr<ID3D11Buffer> buffer;
 	};
 
+	static WPARAM ProcessKeyboard(SDL_Event const& event) {
+		WPARAM wParam{ 0 };
+
+		switch (event.key.key) {
+			// Setas e Navegação
+		case SDLK_LEFT:     wParam = VK_LEFT;     break;
+		case SDLK_RIGHT:    wParam = VK_RIGHT;    break;
+		case SDLK_UP:       wParam = VK_UP;       break;
+		case SDLK_DOWN:     wParam = VK_DOWN;     break;
+		case SDLK_HOME:     wParam = VK_HOME;     break;
+		case SDLK_END:      wParam = VK_END;      break;
+		case SDLK_PAGEUP:   wParam = VK_PRIOR;    break;
+		case SDLK_PAGEDOWN: wParam = VK_NEXT;     break;
+
+			// Teclas de Controle
+		case SDLK_ESCAPE:   wParam = VK_ESCAPE;   break;
+		case SDLK_RETURN:   wParam = VK_RETURN;   break;
+		case SDLK_SPACE:    wParam = VK_SPACE;    break;
+		case SDLK_BACKSPACE:wParam = VK_BACK;     break;
+		case SDLK_TAB:      wParam = VK_TAB;      break;
+		case SDLK_DELETE:   wParam = VK_DELETE;   break;
+		case SDLK_INSERT:   wParam = VK_INSERT;   break;
+
+			// Modificadores
+		case SDLK_LSHIFT:
+		case SDLK_RSHIFT:   wParam = VK_SHIFT;    break;
+		case SDLK_LCTRL:
+		case SDLK_RCTRL:    wParam = VK_CONTROL;  break;
+		case SDLK_LALT:
+		case SDLK_RALT:     wParam = VK_MENU;     break;
+
+			// Teclas de Função
+		case SDLK_F1:  wParam = VK_F1;  break;
+		case SDLK_F2:  wParam = VK_F2;  break;
+		case SDLK_F3:  wParam = VK_F3;  break;
+		case SDLK_F4:  wParam = VK_F4;  break;
+		case SDLK_F5:  wParam = VK_F5;  break;
+		case SDLK_F6:  wParam = VK_F6;  break;
+		case SDLK_F7:  wParam = VK_F7;  break;
+		case SDLK_F8:  wParam = VK_F8;  break;
+		case SDLK_F9:  wParam = VK_F9;  break;
+		case SDLK_F10: wParam = VK_F10; break;
+		case SDLK_F11: wParam = VK_F11; break;
+		case SDLK_F12: wParam = VK_F12; break;
+
+		default:
+			// Para caracteres ASCII (A-Z, 0-9)
+			if (event.key.key >= 32 && event.key.key <= 126) {
+				wParam = static_cast<WPARAM>(event.key.key);
+				// No Windows, VK_A até VK_Z são sempre maiúsculos ('A' = 0x41)
+				if (wParam >= 'a' && wParam <= 'z') {
+					wParam -= 32;
+				}
+			}
+			else {
+				// Se cair aqui, a tecla não foi mapeada (ex: Volume, Media keys)
+				wParam = 0;
+			}
+			break;
+		}
+
+		return wParam;
+	}
+
 	struct Platform::InputProcessMessage {
-		UINT msg;
-		WPARAM wParam;
-		LPARAM lParam;
+		UINT msg{0};
+		WPARAM wParam{0};
+		LPARAM lParam{0};
+
+		InputProcessMessage() = default;
+		
+		inline InputProcessMessage(SDL_Event const& event) {
+			if (event.type == SDL_EVENT_KEY_DOWN || event.type == SDL_EVENT_KEY_UP) {
+				msg = (event.type == SDL_EVENT_KEY_DOWN) ? WM_KEYDOWN : WM_KEYUP;
+				wParam = ProcessKeyboard(event);
+				
+				// Reconstruindo o lParam bit a bit:
+				uint32_t repeatCount = 1;
+				uint32_t scanCode = static_cast<uint32_t>(event.key.key) & 0xFF;
+				uint32_t extended = 0;
+				uint32_t prevState = event.key.repeat ? 1 : 0;
+				uint32_t transition = event.type == SDL_EVENT_KEY_UP ? 1 : 0;
+
+				lParam = (repeatCount) // Bits 0-15
+					| (scanCode << 16) // Bits 16-23
+					| (extended << 24) // Bit 24
+					| (prevState << 30) // Bit 30
+					| (transition << 31); // Bit 31
+
+				return;
+			}
+
+			switch (event.type)
+			{
+			case SDL_EVENT_MOUSE_MOTION:
+				msg = WM_MOUSEMOVE;				
+				if (event.motion.state & SDL_BUTTON_LMASK) wParam |= MK_LBUTTON;
+				if (event.motion.state & SDL_BUTTON_RMASK) wParam |= MK_RBUTTON;
+				if (event.motion.state & SDL_BUTTON_MMASK) wParam |= MK_MBUTTON;				
+				lParam = MAKELPARAM((int)event.motion.x, (int)event.motion.y);
+				break;
+			case SDL_EVENT_MOUSE_BUTTON_DOWN:
+			case SDL_EVENT_MOUSE_BUTTON_UP: {
+				bool down = (event.type == SDL_EVENT_MOUSE_BUTTON_DOWN);
+				lParam = MAKELPARAM((int)event.button.x, (int)event.button.y);
+
+				if (event.button.button == SDL_BUTTON_LEFT) {
+					msg = down ? WM_LBUTTONDOWN : WM_LBUTTONUP;
+					wParam = MK_LBUTTON;
+				}
+				else if (event.button.button == SDL_BUTTON_RIGHT) {
+					msg = down ? WM_RBUTTONDOWN : WM_RBUTTONUP;
+					wParam = MK_RBUTTON;
+				}
+				else if (event.button.button == SDL_BUTTON_MIDDLE) {
+					msg = down ? WM_MBUTTONDOWN : WM_MBUTTONUP;
+					wParam = MK_MBUTTON;
+				}
+				else if (event.button.button == SDL_BUTTON_X1 || event.button.button == SDL_BUTTON_X2) {
+					msg = down ? WM_XBUTTONDOWN : WM_XBUTTONUP;
+					// XBUTTON usa o HIWORD do wParam para identificar qual botão (1 ou 2)
+					WORD xbtn = (event.button.button == SDL_BUTTON_X1) ? XBUTTON1 : XBUTTON2;
+					wParam = MAKEWPARAM(0, xbtn);
+				}
+				break;
+			}
+			case SDL_EVENT_MOUSE_WHEEL: { //TODO: [!] Mouse wheel retorna 0 no directxtk, mas vamos desconsiderar por enquanto
+				msg = WM_MOUSEWHEEL;				
+				short wheelDelta = static_cast<short>(event.wheel.y * 120); //Windows 120 (WHEEL_DELTA).
+				wParam = MAKEWPARAM(0, wheelDelta);				
+				float mouseX, mouseY;
+				SDL_GetMouseState(&mouseX, &mouseY);
+				lParam = MAKELPARAM((int)mouseX, (int)mouseY);
+				break;
+			}
+			default:
+				break;
+			}
+		}
 	};
 
 	//

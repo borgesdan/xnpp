@@ -28,11 +28,36 @@ public:
 	}
 
 	void Update(Xna::GameTime& gameTime) override {
+		oldKState = curKState;
+		curKState = Xna::Keyboard::GetState();
+
+		if (curKState.IsKeyDown(Xna::Keys::Right) && oldKState.IsKeyUp(Xna::Keys::Right)) {
+			backColor = Xna::Color::Red();
+		}
+
+		if (curKState.IsKeyDown(Xna::Keys::Left) && oldKState.IsKeyUp(Xna::Keys::Left)) {
+			backColor = Xna::Color::Green();
+		}
+
+		auto mouseState = Xna::Mouse::GetState();
+
+		if (mouseState.LeftButton == Xna::ButtonState::Pressed) {
+			backColor = Xna::Color::Black();
+		}
+
+		if (mouseState.RightButton == Xna::ButtonState::Pressed) {
+			backColor = Xna::Color::Orange();
+		}
+
+		if (mouseState.ScroolWheelValue > 0) {
+			backColor = Xna::Color::CornflowerBlue();
+		}
+
 		base::Update(gameTime);
 	}
 
 	void Draw(Xna::GameTime& gameTime) override {
-		graphics.GraphicsDevice()->Clear(Xna::Color::CornflowerBlue());
+		graphics.GraphicsDevice()->Clear(backColor);
 
 		base::Draw(gameTime);
 	}
@@ -40,6 +65,9 @@ public:
 private:
 	Xna::GraphicsDeviceManager graphics = nullptr;
 	Xna::SpriteBatch spriteBatch = nullptr;
+	Xna::KeyboardState oldKState{};
+	Xna::KeyboardState curKState{};
+	Xna::Color backColor = Xna::Color::CornflowerBlue();
 	bool one = false;
 };
 

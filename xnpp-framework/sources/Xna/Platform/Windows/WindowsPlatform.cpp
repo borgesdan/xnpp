@@ -19,6 +19,7 @@
 #include "Xna/Framework/Graphics/Effect/BasicEffect.hpp"
 #include "Xna/Framework/Graphics/GraphicsDevice.hpp"
 #include "SDL3/SDL.h"
+#include <SDL3/SDL_system.h>
 
 using Microsoft::WRL::ComPtr;
 
@@ -343,29 +344,6 @@ namespace Xna {
 	}
 
 	size_t Platform::MaxSamplerStates = static_cast<size_t>(D3D11_COMMONSHADER_SAMPLER_SLOT_COUNT);
-
-	//
-	// GameHost
-	//
-
-	void Platform::GameHost_Tick(GameHost& gh) {
-		MSG msg{};
-
-		do {
-			if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
-			{
-				TranslateMessage(&msg);
-				DispatchMessage(&msg);
-			}
-			else {
-				if (gh.impl->exitRequested)
-					gh.impl->gameWindow.Close();
-				else
-					gh.RunOneFrame();
-			}
-
-		} while (msg.message != WM_QUIT);
-	}
 
 	//
 	// Effect
