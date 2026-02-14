@@ -216,6 +216,15 @@ namespace Xna {
 		constexpr PlatformSize(int w, int h) :Width(w), Height(h) {}
 	};
 
+	struct Value2 {
+		intptr_t One;
+		intptr_t Two;
+
+		constexpr Value2() = default;
+		constexpr Value2(intptr_t one, intptr_t two)
+			: One(one), Two(two){ }
+	};
+
 	struct Platform {
 
 		struct InputProcessMessage;
@@ -247,7 +256,7 @@ namespace Xna {
 		XNPP_API static PlatformRectangle System_MonitorArea(intptr_t monitor);
 		XNPP_API static bool System_MonitorIsPrimary(intptr_t monitor);
 		XNPP_API static int32_t System_MonitorBitDepth(intptr_t monitor, intptr_t hdc);		
-		XNPP_API static std::vector<std::tuple<intptr_t, intptr_t>> System_GetAllMonitorHandlers();
+		XNPP_API static std::vector<Value2> System_GetAllMonitorHandlers();
 
 		//platform dependent
 		XNPP_API static void System_ProcessException(std::string const& exception);

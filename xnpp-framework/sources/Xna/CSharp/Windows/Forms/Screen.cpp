@@ -30,8 +30,7 @@ namespace Xna::CSharp {
 
 				for (auto& hnd : handlers) {
 					auto screen = Screen(
-						get<0>(hnd),
-						get<1>(hnd));
+						hnd.One, hnd.Two);
 
 					s_screens.push_back(screen);
 				}

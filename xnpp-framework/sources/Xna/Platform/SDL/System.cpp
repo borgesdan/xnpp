@@ -209,4 +209,21 @@ namespace Xna {
 		
 		return 32;
 	}
+
+	std::vector<Value2> Platform::System_GetAllMonitorHandlers() {
+		std::vector<Value2> list;
+		int count = 0;
+		
+		SDL_DisplayID* displays = SDL_GetDisplays(&count);
+
+		if (displays) {
+			for (size_t i = 0; i < count; ++i) {
+				list.push_back(Value2(static_cast<intptr_t>(displays[i]), 0));
+			}	
+
+			SDL_free(displays);
+		}
+
+		return list;
+	}
 }

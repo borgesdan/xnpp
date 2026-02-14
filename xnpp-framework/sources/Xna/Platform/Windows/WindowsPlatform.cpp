@@ -314,21 +314,7 @@ namespace Xna {
 
 		if (length > 0)
 			path = std::filesystem::path(buffer, buffer + length);
-	}
-
-	static BOOL CALLBACK MonitorEnumProcCallback(HMONITOR hmonitor, HDC hdc, LPRECT lprect, LPARAM lparam) {
-		auto handlers = (std::vector<std::tuple<intptr_t, intptr_t>>*)lparam;
-		handlers->push_back({reinterpret_cast<intptr_t>(hmonitor), reinterpret_cast<intptr_t>(hdc) });
-
-		return true;
-	}
-
-	std::vector<std::tuple<intptr_t, intptr_t>> Platform::System_GetAllMonitorHandlers() {
-		std::vector<std::tuple<intptr_t, intptr_t>> list;
-		EnumDisplayMonitors(NULL, NULL, MonitorEnumProcCallback, (LPARAM)&list);
-
-		return list;
-	}
+	}		
 
 	void Platform::Initialize() {
 		WindowsPlatform::Initialize();
