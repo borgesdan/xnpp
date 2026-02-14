@@ -195,4 +195,18 @@ namespace Xna {
 
 		return id == 0 || id == primary;
 	}
+
+	int32_t Platform::System_MonitorBitDepth(intptr_t monitorID, intptr_t _) {
+		SDL_DisplayID id = static_cast<SDL_DisplayID>(monitorID);
+		if (id == 0) {
+			id = SDL_GetPrimaryDisplay();
+		}
+		
+		const SDL_DisplayMode* mode = SDL_GetCurrentDisplayMode(id);
+
+		if (mode) 
+			return static_cast<int32_t>(SDL_BITSPERPIXEL(mode->format));
+		
+		return 32;
+	}
 }

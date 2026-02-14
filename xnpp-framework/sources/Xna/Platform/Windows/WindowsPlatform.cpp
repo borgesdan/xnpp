@@ -302,28 +302,7 @@ namespace Xna {
 
 	//
 	//System
-	//								
-
-	int32_t Platform::System_MonitorBitDepth(intptr_t monitor, intptr_t hdc) {
-		HDC screenDC = reinterpret_cast<HDC>(hdc);
-
-		if (screenDC == NULL) {
-			MONITORINFOEX info{};
-			info.cbSize = sizeof(MONITORINFOEX);
-			auto hmonitor = reinterpret_cast<HMONITOR>(monitor);
-			GetMonitorInfo(hmonitor, &info);
-
-			auto _deviceName = info.szDevice;
-			screenDC = CreateDCW(LPCWSTR(_deviceName), NULL, NULL, NULL);
-		}
-		
-		int32_t bitDepth = GetDeviceCaps(screenDC, BITSPIXEL);
-		bitDepth *= GetDeviceCaps(screenDC, PLANES);
-
-		DeleteDC(screenDC);
-
-		return bitDepth;
-	}
+	//									
 
 	void Platform::System_ProcessException(std::string const& exception) {
 		MessageBox(nullptr, exception.c_str(), "XN++", MB_OK);
