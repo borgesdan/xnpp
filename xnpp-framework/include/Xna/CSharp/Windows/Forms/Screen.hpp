@@ -63,9 +63,6 @@ namespace Xna::CSharp {
 		}
 
 	private:
-		static constexpr int s_primaryMonitor = 65537;
-
-	private:
 		intptr_t _hmonitor{ 0 };
 		Rectangle _bounds{};
 		Rectangle _workingArea{};

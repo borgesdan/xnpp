@@ -230,7 +230,7 @@ namespace Xna {
 		XNPP_API static void Resume();
 
 		//System		
-
+		
 		XNPP_API static PlatformRectangle System_ClientRect(intptr_t hwnd);
 		XNPP_API static PlatformRectangle System_WindowRect(intptr_t hwnd);
 		XNPP_API static size_t System_GetClockCounter();

@@ -4,7 +4,7 @@
 
 namespace Xna::CSharp {
 	Screen::Screen(intptr_t monitor, intptr_t hdc) {
-		if (!SystemInformation::MultiMonitorSupport() || monitor == s_primaryMonitor) {
+		if (!SystemInformation::MultiMonitorSupport() || monitor == 0) {
 			_bounds = SystemInformation::VirtualScreen();
 			_primary = true;
 			_deviceName = Platform::System_MonitorDeviceName(monitor);
@@ -40,14 +40,14 @@ namespace Xna::CSharp {
 			}
 		}
 		
-		auto primary = Screen(s_primaryMonitor);
+		auto primary = Screen(0);
 		s_screens.push_back(primary);
 
 		return s_screens;
 	}
 
 	Screen Screen::PrimaryScreen() {
-		auto screen = Screen(s_primaryMonitor, 0);
+		auto screen = Screen(0, 0);
 
 		if (SystemInformation::MultiMonitorSupport())
 		{
@@ -64,7 +64,7 @@ namespace Xna::CSharp {
 
 	Rectangle Screen::WorkingArea() {
 		if (_currentDesktopChangedCount != DesktopChangedCount()) {
-			if (!SystemInformation::MultiMonitorSupport() || _hmonitor == s_primaryMonitor) {
+			if (!SystemInformation::MultiMonitorSupport() || _hmonitor == 0) {
 				_workingArea = SystemInformation::WorkingArea();
 			}
 			else {
@@ -91,7 +91,7 @@ namespace Xna::CSharp {
 			return Screen(i_monitor);
 		}
 
-		return Screen(s_primaryMonitor);
+		return Screen(0);
 	}
 
 	Screen Screen::FromRectangle(Rectangle const& rectangle) {
@@ -106,7 +106,7 @@ namespace Xna::CSharp {
 			return Screen(i_monitor);
 		}
 
-		return Screen(s_primaryMonitor);
+		return Screen(0);
 	}
 
 	Screen Screen::FromHandle(intptr_t hwnd) {
@@ -116,6 +116,6 @@ namespace Xna::CSharp {
 			return Screen(i_monitor);
 		}
 
-		return Screen(s_primaryMonitor);
+		return Screen(0);
 	}
 }

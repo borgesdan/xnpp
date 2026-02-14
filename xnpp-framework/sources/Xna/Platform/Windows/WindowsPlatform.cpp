@@ -18,6 +18,7 @@
 #include "Xna/Framework/Graphics/Effect/EffectPass.hpp"
 #include "Xna/Framework/Graphics/Effect/BasicEffect.hpp"
 #include "Xna/Framework/Graphics/GraphicsDevice.hpp"
+#include "SDL3/SDL.h"
 
 using Microsoft::WRL::ComPtr;
 
@@ -301,15 +302,7 @@ namespace Xna {
 
 	//
 	//System
-	//						
-
-	std::string Platform::System_MonitorDeviceName(intptr_t monitor) {
-		MONITORINFOEX info{};
-		info.cbSize = sizeof(MONITORINFOEX);
-		auto hmonitor = reinterpret_cast<HMONITOR>(monitor);
-		GetMonitorInfo(hmonitor, &info);
-		return std::string(info.szDevice);
-	}
+	//							
 
 	PlatformRectangle Platform::System_MonitorArea(intptr_t monitor) {
 		MONITORINFOEX info{};
@@ -376,6 +369,12 @@ namespace Xna {
 
 	void Platform::Initialize() {
 		WindowsPlatform::Initialize();
+
+		//TODO: [!] remover isso aqui
+		if (!(SDL_Init(SDL_INIT_VIDEO))) {
+			// Falha ao inicializar: SDL_GetPrimaryDisplay retornará 0
+			SDL_Log("Erro: %s", SDL_GetError());
+		}
 	}
 
 	void Platform::Dispose() {

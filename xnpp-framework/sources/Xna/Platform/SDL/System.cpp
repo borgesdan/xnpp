@@ -159,4 +159,19 @@ namespace Xna {
 
 		return static_cast<intptr_t>(displayID);
 	}
+
+	std::string Platform::System_MonitorDeviceName(intptr_t monitorID) {
+		SDL_DisplayID id = static_cast<SDL_DisplayID>(monitorID);
+
+		if (id == 0) 
+			id = SDL_GetPrimaryDisplay();
+		
+		const auto name = SDL_GetDisplayName(id);
+
+		if (name) {
+			return std::string(name);
+		}
+
+		return {};
+	}
 }
