@@ -301,20 +301,7 @@ namespace Xna {
 
 	//
 	//System
-	//						
-
-	intptr_t Platform::System_MonitorFromRect(int32_t left, int32_t top, int32_t right, int32_t bottom) {
-		RECT r{};
-		r.left = static_cast<LONG>(left);
-		r.right = static_cast<LONG>(right);
-		r.top = static_cast<LONG>(top);
-		r.bottom = static_cast<LONG>(bottom);
-
-		const auto monitor = MonitorFromRect(&r, MONITOR_DEFAULTTONEAREST);
-		const auto icmonitor = reinterpret_cast<intptr_t>(monitor);
-
-		return icmonitor;
-	}
+	//					
 
 	intptr_t Platform::System_MonitorFromPoint(int32_t x, int32_t y) {
 		POINT p{};
@@ -347,11 +334,7 @@ namespace Xna {
 		auto hmonitor = reinterpret_cast<HMONITOR>(monitor);
 		GetMonitorInfo(hmonitor, &info);
 		return ((info.dwFlags & MONITORINFOF_PRIMARY) != 0);
-	}
-
-	void System_GetAllScreens(std::vector<CSharp::Screen>& scren) {
-
-	}
+	}	
 
 	int32_t Platform::System_MonitorBitDepth(intptr_t monitor, intptr_t hdc) {
 		HDC screenDC = reinterpret_cast<HDC>(hdc);

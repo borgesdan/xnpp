@@ -118,4 +118,34 @@ namespace Xna {
 
 		return static_cast<intptr_t>(displayID);
 	}
+
+	intptr_t Platform::System_MonitorFromRect(int32_t left, int32_t top, int32_t right, int32_t bottom) {
+		SDL_Rect targetRect = { left, top, right - left, bottom - top };
+
+		int count = 0;
+		SDL_DisplayID* displays = SDL_GetDisplays(&count);
+
+		if (!displays || count == 0) return 0;
+
+		SDL_DisplayID bestMonitor = displays[0];
+		int maxOverlapArea = -1;
+
+		for (int i = 0; i < count; ++i) {
+			SDL_Rect displayBounds;
+			if (SDL_GetDisplayBounds(displays[i], &displayBounds)) {
+				SDL_Rect intersection;
+				
+				if (SDL_GetRectIntersection(&targetRect, &displayBounds, &intersection)) {
+					int area = intersection.w * intersection.h;
+					if (area > maxOverlapArea) {
+						maxOverlapArea = area;
+						bestMonitor = displays[i];
+					}
+				}
+			}
+		}
+
+		SDL_free(displays);
+		return static_cast<intptr_t>(bestMonitor);
+	}
 }
