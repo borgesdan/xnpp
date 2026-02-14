@@ -148,4 +148,15 @@ namespace Xna {
 		SDL_free(displays);
 		return static_cast<intptr_t>(bestMonitor);
 	}
+
+	intptr_t Platform::System_MonitorFromPoint(int32_t x, int32_t y) {
+		SDL_Point point = { x, y };
+		SDL_DisplayID displayID = SDL_GetDisplayForPoint(&point);
+
+		if (displayID == 0) {
+			displayID = SDL_GetPrimaryDisplay();
+		}
+
+		return static_cast<intptr_t>(displayID);
+	}
 }

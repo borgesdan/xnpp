@@ -301,16 +301,7 @@ namespace Xna {
 
 	//
 	//System
-	//					
-
-	intptr_t Platform::System_MonitorFromPoint(int32_t x, int32_t y) {
-		POINT p{};
-		p.x = static_cast<LONG>(x);
-		p.y = static_cast<LONG>(y);
-		const auto monitor = MonitorFromPoint(p, MONITOR_DEFAULTTONEAREST);
-		const auto i_monitor = reinterpret_cast<intptr_t>(monitor);
-		return i_monitor;
-	}
+	//						
 
 	std::string Platform::System_MonitorDeviceName(intptr_t monitor) {
 		MONITORINFOEX info{};
