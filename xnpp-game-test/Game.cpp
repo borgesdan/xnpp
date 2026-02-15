@@ -38,6 +38,26 @@ public:
 			backColor = Xna::Color::Green();
 		}
 
+		if (curKState.IsKeyDown(Xna::Keys::Left) && oldKState.IsKeyUp(Xna::Keys::Left)) {
+			backColor = Xna::Color::Blue();
+		}
+
+		if (curKState.IsKeyDown(Xna::Keys::Space) && oldKState.IsKeyUp(Xna::Keys::Space)) {
+			backColor = Xna::Color::Azure();
+		}
+
+		if (curKState.IsKeyDown(Xna::Keys::PageDown) && oldKState.IsKeyUp(Xna::Keys::PageDown)) {
+			backColor = Xna::Color::Bisque();
+		}
+
+		if (curKState.IsKeyDown(Xna::Keys::D1) && oldKState.IsKeyUp(Xna::Keys::D1)) {
+			backColor = Xna::Color::Cyan();
+		}
+
+		if (curKState.IsKeyDown(Xna::Keys::NumPad0) && oldKState.IsKeyUp(Xna::Keys::NumPad0)) {
+			backColor = Xna::Color::DarkOrange();
+		}
+
 		auto mouseState = Xna::Mouse::GetState();
 
 		if (mouseState.LeftButton == Xna::ButtonState::Pressed) {

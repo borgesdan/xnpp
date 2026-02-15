@@ -140,7 +140,7 @@ namespace Xna {
 	}
 
 #else
-	static constexpr std::array<std::pair<SDL_Scancode, Keys>, 64> SDLKeyMap =
+	static constexpr std::array<std::pair<SDL_Scancode, Keys>, 78> SDLKeyMap =
 	{ {
 		{ SDL_SCANCODE_UNKNOWN, Keys::None},
 		{ SDL_SCANCODE_A, Keys::A },
@@ -168,26 +168,31 @@ namespace Xna {
 		{ SDL_SCANCODE_W, Keys::W },
 		{ SDL_SCANCODE_X, Keys::X },
 		{ SDL_SCANCODE_Y, Keys::Y },
-		{ SDL_SCANCODE_Z, Keys::Z },
-
-		{ SDL_SCANCODE_SPACE, Keys::Space },
-		{ SDL_SCANCODE_RETURN, Keys::Enter },
-		{ SDL_SCANCODE_ESCAPE, Keys::Escape },
-		{ SDL_SCANCODE_TAB, Keys::Tab },
-		{ SDL_SCANCODE_BACKSPACE, Keys::Backspace },
-
+		{ SDL_SCANCODE_Z, Keys::Z },		
+		{ SDL_SCANCODE_0, Keys::D0 },
+		{ SDL_SCANCODE_1, Keys::D1 },
+		{ SDL_SCANCODE_2, Keys::D2 },
+		{ SDL_SCANCODE_3, Keys::D3 },
+		{ SDL_SCANCODE_4, Keys::D4 },
+		{ SDL_SCANCODE_5, Keys::D5 },
+		{ SDL_SCANCODE_6, Keys::D6 },
+		{ SDL_SCANCODE_7, Keys::D7 },
+		{ SDL_SCANCODE_8, Keys::D8 },
+		{ SDL_SCANCODE_9, Keys::D9 },
+		{ SDL_SCANCODE_KP_0, Keys::NumPad0 },
+		{ SDL_SCANCODE_KP_1, Keys::NumPad1 },
+		{ SDL_SCANCODE_KP_2, Keys::NumPad2 },
+		{ SDL_SCANCODE_KP_3, Keys::NumPad3 },
+		{ SDL_SCANCODE_KP_4, Keys::NumPad4 },
+		{ SDL_SCANCODE_KP_5, Keys::NumPad5 },
+		{ SDL_SCANCODE_KP_6, Keys::NumPad6 },
+		{ SDL_SCANCODE_KP_7, Keys::NumPad7 },
+		{ SDL_SCANCODE_KP_8, Keys::NumPad8 },
+		{ SDL_SCANCODE_KP_9, Keys::NumPad9 },
 		{ SDL_SCANCODE_LEFT, Keys::Left },
 		{ SDL_SCANCODE_RIGHT, Keys::Right },
 		{ SDL_SCANCODE_UP, Keys::Up },
 		{ SDL_SCANCODE_DOWN, Keys::Down },
-
-		{ SDL_SCANCODE_LSHIFT, Keys::LeftShift },
-		{ SDL_SCANCODE_RSHIFT, Keys::RightShift },
-		{ SDL_SCANCODE_LCTRL, Keys::LeftControl },
-		{ SDL_SCANCODE_RCTRL, Keys::RightControl },
-		{ SDL_SCANCODE_LALT, Keys::LeftAlt },
-		{ SDL_SCANCODE_RALT, Keys::RightAlt },
-
 		{ SDL_SCANCODE_F1, Keys::F1 },
 		{ SDL_SCANCODE_F2, Keys::F2 },
 		{ SDL_SCANCODE_F3, Keys::F3 },
@@ -200,6 +205,22 @@ namespace Xna {
 		{ SDL_SCANCODE_F10, Keys::F10 },
 		{ SDL_SCANCODE_F11, Keys::F11 },
 		{ SDL_SCANCODE_F12, Keys::F12 },
+		{ SDL_SCANCODE_SEPARATOR, Keys::Separator },
+
+		{ SDL_SCANCODE_SPACE, Keys::Space },
+		{ SDL_SCANCODE_RETURN, Keys::Enter },
+		{ SDL_SCANCODE_ESCAPE, Keys::Escape },
+		{ SDL_SCANCODE_TAB, Keys::Tab },
+		{ SDL_SCANCODE_BACKSPACE, Keys::Backspace },
+		{ SDL_SCANCODE_CAPSLOCK, Keys::CapsLock },
+		{ SDL_SCANCODE_PAGEUP, Keys::PageUp },
+		{ SDL_SCANCODE_PAGEDOWN, Keys::PageDown },
+		{ SDL_SCANCODE_LSHIFT, Keys::LeftShift },
+		{ SDL_SCANCODE_RSHIFT, Keys::RightShift },
+		{ SDL_SCANCODE_LCTRL, Keys::LeftControl },
+		{ SDL_SCANCODE_RCTRL, Keys::RightControl },
+		{ SDL_SCANCODE_LALT, Keys::LeftAlt },
+		{ SDL_SCANCODE_RALT, Keys::RightAlt },		
 	} };
 
 	KeyboardState Platform::Keyboard_GetState()
