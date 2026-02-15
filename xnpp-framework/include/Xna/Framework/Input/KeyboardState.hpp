@@ -232,12 +232,6 @@ namespace Xna {
 	struct KeyboardState
 	{
 	public:
-		static constexpr size_t KeyCount =
-			static_cast<size_t>(Keys::_Count);
-
-		static constexpr size_t WordCount =
-			(KeyCount + 31) / 32;
-
 		//Returns whether a specified key is currently being pressed.
 		constexpr bool IsKeyDown(Keys key) const
 		{
@@ -260,9 +254,15 @@ namespace Xna {
 		}
 
 	private:
+		static constexpr size_t KeyCount =
+			static_cast<size_t>(Keys::_Count);
+
+		static constexpr size_t WordCount =
+			(KeyCount + 31) / 32;
+
 		uint32_t m_bits[WordCount]{};
 
-		friend class Platform;
+		friend struct Platform;
 	};
 #endif
 }
