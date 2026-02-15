@@ -11,6 +11,7 @@ set(PROJECT_INCLUDES_DIR "${CMAKE_CURRENT_SOURCE_DIR}/include")
 add_executable(GameTest WIN32 Game.cpp)
 
 target_compile_features(GameTest PUBLIC cxx_std_20)
+target_compile_definitions(GameTest PRIVATE XNPP_DONT_USE_XNA_KEYS)
 
 #Add tests and install targets
 

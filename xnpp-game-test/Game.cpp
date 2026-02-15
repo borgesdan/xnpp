@@ -7,7 +7,6 @@
 #include <Xna/Audio.hpp>
 #include <Xna/Input.hpp>
 
-
 class Game1 : public Xna::Game{
 	using base = Xna::Game;
 public:

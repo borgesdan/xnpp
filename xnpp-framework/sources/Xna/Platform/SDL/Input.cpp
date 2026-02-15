@@ -4,6 +4,8 @@
 #include <array>
 
 namespace Xna {
+
+#ifndef XNPP_DONT_USE_XNA_KEYS
 	//Valores VK_ estão no intervalo 0x00–0xFF, 256 entradas.
 	static const std::array<SDL_Scancode, 256>& BuildVKToScancodeTable()
 	{
@@ -42,7 +44,7 @@ namespace Xna {
 			table['X'] = SDL_SCANCODE_X;
 			table['Y'] = SDL_SCANCODE_Y;
 			table['Z'] = SDL_SCANCODE_Z;
-			
+
 			table['0'] = SDL_SCANCODE_0;
 			table['1'] = SDL_SCANCODE_1;
 			table['2'] = SDL_SCANCODE_2;
@@ -53,7 +55,7 @@ namespace Xna {
 			table['7'] = SDL_SCANCODE_7;
 			table['8'] = SDL_SCANCODE_8;
 			table['9'] = SDL_SCANCODE_9;
-			
+
 			table[0x08] = SDL_SCANCODE_BACKSPACE; //VK_BACK
 			table[0x09] = SDL_SCANCODE_TAB; //VK_TAB
 			table[0x0D] = SDL_SCANCODE_RETURN; //VK_RETURN
@@ -84,7 +86,7 @@ namespace Xna {
 			table[0x79] = SDL_SCANCODE_F10; //VK_F10
 			table[0x7A] = SDL_SCANCODE_F11; //VK_F11
 			table[0x7B] = SDL_SCANCODE_F12; //VK_F12
-		}		
+		}
 
 		return table;
 	}
@@ -137,6 +139,89 @@ namespace Xna {
 		return state;
 	}
 
+#else
+	static constexpr std::array<std::pair<SDL_Scancode, Keys>, 64> SDLKeyMap =
+	{ {
+		{ SDL_SCANCODE_UNKNOWN, Keys::None},
+		{ SDL_SCANCODE_A, Keys::A },
+		{ SDL_SCANCODE_B, Keys::B },
+		{ SDL_SCANCODE_C, Keys::C },
+		{ SDL_SCANCODE_D, Keys::D },
+		{ SDL_SCANCODE_E, Keys::E },
+		{ SDL_SCANCODE_F, Keys::F },
+		{ SDL_SCANCODE_G, Keys::G },
+		{ SDL_SCANCODE_H, Keys::H },
+		{ SDL_SCANCODE_I, Keys::I },
+		{ SDL_SCANCODE_J, Keys::J },
+		{ SDL_SCANCODE_K, Keys::K },
+		{ SDL_SCANCODE_L, Keys::L },
+		{ SDL_SCANCODE_M, Keys::M },
+		{ SDL_SCANCODE_N, Keys::N },
+		{ SDL_SCANCODE_O, Keys::O },
+		{ SDL_SCANCODE_P, Keys::P },
+		{ SDL_SCANCODE_Q, Keys::Q },
+		{ SDL_SCANCODE_R, Keys::R },
+		{ SDL_SCANCODE_S, Keys::S },
+		{ SDL_SCANCODE_T, Keys::T },
+		{ SDL_SCANCODE_U, Keys::U },
+		{ SDL_SCANCODE_V, Keys::V },
+		{ SDL_SCANCODE_W, Keys::W },
+		{ SDL_SCANCODE_X, Keys::X },
+		{ SDL_SCANCODE_Y, Keys::Y },
+		{ SDL_SCANCODE_Z, Keys::Z },
+
+		{ SDL_SCANCODE_SPACE, Keys::Space },
+		{ SDL_SCANCODE_RETURN, Keys::Enter },
+		{ SDL_SCANCODE_ESCAPE, Keys::Escape },
+		{ SDL_SCANCODE_TAB, Keys::Tab },
+		{ SDL_SCANCODE_BACKSPACE, Keys::Backspace },
+
+		{ SDL_SCANCODE_LEFT, Keys::Left },
+		{ SDL_SCANCODE_RIGHT, Keys::Right },
+		{ SDL_SCANCODE_UP, Keys::Up },
+		{ SDL_SCANCODE_DOWN, Keys::Down },
+
+		{ SDL_SCANCODE_LSHIFT, Keys::LeftShift },
+		{ SDL_SCANCODE_RSHIFT, Keys::RightShift },
+		{ SDL_SCANCODE_LCTRL, Keys::LeftControl },
+		{ SDL_SCANCODE_RCTRL, Keys::RightControl },
+		{ SDL_SCANCODE_LALT, Keys::LeftAlt },
+		{ SDL_SCANCODE_RALT, Keys::RightAlt },
+
+		{ SDL_SCANCODE_F1, Keys::F1 },
+		{ SDL_SCANCODE_F2, Keys::F2 },
+		{ SDL_SCANCODE_F3, Keys::F3 },
+		{ SDL_SCANCODE_F4, Keys::F4 },
+		{ SDL_SCANCODE_F5, Keys::F5 },
+		{ SDL_SCANCODE_F6, Keys::F6 },
+		{ SDL_SCANCODE_F7, Keys::F7 },
+		{ SDL_SCANCODE_F8, Keys::F8 },
+		{ SDL_SCANCODE_F9, Keys::F9 },
+		{ SDL_SCANCODE_F10, Keys::F10 },
+		{ SDL_SCANCODE_F11, Keys::F11 },
+		{ SDL_SCANCODE_F12, Keys::F12 },
+	} };
+
+	KeyboardState Platform::Keyboard_GetState()
+	{
+		int numKeys = 0;
+		const bool* sdlState = SDL_GetKeyboardState(&numKeys);
+
+		KeyboardState state{};
+
+		for (const auto& [sc, key] : SDLKeyMap)
+		{
+			if (sc < numKeys && sdlState[sc])
+			{
+				size_t k = static_cast<size_t>(key);
+				state.m_bits[k >> 5] |= (1u << (k & 31));
+			}
+		}
+
+		return state;
+	}
+
+#endif
 	void Platform::Keyboard_ProcessMessage(InputProcessMessage const& msg) {
 		//WindowsPlatform::GetKeyboard().ProcessMessage(msg.msg, msg.wParam, msg.lParam);
 	}
