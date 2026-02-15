@@ -6,17 +6,6 @@
 #include "Xna/Framework/Input/GamePad.hpp"
 
 namespace Xna {
-	KeyboardState Platform::Keyboard_GetState() {
-		const auto implState = WindowsPlatform::GetKeyboard().GetState();
-		auto ptr = reinterpret_cast<const uint32_t*>(&implState);
-		const auto state = reinterpret_cast<const KeyboardState*>(ptr);
-
-		return *state;
-	}
-
-	void Platform::Keyboard_ProcessMessage(InputProcessMessage const& msg) {
-		WindowsPlatform::GetKeyboard().ProcessMessage(msg.msg, msg.wParam, msg.lParam);
-	}
 
 	MouseState Platform::Mouse_GetState() {
 		const auto state = WindowsPlatform::GetMouse().GetState();

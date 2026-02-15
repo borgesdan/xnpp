@@ -32,7 +32,7 @@ namespace Xna {
     };
 
     //Identifies a particular key on a keyboard.
-    enum class Keys : unsigned char {
+    enum class Keys {
         None = 0,
 
         Back = 0x8,

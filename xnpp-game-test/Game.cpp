@@ -35,7 +35,7 @@ public:
 			backColor = Xna::Color::Red();
 		}
 
-		if (curKState.IsKeyDown(Xna::Keys::Left) && oldKState.IsKeyUp(Xna::Keys::Left)) {
+		if (curKState.IsKeyDown(Xna::Keys::A) && oldKState.IsKeyUp(Xna::Keys::A)) {
 			backColor = Xna::Color::Green();
 		}
 
