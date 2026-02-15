@@ -310,7 +310,6 @@ namespace Xna {
 		}
 
 		static inline DirectX::GamePad& GetGamePad() { return *GamePad; }
-		static inline DirectX::Keyboard& GetKeyboard() { return *Keyboard; }
 		static inline DirectX::Mouse& GetMouse() { return *Mouse; }
 
 		static void Initialize();
@@ -357,7 +356,6 @@ namespace Xna {
 		//static inline Microsoft::WRL::ComPtr<MediaEngineNotify> MediaEngineNotify = nullptr;
 		//Input
 		static inline std::unique_ptr<DirectX::GamePad> GamePad = nullptr;
-		static inline std::unique_ptr<DirectX::Keyboard> Keyboard = nullptr;
 		static inline std::unique_ptr<DirectX::Mouse> Mouse = nullptr;
 
 		static void InitWIC();

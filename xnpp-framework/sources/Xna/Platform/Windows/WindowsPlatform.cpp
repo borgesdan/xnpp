@@ -204,7 +204,6 @@ namespace Xna {
 		InitMediaEngine();
 
 		//Input
-		Keyboard = std::make_unique<DirectX::Keyboard>();
 		Mouse = std::make_unique<DirectX::Mouse>();
 		GamePad = std::make_unique<DirectX::GamePad>();
 	}
@@ -228,7 +227,6 @@ namespace Xna {
 			GamePad = nullptr;
 		}		
 
-		Keyboard = nullptr;
 		Mouse = nullptr;
 
 		MFShutdown();
