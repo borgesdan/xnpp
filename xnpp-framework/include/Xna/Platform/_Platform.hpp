@@ -217,8 +217,8 @@ namespace Xna {
 	};
 
 	struct Value2 {
-		intptr_t One;
-		intptr_t Two;
+		intptr_t One{0};
+		intptr_t Two{0};
 
 		constexpr Value2() = default;
 		constexpr Value2(intptr_t one, intptr_t two)
@@ -280,7 +280,6 @@ namespace Xna {
 
 		//Input
 		XNPP_API static KeyboardState Keyboard_GetState();
-		XNPP_API static void Keyboard_ProcessMessage(InputProcessMessage const& msg);
 
 		XNPP_API static MouseState Mouse_GetState();
 		XNPP_API static void Mouse_ProcessMessage(InputProcessMessage const& msg);

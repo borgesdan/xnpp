@@ -63,6 +63,7 @@ add_library(xnpp
         "sources/Xna/Framework/Graphics/VertexDeclaration.cpp"
         "sources/Xna/Framework/Graphics/VertexBufferBinding.cpp"
         "sources/Xna/Framework/Graphics/VertexBuffer.cpp"
+        "sources/Xna/Framework/Input/Input.cpp"
         "sources/Xna/Framework/Content/ContentManager.cpp"
         "sources/Xna/Framework/Content/ContentReader.cpp"
         "sources/Xna/Framework/Content/ContentTypeReaderManager.cpp"

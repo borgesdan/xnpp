@@ -242,8 +242,5 @@ namespace Xna {
 		return state;
 	}
 
-#endif
-	void Platform::Keyboard_ProcessMessage(InputProcessMessage const& msg) {
-		//WindowsPlatform::GetKeyboard().ProcessMessage(msg.msg, msg.wParam, msg.lParam);
-	}
+#endif	
 }

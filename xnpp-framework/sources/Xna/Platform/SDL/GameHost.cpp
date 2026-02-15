@@ -26,7 +26,6 @@ namespace Xna {
                     // WM_KEYDOWN, WM_KEYUP e WM_SYSKEYDOWN
                 case SDL_EVENT_KEY_DOWN:
                 case SDL_EVENT_KEY_UP:
-                    Platform::Keyboard_ProcessMessage(event);
                     break;
 
                     // Substitui WM_MOUSEMOVE, WM_LBUTTONDOWN, etc.
