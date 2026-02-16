@@ -117,9 +117,9 @@ namespace Xna {
 
 		const auto dpad = GamePadDPad(
 			ToButtonState(pad, SDL_GAMEPAD_BUTTON_DPAD_UP),
-			ToButtonState(pad, SDL_GAMEPAD_BUTTON_DPAD_RIGHT),
 			ToButtonState(pad, SDL_GAMEPAD_BUTTON_DPAD_DOWN),
-			ToButtonState(pad, SDL_GAMEPAD_BUTTON_DPAD_LEFT));
+			ToButtonState(pad, SDL_GAMEPAD_BUTTON_DPAD_LEFT),
+			ToButtonState(pad, SDL_GAMEPAD_BUTTON_DPAD_RIGHT));
 
 		const auto isConnected = true;
 
