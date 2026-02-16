@@ -68,7 +68,7 @@ public:
 			backColor = Xna::Color::Orange();
 		}
 
-		if (mouseState.ScroolWheelValue > 0) {
+		if (mouseState.ScroolWheelValue > 50) {
 			backColor = Xna::Color::CornflowerBlue();
 		}
 

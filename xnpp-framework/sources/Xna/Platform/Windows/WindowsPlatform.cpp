@@ -323,6 +323,8 @@ namespace Xna {
 			// Falha ao inicializar: SDL_GetPrimaryDisplay retornará 0
 			SDL_Log("Erro: %s", SDL_GetError());
 		}
+
+		SDL_Init(SDL_INIT_GAMEPAD);
 	}
 
 	void Platform::Dispose() {

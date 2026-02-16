@@ -3,11 +3,26 @@
 #include "InternalSdl.hpp"
 #include <SDL3/SDL.h>
 
-namespace Xna {
-    static inline int g_MouseWheel4 = 0;
+namespace Xna {    
+    static SDL_Gamepad* g_Gamepads[InternalSdl::MAX_GAMEPADS] = {};
+    static SDL_JoystickID g_InstanceIDs[InternalSdl::MAX_GAMEPADS] = {};
+
+    static void HandleGamepadAdded(int deviceIndex);
+    static void HandleGamepadRemoved(SDL_JoystickID instanceID);
+
 	void Platform::GameHost_Tick(GameHost& gh) {
         SDL_Event event;
         bool running = true;
+        
+        if (!SDL_WasInit(SDL_INIT_GAMEPAD))
+            SDL_Init(SDL_INIT_GAMEPAD);
+
+        //Initialize connected gamepads
+        int gamePadCount;
+        SDL_GetGamepads(&gamePadCount);
+
+        for (int i = 0; i < gamePadCount; ++i)
+            HandleGamepadAdded(i);
 
         while (running) {
             while (SDL_PollEvent(&event)) {
@@ -25,18 +40,61 @@ namespace Xna {
                     Platform::GamePad_Suspend();
                     break;          
 
-                    // Substitui WM_MOUSEMOVE, WM_LBUTTONDOWN, etc.                
+                    //WM_MOUSEMOVE, WM_LBUTTONDOWN, etc.                
                 case SDL_EVENT_MOUSE_WHEEL:                    
                     InternalSdl::g_MouseWheel += event.wheel.integer_y;
                     break;
-                }
+                case SDL_EVENT_GAMEPAD_ADDED:
+                    HandleGamepadAdded(event.gdevice.which);
+                    break;
+                case SDL_EVENT_GAMEPAD_REMOVED:
+                    HandleGamepadRemoved(event.gdevice.which);
+                    break;
+                }                
             }
             
             if (gh.impl->exitRequested || !running) 
                 gh.impl->gameWindow.Close();
-            else 
-                // Executa a lógica do jogo e o Render do DirectX
+            else                 
                 gh.RunOneFrame();
         }
 	}
+
+    void HandleGamepadAdded(int deviceIndex)
+    {
+        if (!SDL_IsGamepad(deviceIndex))
+            return;
+
+        auto pad = SDL_OpenGamepad(deviceIndex);
+        if (!pad)
+            return;
+
+        const auto instanceID = SDL_GetGamepadID(pad);
+       
+        for (size_t i = 0; i < InternalSdl::MAX_GAMEPADS; ++i)
+        {
+            if (!g_Gamepads[i])
+            {
+                g_Gamepads[i] = pad;
+                g_InstanceIDs[i] = instanceID;
+                return;
+            }
+        }
+
+        // Sem slot livre
+        SDL_CloseGamepad(pad);
+    }
+
+    void HandleGamepadRemoved(SDL_JoystickID instanceID) {
+        for (size_t i = 0; i < InternalSdl::MAX_GAMEPADS; ++i)
+        {
+            if (g_Gamepads[i] && g_InstanceIDs[i] == instanceID)
+            {
+                SDL_CloseGamepad(g_Gamepads[i]);
+                g_Gamepads[i] = nullptr;
+                g_InstanceIDs[i] = 0;
+                return;
+            }
+        }
+    }
 }

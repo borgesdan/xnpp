@@ -5,6 +5,8 @@
 
 namespace Xna {
 	struct InternalSdl {
+		static constexpr size_t MAX_GAMEPADS = 4;
+
 		//Global mouse wheel
 		static inline int g_MouseWheel = 0;
 		//Global window handle

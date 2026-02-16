@@ -43,7 +43,7 @@ namespace Xna {
 	}
 
 	void Platform::Mouse_SetWindowHandle(intptr_t value) {
-		throw std::runtime_error("Platform::Mouse_SetWindowHandle not supported.");
+		throw std::runtime_error("Platform::Mouse_SetWindowHandle not supported.");		
 	}
 
 
