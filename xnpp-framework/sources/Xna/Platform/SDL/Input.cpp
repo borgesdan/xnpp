@@ -1,8 +1,10 @@
 #include "InternalSdl.hpp"
 #include "Xna/Framework/Input/KeyboardState.hpp"
 #include "Xna/Framework/Input/MouseState.hpp"
+#include "Xna/Framework/Input/GamePad.hpp"
 #include "Xna/Platform/Platform.hpp"
 #include <array>
+#include <cmath>
 #include <SDL3/SDL.h>
 #include <stdexcept>
 
@@ -43,7 +45,123 @@ namespace Xna {
 	}
 
 	void Platform::Mouse_SetWindowHandle(intptr_t value) {
-		throw std::runtime_error("Platform::Mouse_SetWindowHandle not supported.");		
+		throw std::runtime_error("Platform::Mouse_SetWindowHandle not supported.");
+	}
+
+	static void GamepadApplyAxialDeadzone(float& v, float deadzone)
+	{
+		v = (fabs(v) < deadzone) ? 0.0f : v;
+	}
+
+	static void GamepadApplyRadialDeadzone(float& x, float& y, float deadzone)
+	{
+		const auto magnitudeSquared = x * x + y * y;
+
+		if (magnitudeSquared < deadzone * deadzone)
+		{
+			x = 0.0f;
+			y = 0.0f;
+			return;
+		}
+
+		const auto magnitude = std::sqrt(x * x + y * y);
+
+		if (magnitude < deadzone)
+		{
+			x = 0.0f;
+			y = 0.0f;
+			return;
+		}
+
+		const auto newMagnitude = (magnitude - deadzone) / (1.0f - deadzone);
+		const auto scale = newMagnitude / magnitude;
+
+		x *= scale;
+		y *= scale;
+
+		//Clamp
+		if (std::abs(x) > 1.0f) x = (x > 0) ? 1.0f : -1.0f;
+		if (std::abs(y) > 1.0f) y = (y > 0) ? 1.0f : -1.0f;
+	}
+
+	GamePadState Platform::GamePad_GetState(PlayerIndex playerIndex, GamePadDeadZone deadZone) {
+		const auto index = static_cast<int>(playerIndex);
+
+		if (index < 0 || index >= 4)
+			return {};
+
+		auto pad = InternalSdl::g_Gamepads[index];
+
+		if (pad)
+			return {};
+
+		auto ToButtonState = [](SDL_Gamepad* pad, SDL_GamepadButton button)
+			{
+				return SDL_GetGamepadButton(pad, button)
+					? ButtonState::Pressed
+					: ButtonState::Released;
+			};
+
+		const auto buttons = GamePadButtons(
+			ToButtonState(pad, SDL_GAMEPAD_BUTTON_SOUTH),
+			ToButtonState(pad, SDL_GAMEPAD_BUTTON_EAST),
+			ToButtonState(pad, SDL_GAMEPAD_BUTTON_WEST),
+			ToButtonState(pad, SDL_GAMEPAD_BUTTON_NORTH),
+			ToButtonState(pad, SDL_GAMEPAD_BUTTON_LEFT_STICK),
+			ToButtonState(pad, SDL_GAMEPAD_BUTTON_RIGHT_STICK),
+			ToButtonState(pad, SDL_GAMEPAD_BUTTON_LEFT_SHOULDER),
+			ToButtonState(pad, SDL_GAMEPAD_BUTTON_RIGHT_SHOULDER),
+			ToButtonState(pad, SDL_GAMEPAD_BUTTON_BACK),
+			ToButtonState(pad, SDL_GAMEPAD_BUTTON_START),
+			ToButtonState(pad, SDL_GAMEPAD_BUTTON_GUIDE));
+
+		const auto dpad = GamePadDPad(
+			ToButtonState(pad, SDL_GAMEPAD_BUTTON_DPAD_UP),
+			ToButtonState(pad, SDL_GAMEPAD_BUTTON_DPAD_RIGHT),
+			ToButtonState(pad, SDL_GAMEPAD_BUTTON_DPAD_DOWN),
+			ToButtonState(pad, SDL_GAMEPAD_BUTTON_DPAD_LEFT));
+
+		const auto isConnected = true;
+
+		constexpr float AXIS_MAX_POS = 32767.0f;
+		constexpr float AXIS_MAX_NEG = 32768.0f;
+
+		auto NormalizeAxis = [](Sint16 value)
+			{
+				return (value < 0)
+					? value / AXIS_MAX_POS
+					: value / AXIS_MAX_NEG;
+			};
+
+		auto lx = NormalizeAxis(SDL_GetGamepadAxis(pad, SDL_GAMEPAD_AXIS_LEFTX));
+		auto ly = NormalizeAxis(SDL_GetGamepadAxis(pad, SDL_GAMEPAD_AXIS_LEFTY));
+		auto rx = NormalizeAxis(SDL_GetGamepadAxis(pad, SDL_GAMEPAD_AXIS_RIGHTX));
+		auto ry = NormalizeAxis(SDL_GetGamepadAxis(pad, SDL_GAMEPAD_AXIS_RIGHTY));
+
+		constexpr float DEADZONE = 0.15f;
+
+		switch (deadZone) {
+		case GamePadDeadZone::Circular:
+			GamepadApplyRadialDeadzone(lx, ly, DEADZONE);
+			GamepadApplyRadialDeadzone(rx, ry, DEADZONE);
+			break;
+		case GamePadDeadZone::IndependentAxes:
+			GamepadApplyAxialDeadzone(lx, DEADZONE);
+			GamepadApplyAxialDeadzone(ly, DEADZONE);
+			GamepadApplyAxialDeadzone(rx, DEADZONE);
+			GamepadApplyAxialDeadzone(ry, DEADZONE);
+			break;
+		default:
+			break;
+		}
+
+		const auto thumbSticks = GamePadThumbSticks(Vector2(lx, ly), Vector2(rx, ry));
+		const auto lt = SDL_GetGamepadAxis(pad, SDL_GAMEPAD_AXIS_LEFT_TRIGGER) / 32767.0f;
+		const auto rt = SDL_GetGamepadAxis(pad, SDL_GAMEPAD_AXIS_RIGHT_TRIGGER) / 32767.0f;
+
+		const auto triggers = GamePadTriggers(lt, rt);
+		const auto padState = GamePadState(thumbSticks, triggers, buttons, dpad, isConnected);
+		return padState;
 	}
 
 
@@ -210,7 +328,7 @@ namespace Xna {
 		{ SDL_SCANCODE_W, Keys::W },
 		{ SDL_SCANCODE_X, Keys::X },
 		{ SDL_SCANCODE_Y, Keys::Y },
-		{ SDL_SCANCODE_Z, Keys::Z },		
+		{ SDL_SCANCODE_Z, Keys::Z },
 		{ SDL_SCANCODE_0, Keys::D0 },
 		{ SDL_SCANCODE_1, Keys::D1 },
 		{ SDL_SCANCODE_2, Keys::D2 },
@@ -262,7 +380,7 @@ namespace Xna {
 		{ SDL_SCANCODE_LCTRL, Keys::LeftControl },
 		{ SDL_SCANCODE_RCTRL, Keys::RightControl },
 		{ SDL_SCANCODE_LALT, Keys::LeftAlt },
-		{ SDL_SCANCODE_RALT, Keys::RightAlt },		
+		{ SDL_SCANCODE_RALT, Keys::RightAlt },
 	} };
 
 	KeyboardState Platform::Keyboard_GetState()

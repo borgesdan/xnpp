@@ -4,9 +4,6 @@
 #include <SDL3/SDL.h>
 
 namespace Xna {    
-    static SDL_Gamepad* g_Gamepads[InternalSdl::MAX_GAMEPADS] = {};
-    static SDL_JoystickID g_InstanceIDs[InternalSdl::MAX_GAMEPADS] = {};
-
     static void HandleGamepadAdded(int deviceIndex);
     static void HandleGamepadRemoved(SDL_JoystickID instanceID);
 
@@ -73,10 +70,10 @@ namespace Xna {
        
         for (size_t i = 0; i < InternalSdl::MAX_GAMEPADS; ++i)
         {
-            if (!g_Gamepads[i])
+            if (!InternalSdl::g_Gamepads[i])
             {
-                g_Gamepads[i] = pad;
-                g_InstanceIDs[i] = instanceID;
+                InternalSdl::g_Gamepads[i] = pad;
+                InternalSdl::g_InstanceIDs[i] = instanceID;
                 return;
             }
         }
@@ -88,11 +85,11 @@ namespace Xna {
     void HandleGamepadRemoved(SDL_JoystickID instanceID) {
         for (size_t i = 0; i < InternalSdl::MAX_GAMEPADS; ++i)
         {
-            if (g_Gamepads[i] && g_InstanceIDs[i] == instanceID)
+            if (InternalSdl::g_Gamepads[i] && InternalSdl::g_InstanceIDs[i] == instanceID)
             {
-                SDL_CloseGamepad(g_Gamepads[i]);
-                g_Gamepads[i] = nullptr;
-                g_InstanceIDs[i] = 0;
+                SDL_CloseGamepad(InternalSdl::g_Gamepads[i]);
+                InternalSdl::g_Gamepads[i] = nullptr;
+                InternalSdl::g_InstanceIDs[i] = 0;
                 return;
             }
         }

@@ -5,42 +5,7 @@
 #include "Xna/Framework/Input/Mouse.hpp"
 #include "Xna/Framework/Input/GamePad.hpp"
 
-namespace Xna {	
-
-	GamePadState Platform::GamePad_GetState(PlayerIndex playerIndex, GamePadDeadZone deadZone) {
-		const auto stateDeadZone = static_cast<DirectX::GamePad::DeadZone>(deadZone);
-
-		const auto state = WindowsPlatform::GetGamePad().GetState(static_cast<int>(playerIndex), stateDeadZone);
-
-		const auto buttons = GamePadButtons(
-			static_cast<ButtonState>(state.buttons.a),
-			static_cast<ButtonState>(state.buttons.b),
-			static_cast<ButtonState>(state.buttons.x),
-			static_cast<ButtonState>(state.buttons.y),
-			static_cast<ButtonState>(state.buttons.leftStick),
-			static_cast<ButtonState>(state.buttons.rightStick),
-			static_cast<ButtonState>(state.buttons.leftShoulder),
-			static_cast<ButtonState>(state.buttons.rightShoulder),
-			static_cast<ButtonState>(state.buttons.back),
-			static_cast<ButtonState>(state.buttons.start),
-			static_cast<ButtonState>(state.buttons.view));
-
-		const auto dpad = GamePadDPad(
-			static_cast<ButtonState>(state.dpad.up),
-			static_cast<ButtonState>(state.dpad.right),
-			static_cast<ButtonState>(state.dpad.down),
-			static_cast<ButtonState>(state.dpad.left));
-
-		const auto isConnected = state.connected;
-
-		const auto thumbSticks = GamePadThumbSticks(
-			Vector2(state.thumbSticks.leftX, state.thumbSticks.leftY),
-			Vector2(state.thumbSticks.rightX, state.thumbSticks.rightY));
-		const auto triggers = GamePadTriggers(state.triggers.left, state.triggers.right);
-
-		const auto pad = GamePadState(thumbSticks, triggers, buttons, dpad, isConnected);
-		return pad;
-	}
+namespace Xna {		
 
 	GamePadCapabilities Platform::GamePad_GetCapabilities(PlayerIndex playerIndex) {
 		const auto index = static_cast<int>(playerIndex);
