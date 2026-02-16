@@ -108,8 +108,6 @@ namespace Xna {
 			CSharp::Event<CSharp::EventArgs> Paint;
 			CSharp::Event<CSharp::EventArgs> Suspend;
 			CSharp::Event<CSharp::EventArgs> Resume;
-
-			PlatformImpl::GameWindowImpl platformImpl;
 		};
 		std::shared_ptr<Implementation> impl = nullptr;	
 

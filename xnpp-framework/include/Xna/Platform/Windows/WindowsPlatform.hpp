@@ -86,28 +86,7 @@ namespace Xna {
 		Microsoft::WRL::ComPtr<ID3D11RenderTargetView> renderTargetView;
 		Microsoft::WRL::ComPtr<ID3D11Texture2D> depthStencilTexture;
 		Microsoft::WRL::ComPtr<ID3D11DepthStencilView> depthStencilView;
-	};
-
-	struct PlatformImpl::GameWindowImpl {
-		enum class GameWindowMode : UINT {
-			Fullscreen = WS_POPUP | WS_VISIBLE,
-			Windowed = WS_OVERLAPPED | WS_SYSMENU | WS_VISIBLE,
-			Borderless = WS_EX_TOPMOST | WS_POPUP | WS_VISIBLE,
-		};
-
-		HINSTANCE instance{ nullptr };
-		HWND handle{ nullptr };
-		int width{ 800 };
-		int	height{ 480 };
-		HICON icon{ LoadIcon(NULL, IDI_APPLICATION) };
-		HCURSOR cursor{ LoadCursor(NULL, IDC_ARROW) };
-		COLORREF color{ RGB(0,0,0) };
-		DWORD style{ static_cast<DWORD>(GameWindowMode::Windowed) };
-		int positionX{ 0 };
-		int	positionY{ 0 };
-		float centerX{ 0 };
-		float centerY{ 0 };
-	};
+	};	
 
 	struct PlatformImpl::SoundEffectImpl {
 		std::unique_ptr<DirectX::SoundEffect> soundEffect = nullptr;

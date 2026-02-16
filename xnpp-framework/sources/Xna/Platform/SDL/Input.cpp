@@ -1,9 +1,51 @@
-#include "Xna/Platform/Platform.hpp"
+#include "InternalSdl.hpp"
 #include "Xna/Framework/Input/KeyboardState.hpp"
-#include <SDL3/SDL.h>
+#include "Xna/Framework/Input/MouseState.hpp"
+#include "Xna/Platform/Platform.hpp"
 #include <array>
+#include <SDL3/SDL.h>
+#include <stdexcept>
 
 namespace Xna {
+	MouseState Platform::Mouse_GetState() {
+		float posX, posY;
+		auto flags = SDL_GetMouseState(&posX, &posY);
+
+		auto Convert = [](bool pressed)
+			{
+				return pressed ? ButtonState::Pressed
+					: ButtonState::Released;
+			};
+
+		MouseState state{};
+		state.LeftButton = Convert(flags & SDL_BUTTON_LMASK);
+		state.RightButton = Convert(flags & SDL_BUTTON_RMASK);
+		state.MiddleButton = Convert(flags & SDL_BUTTON_MMASK);
+		state.XButton1 = Convert(flags & SDL_BUTTON_X1MASK);
+		state.XButton2 = Convert(flags & SDL_BUTTON_X2MASK);
+		state.X = posX;
+		state.Y = posY;
+		state.ScroolWheelValue = InternalSdl::g_MouseWheel;
+
+		return state;
+	}
+
+	void Platform::Mouse_SetPosition(int32_t x, int32_t y) {
+		if (InternalSdl::g_CurrentWindowHandle == 0)
+			return;
+
+		auto window = reinterpret_cast<SDL_Window*>(InternalSdl::g_CurrentWindowHandle);
+		SDL_WarpMouseInWindow(window, x, y);
+	}
+
+	intptr_t Platform::Mouse_GetWindowHandle() {
+		return InternalSdl::g_CurrentWindowHandle;
+	}
+
+	void Platform::Mouse_SetWindowHandle(intptr_t value) {
+		throw std::runtime_error("Platform::Mouse_SetWindowHandle not supported.");
+	}
+
 
 #ifndef XNPP_DONT_USE_XNA_KEYS
 	//Valores VK_ estão no intervalo 0x00–0xFF, 256 entradas.
@@ -242,5 +284,5 @@ namespace Xna {
 		return state;
 	}
 
-#endif	
+#endif		
 }

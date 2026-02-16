@@ -5,48 +5,7 @@
 #include "Xna/Framework/Input/Mouse.hpp"
 #include "Xna/Framework/Input/GamePad.hpp"
 
-namespace Xna {
-
-	MouseState Platform::Mouse_GetState() {
-		const auto state = WindowsPlatform::GetMouse().GetState();
-		MouseState mstate;
-		mstate.LeftButton = static_cast<ButtonState>(state.leftButton);
-		mstate.RightButton = static_cast<ButtonState>(state.rightButton);
-		mstate.MiddleButton = static_cast<ButtonState>(state.middleButton);
-		mstate.XButton1 = static_cast<ButtonState>(state.xButton1);
-		mstate.XButton2 = static_cast<ButtonState>(state.xButton2);
-		mstate.X = state.x;
-		mstate.Y = state.y;
-		mstate.ScroolWheelValue = state.scrollWheelValue;
-
-		return mstate;
-	}
-
-	void Platform::Mouse_ProcessMessage(InputProcessMessage const& msg) {
-		WindowsPlatform::GetMouse().ProcessMessage(msg.msg, msg.wParam, msg.lParam);
-	}
-
-	void Platform::Mouse_SetWindowHandle(intptr_t value) {
-		auto hwnd = reinterpret_cast<HWND>(value);
-
-		if (!hwnd) return;
-
-		WindowsPlatform::GetMouse().SetWindow(hwnd);
-	}
-
-	intptr_t Platform::Mouse_GetWindowHandle() {
-		const auto state = WindowsPlatform::GetMouse().GetState();
-		POINT p{};
-		p.x = state.x;
-		p.y = state.y;
-
-		const auto hwnd = WindowFromPoint(p);
-		return reinterpret_cast<intptr_t>(hwnd);
-	}
-
-	void Platform::Mouse_SetPosition(int32_t x, int32_t y) {
-		SetCursorPos(static_cast<int>(x), static_cast<int>(y));
-	}
+namespace Xna {	
 
 	GamePadState Platform::GamePad_GetState(PlayerIndex playerIndex, GamePadDeadZone deadZone) {
 		const auto stateDeadZone = static_cast<DirectX::GamePad::DeadZone>(deadZone);

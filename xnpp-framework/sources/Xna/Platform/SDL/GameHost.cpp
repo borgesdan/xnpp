@@ -1,8 +1,10 @@
 #include "Xna/Platform/Platform.hpp"
 #include "Xna/Framework/Game/GameHost.hpp"
+#include "InternalSdl.hpp"
 #include <SDL3/SDL.h>
 
 namespace Xna {
+    static inline int g_MouseWheel4 = 0;
 	void Platform::GameHost_Tick(GameHost& gh) {
         SDL_Event event;
         bool running = true;
@@ -21,19 +23,11 @@ namespace Xna {
                     break;
                 case SDL_EVENT_WINDOW_FOCUS_LOST:
                     Platform::GamePad_Suspend();
-                    break;
+                    break;          
 
-                    // WM_KEYDOWN, WM_KEYUP e WM_SYSKEYDOWN
-                case SDL_EVENT_KEY_DOWN:
-                case SDL_EVENT_KEY_UP:
-                    break;
-
-                    // Substitui WM_MOUSEMOVE, WM_LBUTTONDOWN, etc.
-                case SDL_EVENT_MOUSE_MOTION:
-                case SDL_EVENT_MOUSE_BUTTON_DOWN:
-                case SDL_EVENT_MOUSE_BUTTON_UP:
+                    // Substitui WM_MOUSEMOVE, WM_LBUTTONDOWN, etc.                
                 case SDL_EVENT_MOUSE_WHEEL:                    
-                    Platform::Mouse_ProcessMessage(event);
+                    InternalSdl::g_MouseWheel += event.wheel.integer_y;
                     break;
                 }
             }

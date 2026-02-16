@@ -282,7 +282,6 @@ namespace Xna {
 		XNPP_API static KeyboardState Keyboard_GetState();
 
 		XNPP_API static MouseState Mouse_GetState();
-		XNPP_API static void Mouse_ProcessMessage(InputProcessMessage const& msg);
 		XNPP_API static intptr_t Mouse_GetWindowHandle();
 		XNPP_API static void Mouse_SetWindowHandle(intptr_t value);
 		XNPP_API static void Mouse_SetPosition(int32_t x, int32_t y);
