@@ -47,7 +47,7 @@ namespace Xna {
 		SDL_SetWindowPosition(handle, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED);
 
 		impl->handle = reinterpret_cast<intptr_t>(handle);
-		InternalSdl::g_CurrentWindowHandle = impl->handle;
+		Sdl::Global::MouseWheel = impl->handle;
 	}
 
 	void Platform::GameWindow_Update(GameWindow const& gw) {
@@ -71,7 +71,7 @@ namespace Xna {
 		if (window) {
 			SDL_DestroyWindow(window);
 			gw.impl->handle = 0;
-			InternalSdl::g_CurrentWindowHandle = 0;
+			Sdl::Global::MouseWheel = 0;
 		}
 	}
 

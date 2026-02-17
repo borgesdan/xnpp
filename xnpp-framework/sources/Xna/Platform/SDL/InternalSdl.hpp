@@ -5,22 +5,10 @@
 #include <SDL3/SDL.h>
 #include <vector>
 
-namespace Xna {
-	struct InternalSdl {
-		static constexpr size_t MAX_GAMEPADS = 4;
-
-		//Global mouse wheel
-		static inline int g_MouseWheel = 0;
-		//Global window handle
-		static inline intptr_t g_CurrentWindowHandle = 0;
-		static inline SDL_Gamepad* g_Gamepads[InternalSdl::MAX_GAMEPADS] = {};
-		static inline SDL_JoystickID g_InstanceIDs[InternalSdl::MAX_GAMEPADS] = {};
-	};
-
-	struct SdlGamePadPlayer {
+namespace Xna::Sdl {
+	struct GamepadPlayer {
 		SDL_Gamepad* gamepad = nullptr;
-		// Player Index
-		int id = -1;
+		int index = -1;
 
 		Uint16 low_frequency_rumble{ 0 };
 		Uint16 high_frequency_rumble{ 0 };
@@ -31,8 +19,11 @@ namespace Xna {
 	};
 
 	struct Global {
-		static inline bool GamepadsEnabled = false;
-		static inline std::vector<SdlGamePadPlayer> Gamepads = std::vector<SdlGamePadPlayer>(4);
+		static constexpr size_t MaxGamepads = 4;
+		static inline bool SuspendGamepads = false;
+		static inline std::vector<GamepadPlayer> Gamepads = std::vector<GamepadPlayer>(MaxGamepads);
+		static inline int MouseWheel = 0;		
+		static inline intptr_t CurrentWindowHandle = 0;
 	};
 }
 

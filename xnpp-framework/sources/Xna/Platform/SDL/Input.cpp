@@ -27,21 +27,21 @@ namespace Xna {
 		state.XButton2 = Convert(flags & SDL_BUTTON_X2MASK);
 		state.X = posX;
 		state.Y = posY;
-		state.ScroolWheelValue = InternalSdl::g_MouseWheel;
+		state.ScroolWheelValue = Sdl::Global::MouseWheel;
 
 		return state;
 	}
 
 	void Platform::Mouse_SetPosition(int32_t x, int32_t y) {
-		if (InternalSdl::g_CurrentWindowHandle == 0)
+		if (Sdl::Global::CurrentWindowHandle == 0)
 			return;
 
-		auto window = reinterpret_cast<SDL_Window*>(InternalSdl::g_CurrentWindowHandle);
+		auto window = reinterpret_cast<SDL_Window*>(Sdl::Global::CurrentWindowHandle);
 		SDL_WarpMouseInWindow(window, x, y);
 	}
 
 	intptr_t Platform::Mouse_GetWindowHandle() {
-		return InternalSdl::g_CurrentWindowHandle;
+		throw std::runtime_error("Platform::Mouse_GetWindowHandle not supported.");
 	}
 
 	void Platform::Mouse_SetWindowHandle(intptr_t value) {
@@ -239,7 +239,7 @@ namespace Xna {
 		if (index < 0 || index >= 4)
 			return false;
 
-		auto& pad = Global::Gamepads[index];
+		auto& pad = Sdl::Global::Gamepads[index];
 
 		if (!pad.gamepad)
 			return false;
@@ -253,11 +253,11 @@ namespace Xna {
 	}
 
 	void Platform::GamePad_Suspend() {	
-		Global::GamepadsEnabled = false;
+		Sdl::Global::SuspendGamepads = true;
 	}
 
 	void Platform::GamePad_Resume() {
-		Global::GamepadsEnabled = true;
+		Sdl::Global::SuspendGamepads = false;
 	}
 
 

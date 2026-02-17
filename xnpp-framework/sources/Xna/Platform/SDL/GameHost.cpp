@@ -4,10 +4,10 @@
 #include <SDL3/SDL.h>
 
 namespace Xna {    
-    static void HandleGamepadAdded(SDL_Event const& event, std::vector<SdlGamePadPlayer>& gamePadPlayers);
-    static void HandleGamepadRemoved(SDL_Event const& event, std::vector<SdlGamePadPlayer>& gamePadPlayers);
-    static void CloseAllGamepads(std::vector<SdlGamePadPlayer>& gamePadPlayers);
-    static void UpdateGamePads(std::vector<SdlGamePadPlayer>& gamePadPlayers);
+    static void HandleGamepadAdded(SDL_Event const& event, std::vector<Sdl::GamepadPlayer>& gamePadPlayers);
+    static void HandleGamepadRemoved(SDL_Event const& event, std::vector<Sdl::GamepadPlayer>& gamePadPlayers);
+    static void CloseAllGamepads(std::vector<Sdl::GamepadPlayer>& gamePadPlayers);
+    static void UpdateGamePads(std::vector<Sdl::GamepadPlayer>& gamePadPlayers);
 
 	void Platform::GameHost_Tick(GameHost& gh) {
         SDL_Event event;
@@ -36,13 +36,13 @@ namespace Xna {
 
                     //WM_MOUSEMOVE, WM_LBUTTONDOWN, etc.                
                 case SDL_EVENT_MOUSE_WHEEL:                    
-                    InternalSdl::g_MouseWheel += event.wheel.integer_y;
+                    Sdl::Global::MouseWheel += event.wheel.integer_y;
                     break;
                 case SDL_EVENT_GAMEPAD_ADDED:
-                    HandleGamepadAdded(event, Global::Gamepads);
+                    HandleGamepadAdded(event, Sdl::Global::Gamepads);
                     break;
                 case SDL_EVENT_GAMEPAD_REMOVED:
-                    HandleGamepadRemoved(event, Global::Gamepads);
+                    HandleGamepadRemoved(event, Sdl::Global::Gamepads);
                     break;
                 }                
             }
@@ -50,16 +50,16 @@ namespace Xna {
             if (gh.impl->exitRequested || !running) 
                 gh.impl->gameWindow.Close();
             else {
-                UpdateGamePads(Global::Gamepads);
+                UpdateGamePads(Sdl::Global::Gamepads);
                 gh.RunOneFrame();
             }
         }       
 
         //TODO: [!] Mover para uma área de Dispose
-        CloseAllGamepads(Global::Gamepads);
+        CloseAllGamepads(Sdl::Global::Gamepads);
 	}   
 
-    void HandleGamepadAdded(SDL_Event const& event, std::vector<SdlGamePadPlayer>& gamePadPlayers)
+    void HandleGamepadAdded(SDL_Event const& event, std::vector<Sdl::GamepadPlayer>& gamePadPlayers)
     {
         auto newPad = SDL_OpenGamepad(event.gdevice.which);
 
@@ -67,7 +67,7 @@ namespace Xna {
             for (int i = 0; i < gamePadPlayers.size(); ++i) {
                 if (gamePadPlayers[i].gamepad == nullptr) {
                     gamePadPlayers[i].gamepad = newPad;
-                    gamePadPlayers[i].id = i;
+                    gamePadPlayers[i].index = i;
 
                     //Define o Player Index no SDL
                     SDL_SetGamepadPlayerIndex(newPad, i);
@@ -79,7 +79,7 @@ namespace Xna {
         }
     }    
 
-    void HandleGamepadRemoved(SDL_Event const& event, std::vector<SdlGamePadPlayer>& gamePadPlayers) {
+    void HandleGamepadRemoved(SDL_Event const& event, std::vector<Sdl::GamepadPlayer>& gamePadPlayers) {
         SDL_Gamepad* removedPad = SDL_GetGamepadFromID(event.gdevice.which);
 
         if (removedPad) {
@@ -89,7 +89,7 @@ namespace Xna {
                     SDL_CloseGamepad(gamePadPlayers[i].gamepad);
 
                     gamePadPlayers[i].gamepad = nullptr;
-                    gamePadPlayers[i].id = -1;
+                    gamePadPlayers[i].index = -1;
 
                     break;
                 }
@@ -97,7 +97,7 @@ namespace Xna {
         }
     }
 
-    void CloseAllGamepads(std::vector<SdlGamePadPlayer>& gamePadPlayers) {
+    void CloseAllGamepads(std::vector<Sdl::GamepadPlayer>& gamePadPlayers) {
         for (auto& player : gamePadPlayers) {
             if (player.gamepad) {
                 SDL_RumbleGamepad(player.gamepad, 0, 0, 0);
@@ -105,26 +105,21 @@ namespace Xna {
 
                 SDL_CloseGamepad(player.gamepad);
                 player.gamepad = nullptr;
-                player.id = -1;
+                player.index = -1;
             }
         }
 
         SDL_Log("The pending gamepads have been disconnected.");
     }    
 
-    void UpdateGamePads(std::vector<SdlGamePadPlayer>& gamePadPlayers) {
-        static bool checkEnabled = false;
+    void UpdateGamePads(std::vector<Sdl::GamepadPlayer>& gamePadPlayers) {
 
-        if (!Global::GamepadsEnabled && !checkEnabled) {
+        if (Sdl::Global::SuspendGamepads) {
             for (auto& player : gamePadPlayers) {
                 SDL_RumbleGamepad(player.gamepad, 0, 0, 0);
                 SDL_RumbleGamepadTriggers(player.gamepad, 0, 0, 0);
             }
-
-            checkEnabled = true;
-        }            
-
-        checkEnabled = false;
+        }    
 
         for (auto& player : gamePadPlayers) {
             if (!player.gamepad)
@@ -135,7 +130,7 @@ namespace Xna {
                     player.gamepad, 
                     player.low_frequency_rumble,
                     player.high_frequency_rumble,
-                    SdlGamePadPlayer::FRAME_RUMBLE_MS);
+                    Sdl::GamepadPlayer::FRAME_RUMBLE_MS);
             }
             else {
                 SDL_RumbleGamepad(player.gamepad, 0, 0, 0);
@@ -146,7 +141,7 @@ namespace Xna {
                     player.gamepad,
                     player.left_rumble,
                     player.right_rumble,
-                    SdlGamePadPlayer::FRAME_RUMBLE_MS);
+                    Sdl::GamepadPlayer::FRAME_RUMBLE_MS);
             }
             else {
                 SDL_RumbleGamepadTriggers(player.gamepad, 0, 0, 0);
