@@ -75,8 +75,24 @@ public:
 		oldPState = curPState;
 		curPState = Xna::GamePad::GetState(Xna::PlayerIndex::One);
 
+		if (curPState.IsConnected() && curPState.IsButtonDown(Xna::Buttons::X) && oldPState.IsButtonUp(Xna::Buttons::X)) {
+			backColor = Xna::Color::Ivory();
+			Xna::GamePad::SetVibration(Xna::PlayerIndex::One, 0.2f, 0.2f);
+		}
+
 		if (curPState.IsConnected() && curPState.IsButtonDown(Xna::Buttons::B) && oldPState.IsButtonUp(Xna::Buttons::B)) {
 			backColor = Xna::Color::Ivory();
+			Xna::GamePad::SetVibration(Xna::PlayerIndex::One, 1, 1);
+		}
+
+		if (curPState.IsConnected() && curPState.IsButtonDown(Xna::Buttons::Y) && oldPState.IsButtonUp(Xna::Buttons::Y)) {
+			backColor = Xna::Color::Ivory();
+			Xna::GamePad::SetVibration(Xna::PlayerIndex::One, 0.5f, 0.5f);
+		}
+
+		if (curPState.IsConnected() && curPState.IsButtonDown(Xna::Buttons::A) && oldPState.IsButtonUp(Xna::Buttons::A)) {
+			backColor = Xna::Color::Ivory();
+			Xna::GamePad::SetVibration(Xna::PlayerIndex::One, 0, 0);
 		}
 
 		base::Update(gameTime);

@@ -5,17 +5,26 @@ namespace Xna {
     //Describes the type of a specified Xbox Controller. 
     enum class GamePadCapabilitiesType
     {
-        Unknown = 0,
-        Gamepad,
-        Wheel,
-        ArdaceStick,
-        FlightStick,
-        DancePAd,
-        Guitar,
-        GuitarAlternate,
-        DrumKit,
-        GuitarBass = 11,
-        ArcadePad = 19,
+		//Controller is an unknown type
+        Unknown =0,
+		//Controller is the Standard, Xbox 360, Xbox One, PS3, PS4, PS5 or Nintendo Switch Pro Controller
+		GamePad,
+		//Controller is an alternate guitar
+		AlternateGuitar,
+		//Controller is an Arcade stick
+		ArcadeStick,
+		//Controller is a big button pad
+		BigButtonPad,
+		//Controller is a dance pad
+		DancePad,
+		//Controller is a drum kit
+		DrumKit,
+		//Controller is a flight stick
+		FlightStick,
+		//Controller is a guitar
+		Guitar,
+		//Controller is a wheel
+		Wheel,
     };
 
 	//Describes the capabilities of an Xbox Controller, including controller type, and identifies if the controller supports voice. 
@@ -30,7 +39,7 @@ namespace Xna {
 		constexpr GamePadCapabilitiesType GamePadType() const { return type; }
 
 	private:
-		GamePadCapabilitiesType type{};
+		GamePadCapabilitiesType type{ GamePadCapabilitiesType::Unknown };
 		bool isConnected{ false };
 	};
 }

@@ -30,6 +30,8 @@ namespace Xna {
 		//Retrieves the capabilities of an Xbox Controller.
 		static inline GamePadCapabilities GetCapabilities(PlayerIndex index) { return Platform::GamePad_GetCapabilities(index); }
 		//Sets the vibration motor speeds on an Xbox Controller.
+		//leftMotor: The speed of the left motor, between 0.0 and 1.0.This motor is a low - frequency motor.
+		//rightMotor: The speed of the right motor, between 0.0 and 1.0. This motor is a high-frequency motor.
 		static inline bool SetVibration(PlayerIndex index, float leftMotor, float rightMotor, float leftTrigger = 0, float rightTrigger = 0) {
 			return Platform::GamePad_SetVibration(index, leftMotor, rightMotor, leftTrigger, rightTrigger);
 		}

@@ -89,8 +89,7 @@ namespace Xna {
 
 		if (index < 0 || index >= 4)
 			return {};
-
-		//auto pad = InternalSdl::g_Gamepads[index];
+				
 		SDL_Gamepad* pad = SDL_GetGamepadFromPlayerIndex(index);
 
 		if (!pad)
@@ -164,6 +163,100 @@ namespace Xna {
 		const auto padState = GamePadState(thumbSticks, triggers, buttons, dpad, isConnected);
 		return padState;
 	}	
+
+	static GamePadCapabilitiesType ConvertGamepadType(SDL_Gamepad* pad)
+	{
+		SDL_GamepadType sdlType = SDL_GetGamepadType(pad);
+
+		switch (sdlType)
+		{
+		case SDL_GAMEPAD_TYPE_STANDARD:
+		case SDL_GAMEPAD_TYPE_XBOX360:
+		case SDL_GAMEPAD_TYPE_XBOXONE:
+		case SDL_GAMEPAD_TYPE_PS3:
+		case SDL_GAMEPAD_TYPE_PS4:
+		case SDL_GAMEPAD_TYPE_PS5:
+		case SDL_GAMEPAD_TYPE_NINTENDO_SWITCH_PRO:
+			return GamePadCapabilitiesType::GamePad;
+
+		default:
+			break;
+		}
+
+		// Fallback mais sofisticado:
+		const char* name = SDL_GetGamepadName(pad);
+		if (name)
+		{
+			std::string_view n(name);
+
+			if (n.find("Wheel") != std::string_view::npos)
+				return GamePadCapabilitiesType::Wheel;
+
+			if (n.find("Guitar") != std::string_view::npos)
+				return GamePadCapabilitiesType::Guitar;
+
+			if (n.find("AlternateGuitar") != std::string_view::npos)
+				return GamePadCapabilitiesType::Guitar;
+
+			if (n.find("Drum") != std::string_view::npos)
+				return GamePadCapabilitiesType::DrumKit;
+
+			if (n.find("Flight") != std::string_view::npos)
+				return GamePadCapabilitiesType::FlightStick;
+
+			if (n.find("BigButton") != std::string_view::npos)
+				return GamePadCapabilitiesType::BigButtonPad;
+		}
+
+		return GamePadCapabilitiesType::Unknown;
+	}
+
+	GamePadCapabilities Platform::GamePad_GetCapabilities(PlayerIndex playerIndex) {
+		const auto index = static_cast<int>(playerIndex);
+
+		if (index < 0 || index >= 4)
+			return {};
+
+		SDL_Gamepad* pad = SDL_GetGamepadFromPlayerIndex(index);
+
+		if (!pad)
+			return {};
+
+		const auto type = ConvertGamepadType(pad);
+
+		return GamePadCapabilities(true, type);
+	}
+
+	static Uint16 ConvertRumble(float v)
+	{
+		v = std::clamp(v, 0.0f, 1.0f);
+		return static_cast<Uint16>(v * 65535.0f);
+	}
+
+	bool Platform::GamePad_SetVibration(PlayerIndex playerIndex, float leftMotor, float rightMotor, float leftTrigger, float rightTrigger) {
+		const auto index = static_cast<int>(playerIndex);
+
+		if (index < 0 || index >= 4)
+			return false;
+
+		auto& pad = Global::Gamepads[index];
+
+		if (!pad.gamepad)
+			return false;
+
+		pad.low_frequency_rumble = ConvertRumble(leftMotor);
+		pad.high_frequency_rumble = ConvertRumble(rightMotor);
+		pad.left_rumble = ConvertRumble(leftTrigger);
+		pad.right_rumble = ConvertRumble(rightTrigger);		
+
+		return true;
+	}
+
+	void Platform::GamePad_Suspend() {		
+	}
+
+	void Platform::GamePad_Resume() {
+	}
 
 
 #ifndef XNPP_DONT_USE_XNA_KEYS

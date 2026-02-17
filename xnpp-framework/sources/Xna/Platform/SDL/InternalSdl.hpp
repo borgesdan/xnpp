@@ -3,6 +3,7 @@
 
 #include <cstdint>
 #include <SDL3/SDL.h>
+#include <vector>
 
 namespace Xna {
 	struct InternalSdl {
@@ -19,7 +20,18 @@ namespace Xna {
 	struct SdlGamePadPlayer {
 		SDL_Gamepad* gamepad = nullptr;
 		// Player Index
-		int id = -1;		
+		int id = -1;
+
+		Uint16 low_frequency_rumble{ 0 };
+		Uint16 high_frequency_rumble{ 0 };
+		Uint16 left_rumble{ 0 };
+		Uint16 right_rumble{ 0 };
+		
+		static constexpr Uint32 FRAME_RUMBLE_MS = 16;		
+	};
+
+	struct Global {
+		static inline std::vector<SdlGamePadPlayer> Gamepads = std::vector<SdlGamePadPlayer>(4);
 	};
 }
 
