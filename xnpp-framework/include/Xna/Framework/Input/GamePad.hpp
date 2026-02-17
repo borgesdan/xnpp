@@ -5,7 +5,6 @@
 #include "GamePadCapabilities.hpp"
 #include "Shared.hpp"
 #include <memory>
-#include "Xna/Platform/Platform.hpp"
 
 namespace Xna {
 	//Specifies a type of dead zone processing to apply to Xbox Controller analog sticks when calling GetState. 
@@ -23,18 +22,14 @@ namespace Xna {
 	struct GamePad final {
 	public:		
 		//Gets the current state of a game pad controller. As an option, it specifies a dead zone processing method for the analog sticks.
-		inline static GamePadState GetState(PlayerIndex index, GamePadDeadZone deadZone = GamePadDeadZone::IndependentAxes) {
-			return Platform::GamePad_GetState(index, deadZone);
-		}
+		static GamePadState GetState(PlayerIndex index, GamePadDeadZone deadZone = GamePadDeadZone::IndependentAxes);
 
 		//Retrieves the capabilities of an Xbox Controller.
-		static inline GamePadCapabilities GetCapabilities(PlayerIndex index) { return Platform::GamePad_GetCapabilities(index); }
+		static GamePadCapabilities GetCapabilities(PlayerIndex index);
 		//Sets the vibration motor speeds on an Xbox Controller.
 		//leftMotor: The speed of the left motor, between 0.0 and 1.0.This motor is a low - frequency motor.
 		//rightMotor: The speed of the right motor, between 0.0 and 1.0. This motor is a high-frequency motor.
-		static inline bool SetVibration(PlayerIndex index, float leftMotor, float rightMotor, float leftTrigger = 0, float rightTrigger = 0) {
-			return Platform::GamePad_SetVibration(index, leftMotor, rightMotor, leftTrigger, rightTrigger);
-		}
+		static bool SetVibration(PlayerIndex index, float leftMotor, float rightMotor, float leftTrigger = 0, float rightTrigger = 0);
 	
 		GamePad() = delete;
 		GamePad(GamePad&) = delete;

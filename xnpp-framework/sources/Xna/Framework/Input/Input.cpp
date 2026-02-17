@@ -1,22 +1,38 @@
 #include "Xna/Framework/Input/Keyboard.hpp"
 #include "Xna/Framework/Input/Mouse.hpp"
+#include "Xna/Framework/Input/GamePad.hpp"
 #include "Xna/Platform/Platform.hpp"
 
-namespace Xna {
-	//Returns the current keyboard. 
-	KeyboardState Keyboard::GetState() { return Platform::Keyboard_GetState(); }
+namespace Xna {	
+	KeyboardState Keyboard::GetState() { 
+		return Platform::Keyboard_GetState(); 
+	}
+		
+	MouseState Mouse::GetState() { 
+		return Platform::Mouse_GetState(); 
+	}
+		
+	intptr_t Mouse::WindowHandle() { 
+		return Platform::Mouse_GetWindowHandle(); 
+	}
+	
+	void Mouse::WindowHandle(intptr_t value) {
+		Platform::Mouse_SetWindowHandle(value); 
+	}
+	
+	void Mouse::SetPosition(int32_t x, int32_t y) {
+		Platform::Mouse_SetPosition(x, y); 
+	}
 
-	//Gets the current state of the mouse, including mouse position and buttons pressed. 
-	MouseState Mouse::GetState() { return Platform::Mouse_GetState(); }
+	GamePadState GamePad::GetState(PlayerIndex index, GamePadDeadZone deadZone) {
+		return Platform::GamePad_GetState(index, deadZone);
+	}
 
-	//Gets or sets the window used for mouse processing. 
-	//Mouse coordinates returned by GetState are relative to the upper-left corner of this window. 
-	intptr_t Mouse::WindowHandle() { return Platform::Mouse_GetWindowHandle(); }
+	GamePadCapabilities GamePad::GetCapabilities(PlayerIndex index) { 
+		return Platform::GamePad_GetCapabilities(index); 
+	}
 
-	//Gets or sets the window used for mouse processing. 
-	//Mouse coordinates returned by GetState are relative to the upper-left corner of this window. 
-	void Mouse::WindowHandle(intptr_t value) {	Platform::Mouse_SetWindowHandle(value); }
-
-	//Sets the position of the mouse cursor relative to the upper-left corner of the window.
-	void Mouse::SetPosition(int32_t x, int32_t y) { Platform::Mouse_SetPosition(x, y); }
+	bool GamePad::SetVibration(PlayerIndex index, float leftMotor, float rightMotor, float leftTrigger, float rightTrigger) {
+		return Platform::GamePad_SetVibration(index, leftMotor, rightMotor, leftTrigger, rightTrigger);
+	}
 }

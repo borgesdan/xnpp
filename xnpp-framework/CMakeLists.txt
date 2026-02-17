@@ -73,7 +73,7 @@ add_library(xnpp
         "sources/Xna/Platform/Windows/WindowsSpriteBatch.cpp"
         "sources/Xna/Platform/Windows/WindowsTextures.cpp"
         "sources/Xna/Platform/Windows/WindowsAdapter.cpp"
-        "sources/Xna/Platform/Windows/WindowsInputs.cpp"
+        
         "sources/Xna/Platform/Windows/WindowsPlatformAudio.cpp"       
         "sources/Xna/Platform/Windows/WindowsBuffer.cpp"
         "sources/Xna/App.cpp"
