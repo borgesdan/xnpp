@@ -1,7 +1,6 @@
 #ifndef XNA_INPUT_KEYBOARD_HPP
 #define XNA_INPUT_KEYBOARD_HPP
 
-#include <memory>
 #include <cstdint>
 #include "Shared.hpp"
 
