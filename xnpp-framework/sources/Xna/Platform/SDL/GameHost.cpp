@@ -113,6 +113,19 @@ namespace Xna {
     }    
 
     void UpdateGamePads(std::vector<SdlGamePadPlayer>& gamePadPlayers) {
+        static bool checkEnabled = false;
+
+        if (!Global::GamepadsEnabled && !checkEnabled) {
+            for (auto& player : gamePadPlayers) {
+                SDL_RumbleGamepad(player.gamepad, 0, 0, 0);
+                SDL_RumbleGamepadTriggers(player.gamepad, 0, 0, 0);
+            }
+
+            checkEnabled = true;
+        }            
+
+        checkEnabled = false;
+
         for (auto& player : gamePadPlayers) {
             if (!player.gamepad)
                 continue;            

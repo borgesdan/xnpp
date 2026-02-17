@@ -31,6 +31,7 @@ namespace Xna {
 	};
 
 	struct Global {
+		static inline bool GamepadsEnabled = false;
 		static inline std::vector<SdlGamePadPlayer> Gamepads = std::vector<SdlGamePadPlayer>(4);
 	};
 }

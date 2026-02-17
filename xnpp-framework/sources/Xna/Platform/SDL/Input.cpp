@@ -252,10 +252,12 @@ namespace Xna {
 		return true;
 	}
 
-	void Platform::GamePad_Suspend() {		
+	void Platform::GamePad_Suspend() {	
+		Global::GamepadsEnabled = false;
 	}
 
 	void Platform::GamePad_Resume() {
+		Global::GamepadsEnabled = true;
 	}
 
 
