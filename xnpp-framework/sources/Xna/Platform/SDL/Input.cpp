@@ -1,6 +1,6 @@
 #include "InternalSdl.hpp"
-#include "Xna/Framework/Input/KeyboardState.hpp"
-#include "Xna/Framework/Input/MouseState.hpp"
+#include "Xna/Framework/Input/Keyboard.hpp"
+#include "Xna/Framework/Input/Mouse.hpp"
 #include "Xna/Framework/Input/GamePad.hpp"
 #include "Xna/Platform/Platform.hpp"
 #include <array>

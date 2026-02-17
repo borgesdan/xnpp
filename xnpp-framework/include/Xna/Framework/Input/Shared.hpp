@@ -2,16 +2,13 @@
 #define XNA_FRAMEWORK_INPUT_INPUT_HPP
 
 namespace Xna {
-	//Specifies the game controller associated with a player.
-	enum class PlayerIndex {
-		//The first controller.
-		One,
-		//The second controller.
-		Two,
-		//The third controller.
-		Three,
-		//The fourth controller.
-		Four
+	//Identifies the state of a controller button. 
+	enum class ButtonState
+	{
+		//The button is released.
+		Released,
+		//The button is pressed.
+		Pressed,
 	};
 
 	//Identifies the state of a keyboard key. 
@@ -22,14 +19,7 @@ namespace Xna {
 		Down,
 	};
 
-	//Identifies the state of a controller button. 
-	enum class ButtonState
-	{
-		//The button is released.
-		Released,
-		//The button is pressed.
-		Pressed,
-	};
+	
 
 #ifndef XNPP_DONT_USE_XNA_KEYS
 
