@@ -4,22 +4,19 @@
 #include <SDL3/SDL.h>
 
 namespace Xna {    
-    static void HandleGamepadAdded(int deviceIndex);
-    static void HandleGamepadRemoved(SDL_JoystickID instanceID);
+    static void HandleGamepadAdded(SDL_Event const& event, std::vector<SdlGamePadPlayer>& gamePadPlayers);
+    static void HandleGamepadRemoved(SDL_Event const& event, std::vector<SdlGamePadPlayer>& gamePadPlayers);
+    static void CloseAllGamepads(std::vector<SdlGamePadPlayer>& gamePadPlayers);
 
 	void Platform::GameHost_Tick(GameHost& gh) {
         SDL_Event event;
         bool running = true;
+        std::vector<SdlGamePadPlayer> gamePadPlayers(4);
         
         if (!SDL_WasInit(SDL_INIT_GAMEPAD))
             SDL_Init(SDL_INIT_GAMEPAD);
 
-        //Initialize connected gamepads
-        int gamePadCount;
-        SDL_GetGamepads(&gamePadCount);
-
-        for (int i = 0; i < gamePadCount; ++i)
-            HandleGamepadAdded(i);
+        //AddConnectedGamePads(gamePadPlayers);
 
         while (running) {
             while (SDL_PollEvent(&event)) {
@@ -42,10 +39,10 @@ namespace Xna {
                     InternalSdl::g_MouseWheel += event.wheel.integer_y;
                     break;
                 case SDL_EVENT_GAMEPAD_ADDED:
-                    HandleGamepadAdded(event.gdevice.which);
+                    HandleGamepadAdded(event, gamePadPlayers);
                     break;
                 case SDL_EVENT_GAMEPAD_REMOVED:
-                    HandleGamepadRemoved(event.gdevice.which);
+                    HandleGamepadRemoved(event, gamePadPlayers);
                     break;
                 }                
             }
@@ -55,43 +52,58 @@ namespace Xna {
             else                 
                 gh.RunOneFrame();
         }
-	}
 
-    void HandleGamepadAdded(int deviceIndex)
+        //TODO: [!] Mover para uma área de Dispose
+        CloseAllGamepads(gamePadPlayers);
+	}   
+
+    void HandleGamepadAdded(SDL_Event const& event, std::vector<SdlGamePadPlayer>& gamePadPlayers)
     {
-        if (!SDL_IsGamepad(deviceIndex))
-            return;
+        auto newPad = SDL_OpenGamepad(event.gdevice.which);
 
-        auto pad = SDL_OpenGamepad(deviceIndex);
-        if (!pad)
-            return;
+        if (newPad) {       
+            for (int i = 0; i < gamePadPlayers.size(); ++i) {
+                if (gamePadPlayers[i].gamepad == nullptr) {
+                    gamePadPlayers[i].gamepad = newPad;
+                    gamePadPlayers[i].id = i;
 
-        const auto instanceID = SDL_GetGamepadID(pad);
-       
-        for (size_t i = 0; i < InternalSdl::MAX_GAMEPADS; ++i)
-        {
-            if (!InternalSdl::g_Gamepads[i])
-            {
-                InternalSdl::g_Gamepads[i] = pad;
-                InternalSdl::g_InstanceIDs[i] = instanceID;
-                return;
+                    //Define o Player Index no SDL
+                    SDL_SetGamepadPlayerIndex(newPad, i);
+                    
+                    SDL_Log("Gamepad %d connected: %s", i + 1, SDL_GetGamepadName(newPad));
+                    break;
+                }
             }
         }
+    }    
 
-        // Sem slot livre
-        SDL_CloseGamepad(pad);
+    void HandleGamepadRemoved(SDL_Event const& event, std::vector<SdlGamePadPlayer>& gamePadPlayers) {
+        SDL_Gamepad* removedPad = SDL_GetGamepadFromID(event.gdevice.which);
+
+        if (removedPad) {
+            for (int i = 0; i < gamePadPlayers.size(); ++i) {
+                if (gamePadPlayers[i].gamepad == removedPad) {
+                    SDL_Log("Gamepad %d desconnected.", i + 1);                    
+                    SDL_CloseGamepad(gamePadPlayers[i].gamepad);
+
+                    gamePadPlayers[i].gamepad = nullptr;
+                    gamePadPlayers[i].id = -1;
+
+                    break;
+                }
+            }
+        }
     }
 
-    void HandleGamepadRemoved(SDL_JoystickID instanceID) {
-        for (size_t i = 0; i < InternalSdl::MAX_GAMEPADS; ++i)
-        {
-            if (InternalSdl::g_Gamepads[i] && InternalSdl::g_InstanceIDs[i] == instanceID)
-            {
-                SDL_CloseGamepad(InternalSdl::g_Gamepads[i]);
-                InternalSdl::g_Gamepads[i] = nullptr;
-                InternalSdl::g_InstanceIDs[i] = 0;
-                return;
+    void CloseAllGamepads(std::vector<SdlGamePadPlayer>& gamePadPlayers) {
+        for (auto& player : gamePadPlayers) {
+            if (player.gamepad) {
+                SDL_CloseGamepad(player.gamepad);
+                player.gamepad = nullptr;
+                player.id = -1;
             }
         }
+
+        SDL_Log("The pending gamepads have been disconnected.");
     }
 }

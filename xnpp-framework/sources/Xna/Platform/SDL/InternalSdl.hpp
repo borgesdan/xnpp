@@ -15,6 +15,12 @@ namespace Xna {
 		static inline SDL_Gamepad* g_Gamepads[InternalSdl::MAX_GAMEPADS] = {};
 		static inline SDL_JoystickID g_InstanceIDs[InternalSdl::MAX_GAMEPADS] = {};
 	};
+
+	struct SdlGamePadPlayer {
+		SDL_Gamepad* gamepad = nullptr;
+		// Player Index
+		int id = -1;		
+	};
 }
 
 #endif

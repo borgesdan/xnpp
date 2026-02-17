@@ -70,6 +70,13 @@ public:
 
 		if (mouseState.ScroolWheelValue > 50) {
 			backColor = Xna::Color::CornflowerBlue();
+		}		
+
+		oldPState = curPState;
+		curPState = Xna::GamePad::GetState(Xna::PlayerIndex::One);
+
+		if (curPState.IsConnected() && curPState.IsButtonDown(Xna::Buttons::B) && oldPState.IsButtonUp(Xna::Buttons::B)) {
+			backColor = Xna::Color::Ivory();
 		}
 
 		base::Update(gameTime);
@@ -86,6 +93,8 @@ private:
 	Xna::SpriteBatch spriteBatch = nullptr;
 	Xna::KeyboardState oldKState{};
 	Xna::KeyboardState curKState{};
+	Xna::GamePadState oldPState{};
+	Xna::GamePadState curPState{};
 	Xna::Color backColor = Xna::Color::CornflowerBlue();
 	bool one = false;
 };

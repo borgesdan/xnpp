@@ -90,9 +90,10 @@ namespace Xna {
 		if (index < 0 || index >= 4)
 			return {};
 
-		auto pad = InternalSdl::g_Gamepads[index];
+		//auto pad = InternalSdl::g_Gamepads[index];
+		SDL_Gamepad* pad = SDL_GetGamepadFromPlayerIndex(index);
 
-		if (pad)
+		if (!pad)
 			return {};
 
 		auto ToButtonState = [](SDL_Gamepad* pad, SDL_GamepadButton button)
@@ -162,7 +163,7 @@ namespace Xna {
 		const auto triggers = GamePadTriggers(lt, rt);
 		const auto padState = GamePadState(thumbSticks, triggers, buttons, dpad, isConnected);
 		return padState;
-	}
+	}	
 
 
 #ifndef XNPP_DONT_USE_XNA_KEYS
