@@ -1,4 +1,4 @@
-#include "Xna/Platform/Platform.hpp"
+#include "Xna/Platform/_Platform.hpp"
 #include <algorithm>
 #include <SDL3/SDL.h>
 #include "InternalSdl.hpp"

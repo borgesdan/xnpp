@@ -22,7 +22,7 @@
 #include <d3dcsx.h>
 //DirectXTK
 #include <DirectXMath.h>
-#include <DirectXTK/Audio.h>
+#include <directxtk/Audio.h>
 #include <DirectXTK/BufferHelpers.h>
 #include <DirectXTK/CommonStates.h>
 #include <DirectXTK/DDSTextureLoader.h>
