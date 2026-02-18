@@ -104,7 +104,7 @@ find_package(directxtk CONFIG REQUIRED)
 find_package(SDL3 CONFIG REQUIRED)
 
 target_link_libraries(xnpp
-        PUBLIC
+        PRIVATE
             Microsoft::DirectXTK 
             dxgi.lib
             dxguid.lib
@@ -120,10 +120,15 @@ target_link_libraries(xnpp
             SDL3::SDL3
 )
 
+find_path(MINIAUDIO_INCLUDE_DIRS "miniaudio.h")
+
 target_include_directories(xnpp
     PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
         $<INSTALL_INTERFACE:include>
+
+    PRIVATE
+        ${MINIAUDIO_INCLUDE_DIRS}
 )
 
 set_target_properties(xnpp PROPERTIES

@@ -14,6 +14,7 @@
     "pugixml",
     "freetype",
     "ffmpeg",
-    "sdl3"
+    "sdl3",
+    "miniaudio"
   ]
 }
