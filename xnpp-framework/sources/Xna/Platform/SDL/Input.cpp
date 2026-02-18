@@ -25,8 +25,8 @@ namespace Xna {
 		state.MiddleButton = Convert(flags & SDL_BUTTON_MMASK);
 		state.XButton1 = Convert(flags & SDL_BUTTON_X1MASK);
 		state.XButton2 = Convert(flags & SDL_BUTTON_X2MASK);
-		state.X = posX;
-		state.Y = posY;
+		state.X = static_cast<int32_t>(posX);
+		state.Y = static_cast<int32_t>(posY);
 		state.ScroolWheelValue = Sdl::Global::MouseWheel;
 
 		return state;
@@ -37,7 +37,7 @@ namespace Xna {
 			return;
 
 		auto window = reinterpret_cast<SDL_Window*>(Sdl::Global::CurrentWindowHandle);
-		SDL_WarpMouseInWindow(window, x, y);
+		SDL_WarpMouseInWindow(window, static_cast<float>(x), static_cast<float>(y));
 	}
 
 	intptr_t Platform::Mouse_GetWindowHandle() {

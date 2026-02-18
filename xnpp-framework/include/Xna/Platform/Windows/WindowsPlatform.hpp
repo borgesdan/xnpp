@@ -286,10 +286,7 @@ namespace Xna {
 		static inline  Microsoft::WRL::ComPtr<IMFMediaEngine> GetMediaEngine() {
 			InitMediaEngine();
 			return MediaEngine;
-		}
-
-		static inline DirectX::GamePad& GetGamePad() { return *GamePad; }
-		static inline DirectX::Mouse& GetMouse() { return *Mouse; }
+		}	
 
 		static void Initialize();
 
@@ -332,10 +329,6 @@ namespace Xna {
 		static inline std::unique_ptr<DirectX::AudioEngine> AudioEngine = nullptr;
 		//Media
 		static inline Microsoft::WRL::ComPtr<IMFMediaEngine> MediaEngine = nullptr;
-		//static inline Microsoft::WRL::ComPtr<MediaEngineNotify> MediaEngineNotify = nullptr;
-		//Input
-		static inline std::unique_ptr<DirectX::GamePad> GamePad = nullptr;
-		static inline std::unique_ptr<DirectX::Mouse> Mouse = nullptr;
 
 		static void InitWIC();
 		static void InitFactory();

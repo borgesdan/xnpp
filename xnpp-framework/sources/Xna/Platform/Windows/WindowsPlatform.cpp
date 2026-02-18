@@ -201,11 +201,7 @@ namespace Xna {
 		InitWIC();
 		InitFactory();
 		InitAudioEngine();
-		InitMediaEngine();
-
-		//Input
-		Mouse = std::make_unique<DirectX::Mouse>();
-		GamePad = std::make_unique<DirectX::GamePad>();
+		InitMediaEngine();		
 	}
 
 	void WindowsPlatform::Dispose() {
@@ -220,14 +216,7 @@ namespace Xna {
 		if (MediaEngine) {
 			MediaEngine->Pause();
 			MediaEngine = nullptr;
-		}
-
-		if (GamePad) {
-			GamePad->Suspend();
-			GamePad = nullptr;
 		}		
-
-		Mouse = nullptr;
 
 		MFShutdown();
 		CoUninitialize();

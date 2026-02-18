@@ -16,8 +16,6 @@ namespace Xna {
         if (!SDL_WasInit(SDL_INIT_GAMEPAD))
             SDL_Init(SDL_INIT_GAMEPAD);
 
-        //AddConnectedGamePads(gamePadPlayers);
-
         while (running) {
             while (SDL_PollEvent(&event)) {
                 switch (event.type) {
