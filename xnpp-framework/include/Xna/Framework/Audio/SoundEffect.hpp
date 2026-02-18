@@ -137,6 +137,10 @@ namespace Xna {
 
 	private:
 		struct Implementation {
+			Implementation() {
+				platform = PlatformNS::ISoundEffect::Create();
+			}
+
 			LoopRegion loopInfo;
 			CSharp::TimeSpan duration;
 			std::string effectName;
@@ -155,6 +159,7 @@ namespace Xna {
 				std::vector<std::shared_ptr<SoundEffectInstance>>();
 
 			PlatformImpl::SoundEffectImpl platformImpl;
+			std::unique_ptr<PlatformNS::ISoundEffect> platform;
 		};
 		std::shared_ptr<Implementation> impl = nullptr;
 

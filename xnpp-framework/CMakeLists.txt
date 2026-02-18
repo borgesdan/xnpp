@@ -92,7 +92,8 @@ add_library(xnpp
          "sources/Xna/Platform/SDL/System.cpp" 
          "sources/Xna/Platform/SDL/GameWindow.cpp"
          "sources/Xna/Platform/SDL/GameHost.cpp"
-         "sources/Xna/Platform/SDL/Input.cpp")
+         "sources/Xna/Platform/SDL/Input.cpp" 
+         "sources/Xna/Platform/SDL/Audio.cpp")
 
 target_compile_features(xnpp PUBLIC cxx_std_20)
 

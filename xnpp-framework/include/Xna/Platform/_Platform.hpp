@@ -450,6 +450,13 @@ namespace Xna {
 		);
 
 	};
+
+	namespace PlatformNS {
+		struct ISoundEffect {
+			virtual ~ISoundEffect() = default;
+			XNPP_API static std::unique_ptr<ISoundEffect> Create();
+		};
+	}
 }
 
 #endif
