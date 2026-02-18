@@ -23,6 +23,8 @@ public:
 		auto device = GraphicsDevice();
 		spriteBatch = Xna::SpriteBatch(nullptr);
 
+		soundEffect = Content().Load<Xna::SoundEffect>("Sounds/PlayerFall");
+
 		base::LoadContent();
 	}
 
@@ -112,6 +114,7 @@ private:
 	Xna::GamePadState oldPState{};
 	Xna::GamePadState curPState{};
 	Xna::Color backColor = Xna::Color::CornflowerBlue();
+	Xna::SoundEffect soundEffect = nullptr;
 	bool one = false;
 };
 

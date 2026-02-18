@@ -7,37 +7,37 @@
 #include "Xna/Framework/Media/Song.hpp"
 
 namespace Xna {
-	void Platform::SoundEffect_Create(SoundEffect const& se, std::vector<uint8_t> const& format, std::vector<uint8_t> const& data,
-		size_t offset, size_t count, size_t loopStart, size_t loopLength) {
-		auto wfx = reinterpret_cast<const WAVEFORMATEX*>(format.data());
-		
-		//O ponteiro WAVEFORMATEX* precisa persistir em memória para que não ocorra corrupção de dados
-		se.impl->platformImpl.currentWaveFormatex = *wfx;
+	//void Platform::SoundEffect_Create(SoundEffect const& se, std::vector<uint8_t> const& format, std::vector<uint8_t> const& data,
+	//	size_t offset, size_t count, size_t loopStart, size_t loopLength) {
+	//	auto wfx = reinterpret_cast<const WAVEFORMATEX*>(format.data());
+	//	
+	//	//O ponteiro WAVEFORMATEX* precisa persistir em memória para que não ocorra corrupção de dados
+	//	se.impl->platformImpl.currentWaveFormatex = *wfx;
 
-		auto pcmBuffer = std::make_unique<uint8_t[]>(count);
-		std::memcpy(pcmBuffer.get(), data.data() + offset, count);
-		auto audioStart = pcmBuffer.get();
+	//	auto pcmBuffer = std::make_unique<uint8_t[]>(count);
+	//	std::memcpy(pcmBuffer.get(), data.data() + offset, count);
+	//	auto audioStart = pcmBuffer.get();
 
-		auto& audioEngine = WindowsPlatform::GetAudioEngine();
+	//	auto& audioEngine = WindowsPlatform::GetAudioEngine();
 
-		auto ptr = std::make_unique<DirectX::SoundEffect>(
-			//_In_ AudioEngine* engine,
-			&audioEngine,
-			//_Inout_ std::unique_ptr<uint8_t[]>& wavData,
-			pcmBuffer,
-			//_In_ const WAVEFORMATEX* wfx,
-			&se.impl->platformImpl.currentWaveFormatex,
-			// _In_reads_bytes_(audioBytes) const uint8_t* startAudio
-			audioStart,
-			//size_t audioBytes
-			count,
-			//uint32_t loopStart
-			static_cast<uint32_t>(loopStart),
-			//uint32_t loopLength
-			static_cast<uint32_t>(loopLength));
+	//	auto ptr = std::make_unique<DirectX::SoundEffect>(
+	//		//_In_ AudioEngine* engine,
+	//		&audioEngine,
+	//		//_Inout_ std::unique_ptr<uint8_t[]>& wavData,
+	//		pcmBuffer,
+	//		//_In_ const WAVEFORMATEX* wfx,
+	//		&se.impl->platformImpl.currentWaveFormatex,
+	//		// _In_reads_bytes_(audioBytes) const uint8_t* startAudio
+	//		audioStart,
+	//		//size_t audioBytes
+	//		count,
+	//		//uint32_t loopStart
+	//		static_cast<uint32_t>(loopStart),
+	//		//uint32_t loopLength
+	//		static_cast<uint32_t>(loopLength));
 
-		se.impl->platformImpl.soundEffect = std::move(ptr);
-	}
+	//	se.impl->platformImpl.soundEffect = std::move(ptr);
+	//}
 
 	void Platform::SoundEffect_SetMasterSoundProperties(std::optional<float> volume, std::optional<float> speedOfSound, std::optional<float> dopplerScale, std::optional<float> distanceScale) {
 

@@ -141,7 +141,7 @@ namespace Xna {
 				platform = PlatformNS::ISoundEffect::Create();
 			}
 
-			LoopRegion loopInfo;
+			LoopRegion loopInfo{};
 			CSharp::TimeSpan duration;
 			std::string effectName;
 			std::vector<std::weak_ptr<SoundEffectInstance>> children;
