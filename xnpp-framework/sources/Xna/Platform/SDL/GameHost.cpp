@@ -12,9 +12,6 @@ namespace Xna {
 	void Platform::GameHost_Tick(GameHost& gh) {
         SDL_Event event;
         bool running = true;        
-        
-        if (!SDL_WasInit(SDL_INIT_GAMEPAD))
-            SDL_Init(SDL_INIT_GAMEPAD);
 
         while (running) {
             while (SDL_PollEvent(&event)) {

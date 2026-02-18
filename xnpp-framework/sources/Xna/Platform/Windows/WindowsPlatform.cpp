@@ -18,8 +18,7 @@
 #include "Xna/Framework/Graphics/Effect/EffectPass.hpp"
 #include "Xna/Framework/Graphics/Effect/BasicEffect.hpp"
 #include "Xna/Framework/Graphics/GraphicsDevice.hpp"
-#include "SDL3/SDL.h"
-#include <SDL3/SDL_system.h>
+#include "../SDL/InternalSdl.hpp"
 
 using Microsoft::WRL::ComPtr;
 
@@ -306,14 +305,7 @@ namespace Xna {
 
 	void Platform::Initialize() {
 		WindowsPlatform::Initialize();
-
-		//TODO: [!] remover isso aqui
-		if (!(SDL_Init(SDL_INIT_VIDEO))) {
-			// Falha ao inicializar: SDL_GetPrimaryDisplay retornará 0
-			SDL_Log("Erro: %s", SDL_GetError());
-		}
-
-		SDL_Init(SDL_INIT_GAMEPAD);
+		Sdl::System::Initialize();
 	}
 
 	void Platform::Dispose() {

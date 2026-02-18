@@ -1,8 +1,20 @@
 #include "Xna/Platform/Platform.hpp"
 #include <algorithm>
 #include <SDL3/SDL.h>
+#include "InternalSdl.hpp"
+#include <stdexcept>
 
 namespace Xna {
+	void Sdl::System::Initialize() {
+		if (!SDL_Init(SDL_INIT_VIDEO)) {
+			throw std::runtime_error(SDL_GetError());
+		}
+
+		if (!SDL_Init(SDL_INIT_GAMEPAD)) {
+			throw std::runtime_error(SDL_GetError());
+		}
+	}
+
 	PlatformRectangle Platform::System_ClientRect(intptr_t hwnd) {
 		auto window = reinterpret_cast<SDL_Window*>(hwnd);
 		if (window) {

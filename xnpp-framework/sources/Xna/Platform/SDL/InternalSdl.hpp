@@ -6,6 +6,10 @@
 #include <vector>
 
 namespace Xna::Sdl {
+	struct System {
+		static void Initialize();
+	};
+
 	struct GamepadPlayer {
 		SDL_Gamepad* gamepad = nullptr;
 		int index = -1;
