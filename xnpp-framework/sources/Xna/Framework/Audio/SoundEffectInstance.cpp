@@ -30,7 +30,7 @@ namespace Xna {
 	}
 	
 	void SoundEffectInstance::Apply3D(std::vector<AudioListener> const& listener, AudioEmitter emitter) {
-		Platform::SoundEffect_Apply3D(*this, listener, emitter);
+		throw CSharp::NotSupportedException();
 	}
 	
 	void SoundEffectInstance::Volume(float value) {

@@ -381,12 +381,10 @@ namespace Xna {
 			Pause,
 			Stop,
 			Resume
-		};
+		};		
 		
-		XNPP_API static void SoundEffect_SetMasterSoundProperties(std::optional<float> volume, std::optional<float> speedOfSound, std::optional<float> dopplerScale, std::optional<float> distanceScale);		
 		XNPP_API static void SoundEffect_CreateInstance(DynamicSoundEffectInstance const& se);		
-		XNPP_API static void SoundEffect_SetState(DynamicSoundEffectInstance const& se, SoundEffect_State state, bool immediateIfStop = true);		
-		XNPP_API static void SoundEffect_Apply3D(SoundEffectInstance const& se, std::vector<AudioListener> const& listener, AudioEmitter emitter);		
+		XNPP_API static void SoundEffect_SetState(DynamicSoundEffectInstance const& se, SoundEffect_State state, bool immediateIfStop = true);					
 		XNPP_API static void SoundEffect_SubmitBuffer(DynamicSoundEffectInstance const& se, std::vector<uint8_t> const& buffer, size_t offset, size_t count);
 		XNPP_API static int32_t SoundEffect_GetPendingBufferCount(DynamicSoundEffectInstance const& se);
 
@@ -452,6 +450,11 @@ namespace Xna {
 			Stoped,
 		};
 
+		struct MasterAudio {
+			XNPP_API static void SetMasterVolume(float value);
+		};
+		
+
 		struct ISoundEffect {
 			virtual ~ISoundEffect() = default;
 
@@ -470,7 +473,7 @@ namespace Xna {
 			XNPP_API virtual void Play() = 0;
 			XNPP_API virtual void Pause() = 0;
 			XNPP_API virtual void Stop() = 0;
-			XNPP_API virtual MediaState GetState() = 0;
+			XNPP_API virtual MediaState GetState() = 0;			
 
 			XNPP_API static std::unique_ptr<ISoundEffectInstance> Create();
 		};

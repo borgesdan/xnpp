@@ -33,7 +33,7 @@ namespace Xna {
 	}
 
 	void Sdl::System::DisposeAudio() {
-		AudioEngine.Shutdown();
+		AudioEngine.Shutdown();		
 	}
 
 	namespace PlatformNS {
@@ -173,7 +173,7 @@ namespace Xna {
 
 			MediaState GetState() override {
 				return state;
-			}
+			}			
 
 			~SdlSoundEffectInstance() override {
 				ma_sound_uninit(&sound);
@@ -186,6 +186,10 @@ namespace Xna {
 
 		std::unique_ptr<ISoundEffectInstance> ISoundEffectInstance::Create() {
 			return std::make_unique<SdlSoundEffectInstance>();
+		}
+
+		void MasterAudio::SetMasterVolume(float value) {
+			ma_engine_set_volume(&AudioEngine.GetNative(), value);
 		}
 	}
 }

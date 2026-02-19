@@ -19,7 +19,7 @@ namespace Xna {
 		impl->duration = duration;
 		impl->platform = PlatformNS::ISoundEffect::Create();
 
-		impl->platform->Load(format, data, offset, count, loopStart, loopLength);
+		impl->platform->Load(format, data, offset, count, loopStart, loopLength);		
 	}
 
 	SoundEffect::SoundEffect(std::vector<uint8_t> const& buffer, int32_t sampleRate, AudioChannels channels) {
@@ -151,7 +151,7 @@ namespace Xna {
 		if (value < 0.0 || value > 1.0)
 			throw CSharp::ArgumentOutOfRangeException("value");
 
-		Platform::SoundEffect_SetMasterSoundProperties(value, std::nullopt, std::nullopt, std::nullopt);
+		PlatformNS::MasterAudio::SetMasterVolume(value);
 		Implementation::currentVolume = value;
 	}
 
@@ -162,7 +162,7 @@ namespace Xna {
 		Implementation::speedOfSound = value;
 		Implementation::maxVelocityComponent = Implementation::speedOfSound - Implementation::speedOfSound / 1000.0f;
 
-		Platform::SoundEffect_SetMasterSoundProperties(std::nullopt, value, std::nullopt, std::nullopt);
+		throw CSharp::NotSupportedException();
 	}
 
 	void SoundEffect::DopplerScale(float value) {
@@ -170,12 +170,12 @@ namespace Xna {
 			throw CSharp::ArgumentOutOfRangeException("value");
 
 		Implementation::dopplerScale = value;
-		Platform::SoundEffect_SetMasterSoundProperties(std::nullopt, std::nullopt, value, std::nullopt);
+		throw CSharp::NotSupportedException();
 	}
 
 	void SoundEffect::DistanceScale(float value) {
 		Implementation::distanceScale = static_cast<double>(value <= 1.4012984643248171E-45) ? std::numeric_limits<float>::epsilon() : value;
-		Platform::SoundEffect_SetMasterSoundProperties(std::nullopt, std::nullopt, std::nullopt, value);
+		throw CSharp::NotSupportedException();
 	}
 
 	void SoundEffect::ChildDestroyed(std::shared_ptr<SoundEffectInstance> const& child) {
