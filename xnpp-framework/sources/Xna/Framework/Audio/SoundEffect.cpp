@@ -17,8 +17,9 @@ namespace Xna {
 		impl->loopInfo.Start = loopStart;
 		impl->loopInfo.Length = loopLength;
 		impl->duration = duration;
+		impl->platform = PlatformNS::ISoundEffect::Create();
 
-		Platform::SoundEffect_Create(*this, format, data, offset, count, loopStart, loopLength);
+		impl->platform->Load(format, data, offset, count, loopStart, loopLength);
 	}
 
 	SoundEffect::SoundEffect(std::vector<uint8_t> const& buffer, int32_t sampleRate, AudioChannels channels) {

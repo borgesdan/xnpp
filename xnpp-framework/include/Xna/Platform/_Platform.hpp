@@ -382,8 +382,7 @@ namespace Xna {
 			Stop,
 			Resume
 		};
-
-		XNPP_API static void SoundEffect_Create(SoundEffect const&, std::vector<uint8_t> const& format, std::vector<uint8_t> const& data, size_t offset, size_t count, size_t loopStart, size_t loopLength);
+		
 		XNPP_API static void SoundEffect_SetMasterSoundProperties(std::optional<float> volume, std::optional<float> speedOfSound, std::optional<float> dopplerScale, std::optional<float> distanceScale);
 		XNPP_API static void SoundEffect_CreateInstance(SoundEffectInstance const& se);
 		XNPP_API static void SoundEffect_CreateInstance(DynamicSoundEffectInstance const& se);
@@ -454,7 +453,15 @@ namespace Xna {
 	namespace PlatformNS {
 		struct ISoundEffect {
 			virtual ~ISoundEffect() = default;
+
+			virtual void Load(std::vector<uint8_t> const& format, std::vector<uint8_t> const& data, size_t offset, size_t count, size_t loopStart, size_t loopLength) = 0;
+
 			XNPP_API static std::unique_ptr<ISoundEffect> Create();
+		};
+
+		struct ISoundEffectInstance {
+			virtual ~ISoundEffectInstance() = default;
+			XNPP_API static std::unique_ptr<ISoundEffectInstance> Create();
 		};
 	}
 }

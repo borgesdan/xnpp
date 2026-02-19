@@ -137,10 +137,6 @@ namespace Xna {
 
 	private:
 		struct Implementation {
-			Implementation() {
-				platform = PlatformNS::ISoundEffect::Create();
-			}
-
 			LoopRegion loopInfo{};
 			CSharp::TimeSpan duration;
 			std::string effectName;
