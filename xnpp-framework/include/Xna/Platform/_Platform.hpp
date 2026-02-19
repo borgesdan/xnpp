@@ -374,19 +374,6 @@ namespace Xna {
 		XNPP_API static Vector2 SpriteFont_MeasureString(SpriteFont const& sf, std::string const& text, bool ignoreWhiteSpace);
 		XNPP_API static Vector2 SpriteFont_MeasureString(SpriteFont const& sf, std::wstring const& text, bool ignoreWhiteSpace);		
 
-		//Song
-
-		XNPP_API static void Song_FromFile(Song const& song, std::filesystem::path const& filename);
-		XNPP_API static void MediaPlayer_Play(Song const& song);
-		XNPP_API static void MediaPlayer_Pause();
-		XNPP_API static void MediaPlayer_Resume();
-		XNPP_API static void MediaPlayer_Stop();
-		XNPP_API static void MediaPlayer_SetVolume(float volume);
-		XNPP_API static void MediaPlayer_SetMuted(bool value);
-		XNPP_API static void MediaPlayer_SetIsRepeating(bool value);
-		XNPP_API static double MediaPlayer_GetPlayPosition();
-		XNPP_API static double MediaPlayer_GetDuration();
-
 		enum class MediaPlayer_MediaProperty {
 			Album,
 			Genre,
@@ -438,15 +425,14 @@ namespace Xna {
 
 		struct MasterAudio {
 			XNPP_API static void SetMasterVolume(float value);
-		};
-		
+		};		
 
 		struct ISoundEffect {
 			virtual ~ISoundEffect() = default;
 
 			XNPP_API virtual void Load(std::vector<uint8_t> const& format, std::vector<uint8_t> const& data, size_t offset, size_t count, size_t loopStart, size_t loopLength) = 0;
 
-			XNPP_API static std::unique_ptr<ISoundEffect> Create();
+			XNPP_API static std::unique_ptr<ISoundEffect> Create();	
 		};
 
 		struct ISoundEffectInstance {
@@ -462,6 +448,21 @@ namespace Xna {
 			XNPP_API virtual MediaState GetState() = 0;			
 
 			XNPP_API static std::unique_ptr<ISoundEffectInstance> Create();
+		};		
+
+		struct IMediaPlayer {			
+			XNPP_API virtual void Play(std::filesystem::path const& song) = 0;
+			XNPP_API virtual void Pause() = 0;
+			XNPP_API virtual void Resume() = 0;
+			XNPP_API virtual void Stop() = 0;
+			XNPP_API virtual void SetVolume(float volume) = 0;
+			XNPP_API virtual void SetMuted(bool value) = 0;
+			XNPP_API virtual void SetIsRepeating(bool value) = 0;
+			XNPP_API virtual double GetPlayPosition() = 0;
+
+
+			XNPP_API virtual ~IMediaPlayer() = default;
+			XNPP_API static IMediaPlayer& GetInstance();
 		};
 	}
 }

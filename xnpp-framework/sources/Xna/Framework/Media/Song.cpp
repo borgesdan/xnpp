@@ -7,9 +7,7 @@ namespace Xna {
 		impl->rating = 0;
 		impl->trackNumber = 0;		
 		impl->fileName = filename;
-		impl->duration = CSharp::TimeSpan(0, 0, 0, 0, duration);
-
-		Platform::Song_FromFile(*this, filename);
+		impl->duration = CSharp::TimeSpan(0, 0, 0, 0, duration);		
 	}
 
 	Xna::Album Song::Album() const {

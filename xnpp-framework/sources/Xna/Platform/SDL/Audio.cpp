@@ -30,10 +30,13 @@ namespace Xna {
 
 	void Sdl::System::InitAudio() {
 		AudioEngine.Initialize();
-	}
+	}	
 
 	void Sdl::System::DisposeAudio() {
-		AudioEngine.Shutdown();		
+		if (PlatformNS::SdlMediaPlayer::MediaPlayer)
+			PlatformNS::SdlMediaPlayer::MediaPlayer = nullptr;
+
+		AudioEngine.Shutdown();
 	}
 
 	namespace PlatformNS {
@@ -58,6 +61,8 @@ namespace Xna {
 			ma_uint64 loopStartFrames{};
 			ma_uint64 loopEndFrames{};
 			WAVEFORMATEX waveFormatex{};
+
+			static inline float MasterVolume = 1;
 
 			~SdlSoundEffect() override {
 				ma_audio_buffer_uninit(&audioBuffer);
@@ -133,7 +138,9 @@ namespace Xna {
 				ma_data_source_set_loop_point_in_pcm_frames(
 					&sdlSe->audioBuffer,
 					sdlSe->loopStartFrames,
-					sdlSe->loopEndFrames);				
+					sdlSe->loopEndFrames);	
+
+				SetVolume(SdlSoundEffect::MasterVolume);
 			}
 
 			void SetVolume(float value) override {
@@ -189,7 +196,92 @@ namespace Xna {
 		}
 
 		void MasterAudio::SetMasterVolume(float value) {
-			ma_engine_set_volume(&AudioEngine.GetNative(), value);
+			SdlSoundEffect::MasterVolume = value;
 		}
-	}
+
+		struct SdlMediaPlayer final : public IMediaPlayer {
+			std::filesystem::path currentFile;
+			float currentVolume = 1.0f;
+			bool isMuted = false;
+			ma_sound music{};
+
+			static inline std::unique_ptr<SdlMediaPlayer> MediaPlayer = nullptr;
+
+			void Play(std::filesystem::path const& song) override {
+				ma_result result = ma_sound_init_from_file(
+					&AudioEngine.GetNative(),
+					song.string().c_str(),
+					MA_SOUND_FLAG_STREAM,
+					nullptr,
+					nullptr,
+					&music);
+
+				if (result != MA_SUCCESS) {
+					std::string error = "SdlMediaPlayer tried to open the file but failed: ";
+					error.append(song.string());
+
+					throw std::runtime_error(error);
+				}					
+
+				ma_sound_start(&music);
+			}
+
+			void Pause() override {
+				ma_sound_stop(&music);
+			}
+
+			void Resume() override {
+				ma_sound_start(&music);
+			}
+
+			void Stop() override {
+				ma_sound_stop(&music);
+				ma_sound_seek_to_pcm_frame(&music, 0);
+			}
+
+			void SetVolume(float volume) override {
+				currentVolume = volume;
+
+				if(!isMuted)
+					ma_sound_set_volume(&music, volume);
+			}
+
+			void SetMuted(bool value) override {
+				currentVolume = ma_sound_get_volume(&music);
+				
+				if (value) 
+					ma_sound_set_volume(&music, 0);
+				else 
+					ma_sound_set_volume(&music, currentVolume);
+
+				isMuted = value;
+			}
+
+			void SetIsRepeating(bool value) override {
+				ma_sound_set_looping(&music, static_cast<ma_bool32>(value));
+			}
+
+			double GetPlayPosition() override {
+				float cursor = 0.0f;
+				const auto result = ma_sound_get_cursor_in_seconds(&music, &cursor);
+
+				if(result != MA_SUCCESS)
+					throw std::runtime_error("It was not possible to obtain the tempo of the song.");
+
+				//Tempo em milisegundos
+				return cursor * 1000.0;
+			}
+
+			~SdlMediaPlayer() override {
+				ma_sound_uninit(&music);
+			}
+		};
+
+		IMediaPlayer& IMediaPlayer::GetInstance() {
+
+			if(!SdlMediaPlayer::MediaPlayer)
+				SdlMediaPlayer::MediaPlayer = std::make_unique<SdlMediaPlayer>();
+			return *SdlMediaPlayer::MediaPlayer.get();
+		}
+	}	
 }
