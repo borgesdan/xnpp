@@ -51,9 +51,10 @@ namespace Xna {
 		};
 #pragma pack(pop)
 
-		struct SdlSoundEffect : public ISoundEffect {
+		struct SdlSoundEffect final : public ISoundEffect {
 			std::vector<uint8_t> pcmData{};
 			ma_audio_buffer audioBuffer{};
+			ma_audio_buffer_config bufferConfig{};
 			ma_uint64 loopStartFrames{};
 			ma_uint64 loopEndFrames{};
 			WAVEFORMATEX waveFormatex{};
@@ -93,7 +94,7 @@ namespace Xna {
 
 				ma_uint64 totalFrames = count / wfx->nBlockAlign;
 
-				ma_audio_buffer_config bufferConfig =
+				bufferConfig =
 					ma_audio_buffer_config_init(
 						maFormat,
 						wfx->nChannels,
@@ -116,8 +117,63 @@ namespace Xna {
 			}
 		};		
 
-		struct SdlSoundEffectInstance : public ISoundEffectInstance {
+		struct SdlSoundEffectInstance final : public ISoundEffectInstance {
 			ma_sound sound{};
+			ma_sound_config config{};
+			MediaState state{ MediaState::Stoped };
+
+			void Load(ISoundEffect* baseSE) override {
+				auto sdlSe = reinterpret_cast<SdlSoundEffect*>(baseSE);
+
+				config = ma_sound_config_init();
+				config.pDataSource = &sdlSe->audioBuffer;		
+
+				ma_sound_init_ex(&AudioEngine.GetNative(), &config, &sound);				
+
+				ma_data_source_set_loop_point_in_pcm_frames(
+					&sdlSe->audioBuffer,
+					sdlSe->loopStartFrames,
+					sdlSe->loopEndFrames);				
+			}
+
+			void SetVolume(float value) override {
+				ma_sound_set_volume(&sound, value);
+			}
+
+			void SetPan(float value) override {
+				ma_sound_set_pan(&sound, value);				
+			}
+
+			void SetPitch(float value) override {
+				ma_sound_set_pitch(&sound, value);				
+			}
+
+			void IsLooped(bool value) override {
+				ma_sound_set_looping(&sound, static_cast<ma_bool32>(value));
+			}
+
+			void Play() override {				
+				assert(sound.pDataSource != nullptr);
+
+				ma_sound_start(&sound);
+				
+				state = MediaState::Playing;
+			}
+
+			void Pause() override {
+				ma_sound_stop(&sound);
+				state = MediaState::Paused;
+			}
+			
+			void Stop() override {
+				ma_sound_stop(&sound);
+				ma_sound_seek_to_pcm_frame(&sound, 0);
+				state = MediaState::Stoped;
+			}
+
+			MediaState GetState() override {
+				return state;
+			}
 
 			~SdlSoundEffectInstance() override {
 				ma_sound_uninit(&sound);

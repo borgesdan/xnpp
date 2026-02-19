@@ -160,6 +160,8 @@ namespace Xna {
 		std::shared_ptr<Implementation> impl = nullptr;
 
 		friend struct Platform;
+
+		friend class SoundEffectInstance;
 		friend struct FrameworkDispatcher;
 		friend class SoundEffectReader;
 	};

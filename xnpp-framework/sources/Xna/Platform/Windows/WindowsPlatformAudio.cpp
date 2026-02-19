@@ -6,38 +6,7 @@
 #include "Xna/CSharp/Exception.hpp"
 #include "Xna/Framework/Media/Song.hpp"
 
-namespace Xna {
-	//void Platform::SoundEffect_Create(SoundEffect const& se, std::vector<uint8_t> const& format, std::vector<uint8_t> const& data,
-	//	size_t offset, size_t count, size_t loopStart, size_t loopLength) {
-	//	auto wfx = reinterpret_cast<const WAVEFORMATEX*>(format.data());
-	//	
-	//	//O ponteiro WAVEFORMATEX* precisa persistir em memória para que não ocorra corrupção de dados
-	//	se.impl->platformImpl.currentWaveFormatex = *wfx;
-
-	//	auto pcmBuffer = std::make_unique<uint8_t[]>(count);
-	//	std::memcpy(pcmBuffer.get(), data.data() + offset, count);
-	//	auto audioStart = pcmBuffer.get();
-
-	//	auto& audioEngine = WindowsPlatform::GetAudioEngine();
-
-	//	auto ptr = std::make_unique<DirectX::SoundEffect>(
-	//		//_In_ AudioEngine* engine,
-	//		&audioEngine,
-	//		//_Inout_ std::unique_ptr<uint8_t[]>& wavData,
-	//		pcmBuffer,
-	//		//_In_ const WAVEFORMATEX* wfx,
-	//		&se.impl->platformImpl.currentWaveFormatex,
-	//		// _In_reads_bytes_(audioBytes) const uint8_t* startAudio
-	//		audioStart,
-	//		//size_t audioBytes
-	//		count,
-	//		//uint32_t loopStart
-	//		static_cast<uint32_t>(loopStart),
-	//		//uint32_t loopLength
-	//		static_cast<uint32_t>(loopLength));
-
-	//	se.impl->platformImpl.soundEffect = std::move(ptr);
-	//}
+namespace Xna {	
 
 	void Platform::SoundEffect_SetMasterSoundProperties(std::optional<float> volume, std::optional<float> speedOfSound, std::optional<float> dopplerScale, std::optional<float> distanceScale) {
 
@@ -57,39 +26,7 @@ namespace Xna {
 		if (distanceScale) {
 			//TODO
 		}
-	}
-
-	void Platform::SoundEffect_SetState(SoundEffectInstance const& se, SoundEffect_State state, bool immediateIfStop) {
-
-		switch (state) {
-		case SoundEffect_State::Play:
-			se.impl->platformImpl.soundEffectInstance->Play(se.impl->looped);
-			break;
-		case SoundEffect_State::Stop:
-			se.impl->platformImpl.soundEffectInstance->Stop(immediateIfStop);
-			break;
-		case SoundEffect_State::Pause:
-			se.impl->platformImpl.soundEffectInstance->Pause();
-			break;
-		case SoundEffect_State::Resume:
-			se.impl->platformImpl.soundEffectInstance->Resume();
-			break;
-		}		
-	}
-
-	void Platform::SoundEffect_SetAttributes(SoundEffectInstance const& se, std::optional<float> volume, std::optional<float> pan, std::optional<float> pitch) {
-		if (volume) {
-			se.impl->platformImpl.soundEffectInstance->SetVolume(*volume);
-		}
-
-		if (pan) {
-			se.impl->platformImpl.soundEffectInstance->SetPan(*pan);
-		}
-
-		if (pitch) {
-			se.impl->platformImpl.soundEffectInstance->SetPitch(*pitch);
-		}		
-	}
+	}	
 
 	void Platform::SoundEffect_Apply3D(SoundEffectInstance const& se, std::vector<AudioListener> const& listeners, AudioEmitter emitter) {
 		X3DAUDIO_LISTENER _listener{};
@@ -151,46 +88,7 @@ namespace Xna {
 		_emitter.Velocity = vec;
 
 		se.impl->platformImpl.soundEffectInstance->Apply3D(_listener, _emitter);
-	}
-
-	void Platform::SoundEffect_CreateInstance(SoundEffectInstance const& se) {	
-		auto wfx = *se.SoundEffect()->impl->platformImpl.soundEffect->GetFormat();
-
-		assert(wfx.wFormatTag == WAVE_FORMAT_PCM ||
-			wfx.wFormatTag == WAVE_FORMAT_ADPCM ||
-			wfx.wFormatTag == WAVE_FORMAT_WMAUDIO2);
-
-		assert(wfx.nChannels > 0);
-		assert(wfx.nSamplesPerSec > 0);
-		assert(wfx.wBitsPerSample == 8 || wfx.wBitsPerSample == 16);
-
-		auto instance = se.SoundEffect()->impl->platformImpl.soundEffect->CreateInstance();
-		se.impl->platformImpl.soundEffectInstance = std::move(instance);
-	}
-
-	void Platform::SoundEffect_DeleteInstance(SoundEffectInstance const& se) {
-		se.impl->platformImpl.soundEffectInstance = nullptr;
-	}
-
-	SoundState Platform::SoundEffect_GetState(SoundEffectInstance const& se) {
-		auto state = se.impl->platformImpl.soundEffectInstance->GetState();
-		
-		if(!state)
-			return SoundState::Stopped;
-
-		switch (state)
-		{
-		case DirectX::STOPPED:
-			return SoundState::Stopped;			
-		case DirectX::PLAYING:
-			return SoundState::Playing;			
-		case DirectX::PAUSED:
-			return SoundState::Paused;
-			break;
-		default:
-			return SoundState::Stopped;
-		}
-	}
+	}	
 
 	void Platform::SoundEffect_CreateInstance(DynamicSoundEffectInstance const& se) {
 		//DirectX::AudioEngine&
