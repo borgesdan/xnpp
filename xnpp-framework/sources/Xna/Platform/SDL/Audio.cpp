@@ -2,32 +2,41 @@
 #define MINIAUDIO_IMPLEMENTATION
 #include <miniaudio.h>
 #include "Xna/Framework/Audio/SoundEffect.hpp"
+#include "InternalSdl.hpp"
 
 namespace Xna {
-	namespace PlatformNS {
-		class AudioEngineManager
+	class AudioEngineManager
+	{
+	public:
+		void Initialize()
 		{
-		public:
-			void Initialize()
-			{
-				ma_result result = ma_engine_init(nullptr, &_engine);
-				if (result != MA_SUCCESS)
-					throw std::runtime_error("Falha ao inicializar ma_engine");
-			}
+			ma_result result = ma_engine_init(nullptr, &_engine);
+			if (result != MA_SUCCESS)
+				throw std::runtime_error("Falha ao inicializar ma_engine");
+		}
 
-			void Shutdown()
-			{
-				ma_engine_uninit(&_engine);
-			}
+		void Shutdown()
+		{
+			ma_engine_uninit(&_engine);
+		}
 
-			ma_engine& GetNative() { return _engine; }
+		ma_engine& GetNative() { return _engine; }
 
-		private:
-			ma_engine _engine{};
-		};
+	private:
+		ma_engine _engine{};
+	};
 
-		static AudioEngineManager AudioEngine = {};
+	static AudioEngineManager AudioEngine = {};
 
+	void Sdl::System::InitAudio() {
+		AudioEngine.Initialize();
+	}
+
+	void Sdl::System::DisposeAudio() {
+		AudioEngine.Shutdown();
+	}
+
+	namespace PlatformNS {
 #pragma pack(push, 1)
 		//The WAVEFORMATEX structure as implemented in the mmeapi.h header.
 		struct WAVEFORMATEX
@@ -122,5 +131,5 @@ namespace Xna {
 		std::unique_ptr<ISoundEffectInstance> ISoundEffectInstance::Create() {
 			return std::make_unique<SdlSoundEffectInstance>();
 		}
-	}	
+	}
 }

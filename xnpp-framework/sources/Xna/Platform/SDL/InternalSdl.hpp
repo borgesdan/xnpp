@@ -8,6 +8,11 @@
 namespace Xna::Sdl {
 	struct System {
 		static void Initialize();
+		static void Dispose();
+	
+	private:
+		static void InitAudio();
+		static void DisposeAudio();
 	};
 
 	struct GamepadPlayer {

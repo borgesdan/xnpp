@@ -13,6 +13,12 @@ namespace Xna {
 		if (!SDL_Init(SDL_INIT_GAMEPAD)) {
 			throw std::runtime_error(SDL_GetError());
 		}
+
+		InitAudio();
+	}
+
+	void Sdl::System::Dispose() {
+		DisposeAudio();
 	}
 
 	PlatformRectangle Platform::System_ClientRect(intptr_t hwnd) {
