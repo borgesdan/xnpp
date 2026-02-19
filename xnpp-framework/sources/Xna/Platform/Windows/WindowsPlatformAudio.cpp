@@ -7,52 +7,7 @@
 #include "Xna/Framework/Media/Song.hpp"
 
 namespace Xna {	
-	void Platform::SoundEffect_CreateInstance(DynamicSoundEffectInstance const& se) {
-		//DirectX::AudioEngine&
-		auto& audioEngine = WindowsPlatform::GetAudioEngine();
-		//std::optional<AudioFormat>
-		auto& format = se.impl->format;
-		auto ptr = new DirectX::DynamicSoundEffectInstance(
-			// _In_ AudioEngine* engine,
-			&audioEngine,
-			//_In_ std::function<void __cdecl(DynamicSoundEffectInstance*)> bufferNeeded,
-			[](DirectX::DynamicSoundEffectInstance*) {}, 
-			//int sampleRate,
-			format->SampleRate, 
-			//int channels,
-			format->Channels, 
-			//int sampleBits = 16,
-			format->BitsPerSample,
-			//SOUND_EFFECT_INSTANCE_FLAGS flags = SoundEffectInstance_Default
-			DirectX::SoundEffectInstance_Default);	
-		
-		se.impl->platformImpl.dynamicSoundEffectInstance.reset(ptr);
-	}
-
-	void Platform::SoundEffect_SubmitBuffer(DynamicSoundEffectInstance const& se, std::vector<uint8_t> const& buffer, size_t offset, size_t count) {
-		se.impl->platformImpl.dynamicSoundEffectInstance->SubmitBuffer(buffer.data(), static_cast<uint32_t>(offset), count);
-	}
-
-	void Platform::SoundEffect_SetState(DynamicSoundEffectInstance const& se, SoundEffect_State state, bool immediateIfStop) {
-		switch (state) {
-		case SoundEffect_State::Play:
-			se.impl->platformImpl.dynamicSoundEffectInstance->Play();
-			break;
-		case SoundEffect_State::Stop:
-			se.impl->platformImpl.dynamicSoundEffectInstance->Stop(immediateIfStop);
-			break;
-		case SoundEffect_State::Pause:
-			se.impl->platformImpl.dynamicSoundEffectInstance->Pause();
-			break;
-		case SoundEffect_State::Resume:
-			se.impl->platformImpl.dynamicSoundEffectInstance->Resume();
-			break;
-		}
-	}
-
-	int32_t Platform::SoundEffect_GetPendingBufferCount(DynamicSoundEffectInstance const& se) {
-		return se.impl->platformImpl.dynamicSoundEffectInstance->GetPendingBufferCount();
-	}
+	
 
 	void Platform::Song_FromFile(Song const& song, std::filesystem::path const& filename) {
 		//TODO: nada a fazer

@@ -372,21 +372,7 @@ namespace Xna {
 			std::vector<char32_t> const& charMap, int32_t lineSpacing, float spacing,
 			std::vector<Vector3> const& kerning, std::optional<char32_t> const& defaultCharacter);
 		XNPP_API static Vector2 SpriteFont_MeasureString(SpriteFont const& sf, std::string const& text, bool ignoreWhiteSpace);
-		XNPP_API static Vector2 SpriteFont_MeasureString(SpriteFont const& sf, std::wstring const& text, bool ignoreWhiteSpace);
-
-		//SoundEffect
-
-		enum class SoundEffect_State {
-			Play,
-			Pause,
-			Stop,
-			Resume
-		};		
-		
-		XNPP_API static void SoundEffect_CreateInstance(DynamicSoundEffectInstance const& se);		
-		XNPP_API static void SoundEffect_SetState(DynamicSoundEffectInstance const& se, SoundEffect_State state, bool immediateIfStop = true);					
-		XNPP_API static void SoundEffect_SubmitBuffer(DynamicSoundEffectInstance const& se, std::vector<uint8_t> const& buffer, size_t offset, size_t count);
-		XNPP_API static int32_t SoundEffect_GetPendingBufferCount(DynamicSoundEffectInstance const& se);
+		XNPP_API static Vector2 SpriteFont_MeasureString(SpriteFont const& sf, std::wstring const& text, bool ignoreWhiteSpace);		
 
 		//Song
 
