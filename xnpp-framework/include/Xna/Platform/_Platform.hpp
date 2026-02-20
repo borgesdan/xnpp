@@ -459,7 +459,7 @@ namespace Xna {
 			XNPP_API virtual void SetVolume(float volume) = 0;
 			XNPP_API virtual void SetMuted(bool value) = 0;
 			XNPP_API virtual void SetIsRepeating(bool value) = 0;
-			XNPP_API virtual double GetPlayPosition() = 0;
+			XNPP_API virtual double GetPlayPosition() = 0; //Em milisegundos
 
 			XNPP_API virtual void SongChanged(std::function<void()> const& func) = 0;
 			XNPP_API virtual void MediaStateChanged(std::function<void()> const& func) = 0;

@@ -1,4 +1,9 @@
-
+/*
+* A biblioteca miniaudio.h é a responsável pela reprodução de músicas e sons no jogo.
+* Suporta nativamente MP3, WAV, FLAC, para OGG é necessário a integração de biblioteca externa (libvorbis, libogg).
+* A biblioteca não suporta WMA.
+* Por padrão temos somente uma instância da engine de áudio que persistirá até o encerramento do programa.
+*/
 
 #include "Xna/Platform/_Platform.hpp"
 #include "Xna/Framework/Audio/SoundEffect.hpp"
@@ -9,6 +14,7 @@
 #include "third-party/miniaudio/miniaudio_libvorbis.h"
 
 namespace Xna {
+	//Gerenciador de áudio é sons
 	class AudioEngineManager
 	{
 	public:
@@ -52,6 +58,7 @@ namespace Xna {
 		ma_engine engine{};
 	};
 
+	//Somente uma instância para todo o programa
 	static AudioEngineManager AudioEngine = {};	
 
 	namespace PlatformNS {
@@ -69,6 +76,7 @@ namespace Xna {
 		};
 #pragma pack(pop)
 
+		//Representação interna do SoundEffect com miniaudio
 		struct MiniAudioSoundEffect final : public ISoundEffect {
 			std::vector<uint8_t> pcmData{};
 			ma_audio_buffer audioBuffer{};
@@ -83,6 +91,7 @@ namespace Xna {
 				ma_audio_buffer_uninit(&audioBuffer);
 			}
 
+			//Carrega o arquivo WAV já decodificado pela engine e transformado em array de bytes.
 			void Load(std::vector<uint8_t> const& format, std::vector<uint8_t> const& data, size_t offset, size_t count, size_t loopStart, size_t loopLength) override {
 				auto wfx = reinterpret_cast<const WAVEFORMATEX*>(format.data());				
 				waveFormatex = *wfx;
@@ -137,6 +146,7 @@ namespace Xna {
 			}
 		};		
 
+		//Representação interna do SoundEffectInstance
 		struct MiniAudioSoundEffectInstance final : public ISoundEffectInstance {
 			ma_sound sound{};
 			ma_sound_config config{};
@@ -214,6 +224,7 @@ namespace Xna {
 			MiniAudioSoundEffect::MasterVolume = value;
 		}
 
+		//Representação interna do MediaPlayer
 		struct MiniAudioMediaPlayer final : public IMediaPlayer {
 			std::filesystem::path currentFile;
 			float currentVolume = 1.0f;
@@ -293,6 +304,7 @@ namespace Xna {
 				ma_sound_set_looping(&music, static_cast<ma_bool32>(value));
 			}
 
+			//Retorna o tempo em milisegundos
 			double GetPlayPosition() override {
 				float cursor = 0.0f;
 				const auto result = ma_sound_get_cursor_in_seconds(&music, &cursor);
@@ -319,6 +331,7 @@ namespace Xna {
 			}
 		};
 
+		//Temos somente uma instância do Media Player para todo o tempo de vida do programa.
 		IMediaPlayer& IMediaPlayer::GetInstance() {
 
 			if(!MiniAudioMediaPlayer::MediaPlayer)
