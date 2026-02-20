@@ -1,7 +1,7 @@
 #include "Xna/Framework/Audio/SoundEffect.hpp"
 #include "Xna/Framework/Audio/SoundEffectInstance.hpp"
 #include "Xna/Framework/Audio/WavFile.hpp"
-#include "Xna/Framework/Audio/AudioHelper.hpp"
+#include "AudioHelper.hpp"
 #include <limits>
 #include "Xna/Internal/Misc.hpp"
 

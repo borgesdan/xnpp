@@ -3,7 +3,7 @@
 
 #include <vector>
 #include <bit>
-#include "Shared.hpp"
+#include "Xna/Framework/Audio/Shared.hpp"
 #include "Xna/CSharp/TimeSpan.hpp"
 #include "Xna/Internal/Export.hpp"
 
