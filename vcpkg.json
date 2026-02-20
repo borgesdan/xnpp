@@ -15,6 +15,7 @@
     "freetype",
     "ffmpeg",
     "sdl3",
-    "miniaudio"
+    "libogg",
+    "libvorbis"
   ]
 }

@@ -2,8 +2,8 @@
 #include "Xna/Framework/Audio/SoundEffect.hpp"
 #include "InternalSdl.hpp"
 #include <functional>
-#define MINIAUDIO_IMPLEMENTATION
-#include <miniaudio.h>
+#include "third-party/miniaudio/miniaudio.h"
+#include "third-party/miniaudio/miniaudio_libvorbis.h"
 
 namespace Xna {
 	class AudioEngineManager

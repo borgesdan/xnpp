@@ -100,13 +100,19 @@ target_compile_features(xnpp PUBLIC cxx_std_20)
 target_compile_definitions(xnpp PRIVATE USING_XINPUT)
 target_compile_definitions(xnpp PRIVATE XNPP_EXPORT_DLL)
 target_compile_definitions(xnpp PRIVATE XNPP_DONT_USE_XNA_KEYS)
+target_compile_definitions(xnpp PRIVATE MINIAUDIO_IMPLEMENTATION)
 
 find_package(directxtk CONFIG REQUIRED)
 find_package(SDL3 CONFIG REQUIRED)
+#libvorbis
+find_package(Ogg CONFIG REQUIRED)
+find_package(Vorbis CONFIG REQUIRED)
+
 
 target_link_libraries(xnpp
         PUBLIC
             Microsoft::DirectXTK 
+        PRIVATE
             dxgi.lib
             dxguid.lib
             D3d11.lib 
@@ -119,10 +125,11 @@ target_link_libraries(xnpp
             Ole32.lib
             Propsys.lib
             SDL3::SDL3
+            Ogg::ogg
+            Vorbis::vorbis
+            Vorbis::vorbisfile
 )
 
-find_path(MINIAUDIO_INCLUDE_DIRS "miniaudio.h")
-target_include_directories(xnpp PRIVATE ${MINIAUDIO_INCLUDE_DIRS})
 target_include_directories(xnpp
     PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
