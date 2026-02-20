@@ -7,6 +7,10 @@ endif ()
 # Includes directory
 set(PROJECT_INCLUDES_DIR "${CMAKE_CURRENT_SOURCE_DIR}/include")
 
+set(MINIAUDIO_VORBIS_SRC 
+    "sources/Xna/Platform/SDL/third-party/miniaudio/miniaudio_libvorbis.c"
+)
+
 # Add source to this project's executable.
 add_library(xnpp
         "sources/Xna/CSharp/IO/MemoryStream.cpp"
@@ -93,14 +97,17 @@ add_library(xnpp
          "sources/Xna/Platform/SDL/GameWindow.cpp"
          "sources/Xna/Platform/SDL/GameHost.cpp"
          "sources/Xna/Platform/SDL/Input.cpp" 
-         "sources/Xna/Platform/SDL/Audio.cpp")
+         "sources/Xna/Platform/SDL/Audio.cpp"
+
+         ${MINIAUDIO_VORBIS_SRC}        
+)
+#set_source_files_properties(${MINIAUDIO_VORBIS_SRC} PROPERTIES LANGUAGE C)
 
 target_compile_features(xnpp PUBLIC cxx_std_20)
 
 target_compile_definitions(xnpp PRIVATE USING_XINPUT)
 target_compile_definitions(xnpp PRIVATE XNPP_EXPORT_DLL)
 target_compile_definitions(xnpp PRIVATE XNPP_DONT_USE_XNA_KEYS)
-target_compile_definitions(xnpp PRIVATE MINIAUDIO_IMPLEMENTATION)
 
 find_package(directxtk CONFIG REQUIRED)
 find_package(SDL3 CONFIG REQUIRED)
@@ -133,7 +140,7 @@ target_link_libraries(xnpp
 target_include_directories(xnpp
     PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-        $<INSTALL_INTERFACE:include>        
+        $<INSTALL_INTERFACE:include>            
 )
 
 set_target_properties(xnpp PROPERTIES

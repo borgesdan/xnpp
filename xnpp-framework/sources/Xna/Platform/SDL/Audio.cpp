@@ -2,6 +2,7 @@
 #include "Xna/Framework/Audio/SoundEffect.hpp"
 #include "InternalSdl.hpp"
 #include <functional>
+#define MINIAUDIO_IMPLEMENTATION
 #include "third-party/miniaudio/miniaudio.h"
 #include "third-party/miniaudio/miniaudio_libvorbis.h"
 
@@ -11,20 +12,41 @@ namespace Xna {
 	public:
 		void Initialize()
 		{
-			ma_result result = ma_engine_init(nullptr, &_engine);
-			if (result != MA_SUCCESS)
-				throw std::runtime_error("Falha ao inicializar ma_engine");
+			// Configurar os backends personalizados
+			pCustomBackendVTables[0] = ma_decoding_backend_libvorbis;
+
+			// Configurar o resource manager
+			ma_resource_manager_config resourceManagerConfig = ma_resource_manager_config_init();
+			resourceManagerConfig.ppCustomDecodingBackendVTables = pCustomBackendVTables;
+			resourceManagerConfig.customDecodingBackendCount = 1;  // Número de backends
+
+			// Inicializar resource manager
+			if (ma_resource_manager_init(&resourceManagerConfig, &resourceManager) != MA_SUCCESS) {
+				throw std::runtime_error("");
+			}
+
+			// Configurar o engine com o resource manager
+			ma_engine_config engineConfig = ma_engine_config_init();
+			engineConfig.pResourceManager = &resourceManager;
+
+			// Inicializar engine
+			if (ma_engine_init(&engineConfig, &engine) != MA_SUCCESS) {
+				ma_resource_manager_uninit(&resourceManager);
+				throw std::runtime_error("");
+			}
 		}
 
 		void Shutdown()
 		{
-			ma_engine_uninit(&_engine);
+			ma_engine_uninit(&engine);
 		}
 
-		ma_engine& GetNative() { return _engine; }
+		ma_engine& GetNative() { return engine; }
 
 	private:
-		ma_engine _engine{};
+		ma_resource_manager resourceManager{};
+		ma_decoding_backend_vtable* pCustomBackendVTables[1];
+		ma_engine engine{};
 	};
 
 	static AudioEngineManager AudioEngine = {};	
@@ -198,7 +220,7 @@ namespace Xna {
 			static inline std::unique_ptr<SdlMediaPlayer> MediaPlayer = nullptr;
 
 			std::function<void()> songChanged;
-			std::function<void()> mediaStateChanged;
+			std::function<void()> mediaStateChanged;			
 
 			void Play(std::filesystem::path const& song) override {
 				const auto file = song.string();
