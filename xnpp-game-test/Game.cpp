@@ -31,13 +31,15 @@ public:
 
 	void Update(Xna::GameTime& gameTime) override {
 		oldKState = curKState;
-		curKState = Xna::Keyboard::GetState();
+		curKState = Xna::Keyboard::GetState();		
 
 		if (curKState.IsKeyDown(Xna::Keys::Right) && oldKState.IsKeyUp(Xna::Keys::Right)) {
 			backColor = Xna::Color::Red();
-			soundEffectInstance = soundEffect.CreateInstance();
-			soundEffectInstance->Play();
+			auto soundEffectInstance1 = soundEffect.CreateInstance();			
+			soundEffectInstance1.Play();			
 		}
+
+		
 
 		if (curKState.IsKeyDown(Xna::Keys::A) && oldKState.IsKeyUp(Xna::Keys::A)) {
 			backColor = Xna::Color::Green();
@@ -46,6 +48,9 @@ public:
 
 		if (curKState.IsKeyDown(Xna::Keys::Left) && oldKState.IsKeyUp(Xna::Keys::Left)) {
 			backColor = Xna::Color::Blue();
+
+			auto soundEffectInstance2 = soundEffect.CreateInstance();
+			soundEffectInstance2.Play();
 		}
 
 		if (curKState.IsKeyDown(Xna::Keys::Space) && oldKState.IsKeyUp(Xna::Keys::Space)) {

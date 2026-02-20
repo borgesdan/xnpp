@@ -149,21 +149,33 @@ namespace Xna {
 		//Representação interna do SoundEffectInstance
 		struct MiniAudioSoundEffectInstance final : public ISoundEffectInstance {
 			ma_sound sound{};
-			ma_sound_config config{};
+			ma_audio_buffer buffer{};
+			ma_audio_buffer_config bufferConfig{};
 			MediaState state{ MediaState::Stoped };
 
 			void Load(ISoundEffect* baseSE) override {
-				auto sdlSe = reinterpret_cast<MiniAudioSoundEffect*>(baseSE);
+				auto se = reinterpret_cast<MiniAudioSoundEffect*>(baseSE);
 
-				config = ma_sound_config_init();
-				config.pDataSource = &sdlSe->audioBuffer;		
+				bufferConfig = ma_audio_buffer_config_init(
+					se->bufferConfig.format,
+					se->bufferConfig.channels,
+					se->loopEndFrames - se->loopStartFrames,
+					se->pcmData.data(),
+					nullptr
+				);
 
-				ma_sound_init_ex(&AudioEngine.GetNative(), &config, &sound);				
+				ma_audio_buffer_init(&bufferConfig, &buffer);
+
+				ma_sound_config config = ma_sound_config_init();
+				config.pDataSource = &buffer;
+
+				ma_sound_init_ex(&AudioEngine.GetNative(), &config, &sound);
 
 				ma_data_source_set_loop_point_in_pcm_frames(
-					&sdlSe->audioBuffer,
-					sdlSe->loopStartFrames,
-					sdlSe->loopEndFrames);	
+					&buffer,
+					se->loopStartFrames,
+					se->loopEndFrames
+				);
 
 				SetVolume(MiniAudioSoundEffect::MasterVolume);
 			}
@@ -204,6 +216,14 @@ namespace Xna {
 			}
 
 			MediaState GetState() override {
+				auto isPlaying = ma_sound_is_playing(&sound);				
+
+				if (isPlaying)
+					return MediaState::Playing;
+				else if (state == MediaState::Paused)
+					return MediaState::Paused;
+
+				state = MediaState::Stoped;
 				return state;
 			}			
 

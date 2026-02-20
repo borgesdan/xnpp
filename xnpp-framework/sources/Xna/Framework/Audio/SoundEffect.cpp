@@ -89,14 +89,14 @@ namespace Xna {
 		throw CSharp::ArgumentException("DynamicSoundEffectInvalidOffset");
 	}
 
-	std::shared_ptr<SoundEffectInstance> SoundEffect::CreateInstance() {
+	SoundEffectInstance SoundEffect::CreateInstance() {
 		auto instance = new SoundEffectInstance(*this, true);
 		std::shared_ptr<SoundEffectInstance> target = nullptr;
 		target.reset(instance);
 		impl->children.push_back(target);
-		Implementation::fireAndForgetInstances.emplace(target, true); // Adicionar para persistir os dados em memória
+		fireAndForgetInstances.emplace(target, true); // Adicionar para persistir os dados em memória
 
-		return target;
+		return *target;
 	}
 
 	bool SoundEffect::Play(float volume, float pitch, float pan) {
@@ -122,7 +122,7 @@ namespace Xna {
 			soundEffectInstance->Pan(pan);
 			soundEffectInstance->Play();
 
-			Implementation::fireAndForgetInstances.emplace(soundEffectInstance, true);
+			fireAndForgetInstances.emplace(soundEffectInstance, true);
 
 			return true;
 		}
@@ -152,15 +152,15 @@ namespace Xna {
 			throw CSharp::ArgumentOutOfRangeException("value");
 
 		PlatformNS::MasterAudio::SetMasterVolume(value);
-		Implementation::currentVolume = value;
+		currentVolume = value;
 	}
 
 	void SoundEffect::SpeedOfSound(float value) {
 		if (value <= 0)
 			throw CSharp::ArgumentOutOfRangeException("value");
 
-		Implementation::speedOfSound = value;
-		Implementation::maxVelocityComponent = Implementation::speedOfSound - Implementation::speedOfSound / 1000.0f;
+		speedOfSound = value;
+		maxVelocityComponent = speedOfSound - speedOfSound / 1000.0f;
 
 		throw CSharp::NotSupportedException();
 	}
@@ -169,12 +169,12 @@ namespace Xna {
 		if (value <= 0)
 			throw CSharp::ArgumentOutOfRangeException("value");
 
-		Implementation::dopplerScale = value;
+		dopplerScale = value;
 		throw CSharp::NotSupportedException();
 	}
 
 	void SoundEffect::DistanceScale(float value) {
-		Implementation::distanceScale = static_cast<double>(value <= 1.4012984643248171E-45) ? std::numeric_limits<float>::epsilon() : value;
+		distanceScale = static_cast<double>(value <= 1.4012984643248171E-45) ? std::numeric_limits<float>::epsilon() : value;
 		throw CSharp::NotSupportedException();
 	}
 
@@ -193,19 +193,19 @@ namespace Xna {
 	}
 
 	void SoundEffect::RecycleStoppedFireAndForgetInstances() {
-		for (auto& [key, value] : Implementation::fireAndForgetInstances)
+		for (auto& [key, value] : fireAndForgetInstances)
 		{
 			if (IsStoppedInstance(key))
-				Implementation::instancesToDispose.push_back(key);
+				instancesToDispose.push_back(key);
 		}
 
-		for (auto& soundEffectInstance : Implementation::instancesToDispose)
+		for (auto& soundEffectInstance : instancesToDispose)
 		{
-			Implementation::fireAndForgetInstances.erase(soundEffectInstance);
+			fireAndForgetInstances.erase(soundEffectInstance);
 			soundEffectInstance->SoundEffect()->AddToInstancePool(soundEffectInstance);
 		}
 
-		Implementation::instancesToDispose.clear();
+		instancesToDispose.clear();
 	}
 
 	void SoundEffect::AddToInstancePool(std::shared_ptr<SoundEffectInstance> const& instance) {
