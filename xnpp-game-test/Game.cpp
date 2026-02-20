@@ -24,7 +24,7 @@ public:
 		spriteBatch = Xna::SpriteBatch(nullptr);
 
 		soundEffect = Content().Load<Xna::SoundEffect>("Sounds/PlayerFall");
-		
+		song = Content().Load<Xna::Song>("Sounds/Music");
 
 		base::LoadContent();
 	}
@@ -41,6 +41,7 @@ public:
 
 		if (curKState.IsKeyDown(Xna::Keys::A) && oldKState.IsKeyUp(Xna::Keys::A)) {
 			backColor = Xna::Color::Green();
+			Xna::MediaPlayer::Play(song);
 		}
 
 		if (curKState.IsKeyDown(Xna::Keys::Left) && oldKState.IsKeyUp(Xna::Keys::Left)) {
@@ -118,6 +119,7 @@ private:
 	Xna::GamePadState curPState{};
 	Xna::Color backColor = Xna::Color::CornflowerBlue();
 	Xna::SoundEffect soundEffect = nullptr;
+	Xna::Song song = nullptr;
 	std::shared_ptr<Xna::SoundEffectInstance> soundEffectInstance = nullptr;
 	bool one = false;
 };

@@ -1,8 +1,9 @@
 #include "Xna/Platform/_Platform.hpp"
-#define MINIAUDIO_IMPLEMENTATION
-#include <miniaudio.h>
 #include "Xna/Framework/Audio/SoundEffect.hpp"
 #include "InternalSdl.hpp"
+#include <functional>
+#define MINIAUDIO_IMPLEMENTATION
+#include <miniaudio.h>
 
 namespace Xna {
 	class AudioEngineManager
@@ -26,18 +27,7 @@ namespace Xna {
 		ma_engine _engine{};
 	};
 
-	static AudioEngineManager AudioEngine = {};
-
-	void Sdl::System::InitAudio() {
-		AudioEngine.Initialize();
-	}	
-
-	void Sdl::System::DisposeAudio() {
-		if (PlatformNS::SdlMediaPlayer::MediaPlayer)
-			PlatformNS::SdlMediaPlayer::MediaPlayer = nullptr;
-
-		AudioEngine.Shutdown();
-	}
+	static AudioEngineManager AudioEngine = {};	
 
 	namespace PlatformNS {
 #pragma pack(push, 1)
@@ -203,14 +193,19 @@ namespace Xna {
 			std::filesystem::path currentFile;
 			float currentVolume = 1.0f;
 			bool isMuted = false;
-			ma_sound music{};
+			ma_sound music{};			
 
 			static inline std::unique_ptr<SdlMediaPlayer> MediaPlayer = nullptr;
 
+			std::function<void()> songChanged;
+			std::function<void()> mediaStateChanged;
+
 			void Play(std::filesystem::path const& song) override {
+				const auto file = song.string();
+
 				ma_result result = ma_sound_init_from_file(
 					&AudioEngine.GetNative(),
-					song.string().c_str(),
+					file.c_str(),
 					MA_SOUND_FLAG_STREAM,
 					nullptr,
 					nullptr,
@@ -224,19 +219,31 @@ namespace Xna {
 				}					
 
 				ma_sound_start(&music);
+
+				if(songChanged)
+					songChanged();
 			}
 
 			void Pause() override {
 				ma_sound_stop(&music);
+				
+				if(mediaStateChanged)
+					mediaStateChanged();
 			}
 
 			void Resume() override {
 				ma_sound_start(&music);
+
+				if (mediaStateChanged)
+					mediaStateChanged();
 			}
 
 			void Stop() override {
 				ma_sound_stop(&music);
 				ma_sound_seek_to_pcm_frame(&music, 0);
+
+				if (mediaStateChanged)
+					mediaStateChanged();
 			}
 
 			void SetVolume(float volume) override {
@@ -266,10 +273,20 @@ namespace Xna {
 				const auto result = ma_sound_get_cursor_in_seconds(&music, &cursor);
 
 				if(result != MA_SUCCESS)
-					throw std::runtime_error("It was not possible to obtain the tempo of the song.");
+					throw std::runtime_error("It was not possible to obtain the time of the song.");
 
 				//Tempo em milisegundos
 				return cursor * 1000.0;
+			}
+
+			void SongChanged(std::function<void()> const& func) override 
+			{
+				songChanged = func;
+			}
+
+			void MediaStateChanged(std::function<void()> const& func) override
+			{
+				mediaStateChanged = func;
 			}
 
 			~SdlMediaPlayer() override {
@@ -284,4 +301,15 @@ namespace Xna {
 			return *SdlMediaPlayer::MediaPlayer.get();
 		}
 	}	
+
+	void Sdl::System::InitAudio() {
+		AudioEngine.Initialize();
+	}
+
+	void Sdl::System::DisposeAudio() {
+		if (PlatformNS::SdlMediaPlayer::MediaPlayer)
+			PlatformNS::SdlMediaPlayer::MediaPlayer = nullptr;
+
+		AudioEngine.Shutdown();
+	}
 }

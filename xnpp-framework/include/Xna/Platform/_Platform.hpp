@@ -8,6 +8,7 @@
 #include <exception>
 #include <filesystem>
 #include <tuple>
+#include <functional>
 #include "Xna/CSharp/IO/Stream.hpp"
 
 //OS
@@ -460,6 +461,8 @@ namespace Xna {
 			XNPP_API virtual void SetIsRepeating(bool value) = 0;
 			XNPP_API virtual double GetPlayPosition() = 0;
 
+			XNPP_API virtual void SongChanged(std::function<void()> const& func) = 0;
+			XNPP_API virtual void MediaStateChanged(std::function<void()> const& func) = 0;
 
 			XNPP_API virtual ~IMediaPlayer() = default;
 			XNPP_API static IMediaPlayer& GetInstance();
