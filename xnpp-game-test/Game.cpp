@@ -21,7 +21,7 @@ public:
 
 	void LoadContent() override {
 		auto device = GraphicsDevice();
-		spriteBatch = Xna::SpriteBatch(nullptr);
+		spriteBatch = Xna::SpriteBatch(device);
 
 		soundEffect = Content().Load<Xna::SoundEffect>("Sounds/PlayerFall");
 		song = Content().Load<Xna::Song>("Sounds/Music");
@@ -37,13 +37,11 @@ public:
 			backColor = Xna::Color::Red();
 			auto soundEffectInstance1 = soundEffect.CreateInstance();			
 			soundEffectInstance1.Play();			
-		}
-
-		
+		}		
 
 		if (curKState.IsKeyDown(Xna::Keys::A) && oldKState.IsKeyUp(Xna::Keys::A)) {
 			backColor = Xna::Color::Green();
-			Xna::MediaPlayer::Play(song);
+			Xna::MediaPlayer::Play(song);			
 		}
 
 		if (curKState.IsKeyDown(Xna::Keys::Left) && oldKState.IsKeyUp(Xna::Keys::Left)) {
@@ -51,6 +49,8 @@ public:
 
 			auto soundEffectInstance2 = soundEffect.CreateInstance();
 			soundEffectInstance2.Play();
+
+			//Xna::MediaPlayer::Stop();
 		}
 
 		if (curKState.IsKeyDown(Xna::Keys::Space) && oldKState.IsKeyUp(Xna::Keys::Space)) {
@@ -111,6 +111,13 @@ public:
 
 	void Draw(Xna::GameTime& gameTime) override {
 		graphics.GraphicsDevice()->Clear(backColor);
+		bool draw = false;
+		spriteBatch.Begin();
+		
+		if (draw)
+			spriteBatch.Draw(nullptr, Xna::Vector2::Zero(), Xna::Color::White());
+
+		spriteBatch.End();
 
 		base::Draw(gameTime);
 	}

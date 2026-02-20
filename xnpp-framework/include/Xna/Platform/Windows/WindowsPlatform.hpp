@@ -86,20 +86,7 @@ namespace Xna {
 		Microsoft::WRL::ComPtr<ID3D11RenderTargetView> renderTargetView;
 		Microsoft::WRL::ComPtr<ID3D11Texture2D> depthStencilTexture;
 		Microsoft::WRL::ComPtr<ID3D11DepthStencilView> depthStencilView;
-	};	
-
-	struct PlatformImpl::SoundEffectImpl {
-		std::unique_ptr<DirectX::SoundEffect> soundEffect = nullptr;
-		WAVEFORMATEX currentWaveFormatex{};
 	};
-
-	struct PlatformImpl::SoundEffectInstanceImpl {
-		std::unique_ptr<DirectX::SoundEffectInstance> soundEffectInstance = nullptr;
-	};
-
-	struct PlatformImpl::DynamicSoundEffectInstanceImpl {
-		std::unique_ptr<DirectX::DynamicSoundEffectInstance> dynamicSoundEffectInstance = nullptr;
-	};	
 
 	struct PlatformImpl::BasicEffectImpl {
 		std::unique_ptr<DirectX::BasicEffect> basicEffect;
@@ -256,16 +243,7 @@ namespace Xna {
 
 	//
 	// WINDOWS PLATFORM
-	//
-
-	class MediaEngineNotify final : public Microsoft::WRL::RuntimeClass<Microsoft::WRL::RuntimeClassFlags<Microsoft::WRL::ClassicCom>, IMFMediaEngineNotify>
-	{
-	public:
-		STDMETHODIMP EventNotify(
-			DWORD event,
-			DWORD_PTR ptr,
-			DWORD e) override;
-	};
+	//	
 
 	struct WindowsPlatform {
 		static inline Microsoft::WRL::ComPtr<IWICImagingFactory> GetWICFactory() {
@@ -276,30 +254,17 @@ namespace Xna {
 		static inline Microsoft::WRL::ComPtr<IDXGIFactory1> GetDXGIFactory() {
 			InitFactory();
 			return DXGIFactory;
-		}
-
-		static inline DirectX::AudioEngine& GetAudioEngine() {
-			InitAudioEngine();
-			return *AudioEngine;
-		}
-
-		static inline  Microsoft::WRL::ComPtr<IMFMediaEngine> GetMediaEngine() {
-			InitMediaEngine();
-			return MediaEngine;
 		}	
 
 		static void Initialize();
 
 		static inline void Update() {
-			GetAudioEngine().Update();
 		}
 
 		static inline void Resume() {
-			GetAudioEngine().Resume();
 		}
 
 		static inline void Suspend() {
-			GetAudioEngine().Suspend();
 		}
 
 		static constexpr DXGI_SWAP_CHAIN_DESC1 GetDefaultSwapChainDesc1() {
@@ -324,16 +289,10 @@ namespace Xna {
 
 	private:
 		static inline Microsoft::WRL::ComPtr<IWICImagingFactory> WICFactory = nullptr;
-		static inline Microsoft::WRL::ComPtr<IDXGIFactory1> DXGIFactory = nullptr;
-		//Audio
-		static inline std::unique_ptr<DirectX::AudioEngine> AudioEngine = nullptr;
-		//Media
-		static inline Microsoft::WRL::ComPtr<IMFMediaEngine> MediaEngine = nullptr;
+		static inline Microsoft::WRL::ComPtr<IDXGIFactory1> DXGIFactory = nullptr;		
 
 		static void InitWIC();
 		static void InitFactory();
-		static void InitAudioEngine();
-		static void InitMediaEngine();
 	};
 }
 

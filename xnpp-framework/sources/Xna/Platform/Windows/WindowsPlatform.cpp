@@ -45,43 +45,7 @@ namespace Xna {
 
 	//
 	//WindowsPlatform
-	//
-
-	STDMETHODIMP MediaEngineNotify::EventNotify(DWORD event, DWORD_PTR ptr, DWORD e) {
-		switch (event)
-		{
-		case MF_MEDIA_ENGINE_EVENT_LOADEDMETADATA: {
-			MediaPlayer::OnActiveSongChanged(CSharp::EventArgs::Empty);
-			break;
-		}
-		case MF_MEDIA_ENGINE_EVENT_CANPLAY: {
-			break;
-		}
-		case MF_MEDIA_ENGINE_EVENT_PLAY: {
-			MediaPlayer::OnMediaStateChanged(CSharp::EventArgs::Empty);
-			break;
-		}
-		case MF_MEDIA_ENGINE_EVENT_PAUSE: {
-			MediaPlayer::OnMediaStateChanged(CSharp::EventArgs::Empty);
-			break;
-		}
-		case MF_MEDIA_ENGINE_EVENT_PURGEQUEUEDEVENTS: {
-			break;
-		}
-		case MF_MEDIA_ENGINE_EVENT_NOTIFYSTABLESTATE: {
-			break;
-		}
-		case MF_MEDIA_ENGINE_EVENT_ERROR: {
-			break;
-		}
-		case MF_MEDIA_ENGINE_EVENT_ENDED:
-			MediaPlayer::state = MediaState::Stopped;
-			MediaPlayer::OnMediaStateChanged(CSharp::EventArgs::Empty);
-			break;
-		}
-
-		return S_OK;
-	}
+	//	
 
 	void WindowsPlatform::InitWIC() {
 		if (WICFactory)
@@ -132,53 +96,7 @@ namespace Xna {
 			throw CSharp::InvalidOperationException("CreateSwapChainForHwnd() failed.");
 
 		return swapChain1;
-	}
-
-	void WindowsPlatform::InitAudioEngine() {
-		if (AudioEngine == nullptr) {
-			DirectX::AUDIO_ENGINE_FLAGS eflags = DirectX::AudioEngine_Default;
-#ifdef _DEBUG
-			eflags |= DirectX::AudioEngine_Debug;
-#endif
-			AudioEngine = std::make_unique<DirectX::AudioEngine>(eflags);
-		}
-	}
-
-	void WindowsPlatform::InitMediaEngine() {
-		if (MediaEngine != nullptr)
-			return;
-
-		Microsoft::WRL::ComPtr<IMFAttributes> attributes;
-		MFCreateAttributes(&attributes, 2);
-
-		auto notify = Microsoft::WRL::Make<MediaEngineNotify>();
-
-		attributes->SetUnknown(MF_MEDIA_ENGINE_CALLBACK, notify.Get());
-		attributes->SetUINT32(MF_MEDIA_ENGINE_AUDIO_CATEGORY, AudioCategory_GameMedia);
-
-		Microsoft::WRL::ComPtr<IMFMediaEngineClassFactory> factory;
-		auto hr = CoCreateInstance(
-			CLSID_MFMediaEngineClassFactory,
-			nullptr,
-			CLSCTX_INPROC_SERVER,
-			IID_PPV_ARGS(&factory));
-
-		if FAILED(hr)
-			throw CSharp::InvalidOperationException("CoCreateInstance->IMFMediaEngineClassFactory failed.");
-
-		hr = factory->CreateInstance(
-			MF_MEDIA_ENGINE_AUDIOONLY | MF_MEDIA_ENGINE_REAL_TIME_MODE,
-			attributes.Get(),
-			MediaEngine.ReleaseAndGetAddressOf());
-
-		if FAILED(hr)
-			throw CSharp::InvalidOperationException("CreateInstance->IMFMediaEngine* failed.");
-
-		hr = MediaEngine->SetAutoPlay(TRUE);
-
-		if FAILED(hr)
-			throw CSharp::InvalidOperationException("MediaEngine->SetAutoPlay(TRUE) failed.");
-	}
+	}	
 
 	void WindowsPlatform::Initialize() {
 		//Rotines
@@ -189,35 +107,17 @@ namespace Xna {
 
 		HRESULT hr = CoInitializeEx(nullptr, COINIT_APARTMENTTHREADED); //COINIT_MULTITHREADED
 		if (FAILED(hr))
-			throw CSharp::InvalidOperationException("CoInitializeEx failed.");
-
-		//Media
-		hr = MFStartup(MF_VERSION);
-		if FAILED(hr)
-			throw CSharp::InvalidOperationException("MFStartup failed.");
+			throw CSharp::InvalidOperationException("CoInitializeEx failed.");		
 
 		//Init functions
 		InitWIC();
 		InitFactory();
-		InitAudioEngine();
-		InitMediaEngine();		
 	}
 
 	void WindowsPlatform::Dispose() {
 		WICFactory = nullptr;
 		DXGIFactory = nullptr;
 
-		if (AudioEngine) {
-			AudioEngine->Suspend();
-			AudioEngine = nullptr;
-		}
-
-		if (MediaEngine) {
-			MediaEngine->Pause();
-			MediaEngine = nullptr;
-		}		
-
-		MFShutdown();
 		CoUninitialize();
 		RoUninitialize();
 	}

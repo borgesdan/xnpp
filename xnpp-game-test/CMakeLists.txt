@@ -12,6 +12,7 @@ add_executable(GameTest WIN32 Game.cpp)
 
 target_compile_features(GameTest PUBLIC cxx_std_20)
 target_compile_definitions(GameTest PRIVATE XNPP_DONT_USE_XNA_KEYS)
+target_compile_definitions(GameTest PRIVATE XNPP_EXPORT_DLL)
 
 #Add tests and install targets
 

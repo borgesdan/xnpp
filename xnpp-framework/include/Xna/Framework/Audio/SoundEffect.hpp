@@ -141,9 +141,7 @@ namespace Xna {
 			CSharp::TimeSpan duration;
 			std::string effectName;
 			std::vector<std::weak_ptr<SoundEffectInstance>> children;
-			std::stack<std::shared_ptr<SoundEffectInstance>> instancePool;			
-
-			PlatformImpl::SoundEffectImpl platformImpl;
+			std::stack<std::shared_ptr<SoundEffectInstance>> instancePool;	
 			std::unique_ptr<PlatformNS::ISoundEffect> platform;
 		};
 		

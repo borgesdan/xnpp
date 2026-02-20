@@ -40,8 +40,7 @@ add_library(xnpp
         "sources/Xna/Framework/Graphics/RasterizerState.cpp"
         "sources/Xna/Framework/Graphics/SamplerState.cpp"
         "sources/Xna/Framework/Graphics/Texture3D.cpp"
-        "sources/Xna/Framework/Graphics/Texture2D.cpp"
-        
+        "sources/Xna/Framework/Graphics/Texture2D.cpp"        
         "sources/Xna/Framework/Graphics/GraphicsDevice.cpp"
         "sources/Xna/Framework/Graphics/RenderTarget2D.cpp"
         "sources/Xna/Framework/Graphics/IndexBuffer.cpp"
@@ -77,8 +76,6 @@ add_library(xnpp
         "sources/Xna/Platform/Windows/WindowsSpriteBatch.cpp"
         "sources/Xna/Platform/Windows/WindowsTextures.cpp"
         "sources/Xna/Platform/Windows/WindowsAdapter.cpp"
-        
-        "sources/Xna/Platform/Windows/WindowsPlatformAudio.cpp"       
         "sources/Xna/Platform/Windows/WindowsBuffer.cpp"
         "sources/Xna/App.cpp"
         "sources/Xna/Framework/Audio/AudioFormat.cpp"
@@ -90,14 +87,13 @@ add_library(xnpp
         "sources/Xna/Framework/Media/Song.cpp" 
         "sources/Xna/Framework/Media/MediaPlayer.cpp"
         "sources/Xna/Framework/Media/MediaQueue.cpp"
-        "sources/Xna/CSharp/Type.cpp" 
-        "sources/Xna/Framework/Content/Readers/BasicReaders.cpp" 
-         
-         "sources/Xna/Platform/SDL/System.cpp" 
-         "sources/Xna/Platform/SDL/GameWindow.cpp"
-         "sources/Xna/Platform/SDL/GameHost.cpp"
-         "sources/Xna/Platform/SDL/Input.cpp" 
-         "sources/Xna/Platform/SDL/Audio.cpp"
+        "sources/Xna/CSharp/Type.cpp"
+        "sources/Xna/Framework/Content/Readers/BasicReaders.cpp"
+        "sources/Xna/Platform/SDL/System.cpp" 
+        "sources/Xna/Platform/SDL/GameWindow.cpp"
+        "sources/Xna/Platform/SDL/GameHost.cpp"
+        "sources/Xna/Platform/SDL/Input.cpp" 
+        "sources/Xna/Platform/SDL/Audio.cpp"
 
          ${MINIAUDIO_VORBIS_SRC}        
 )

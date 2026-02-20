@@ -373,20 +373,7 @@ namespace Xna {
 			std::vector<char32_t> const& charMap, int32_t lineSpacing, float spacing,
 			std::vector<Vector3> const& kerning, std::optional<char32_t> const& defaultCharacter);
 		XNPP_API static Vector2 SpriteFont_MeasureString(SpriteFont const& sf, std::string const& text, bool ignoreWhiteSpace);
-		XNPP_API static Vector2 SpriteFont_MeasureString(SpriteFont const& sf, std::wstring const& text, bool ignoreWhiteSpace);		
-
-		enum class MediaPlayer_MediaProperty {
-			Album,
-			Genre,
-			Artist,
-			Duration,
-			TrackNumber,
-			IsProtected,
-			PlayCount,
-			Rating
-		};
-
-		XNPP_API static void MediaPlayer_SetProperty(Song const& song, MediaPlayer_MediaProperty prop);
+		XNPP_API static Vector2 SpriteFont_MeasureString(SpriteFont const& sf, std::wstring const& text, bool ignoreWhiteSpace);				
 
 		//Effects
 

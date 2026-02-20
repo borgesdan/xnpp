@@ -91,7 +91,6 @@ namespace Xna {
 			std::vector<UnsafeNativeStructures::XACT_LISTENER_DATA> listenerData;
 			uint32_t voiceHandle{ std::numeric_limits<uint32_t>::max() };
 
-			PlatformImpl::SoundEffectInstanceImpl platformImpl;
 			std::unique_ptr<PlatformNS::ISoundEffectInstance> platform;
 		};
 
