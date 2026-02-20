@@ -9,16 +9,16 @@ namespace Xna {
         if (context.TargetPlatform() == TargetPlatform::Windows || context.TargetPlatform() == TargetPlatform::WindowsPhone)
             formatType = Quality != ConversionQuality::Best ? ConversionFormat::Adpcm : ConversionFormat::Pcm;
         else if (context.TargetPlatform() == TargetPlatform::Xbox360)
-            formatType = ConversionFormat::Xma;
-
-        //TODO: [!] implementar conversão
-        //input.ConvertFormat(formatType, this.quality, (string)null);        
+            formatType = ConversionFormat::Xma;            
 
         if (input.FileType != AudioFileType::Wav) {
             AudioHelper helper{};
             helper.OpenFile(input.ContentItem.Identity.SourceFileName);
             helper.Convert(formatType, ConversionQuality::Best, std::nullopt, input);
-        }       
+        }
+        else {
+            throw std::runtime_error("Currently, song processor only supports WMA to WAV conversion. Please convert your file to WMA or directly to WAV.");
+        }
 
         return SoundEffectContent(
             input.Format->NativeWaveFormat(),
