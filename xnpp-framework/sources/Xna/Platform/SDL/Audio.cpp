@@ -1,3 +1,5 @@
+
+
 #include "Xna/Platform/_Platform.hpp"
 #include "Xna/Framework/Audio/SoundEffect.hpp"
 #include "InternalSdl.hpp"
@@ -39,6 +41,7 @@ namespace Xna {
 		void Shutdown()
 		{
 			ma_engine_uninit(&engine);
+			ma_resource_manager_uninit(&resourceManager);
 		}
 
 		ma_engine& GetNative() { return engine; }
@@ -66,7 +69,7 @@ namespace Xna {
 		};
 #pragma pack(pop)
 
-		struct SdlSoundEffect final : public ISoundEffect {
+		struct MiniAudioSoundEffect final : public ISoundEffect {
 			std::vector<uint8_t> pcmData{};
 			ma_audio_buffer audioBuffer{};
 			ma_audio_buffer_config bufferConfig{};
@@ -76,7 +79,7 @@ namespace Xna {
 
 			static inline float MasterVolume = 1;
 
-			~SdlSoundEffect() override {
+			~MiniAudioSoundEffect() override {
 				ma_audio_buffer_uninit(&audioBuffer);
 			}
 
@@ -134,13 +137,13 @@ namespace Xna {
 			}
 		};		
 
-		struct SdlSoundEffectInstance final : public ISoundEffectInstance {
+		struct MiniAudioSoundEffectInstance final : public ISoundEffectInstance {
 			ma_sound sound{};
 			ma_sound_config config{};
 			MediaState state{ MediaState::Stoped };
 
 			void Load(ISoundEffect* baseSE) override {
-				auto sdlSe = reinterpret_cast<SdlSoundEffect*>(baseSE);
+				auto sdlSe = reinterpret_cast<MiniAudioSoundEffect*>(baseSE);
 
 				config = ma_sound_config_init();
 				config.pDataSource = &sdlSe->audioBuffer;		
@@ -152,7 +155,7 @@ namespace Xna {
 					sdlSe->loopStartFrames,
 					sdlSe->loopEndFrames);	
 
-				SetVolume(SdlSoundEffect::MasterVolume);
+				SetVolume(MiniAudioSoundEffect::MasterVolume);
 			}
 
 			void SetVolume(float value) override {
@@ -194,30 +197,30 @@ namespace Xna {
 				return state;
 			}			
 
-			~SdlSoundEffectInstance() override {
+			~MiniAudioSoundEffectInstance() override {
 				ma_sound_uninit(&sound);
 			}
 		};
 
 		std::unique_ptr<ISoundEffect> ISoundEffect::Create() {
-			return std::make_unique<SdlSoundEffect>();
+			return std::make_unique<MiniAudioSoundEffect>();
 		}
 
 		std::unique_ptr<ISoundEffectInstance> ISoundEffectInstance::Create() {
-			return std::make_unique<SdlSoundEffectInstance>();
+			return std::make_unique<MiniAudioSoundEffectInstance>();
 		}
 
 		void MasterAudio::SetMasterVolume(float value) {
-			SdlSoundEffect::MasterVolume = value;
+			MiniAudioSoundEffect::MasterVolume = value;
 		}
 
-		struct SdlMediaPlayer final : public IMediaPlayer {
+		struct MiniAudioMediaPlayer final : public IMediaPlayer {
 			std::filesystem::path currentFile;
 			float currentVolume = 1.0f;
 			bool isMuted = false;
 			ma_sound music{};			
 
-			static inline std::unique_ptr<SdlMediaPlayer> MediaPlayer = nullptr;
+			static inline std::unique_ptr<MiniAudioMediaPlayer> MediaPlayer = nullptr;
 
 			std::function<void()> songChanged;
 			std::function<void()> mediaStateChanged;			
@@ -234,7 +237,7 @@ namespace Xna {
 					&music);
 
 				if (result != MA_SUCCESS) {
-					std::string error = "SdlMediaPlayer tried to open the file but failed: ";
+					std::string error = "MiniAudioMediaPlayer tried to open the file but failed: ";
 					error.append(song.string());
 
 					throw std::runtime_error(error);
@@ -311,16 +314,16 @@ namespace Xna {
 				mediaStateChanged = func;
 			}
 
-			~SdlMediaPlayer() override {
+			~MiniAudioMediaPlayer() override {
 				ma_sound_uninit(&music);
 			}
 		};
 
 		IMediaPlayer& IMediaPlayer::GetInstance() {
 
-			if(!SdlMediaPlayer::MediaPlayer)
-				SdlMediaPlayer::MediaPlayer = std::make_unique<SdlMediaPlayer>();
-			return *SdlMediaPlayer::MediaPlayer.get();
+			if(!MiniAudioMediaPlayer::MediaPlayer)
+				MiniAudioMediaPlayer::MediaPlayer = std::make_unique<MiniAudioMediaPlayer>();
+			return *MiniAudioMediaPlayer::MediaPlayer.get();
 		}
 	}	
 
@@ -329,8 +332,8 @@ namespace Xna {
 	}
 
 	void Sdl::System::DisposeAudio() {
-		if (PlatformNS::SdlMediaPlayer::MediaPlayer)
-			PlatformNS::SdlMediaPlayer::MediaPlayer = nullptr;
+		if (PlatformNS::MiniAudioMediaPlayer::MediaPlayer)
+			PlatformNS::MiniAudioMediaPlayer::MediaPlayer = nullptr;
 
 		AudioEngine.Shutdown();
 	}
