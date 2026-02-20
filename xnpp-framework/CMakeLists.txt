@@ -11,6 +11,14 @@ set(MINIAUDIO_VORBIS_SRC
     "sources/Xna/Platform/SDL/third-party/miniaudio/miniaudio_libvorbis.c"
 )
 
+set(XNPP_PLATFORM_SRC
+    "sources/Xna/Platform/SDL/System.cpp" 
+    "sources/Xna/Platform/SDL/GameWindow.cpp"
+    "sources/Xna/Platform/SDL/GameHost.cpp"
+    "sources/Xna/Platform/SDL/Input.cpp" 
+    "sources/Xna/Platform/SDL/Audio.cpp"
+)
+
 # Add source to this project's executable.
 add_library(xnpp
         "sources/Xna/CSharp/IO/MemoryStream.cpp"
@@ -89,13 +97,9 @@ add_library(xnpp
         "sources/Xna/Framework/Media/MediaQueue.cpp"
         "sources/Xna/CSharp/Type.cpp"
         "sources/Xna/Framework/Content/Readers/BasicReaders.cpp"
-        "sources/Xna/Platform/SDL/System.cpp" 
-        "sources/Xna/Platform/SDL/GameWindow.cpp"
-        "sources/Xna/Platform/SDL/GameHost.cpp"
-        "sources/Xna/Platform/SDL/Input.cpp" 
-        "sources/Xna/Platform/SDL/Audio.cpp"
 
-         ${MINIAUDIO_VORBIS_SRC}        
+        ${XNPP_PLATFORM_SRC}
+        ${MINIAUDIO_VORBIS_SRC}        
 )
 #set_source_files_properties(${MINIAUDIO_VORBIS_SRC} PROPERTIES LANGUAGE C)
 
