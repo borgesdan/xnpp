@@ -18,6 +18,7 @@
 #include "Xna/Framework/Graphics/Effect/EffectPass.hpp"
 #include "Xna/Framework/Graphics/Effect/BasicEffect.hpp"
 #include "Xna/Framework/Graphics/GraphicsDevice.hpp"
+#include "../SDL/InternalSdl.hpp"
 
 using Microsoft::WRL::ComPtr;
 
@@ -44,43 +45,7 @@ namespace Xna {
 
 	//
 	//WindowsPlatform
-	//
-
-	STDMETHODIMP MediaEngineNotify::EventNotify(DWORD event, DWORD_PTR ptr, DWORD e) {
-		switch (event)
-		{
-		case MF_MEDIA_ENGINE_EVENT_LOADEDMETADATA: {
-			MediaPlayer::OnActiveSongChanged(CSharp::EventArgs::Empty);
-			break;
-		}
-		case MF_MEDIA_ENGINE_EVENT_CANPLAY: {
-			break;
-		}
-		case MF_MEDIA_ENGINE_EVENT_PLAY: {
-			MediaPlayer::OnMediaStateChanged(CSharp::EventArgs::Empty);
-			break;
-		}
-		case MF_MEDIA_ENGINE_EVENT_PAUSE: {
-			MediaPlayer::OnMediaStateChanged(CSharp::EventArgs::Empty);
-			break;
-		}
-		case MF_MEDIA_ENGINE_EVENT_PURGEQUEUEDEVENTS: {
-			break;
-		}
-		case MF_MEDIA_ENGINE_EVENT_NOTIFYSTABLESTATE: {
-			break;
-		}
-		case MF_MEDIA_ENGINE_EVENT_ERROR: {
-			break;
-		}
-		case MF_MEDIA_ENGINE_EVENT_ENDED:
-			MediaPlayer::state = MediaState::Stopped;
-			MediaPlayer::OnMediaStateChanged(CSharp::EventArgs::Empty);
-			break;
-		}
-
-		return S_OK;
-	}
+	//	
 
 	void WindowsPlatform::InitWIC() {
 		if (WICFactory)
@@ -131,53 +96,7 @@ namespace Xna {
 			throw CSharp::InvalidOperationException("CreateSwapChainForHwnd() failed.");
 
 		return swapChain1;
-	}
-
-	void WindowsPlatform::InitAudioEngine() {
-		if (AudioEngine == nullptr) {
-			DirectX::AUDIO_ENGINE_FLAGS eflags = DirectX::AudioEngine_Default;
-#ifdef _DEBUG
-			eflags |= DirectX::AudioEngine_Debug;
-#endif
-			AudioEngine = std::make_unique<DirectX::AudioEngine>(eflags);
-		}
-	}
-
-	void WindowsPlatform::InitMediaEngine() {
-		if (MediaEngine != nullptr)
-			return;
-
-		Microsoft::WRL::ComPtr<IMFAttributes> attributes;
-		MFCreateAttributes(&attributes, 2);
-
-		auto notify = Microsoft::WRL::Make<MediaEngineNotify>();
-
-		attributes->SetUnknown(MF_MEDIA_ENGINE_CALLBACK, notify.Get());
-		attributes->SetUINT32(MF_MEDIA_ENGINE_AUDIO_CATEGORY, AudioCategory_GameMedia);
-
-		Microsoft::WRL::ComPtr<IMFMediaEngineClassFactory> factory;
-		auto hr = CoCreateInstance(
-			CLSID_MFMediaEngineClassFactory,
-			nullptr,
-			CLSCTX_INPROC_SERVER,
-			IID_PPV_ARGS(&factory));
-
-		if FAILED(hr)
-			throw CSharp::InvalidOperationException("CoCreateInstance->IMFMediaEngineClassFactory failed.");
-
-		hr = factory->CreateInstance(
-			MF_MEDIA_ENGINE_AUDIOONLY | MF_MEDIA_ENGINE_REAL_TIME_MODE,
-			attributes.Get(),
-			MediaEngine.ReleaseAndGetAddressOf());
-
-		if FAILED(hr)
-			throw CSharp::InvalidOperationException("CreateInstance->IMFMediaEngine* failed.");
-
-		hr = MediaEngine->SetAutoPlay(TRUE);
-
-		if FAILED(hr)
-			throw CSharp::InvalidOperationException("MediaEngine->SetAutoPlay(TRUE) failed.");
-	}
+	}	
 
 	void WindowsPlatform::Initialize() {
 		//Rotines
@@ -188,48 +107,17 @@ namespace Xna {
 
 		HRESULT hr = CoInitializeEx(nullptr, COINIT_APARTMENTTHREADED); //COINIT_MULTITHREADED
 		if (FAILED(hr))
-			throw CSharp::InvalidOperationException("CoInitializeEx failed.");
-
-		//Media
-		hr = MFStartup(MF_VERSION);
-		if FAILED(hr)
-			throw CSharp::InvalidOperationException("MFStartup failed.");
+			throw CSharp::InvalidOperationException("CoInitializeEx failed.");		
 
 		//Init functions
 		InitWIC();
 		InitFactory();
-		InitAudioEngine();
-		InitMediaEngine();
-
-		//Input
-		Keyboard = std::make_unique<DirectX::Keyboard>();
-		Mouse = std::make_unique<DirectX::Mouse>();
-		GamePad = std::make_unique<DirectX::GamePad>();
 	}
 
 	void WindowsPlatform::Dispose() {
 		WICFactory = nullptr;
 		DXGIFactory = nullptr;
 
-		if (AudioEngine) {
-			AudioEngine->Suspend();
-			AudioEngine = nullptr;
-		}
-
-		if (MediaEngine) {
-			MediaEngine->Pause();
-			MediaEngine = nullptr;
-		}
-
-		if (GamePad) {
-			GamePad->Suspend();
-			GamePad = nullptr;
-		}		
-
-		Keyboard = nullptr;
-		Mouse = nullptr;
-
-		MFShutdown();
 		CoUninitialize();
 		RoUninitialize();
 	}
@@ -301,163 +189,10 @@ namespace Xna {
 
 	//
 	//System
-	//
+	//									
 
-	Rectangle Platform::System_ClientRect(intptr_t hwnd) {
-		RECT rect{};
-		GetClientRect(reinterpret_cast<HWND>(hwnd), &rect);
-		return Rectangle(rect.left, rect.top, rect.right - rect.left, rect.bottom - rect.top);
-	}
-
-	Rectangle Platform::System_WindowRect(intptr_t hwnd) {
-		RECT rect{};
-		GetWindowRect(reinterpret_cast<HWND>(hwnd), &rect);
-		return Rectangle(rect.left, rect.top, rect.right - rect.left, rect.bottom - rect.top);
-	}
-
-	size_t Platform::System_GetClockCounter() {
-		LARGE_INTEGER counter;
-		QueryPerformanceCounter(&counter);
-		return static_cast<size_t>(counter.QuadPart);
-	}
-
-	size_t Platform::System_GetClockFrequency() {
-		LARGE_INTEGER frequency;
-		QueryPerformanceFrequency(&frequency);
-		return static_cast<size_t>(frequency.QuadPart);
-	}
-
-	bool Platform::System_MultiMonitorSupport() {
-		return GetSystemMetrics(SM_CMONITORS) != 0;
-	}
-
-	PlatformRectangle Platform::System_VirtualScreen() {
-		const auto x = GetSystemMetrics(SM_XVIRTUALSCREEN);
-		const auto y = GetSystemMetrics(SM_YVIRTUALSCREEN);
-		const auto w = GetSystemMetrics(SM_CXVIRTUALSCREEN);
-		const auto h = GetSystemMetrics(SM_CYVIRTUALSCREEN);
-
-		return { x, y, w, h };
-	}
-
-	PlatformSize Platform::System_PrimaryMonitorSize() {
-		const auto x = GetSystemMetrics(SM_CXSCREEN);
-		const auto y = GetSystemMetrics(SM_CYSCREEN);
-
-		return { x, y };
-	}	
-
-	PlatformRectangle Platform::System_WorkingArea() {
-		RECT workingArea{};
-		SystemParametersInfo(SPI_GETWORKAREA, NULL, &workingArea, NULL);
-
-		return RECTtoPRectangle(workingArea);
-	}
-
-	PlatformRectangle Platform::System_MonitorWorkingArea(intptr_t hMonitor) {
-		MONITORINFOEXW info{};
-		info.cbSize = sizeof(MONITORINFOEXW);
-
-		auto hmonitor = reinterpret_cast<HMONITOR>(hMonitor);
-		auto monitorInfo = reinterpret_cast<MONITORINFO*>(&info);
-		GetMonitorInfo(hmonitor, monitorInfo);
-		return RECTtoPRectangle(info.rcWork);
-	}
-
-	intptr_t Platform::System_MonitorFromHandle(intptr_t hwnd) {
-		const auto handle = reinterpret_cast<HWND>(hwnd);
-		const auto monitor = MonitorFromWindow(handle, MONITOR_DEFAULTTONEAREST);
-		const auto i_monitor = reinterpret_cast<intptr_t>(monitor);
-		return i_monitor;
-	}
-
-	intptr_t Platform::System_MonitorFromRect(int32_t left, int32_t top, int32_t right, int32_t bottom) {
-		RECT r{};
-		r.left = static_cast<LONG>(left);
-		r.right = static_cast<LONG>(right);
-		r.top = static_cast<LONG>(top);
-		r.bottom = static_cast<LONG>(bottom);
-
-		const auto monitor = MonitorFromRect(&r, MONITOR_DEFAULTTONEAREST);
-		const auto icmonitor = reinterpret_cast<intptr_t>(monitor);
-
-		return icmonitor;
-	}
-
-	intptr_t Platform::System_MonitorFromPoint(int32_t x, int32_t y) {
-		POINT p{};
-		p.x = static_cast<LONG>(x);
-		p.y = static_cast<LONG>(y);
-		const auto monitor = MonitorFromPoint(p, MONITOR_DEFAULTTONEAREST);
-		const auto i_monitor = reinterpret_cast<intptr_t>(monitor);
-		return i_monitor;
-	}
-
-	std::string Platform::System_MonitorDeviceName(intptr_t monitor) {
-		MONITORINFOEX info{};
-		info.cbSize = sizeof(MONITORINFOEX);
-		auto hmonitor = reinterpret_cast<HMONITOR>(monitor);
-		GetMonitorInfo(hmonitor, &info);
-		return std::string(info.szDevice);
-	}
-
-	PlatformRectangle Platform::System_MonitorArea(intptr_t monitor) {
-		MONITORINFOEX info{};
-		info.cbSize = sizeof(MONITORINFOEX);
-		auto hmonitor = reinterpret_cast<HMONITOR>(monitor);
-		GetMonitorInfo(hmonitor, &info);
-		return RECTtoPRectangle(info.rcMonitor);
-	}
-
-	bool Platform::System_MonitorIsPrimary(intptr_t monitor) {
-		MONITORINFOEX info{};
-		info.cbSize = sizeof(MONITORINFOEX);
-		auto hmonitor = reinterpret_cast<HMONITOR>(monitor);
-		GetMonitorInfo(hmonitor, &info);
-		return ((info.dwFlags & MONITORINFOF_PRIMARY) != 0);
-	}
-
-	void System_GetAllScreens(std::vector<CSharp::Screen>& scren) {
-
-	}
-
-	int32_t Platform::System_MonitorBitDepth(intptr_t monitor, intptr_t hdc) {
-		HDC screenDC = reinterpret_cast<HDC>(hdc);
-
-		if (screenDC == NULL) {
-			MONITORINFOEX info{};
-			info.cbSize = sizeof(MONITORINFOEX);
-			auto hmonitor = reinterpret_cast<HMONITOR>(monitor);
-			GetMonitorInfo(hmonitor, &info);
-
-			auto _deviceName = info.szDevice;
-			screenDC = CreateDCW(LPCWSTR(_deviceName), NULL, NULL, NULL);
-		}
-		
-		int32_t bitDepth = GetDeviceCaps(screenDC, BITSPIXEL);
-		bitDepth *= GetDeviceCaps(screenDC, PLANES);
-
-		DeleteDC(screenDC);
-
-		return bitDepth;
-	}
-	void Platform::System_ProcessException(std::exception& ex) {
-		auto _ex = dynamic_cast<CSharp::Exception*>(&ex);
-
-		std::string message;
-
-		if (_ex == nullptr) {
-			message = ex.what();
-		}
-		else {
-#if DEBUG || _DEBUG
-			message = _ex->FullMessage();
-#else
-			message = _ex->Message();
-#endif
-		}
-
-		MessageBox(nullptr, message.c_str(), "XN++", MB_OK);
+	void Platform::System_ProcessException(std::string const& exception) {
+		MessageBox(nullptr, exception.c_str(), "XN++", MB_OK);
 	}
 
 	void Platform::System_GetExecutablePath(std::filesystem::path& path) {
@@ -466,24 +201,11 @@ namespace Xna {
 
 		if (length > 0)
 			path = std::filesystem::path(buffer, buffer + length);
-	}
-
-	static BOOL CALLBACK MonitorEnumProcCallback(HMONITOR hmonitor, HDC hdc, LPRECT lprect, LPARAM lparam) {
-		auto handlers = (std::vector<std::tuple<intptr_t, intptr_t>>*)lparam;
-		handlers->push_back({reinterpret_cast<intptr_t>(hmonitor), reinterpret_cast<intptr_t>(hdc) });
-
-		return true;
-	}
-
-	std::vector<std::tuple<intptr_t, intptr_t>> Platform::System_GetAllMonitorHandlers() {
-		std::vector<std::tuple<intptr_t, intptr_t>> list;
-		EnumDisplayMonitors(NULL, NULL, MonitorEnumProcCallback, (LPARAM)&list);
-
-		return list;
-	}
+	}		
 
 	void Platform::Initialize() {
 		WindowsPlatform::Initialize();
+		Sdl::System::Initialize();
 	}
 
 	void Platform::Dispose() {
@@ -503,29 +225,6 @@ namespace Xna {
 	}
 
 	size_t Platform::MaxSamplerStates = static_cast<size_t>(D3D11_COMMONSHADER_SAMPLER_SLOT_COUNT);
-
-	//
-	// GameHost
-	//
-
-	void Platform::GameHost_Tick(GameHost& gh) {
-		MSG msg{};
-
-		do {
-			if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
-			{
-				TranslateMessage(&msg);
-				DispatchMessage(&msg);
-			}
-			else {
-				if (gh.impl->exitRequested)
-					gh.impl->gameWindow.Close();
-				else
-					gh.RunOneFrame();
-			}
-
-		} while (msg.message != WM_QUIT);
-	}
 
 	//
 	// Effect

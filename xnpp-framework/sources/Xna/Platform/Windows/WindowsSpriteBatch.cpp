@@ -5,6 +5,8 @@
 #include "Xna/Framework/Graphics/SpriteFont.hpp"
 #include "Xna/Internal/Misc.hpp"
 
+#include "directxtk/SpriteBatch.h"
+
 namespace Xna {
 	//
 	// SpriteBatch

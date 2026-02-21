@@ -99,6 +99,9 @@ namespace Xna {
 				case AV_CODEC_ID_PCM_S16LE:
 					currentFileType = AudioFileType::Wav;
 					break;
+				case AV_CODEC_ID_VORBIS:
+					currentFileType = AudioFileType::Ogg;
+					break;
 				default: 
 					return false;
 				}

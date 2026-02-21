@@ -39,7 +39,6 @@ namespace Xna {
 
 		struct Implementation {
 			std::optional<AudioFormat> format;
-			PlatformImpl::DynamicSoundEffectInstanceImpl platformImpl;
 		};
 
 		std::shared_ptr<Implementation> impl;

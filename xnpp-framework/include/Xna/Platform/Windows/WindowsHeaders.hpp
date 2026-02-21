@@ -22,26 +22,21 @@
 #include <d3dcsx.h>
 //DirectXTK
 #include <DirectXMath.h>
-#include <Audio.h>
-#include <BufferHelpers.h>
-#include <CommonStates.h>
-#include <DDSTextureLoader.h>
-#include <DirectXHelpers.h>
-#include <Effects.h>
-#include <GamePad.h>
-#include <GeometricPrimitive.h>
-#include <GraphicsMemory.h>
-#include <Keyboard.h>
-#include <Model.h>
-#include <Mouse.h>
-#include <PostProcess.h>
-#include <PrimitiveBatch.h>
-#include <ScreenGrab.h>
-#include <SimpleMath.h>
-#include <SpriteBatch.h>
-#include <SpriteFont.h>
-#include <VertexTypes.h>
-#include <WICTextureLoader.h>
+#include <DirectXTK/BufferHelpers.h>
+#include <DirectXTK/CommonStates.h>
+#include <DirectXTK/DDSTextureLoader.h>
+#include <DirectXTK/DirectXHelpers.h>
+#include <DirectXTK/Effects.h>
+#include <DirectXTK/GeometricPrimitive.h>
+#include <DirectXTK/GraphicsMemory.h>
+#include <DirectXTK/Model.h>
+#include <DirectXTK/PostProcess.h>
+#include <DirectXTK/PrimitiveBatch.h>
+#include <DirectXTK/ScreenGrab.h>
+#include <DirectXTK/SimpleMath.h>
+#include <DirectXTK/SpriteFont.h>
+#include <DirectXTK/VertexTypes.h>
+#include <DirectXTK/WICTextureLoader.h>
 //Windows
 #include <Windows.h>
 #include <windowsx.h>
@@ -52,15 +47,6 @@
 #include <wincodec.h>
 #include <shlwapi.h>
 #include <comdef.h> //comsuppw.lib
-
-//Audio
-#include <xaudio2.h>
-#include <x3daudio.h>
-#include <mfmediaengine.h> //MediaPlayer
-#include <mfapi.h> //MediaPlayer
-#include <shobjidl.h>
-#include <propkey.h>
-#include <propvarutil.h>
 
 #endif
 #endif

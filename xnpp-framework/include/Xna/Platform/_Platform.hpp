@@ -8,6 +8,7 @@
 #include <exception>
 #include <filesystem>
 #include <tuple>
+#include <functional>
 #include "Xna/CSharp/IO/Stream.hpp"
 
 //OS
@@ -198,8 +199,8 @@ namespace Xna {
 		int Bottom{ 0 };
 
 		constexpr PlatformRectangle() = default;
-		constexpr PlatformRectangle(int x, int y, int l, int b)
-			:Left(x), Top(y), Right(l), Bottom(b) {
+		constexpr PlatformRectangle(int x, int y, int right, int bottom)
+			:Left(x), Top(y), Right(right), Bottom(bottom) {
 		}
 
 		constexpr int X() const noexcept { return Left; }
@@ -216,6 +217,15 @@ namespace Xna {
 		constexpr PlatformSize(int w, int h) :Width(w), Height(h) {}
 	};
 
+	struct Value2 {
+		intptr_t One{0};
+		intptr_t Two{0};
+
+		constexpr Value2() = default;
+		constexpr Value2(intptr_t one, intptr_t two)
+			: One(one), Two(two){ }
+	};
+
 	struct Platform {
 
 		struct InputProcessMessage;
@@ -229,14 +239,12 @@ namespace Xna {
 		XNPP_API static void Suspend();
 		XNPP_API static void Resume();
 
-		//System
-
-		XNPP_API static Rectangle System_ClientRect(intptr_t hwnd);
-		XNPP_API static Rectangle System_WindowRect(intptr_t hwnd);
+		//System		
+		
+		XNPP_API static PlatformRectangle System_ClientRect(intptr_t hwnd);
+		XNPP_API static PlatformRectangle System_WindowRect(intptr_t hwnd);
 		XNPP_API static size_t System_GetClockCounter();
-		XNPP_API static size_t System_GetClockFrequency();
-		XNPP_API static void System_ProcessException(std::exception& ex);
-		XNPP_API static void System_GetExecutablePath(std::filesystem::path& path);
+		XNPP_API static size_t System_GetClockFrequency();		
 		XNPP_API static bool System_MultiMonitorSupport();
 		XNPP_API static PlatformRectangle System_VirtualScreen();
 		XNPP_API static PlatformSize System_PrimaryMonitorSize();
@@ -248,9 +256,12 @@ namespace Xna {
 		XNPP_API static std::string System_MonitorDeviceName(intptr_t monitor);
 		XNPP_API static PlatformRectangle System_MonitorArea(intptr_t monitor);
 		XNPP_API static bool System_MonitorIsPrimary(intptr_t monitor);
-		XNPP_API static int32_t System_MonitorBitDepth(intptr_t monitor, intptr_t hdc);
-		//XNPP_API static void System_GetAllScreens(std::vector<CSharp::Screen>& scren);
-		XNPP_API static std::vector<std::tuple<intptr_t, intptr_t>> System_GetAllMonitorHandlers();
+		XNPP_API static int32_t System_MonitorBitDepth(intptr_t monitor, intptr_t hdc);		
+		XNPP_API static std::vector<Value2> System_GetAllMonitorHandlers();
+
+		//platform dependent
+		XNPP_API static void System_ProcessException(std::string const& exception);
+		XNPP_API static void System_GetExecutablePath(std::filesystem::path& path);
 
 		//GameWindow
 
@@ -262,9 +273,7 @@ namespace Xna {
 		XNPP_API static void GameWindow_SetMouseVisible(GameWindow const& gw, bool value);
 		XNPP_API static void GameWindow_AllowUserResizing(GameWindow const& gw, bool value);
 		XNPP_API static Rectangle GameWindow_ClientBounds(GameWindow const& gw);
-		XNPP_API static void GameWindow_SetTitle(GameWindow const& gw, std::string const& title);
-		XNPP_API static void GameWindow_BeginScreenDeviceChange(GameWindow const& gw, bool willBeFullScreen);
-		XNPP_API static void GameWindow_EndScreenDeviceChange(GameWindow const& gw, std::string const& screenDeviceName, int32_t clientWidth, int32_t clientHeight);
+		XNPP_API static void GameWindow_SetTitle(GameWindow const& gw, std::string const& title);		
 
 		//GameHost
 
@@ -272,10 +281,8 @@ namespace Xna {
 
 		//Input
 		XNPP_API static KeyboardState Keyboard_GetState();
-		XNPP_API static void Keyboard_ProcessMessage(InputProcessMessage const& msg);
 
 		XNPP_API static MouseState Mouse_GetState();
-		XNPP_API static void Mouse_ProcessMessage(InputProcessMessage const& msg);
 		XNPP_API static intptr_t Mouse_GetWindowHandle();
 		XNPP_API static void Mouse_SetWindowHandle(intptr_t value);
 		XNPP_API static void Mouse_SetPosition(int32_t x, int32_t y);
@@ -366,55 +373,7 @@ namespace Xna {
 			std::vector<char32_t> const& charMap, int32_t lineSpacing, float spacing,
 			std::vector<Vector3> const& kerning, std::optional<char32_t> const& defaultCharacter);
 		XNPP_API static Vector2 SpriteFont_MeasureString(SpriteFont const& sf, std::string const& text, bool ignoreWhiteSpace);
-		XNPP_API static Vector2 SpriteFont_MeasureString(SpriteFont const& sf, std::wstring const& text, bool ignoreWhiteSpace);
-
-		//SoundEffect
-
-		enum class SoundEffect_State {
-			Play,
-			Pause,
-			Stop,
-			Resume
-		};
-
-		XNPP_API static void SoundEffect_Create(SoundEffect const&, std::vector<uint8_t> const& format, std::vector<uint8_t> const& data, size_t offset, size_t count, size_t loopStart, size_t loopLength);
-		XNPP_API static void SoundEffect_SetMasterSoundProperties(std::optional<float> volume, std::optional<float> speedOfSound, std::optional<float> dopplerScale, std::optional<float> distanceScale);
-		XNPP_API static void SoundEffect_CreateInstance(SoundEffectInstance const& se);
-		XNPP_API static void SoundEffect_CreateInstance(DynamicSoundEffectInstance const& se);
-		XNPP_API static void SoundEffect_DeleteInstance(SoundEffectInstance const& se);
-		XNPP_API static void SoundEffect_SetState(SoundEffectInstance const& se, SoundEffect_State state, bool immediateIfStop = true);
-		XNPP_API static void SoundEffect_SetState(DynamicSoundEffectInstance const& se, SoundEffect_State state, bool immediateIfStop = true);
-		XNPP_API static void SoundEffect_SetAttributes(SoundEffectInstance const& se, std::optional<float> volume, std::optional<float> pan, std::optional<float> pitch);
-		XNPP_API static void SoundEffect_Apply3D(SoundEffectInstance const& se, std::vector<AudioListener> const& listener, AudioEmitter emitter);
-		XNPP_API static SoundState SoundEffect_GetState(SoundEffectInstance const& se);
-		XNPP_API static void SoundEffect_SubmitBuffer(DynamicSoundEffectInstance const& se, std::vector<uint8_t> const& buffer, size_t offset, size_t count);
-		XNPP_API static int32_t SoundEffect_GetPendingBufferCount(DynamicSoundEffectInstance const& se);
-
-		//Song
-
-		XNPP_API static void Song_FromFile(Song const& song, std::filesystem::path const& filename);
-		XNPP_API static void MediaPlayer_Play(Song const& song);
-		XNPP_API static void MediaPlayer_Pause();
-		XNPP_API static void MediaPlayer_Resume();
-		XNPP_API static void MediaPlayer_Stop();
-		XNPP_API static void MediaPlayer_SetVolume(float volume);
-		XNPP_API static void MediaPlayer_SetMuted(bool value);
-		XNPP_API static void MediaPlayer_SetIsRepeating(bool value);
-		XNPP_API static double MediaPlayer_GetPlayPosition();
-		XNPP_API static double MediaPlayer_GetDuration();
-
-		enum class MediaPlayer_MediaProperty {
-			Album,
-			Genre,
-			Artist,
-			Duration,
-			TrackNumber,
-			IsProtected,
-			PlayCount,
-			Rating
-		};
-
-		XNPP_API static void MediaPlayer_SetProperty(Song const& song, MediaPlayer_MediaProperty prop);
+		XNPP_API static Vector2 SpriteFont_MeasureString(SpriteFont const& sf, std::wstring const& text, bool ignoreWhiteSpace);				
 
 		//Effects
 
@@ -444,6 +403,58 @@ namespace Xna {
 		);
 
 	};
+
+	namespace PlatformNS {
+		enum class MediaState {
+			Playing,
+			Paused,
+			Stoped,
+		};
+
+		struct MasterAudio {
+			XNPP_API static void SetMasterVolume(float value);
+		};		
+
+		struct ISoundEffect {
+			virtual ~ISoundEffect() = default;
+
+			XNPP_API virtual void Load(std::vector<uint8_t> const& format, std::vector<uint8_t> const& data, size_t offset, size_t count, size_t loopStart, size_t loopLength) = 0;
+
+			XNPP_API static std::unique_ptr<ISoundEffect> Create();	
+		};
+
+		struct ISoundEffectInstance {
+			virtual ~ISoundEffectInstance() = default;
+			XNPP_API virtual void Load(ISoundEffect* baseSE) = 0;
+			XNPP_API virtual void SetVolume(float value) = 0;
+			XNPP_API virtual void SetPan(float value) = 0;
+			XNPP_API virtual void SetPitch(float value) = 0;			
+			XNPP_API virtual void IsLooped(bool value) = 0;
+			XNPP_API virtual void Play() = 0;
+			XNPP_API virtual void Pause() = 0;
+			XNPP_API virtual void Stop() = 0;
+			XNPP_API virtual MediaState GetState() = 0;			
+
+			XNPP_API static std::unique_ptr<ISoundEffectInstance> Create();
+		};		
+
+		struct IMediaPlayer {			
+			XNPP_API virtual void Play(std::filesystem::path const& song) = 0;
+			XNPP_API virtual void Pause() = 0;
+			XNPP_API virtual void Resume() = 0;
+			XNPP_API virtual void Stop() = 0;
+			XNPP_API virtual void SetVolume(float volume) = 0;
+			XNPP_API virtual void SetMuted(bool value) = 0;
+			XNPP_API virtual void SetIsRepeating(bool value) = 0;
+			XNPP_API virtual double GetPlayPosition() = 0; //Em milisegundos
+
+			XNPP_API virtual void SongChanged(std::function<void()> const& func) = 0;
+			XNPP_API virtual void MediaStateChanged(std::function<void()> const& func) = 0;
+
+			XNPP_API virtual ~IMediaPlayer() = default;
+			XNPP_API static IMediaPlayer& GetInstance();
+		};
+	}
 }
 
 #endif

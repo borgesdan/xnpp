@@ -7,6 +7,18 @@ endif ()
 # Includes directory
 set(PROJECT_INCLUDES_DIR "${CMAKE_CURRENT_SOURCE_DIR}/include")
 
+set(MINIAUDIO_VORBIS_SRC 
+    "sources/Xna/Platform/SDL/third-party/miniaudio/miniaudio_libvorbis.c"
+)
+
+set(XNPP_PLATFORM_SRC
+    "sources/Xna/Platform/SDL/System.cpp" 
+    "sources/Xna/Platform/SDL/GameWindow.cpp"
+    "sources/Xna/Platform/SDL/GameHost.cpp"
+    "sources/Xna/Platform/SDL/Input.cpp" 
+    "sources/Xna/Platform/SDL/Audio.cpp"
+)
+
 # Add source to this project's executable.
 add_library(xnpp
         "sources/Xna/CSharp/IO/MemoryStream.cpp"
@@ -36,8 +48,7 @@ add_library(xnpp
         "sources/Xna/Framework/Graphics/RasterizerState.cpp"
         "sources/Xna/Framework/Graphics/SamplerState.cpp"
         "sources/Xna/Framework/Graphics/Texture3D.cpp"
-        "sources/Xna/Framework/Graphics/Texture2D.cpp"
-        
+        "sources/Xna/Framework/Graphics/Texture2D.cpp"        
         "sources/Xna/Framework/Graphics/GraphicsDevice.cpp"
         "sources/Xna/Framework/Graphics/RenderTarget2D.cpp"
         "sources/Xna/Framework/Graphics/IndexBuffer.cpp"
@@ -63,6 +74,7 @@ add_library(xnpp
         "sources/Xna/Framework/Graphics/VertexDeclaration.cpp"
         "sources/Xna/Framework/Graphics/VertexBufferBinding.cpp"
         "sources/Xna/Framework/Graphics/VertexBuffer.cpp"
+        "sources/Xna/Framework/Input/Input.cpp"
         "sources/Xna/Framework/Content/ContentManager.cpp"
         "sources/Xna/Framework/Content/ContentReader.cpp"
         "sources/Xna/Framework/Content/ContentTypeReaderManager.cpp"
@@ -72,9 +84,6 @@ add_library(xnpp
         "sources/Xna/Platform/Windows/WindowsSpriteBatch.cpp"
         "sources/Xna/Platform/Windows/WindowsTextures.cpp"
         "sources/Xna/Platform/Windows/WindowsAdapter.cpp"
-        "sources/Xna/Platform/Windows/WindowsGameWindow.cpp"
-        "sources/Xna/Platform/Windows/WindowsInputs.cpp"
-        "sources/Xna/Platform/Windows/WindowsPlatformAudio.cpp"       
         "sources/Xna/Platform/Windows/WindowsBuffer.cpp"
         "sources/Xna/App.cpp"
         "sources/Xna/Framework/Audio/AudioFormat.cpp"
@@ -86,21 +95,32 @@ add_library(xnpp
         "sources/Xna/Framework/Media/Song.cpp" 
         "sources/Xna/Framework/Media/MediaPlayer.cpp"
         "sources/Xna/Framework/Media/MediaQueue.cpp"
-        "sources/Xna/CSharp/Type.cpp" 
-        "sources/Xna/Framework/Content/Readers/BasicReaders.cpp" 
-         
-        )
+        "sources/Xna/CSharp/Type.cpp"
+        "sources/Xna/Framework/Content/Readers/BasicReaders.cpp"
+
+        ${XNPP_PLATFORM_SRC}
+        ${MINIAUDIO_VORBIS_SRC}        
+)
+#set_source_files_properties(${MINIAUDIO_VORBIS_SRC} PROPERTIES LANGUAGE C)
 
 target_compile_features(xnpp PUBLIC cxx_std_20)
 
 target_compile_definitions(xnpp PRIVATE USING_XINPUT)
 target_compile_definitions(xnpp PRIVATE XNPP_EXPORT_DLL)
+target_compile_definitions(xnpp PRIVATE XNPP_DONT_USE_XNA_KEYS)
 
 find_package(directxtk CONFIG REQUIRED)
+find_package(SDL3 CONFIG REQUIRED)
+#libvorbis
+find_package(Ogg CONFIG REQUIRED)
+find_package(Vorbis CONFIG REQUIRED)
+#bgfx
+find_package(bgfx CONFIG REQUIRED)
 
 target_link_libraries(xnpp
         PUBLIC
             Microsoft::DirectXTK 
+        PRIVATE
             dxgi.lib
             dxguid.lib
             D3d11.lib 
@@ -112,12 +132,19 @@ target_link_libraries(xnpp
             Oleaut32.lib
             Ole32.lib
             Propsys.lib
+            SDL3::SDL3
+            Ogg::ogg
+            Vorbis::vorbis
+            Vorbis::vorbisfile
+             bgfx::bgfx
+             bgfx::bx
+             bgfx::bimg
 )
 
 target_include_directories(xnpp
     PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-        $<INSTALL_INTERFACE:include>
+        $<INSTALL_INTERFACE:include>            
 )
 
 set_target_properties(xnpp PROPERTIES

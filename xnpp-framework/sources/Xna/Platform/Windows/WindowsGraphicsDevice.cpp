@@ -1,6 +1,8 @@
 #include "Xna/Platform/Platform.hpp"
 #ifdef PLATFORM_WINDOWS
 #include "Xna/Framework/Graphics/GraphicsDevice.hpp"
+#include "SDL3/SDL.h"
+#include <SDL3/SDL_system.h>
 
 using Microsoft::WRL::ComPtr;
 
@@ -363,7 +365,10 @@ namespace Xna {
 			const auto swapDesc = impl.lazySwapChainDesc;
 			const auto swalFullScreenDesc = impl.lazySwapChainFullScreenDesc;
 
-			auto hwnd = reinterpret_cast<HWND>(windowHandle);
+			//TODO: [!] uso de SDL
+			auto window = reinterpret_cast<SDL_Window*>(windowHandle);
+			auto hwnd = (HWND)SDL_GetPointerProperty(SDL_GetWindowProperties(window), SDL_PROP_WINDOW_WIN32_HWND_POINTER, NULL);
+
 			const auto swapChain = WindowsPlatform::CreateSwapChain1(swapDesc, swalFullScreenDesc, device.implGraphicsDevice->platformImpl.device, hwnd);
 
 			impl.swapChain = swapChain;

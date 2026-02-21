@@ -73,8 +73,7 @@ namespace Xna {
 		int num1 = 0;
 		std::optional<CSharp::Screen> screen;
 		auto rect = Platform::System_WindowRect(windowHandle);
-
-		CSharp::Rectangle rectangle1 = CSharp::Rectangle(rect.X, rect.Y, rect.Width, rect.Height);
+		auto rectangle1 = CSharp::Rectangle::FromLTRB(rect.Left, rect.Top, rect.Right, rect.Bottom);
 
 		auto allScreens = CSharp::Screen::AllScreens();
 

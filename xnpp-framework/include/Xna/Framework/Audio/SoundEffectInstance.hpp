@@ -52,7 +52,7 @@ namespace Xna {
 		//Gets or sets a value that indicates whether looping is enabled for the SoundEffectInstance.
 		inline virtual bool IsLooped() const { return impl->looped; }
 		//Gets or sets a value that indicates whether looping is enabled for the SoundEffectInstance.
-		inline virtual void IsLooped(bool value) { impl->looped = value; }
+		inline virtual void IsLooped(bool value);
 		
 		//Gets the current state (playing, paused, or stopped) of the SoundEffectInstance.
 		XNPP_API SoundState State() const;
@@ -91,7 +91,7 @@ namespace Xna {
 			std::vector<UnsafeNativeStructures::XACT_LISTENER_DATA> listenerData;
 			uint32_t voiceHandle{ std::numeric_limits<uint32_t>::max() };
 
-			PlatformImpl::SoundEffectInstanceImpl platformImpl;
+			std::unique_ptr<PlatformNS::ISoundEffectInstance> platform;
 		};
 
 		std::shared_ptr<Implementation> impl;

@@ -6,10 +6,11 @@ namespace Xna {
 	void MediaQueue::Play(Song const& song) {
 		if (song.impl->fileName.empty())
 			throw CSharp::ArgumentNullException("song filename is empty()");
-		impl->activeSong = song;
+		
+		impl->activeSong = song;		
 
-		Platform::MediaPlayer_Stop();
-		Platform::MediaPlayer_Play(*impl->activeSong);
+		PlatformNS::IMediaPlayer::GetInstance().Stop();
+		PlatformNS::IMediaPlayer::GetInstance().Play(impl->activeSong->impl->fileName);
 	}
 
 	void MediaQueue::Play(SongCollection const& songCollection) {
@@ -74,7 +75,7 @@ namespace Xna {
 	}
 
 	CSharp::TimeSpan MediaQueue::PlayPosition() const {
-		auto position = Platform::MediaPlayer_GetPlayPosition();
+		const auto position = PlatformNS::IMediaPlayer::GetInstance().GetPlayPosition();
 		return CSharp::TimeSpan(0, 0, 0, 0, position);
 	}
 }
