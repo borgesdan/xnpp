@@ -8,15 +8,15 @@ endif ()
 set(PROJECT_INCLUDES_DIR "${CMAKE_CURRENT_SOURCE_DIR}/include")
 
 set(MINIAUDIO_VORBIS_SRC 
-    "sources/Xna/Platform/SDL/third-party/miniaudio/miniaudio_libvorbis.c"
+    "sources/Xna/Platform/Cross/third-party/miniaudio/miniaudio_libvorbis.c"
 )
 
 set(XNPP_PLATFORM_SRC
-    "sources/Xna/Platform/SDL/System.cpp" 
-    "sources/Xna/Platform/SDL/GameWindow.cpp"
-    "sources/Xna/Platform/SDL/GameHost.cpp"
-    "sources/Xna/Platform/SDL/Input.cpp" 
-    "sources/Xna/Platform/SDL/Audio.cpp"
+    "sources/Xna/Platform/Cross/System.cpp" 
+    "sources/Xna/Platform/Cross/GameWindow.cpp"
+    "sources/Xna/Platform/Cross/GameHost.cpp"
+    "sources/Xna/Platform/Cross/Input.cpp" 
+    "sources/Xna/Platform/Cross/Audio.cpp"
 )
 
 # Add source to this project's executable.

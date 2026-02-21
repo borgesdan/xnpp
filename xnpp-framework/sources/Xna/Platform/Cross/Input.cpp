@@ -1,4 +1,4 @@
-#include "InternalSdl.hpp"
+#include "Internal.hpp"
 #include "Xna/Framework/Input/Keyboard.hpp"
 #include "Xna/Framework/Input/Mouse.hpp"
 #include "Xna/Framework/Input/GamePad.hpp"
@@ -27,16 +27,16 @@ namespace Xna {
 		state.XButton2 = Convert(flags & SDL_BUTTON_X2MASK);
 		state.X = static_cast<int32_t>(posX);
 		state.Y = static_cast<int32_t>(posY);
-		state.ScroolWheelValue = Sdl::Global::MouseWheel;
+		state.ScroolWheelValue = Cross::Global::MouseWheel;
 
 		return state;
 	}
 
 	void Platform::Mouse_SetPosition(int32_t x, int32_t y) {
-		if (Sdl::Global::CurrentWindowHandle == 0)
+		if (Cross::Global::CurrentWindowHandle == 0)
 			return;
 
-		auto window = reinterpret_cast<SDL_Window*>(Sdl::Global::CurrentWindowHandle);
+		auto window = reinterpret_cast<SDL_Window*>(Cross::Global::CurrentWindowHandle);
 		SDL_WarpMouseInWindow(window, static_cast<float>(x), static_cast<float>(y));
 	}
 
@@ -239,7 +239,7 @@ namespace Xna {
 		if (index < 0 || index >= 4)
 			return false;
 
-		auto& pad = Sdl::Global::Gamepads[index];
+		auto& pad = Cross::Global::Gamepads[index];
 
 		if (!pad.gamepad)
 			return false;
@@ -253,11 +253,11 @@ namespace Xna {
 	}
 
 	void Platform::GamePad_Suspend() {	
-		Sdl::Global::SuspendGamepads = true;
+		Cross::Global::SuspendGamepads = true;
 	}
 
 	void Platform::GamePad_Resume() {
-		Sdl::Global::SuspendGamepads = false;
+		Cross::Global::SuspendGamepads = false;
 	}
 
 

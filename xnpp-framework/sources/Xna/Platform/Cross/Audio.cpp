@@ -7,7 +7,7 @@
 
 #include "Xna/Platform/_Platform.hpp"
 #include "Xna/Framework/Audio/SoundEffect.hpp"
-#include "InternalSdl.hpp"
+#include "Internal.hpp"
 #include <functional>
 #define MINIAUDIO_IMPLEMENTATION
 #include "third-party/miniaudio/miniaudio.h"
@@ -360,11 +360,11 @@ namespace Xna {
 		}
 	}	
 
-	void Sdl::System::InitAudio() {
+	void Cross::System::InitAudio() {
 		AudioEngine.Initialize();
 	}
 
-	void Sdl::System::DisposeAudio() {
+	void Cross::System::DisposeAudio() {
 		if (PlatformNS::MiniAudioMediaPlayer::MediaPlayer)
 			PlatformNS::MiniAudioMediaPlayer::MediaPlayer = nullptr;
 

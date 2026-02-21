@@ -1,13 +1,13 @@
 #include "Xna/Platform/_Platform.hpp"
 #include "Xna/Framework/Game/GameHost.hpp"
-#include "InternalSdl.hpp"
+#include "Internal.hpp"
 #include <SDL3/SDL.h>
 
 namespace Xna {    
-    static void HandleGamepadAdded(SDL_Event const& event, std::vector<Sdl::GamepadPlayer>& gamePadPlayers);
-    static void HandleGamepadRemoved(SDL_Event const& event, std::vector<Sdl::GamepadPlayer>& gamePadPlayers);
-    static void CloseAllGamepads(std::vector<Sdl::GamepadPlayer>& gamePadPlayers);
-    static void UpdateGamePads(std::vector<Sdl::GamepadPlayer>& gamePadPlayers);
+    static void HandleGamepadAdded(SDL_Event const& event, std::vector<Cross::GamepadPlayer>& gamePadPlayers);
+    static void HandleGamepadRemoved(SDL_Event const& event, std::vector<Cross::GamepadPlayer>& gamePadPlayers);
+    static void CloseAllGamepads(std::vector<Cross::GamepadPlayer>& gamePadPlayers);
+    static void UpdateGamePads(std::vector<Cross::GamepadPlayer>& gamePadPlayers);
 
 	void Platform::GameHost_Tick(GameHost& gh) {
         SDL_Event event;
@@ -31,13 +31,13 @@ namespace Xna {
 
                     //WM_MOUSEMOVE, WM_LBUTTONDOWN, etc.                
                 case SDL_EVENT_MOUSE_WHEEL:                    
-                    Sdl::Global::MouseWheel += event.wheel.integer_y;
+                    Cross::Global::MouseWheel += event.wheel.integer_y;
                     break;
                 case SDL_EVENT_GAMEPAD_ADDED:
-                    HandleGamepadAdded(event, Sdl::Global::Gamepads);
+                    HandleGamepadAdded(event, Cross::Global::Gamepads);
                     break;
                 case SDL_EVENT_GAMEPAD_REMOVED:
-                    HandleGamepadRemoved(event, Sdl::Global::Gamepads);
+                    HandleGamepadRemoved(event, Cross::Global::Gamepads);
                     break;
                 }                
             }
@@ -45,16 +45,16 @@ namespace Xna {
             if (gh.impl->exitRequested || !running) 
                 gh.impl->gameWindow.Close();
             else {
-                UpdateGamePads(Sdl::Global::Gamepads);
+                UpdateGamePads(Cross::Global::Gamepads);
                 gh.RunOneFrame();
             }
         }       
 
         //TODO: [!] Mover para uma área de Dispose
-        CloseAllGamepads(Sdl::Global::Gamepads);
+        CloseAllGamepads(Cross::Global::Gamepads);
 	}   
 
-    void HandleGamepadAdded(SDL_Event const& event, std::vector<Sdl::GamepadPlayer>& gamePadPlayers)
+    void HandleGamepadAdded(SDL_Event const& event, std::vector<Cross::GamepadPlayer>& gamePadPlayers)
     {
         auto newPad = SDL_OpenGamepad(event.gdevice.which);
 
@@ -74,7 +74,7 @@ namespace Xna {
         }
     }    
 
-    void HandleGamepadRemoved(SDL_Event const& event, std::vector<Sdl::GamepadPlayer>& gamePadPlayers) {
+    void HandleGamepadRemoved(SDL_Event const& event, std::vector<Cross::GamepadPlayer>& gamePadPlayers) {
         SDL_Gamepad* removedPad = SDL_GetGamepadFromID(event.gdevice.which);
 
         if (removedPad) {
@@ -92,7 +92,7 @@ namespace Xna {
         }
     }
 
-    void CloseAllGamepads(std::vector<Sdl::GamepadPlayer>& gamePadPlayers) {
+    void CloseAllGamepads(std::vector<Cross::GamepadPlayer>& gamePadPlayers) {
         for (auto& player : gamePadPlayers) {
             if (player.gamepad) {
                 SDL_RumbleGamepad(player.gamepad, 0, 0, 0);
@@ -107,9 +107,9 @@ namespace Xna {
         SDL_Log("The pending gamepads have been disconnected.");
     }    
 
-    void UpdateGamePads(std::vector<Sdl::GamepadPlayer>& gamePadPlayers) {
+    void UpdateGamePads(std::vector<Cross::GamepadPlayer>& gamePadPlayers) {
 
-        if (Sdl::Global::SuspendGamepads) {
+        if (Cross::Global::SuspendGamepads) {
             for (auto& player : gamePadPlayers) {
                 SDL_RumbleGamepad(player.gamepad, 0, 0, 0);
                 SDL_RumbleGamepadTriggers(player.gamepad, 0, 0, 0);
@@ -125,7 +125,7 @@ namespace Xna {
                     player.gamepad, 
                     player.low_frequency_rumble,
                     player.high_frequency_rumble,
-                    Sdl::GamepadPlayer::FRAME_RUMBLE_MS);
+                    Cross::GamepadPlayer::FRAME_RUMBLE_MS);
             }
             else {
                 SDL_RumbleGamepad(player.gamepad, 0, 0, 0);
@@ -136,7 +136,7 @@ namespace Xna {
                     player.gamepad,
                     player.left_rumble,
                     player.right_rumble,
-                    Sdl::GamepadPlayer::FRAME_RUMBLE_MS);
+                    Cross::GamepadPlayer::FRAME_RUMBLE_MS);
             }
             else {
                 SDL_RumbleGamepadTriggers(player.gamepad, 0, 0, 0);

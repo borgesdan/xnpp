@@ -18,7 +18,7 @@
 #include "Xna/Framework/Graphics/Effect/EffectPass.hpp"
 #include "Xna/Framework/Graphics/Effect/BasicEffect.hpp"
 #include "Xna/Framework/Graphics/GraphicsDevice.hpp"
-#include "../SDL/InternalSdl.hpp"
+#include "../Cross/Internal.hpp"
 
 using Microsoft::WRL::ComPtr;
 
@@ -205,7 +205,7 @@ namespace Xna {
 
 	void Platform::Initialize() {
 		WindowsPlatform::Initialize();
-		Sdl::System::Initialize();
+		Cross::System::Initialize();
 	}
 
 	void Platform::Dispose() {
