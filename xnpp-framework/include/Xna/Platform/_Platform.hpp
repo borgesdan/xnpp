@@ -402,6 +402,7 @@ namespace Xna {
 			size_t vertexStride
 		);
 
+		XNPP_API static void GraphicsDevice_LazyInitialization1(intptr_t windowHandle);
 	};
 
 	namespace PlatformNS {

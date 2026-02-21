@@ -17,6 +17,7 @@ set(XNPP_PLATFORM_SRC
     "sources/Xna/Platform/Cross/GameHost.cpp"
     "sources/Xna/Platform/Cross/Input.cpp" 
     "sources/Xna/Platform/Cross/Audio.cpp"
+    "sources/Xna/Platform/Cross/Graphics/Device.cpp"
 )
 
 # Add source to this project's executable.
