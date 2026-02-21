@@ -1,11 +1,11 @@
 #include "Xna/Platform/_Platform.hpp"
 #include <algorithm>
 #include <SDL3/SDL.h>
-#include "InternalSdl.hpp"
+#include "Internal.hpp"
 #include <stdexcept>
 
 namespace Xna {
-	void Sdl::System::Initialize() {
+	void Cross::System::Initialize() {
 		if (!SDL_Init(SDL_INIT_VIDEO)) {
 			throw std::runtime_error(SDL_GetError());
 		}
@@ -17,7 +17,7 @@ namespace Xna {
 		InitAudio();
 	}
 
-	void Sdl::System::Dispose() {
+	void Cross::System::Dispose() {
 		DisposeAudio();
 	}
 

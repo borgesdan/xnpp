@@ -1,7 +1,7 @@
 #include "Xna/Platform/_Platform.hpp"
 #include "Xna/Framework/Game/GameWindow.hpp"
 #include "Xna/CSharp/Exception.hpp"
-#include "InternalSdl.hpp"
+#include "Internal.hpp"
 #include <SDL3/SDL.h>
 
 namespace Xna {
@@ -47,7 +47,7 @@ namespace Xna {
 		SDL_SetWindowPosition(handle, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED);
 
 		impl->handle = reinterpret_cast<intptr_t>(handle);
-		Sdl::Global::MouseWheel = impl->handle;
+		Cross::Global::MouseWheel = impl->handle;
 	}
 
 	void Platform::GameWindow_Update(GameWindow const& gw) {
@@ -71,7 +71,7 @@ namespace Xna {
 		if (window) {
 			SDL_DestroyWindow(window);
 			gw.impl->handle = 0;
-			Sdl::Global::MouseWheel = 0;
+			Cross::Global::MouseWheel = 0;
 		}
 	}
 

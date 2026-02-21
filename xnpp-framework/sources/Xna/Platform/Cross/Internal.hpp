@@ -5,7 +5,7 @@
 #include <SDL3/SDL.h>
 #include <vector>
 
-namespace Xna::Sdl {
+namespace Xna::Cross {
 	struct System {
 		static void Initialize();
 		static void Dispose();
