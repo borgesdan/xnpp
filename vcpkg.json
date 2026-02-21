@@ -16,6 +16,7 @@
     "ffmpeg",
     "sdl3",
     "libogg",
-    "libvorbis"
+    "libvorbis",
+    "bgfx"
   ]
 }

@@ -114,7 +114,8 @@ find_package(SDL3 CONFIG REQUIRED)
 #libvorbis
 find_package(Ogg CONFIG REQUIRED)
 find_package(Vorbis CONFIG REQUIRED)
-
+#bgfx
+find_package(bgfx CONFIG REQUIRED)
 
 target_link_libraries(xnpp
         PUBLIC
@@ -135,6 +136,9 @@ target_link_libraries(xnpp
             Ogg::ogg
             Vorbis::vorbis
             Vorbis::vorbisfile
+             bgfx::bgfx
+             bgfx::bx
+             bgfx::bimg
 )
 
 target_include_directories(xnpp
