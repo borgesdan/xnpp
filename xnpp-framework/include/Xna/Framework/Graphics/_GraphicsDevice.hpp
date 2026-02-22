@@ -178,6 +178,8 @@ namespace Xna {
 		inline bool operator==(std::nullptr_t) const noexcept { return implGraphicsDevice == nullptr; }
 		inline explicit operator bool() const noexcept { return implGraphicsDevice != nullptr; }
 
+		inline PlatformNS::IGraphicsDevice& GetBackend();
+
 	private:
 		void CreateDevice(GraphicsAdapter const& adapter, Xna::PresentationParameters const& presentationParameters);
 		inline RenderTarget2D CreateBackBufferRenderTarget() const;

@@ -8,6 +8,7 @@
 #include "Xna/Platform/_Platform.hpp"
 
 #include "Xna/Framework/Graphics/BlendState.hpp"
+#include "Xna/Framework/Graphics/GraphicsDevice.hpp"
 
 namespace Xna {
 	//Padrão do BlendState para Bgfx
@@ -262,5 +263,10 @@ namespace Xna {
 
 		// 6: Aplicar o estado		
 		bgfx::setState(state);
+	}
+
+	void PlatformNS::GraphicsDevice_Apply_BlendState(GraphicsDevice& device, BlendState const& blend) {
+		auto& deviceBackend = device.GetBackend();
+		deviceBackend.ApplyBlendState(blend);
 	}
 }

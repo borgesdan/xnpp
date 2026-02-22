@@ -454,6 +454,8 @@ namespace Xna {
 			XNPP_API static IMediaPlayer& GetInstance();
 		};
 
+		XNPP_API static void GraphicsDevice_Apply_BlendState(GraphicsDevice& device, BlendState const& blend);
+
 		struct IGraphicsDevice {
 			XNPP_API virtual ~IGraphicsDevice() = default;
 

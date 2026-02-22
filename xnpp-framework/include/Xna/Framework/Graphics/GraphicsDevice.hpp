@@ -44,6 +44,7 @@ namespace Xna {
 		bool lazyInitialization{ false };
 
 		PlatformImpl::GraphicsDeviceImpl platformImpl;
+		std::unique_ptr<PlatformNS::IGraphicsDevice> backend;
 	};	
 
 	inline GraphicsAdapter GraphicsDevice::Adapter() const { return implGraphicsDevice->adapter.value(); }
@@ -73,6 +74,10 @@ namespace Xna {
 	inline CSharp::Event<CSharp::EventArgs> GraphicsDevice::DeviceReset() { return implGraphicsDevice->deviceReset; }
 	inline CSharp::Event<CSharp::EventArgs> GraphicsDevice::DeviceLost() { return implGraphicsDevice->deviceLost; }
 	inline CSharp::Event<CSharp::EventArgs> GraphicsDevice::Disposing() { return implGraphicsDevice->disposing; }
+
+	inline PlatformNS::IGraphicsDevice& GraphicsDevice::GetBackend() {
+		return *implGraphicsDevice->backend.get();
+	}
 }
 
 #endif

@@ -4,6 +4,7 @@
 #include <cstdint>
 #include "Shared.hpp"
 #include "Xna/Framework/Color.hpp"
+#include "Xna/Platform/Platform.hpp"
 
 namespace Xna {
 	//Contains blend state for the device. 
@@ -150,7 +151,7 @@ namespace Xna {
 		}
 
 		inline void Apply(GraphicsDevice& graphicsDevice) { 
-			//TODO:: apply blendState
+			PlatformNS::GraphicsDevice_Apply_BlendState(graphicsDevice, *this);
 		}
 
 		BlendOperation alphaBlendFunction{ BlendOperation::Add };
