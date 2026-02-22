@@ -38,11 +38,7 @@ namespace Xna {
 		//Each component of the color is multiplied by a constant set in BlendFactor. 
 		BlendFactor,
 		//Each component of the color is multiplied by the inverse of a constant set in BlendFactor. 
-		InverseBlendFactor,
-		Source1Color,
-		InverseSource1Color,
-		Source1Alpha,
-		InverseSource1Alpha
+		InverseBlendFactor,		
 	};
 
 	//Defines how to combine a source color with the destination color already on the render target for color blending.

@@ -44,7 +44,7 @@ add_library(xnpp
         "sources/Xna/Framework/Game/GraphicsDeviceManager.cpp"
         "sources/Xna/Framework/Game/GameComponentCollection.cpp"
         "sources/Xna/Framework/Graphics/GraphicsResource.cpp"
-        "sources/Xna/Framework/Graphics/BlendState.cpp"
+        
         "sources/Xna/Framework/Graphics/DepthStencilState.cpp"
         "sources/Xna/Framework/Graphics/RasterizerState.cpp"
         "sources/Xna/Framework/Graphics/SamplerState.cpp"

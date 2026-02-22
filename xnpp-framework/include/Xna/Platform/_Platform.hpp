@@ -400,9 +400,7 @@ namespace Xna {
 			size_t startIndex,
 			size_t elementCount,
 			size_t vertexStride
-		);
-
-		XNPP_API static void GraphicsDevice_LazyInitialization1(intptr_t windowHandle);
+		);		
 	};
 
 	namespace PlatformNS {
@@ -454,6 +452,13 @@ namespace Xna {
 
 			XNPP_API virtual ~IMediaPlayer() = default;
 			XNPP_API static IMediaPlayer& GetInstance();
+		};
+
+		struct IGraphicsDevice {
+			XNPP_API virtual ~IGraphicsDevice() = default;
+
+			XNPP_API virtual void LazyInitialization1(intptr_t windowHandle) = 0;
+			XNPP_API virtual void ApplyBlendState(BlendState const& blend) = 0;
 		};
 	}
 }

@@ -11,110 +11,137 @@
 
 namespace Xna {
 	//Contains blend state for the device. 
-	class BlendState final : public GraphicsResource {
+	class BlendState {
 	public:
 		//Creates an instance of the BlendState class with default values, using additive color and alpha blending.
-		inline BlendState() { impl = std::make_shared<BlendState::Implementation>(); }
-
-		virtual ~BlendState() override {}
+		constexpr BlendState() = default;
 
 		//A built-in state object with settings for opaque blend,
 		//that is overwriting the source with the destination data.
-		XNPP_API static BlendState Opaque();
+		static constexpr BlendState Opaque() {
+			return BlendState(
+				Blend::One,
+				Blend::Zero,
+				Blend::One,
+				Blend::Zero);
+		}
 		//A built-in state object with settings for alpha blend, 
 		//that is blending the source and destination data using alpha.
-		XNPP_API static BlendState AlphaBlend();
+		static BlendState AlphaBlend() {
+			return BlendState(
+				Blend::One,
+				Blend::InverseSourceAlpha,
+				Blend::One,
+				Blend::InverseSourceAlpha);
+		}
 		//A built-in state object with settings for additive blend, 
 		//that is adding the destination data to the source data without using alpha.
-		XNPP_API static BlendState Additive();
+		static BlendState Additive() {
+			return BlendState(
+				Blend::SourceAlpha,
+				Blend::One,
+				Blend::SourceAlpha,
+				Blend::One;
+		}
 		//A built-in state object with settings for blending with non-premultipled alpha, 
 		//that is blending source and destination data using alpha while assuming the color data contains no alpha information.
-		XNPP_API static BlendState NonPremultiplied();
+		static BlendState NonPremultiplied() {
+			return BlendState(
+				Blend::SourceAlpha,
+				Blend::InverseSourceAlpha,
+				Blend::SourceAlpha,
+				Blend::InverseSourceAlpha);
+		}
 
 		//Gets or sets the arithmetic operation when blending alpha values. The default is BlendFunction.Add. 
-		inline BlendOperation AlphaBlendFunction() const { return impl->alphaBlendFunction; }
+		constexpr BlendOperation AlphaBlendFunction() const { return alphaBlendFunction; }
 		//Gets or sets the arithmetic operation when blending alpha values. The default is BlendFunction.Add. 
-		inline void AlphaBlendFunction(BlendOperation value) { impl->alphaBlendFunction = value; }
+		constexpr void AlphaBlendFunction(BlendOperation value) { alphaBlendFunction = value; }
 		//Gets or sets the blend factor for the destination alpha, which is the percentage of the destination alpha included in the blended result. The default is Blend.One. 
-		inline Blend AlphaDestinationBlend() const { return impl->alphaDestinationBlend; }
+		constexpr Blend AlphaDestinationBlend() const { return alphaDestinationBlend; }
 		//Gets or sets the blend factor for the destination alpha, which is the percentage of the destination alpha included in the blended result. The default is Blend.One. 
-		inline void AlphaDestinationBlend(Blend value) { impl->alphaDestinationBlend = value; }
+		constexpr void AlphaDestinationBlend(Blend value) { alphaDestinationBlend = value; }
 		//Gets or sets the alpha blend factor. The default is Blend.One. 
-		inline Blend AlphaSourceBlend() const { return impl->alphaSourceBlend; }
+		constexpr Blend AlphaSourceBlend() const { return alphaSourceBlend; }
 		//Gets or sets the alpha blend factor. The default is Blend.One. 
-		inline void AlphaSourceBlend(Blend value) { impl->alphaSourceBlend = value; }
+		constexpr void AlphaSourceBlend(Blend value) { alphaSourceBlend = value; }
 		//Gets or sets the arithmetic operation when blending color values. The default is BlendFunction.Add. 
-		inline BlendOperation ColorBlendFunction() const { return impl->colorBlendFunction; }
+		constexpr BlendOperation ColorBlendFunction() const { return colorBlendFunction; }
 		//Gets or sets the arithmetic operation when blending color values. The default is BlendFunction.Add. 
-		inline void ColorBlendFunction(BlendOperation value) {  impl->colorBlendFunction = value;  }
+		constexpr void ColorBlendFunction(BlendOperation value) {  colorBlendFunction = value;  }
 		//Gets or sets the blend factor for the destination color. The default is Blend.One. 
-		inline Blend ColorDestinationBlend() const { return impl->colorDestinationBlend; }
+		constexpr Blend ColorDestinationBlend() const { return colorDestinationBlend; }
 		//Gets or sets the blend factor for the destination color. The default is Blend.One. 
-		inline void ColorDestinationBlend(Blend value) { impl->colorDestinationBlend = value; }
+		constexpr void ColorDestinationBlend(Blend value) { colorDestinationBlend = value; }
 		//Gets or sets the blend factor for the source color. The default is Blend.One. 
-		inline Blend ColorSourceBlend() const { return impl->colorSourceBlend; }
+		constexpr Blend ColorSourceBlend() const { return colorSourceBlend; }
 		//Gets or sets the blend factor for the source color. The default is Blend.One. 
-		inline void ColorSourceBlend(Blend value) { impl->colorSourceBlend = value; }
+		constexpr void ColorSourceBlend(Blend value) { colorSourceBlend = value; }
 		//Gets or sets which color channels (RGBA) are enabled for writing during color blending. 
 		// The default value is ColorWriteChannels.None.
-		inline Xna::ColorWriteChannels ColorWriteChannels() const { return impl->colorWriteChannels0; }
+		constexpr Xna::ColorWriteChannels ColorWriteChannels() const { return colorWriteChannels0; }
 		//Gets or sets which color channels (RGBA) are enabled for writing during color blending. 
 		// The default value is ColorWriteChannels.None.
-		inline void ColorWriteChannels(Xna::ColorWriteChannels const& value) { impl->colorWriteChannels0 = value; }
+		constexpr void ColorWriteChannels(Xna::ColorWriteChannels const& value) { colorWriteChannels0 = value; }
 		//Gets or sets which color channels (RGBA) are enabled for writing during color blending. 
 		// The default value is ColorWriteChannels.None.
-		inline Xna::ColorWriteChannels ColorWriteChannels1() const { return impl->colorWriteChannels1; }
+		constexpr Xna::ColorWriteChannels ColorWriteChannels1() const { return colorWriteChannels1; }
 		//Gets or sets which color channels (RGBA) are enabled for writing during color blending. 
 		// The default value is ColorWriteChannels.None.
-		inline void ColorWriteChannels1(Xna::ColorWriteChannels const& value) { impl->colorWriteChannels1 = value; }
+		constexpr void ColorWriteChannels1(Xna::ColorWriteChannels const& value) { colorWriteChannels1 = value; }
 		//Gets or sets which color channels (RGBA) are enabled for writing during color blending. 
 		// The default value is ColorWriteChannels.None.
-		inline Xna::ColorWriteChannels ColorWriteChannels2() const { return impl->colorWriteChannels2; }
+		constexpr Xna::ColorWriteChannels ColorWriteChannels2() const { return colorWriteChannels2; }
 		//Gets or sets which color channels (RGBA) are enabled for writing during color blending. 
 		// The default value is ColorWriteChannels.None.
-		inline void ColorWriteChannels2(Xna::ColorWriteChannels const& value) { impl->colorWriteChannels2 = value; }
+		constexpr void ColorWriteChannels2(Xna::ColorWriteChannels const& value) { colorWriteChannels2 = value; }
 		//Gets or sets which color channels (RGBA) are enabled for writing during color blending. 
 		// The default value is ColorWriteChannels.None.
-		inline Xna::ColorWriteChannels ColorWriteChannels3() const { return impl->colorWriteChannels3; }
+		constexpr Xna::ColorWriteChannels ColorWriteChannels3() const { return colorWriteChannels3; }
 		//Gets or sets which color channels (RGBA) are enabled for writing during color blending. 
 		// The default value is ColorWriteChannels.None.
-		inline void ColorWriteChannels3(Xna::ColorWriteChannels const& value) { impl->colorWriteChannels3 = value; }
+		constexpr void ColorWriteChannels3(Xna::ColorWriteChannels const& value) { colorWriteChannels3 = value; }
 		//Gets or sets a bitmask which defines which samples can be written during multisampling. The default is 0xffffffff.
-		inline int32_t MultiSampleMask() const { return impl->multiSampleMask; }
+		constexpr int32_t MultiSampleMask() const { return multiSampleMask; }
 		//Gets or sets a bitmask which defines which samples can be written during multisampling. The default is 0xffffffff.
-		inline void MultiSampleMask(int32_t value) { impl->multiSampleMask = value; }
+		constexpr void MultiSampleMask(int32_t value) { multiSampleMask = value; }
 		//Gets or sets the four-component (RGBA) blend factor for alpha blending.
-		inline Color BlendFactor() const { return impl->blendFactor; }
+		constexpr Color BlendFactor() const { return blendFactor; }
 		//Gets or sets the four - component(RGBA) blend factor for alpha blending.
-		inline void BlendFactor(Color const& value) { impl->blendFactor = value; }
+		constexpr void BlendFactor(Color const& value) { blendFactor = value; }		
 
-		inline BlendState(std::nullptr_t) { impl = nullptr; }
-		inline bool operator==(BlendState const& other) const noexcept { return impl == other.impl;	}
-		inline bool operator==(std::nullptr_t) const noexcept {	return impl == nullptr;	}
-		inline explicit operator bool() const noexcept { return impl != nullptr; }
+		constexpr bool operator==(BlendState const& other) const noexcept = default;		
 
 	private:
-		inline void Apply(GraphicsDevice& graphicsDevice) { Platform::BlendState_Apply(*this, graphicsDevice); }
-	
-		struct Implementation {
-			BlendOperation alphaBlendFunction{ BlendOperation::Add };
-			Blend alphaDestinationBlend{ Blend::One };
-			Blend alphaSourceBlend{ Blend::One };
-			BlendOperation colorBlendFunction{ BlendOperation::Add };
-			Blend colorDestinationBlend{ Blend::One };
-			Blend colorSourceBlend{ Blend::One };
-			int32_t multiSampleMask{ -1 };
-			Color blendFactor{ Colors::White };
-			Xna::ColorWriteChannels colorWriteChannels0{ ColorWriteChannels::None };
-			Xna::ColorWriteChannels colorWriteChannels1{ ColorWriteChannels::None };
-			Xna::ColorWriteChannels colorWriteChannels2{ ColorWriteChannels::None };
-			Xna::ColorWriteChannels colorWriteChannels3{ ColorWriteChannels::None };
+		constexpr BlendState(
+			Blend colorSrcBlend,
+			Blend colorDestBlend,
+			Blend alphaSrcBlend,
+			Blend alphaDestBlend) {
 
-			PlatformImpl::BlendStateImpl platformImpl;
-		};
-	
-		std::shared_ptr<Implementation> impl;
-	
+			colorSourceBlend = colorSrcBlend;
+			colorDestinationBlend = colorDestBlend;
+			alphaSourceBlend = alphaSrcBlend;
+			alphaDestinationBlend = alphaDestBlend;
+		}
+
+		inline void Apply(GraphicsDevice& graphicsDevice) { 
+			Platform::BlendState_Apply(*this, graphicsDevice); 
+		}
+
+		BlendOperation alphaBlendFunction{ BlendOperation::Add };
+		Blend alphaDestinationBlend{ Blend::One };
+		Blend alphaSourceBlend{ Blend::One };
+		BlendOperation colorBlendFunction{ BlendOperation::Add };
+		Blend colorDestinationBlend{ Blend::One };
+		Blend colorSourceBlend{ Blend::One };
+		int32_t multiSampleMask{ 0xffffffff };
+		Color blendFactor{ Colors::White };
+		Xna::ColorWriteChannels colorWriteChannels0{ ColorWriteChannels::None };
+		Xna::ColorWriteChannels colorWriteChannels1{ ColorWriteChannels::None };
+		Xna::ColorWriteChannels colorWriteChannels2{ ColorWriteChannels::None };
+		Xna::ColorWriteChannels colorWriteChannels3{ ColorWriteChannels::None };		
+
 		friend class GraphicsDevice;
 		friend struct Platform;
 	};

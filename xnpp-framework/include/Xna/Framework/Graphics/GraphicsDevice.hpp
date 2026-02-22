@@ -48,7 +48,7 @@ namespace Xna {
 
 	inline GraphicsAdapter GraphicsDevice::Adapter() const { return implGraphicsDevice->adapter.value(); }
 	inline Xna::BlendState GraphicsDevice::BlendState() const { return implGraphicsDevice->blendState.value(); }
-	inline Color GraphicsDevice::BlendFactor() const { return implGraphicsDevice->blendState->impl->blendFactor; }
+	inline Color GraphicsDevice::BlendFactor() const { return implGraphicsDevice->blendState->blendFactor; }
 	inline Xna::DepthStencilState GraphicsDevice::DepthStencilState() const { return implGraphicsDevice->depthStencilState.value(); }
 	inline int32_t GraphicsDevice::MultiSampleMask() const { return implGraphicsDevice->multiSampleMask; }
 	inline Xna::PresentationParameters& GraphicsDevice::PresentationParameters() { return implGraphicsDevice->presentationParameters; }
