@@ -1,13 +1,9 @@
 ﻿#ifndef XNA_FRAMEWORK_GRAPHICS_BLENDSTATE_HPP
 #define XNA_FRAMEWORK_GRAPHICS_BLENDSTATE_HPP
 
-#include <memory>
 #include <cstdint>
 #include "Shared.hpp"
-#include "GraphicsResource.hpp"
 #include "Xna/Framework/Color.hpp"
-#include "Xna/Platform/Platform.hpp"
-#include "Xna/Internal/Export.hpp"
 
 namespace Xna {
 	//Contains blend state for the device. 
@@ -41,7 +37,7 @@ namespace Xna {
 				Blend::SourceAlpha,
 				Blend::One,
 				Blend::SourceAlpha,
-				Blend::One;
+				Blend::One);
 		}
 		//A built-in state object with settings for blending with non-premultipled alpha, 
 		//that is blending source and destination data using alpha while assuming the color data contains no alpha information.
@@ -112,6 +108,34 @@ namespace Xna {
 
 		constexpr bool operator==(BlendState const& other) const noexcept = default;		
 
+		constexpr bool IsOpaque() const noexcept {
+			return colorSourceBlend == Blend::One
+				&& colorDestinationBlend == Blend::Zero
+				&& alphaSourceBlend == Blend::One
+				&& alphaDestinationBlend == Blend::Zero;
+		}
+
+		constexpr bool IsAlphaBlend() const noexcept {
+			return colorSourceBlend == Blend::One
+				&& colorDestinationBlend == Blend::InverseSourceAlpha
+				&& alphaSourceBlend == Blend::One
+				&& alphaDestinationBlend == Blend::InverseSourceAlpha;
+		}
+
+		constexpr bool IsAdditive() const noexcept {
+			return colorSourceBlend == Blend::SourceAlpha
+				&& colorDestinationBlend == Blend::One
+				&& alphaSourceBlend == Blend::SourceAlpha
+				&& alphaDestinationBlend == Blend::One;
+		}
+
+		constexpr bool IsNonPremultiplied() const noexcept {
+			return colorSourceBlend == Blend::SourceAlpha
+				&& colorDestinationBlend == Blend::InverseSourceAlpha
+				&& alphaSourceBlend == Blend::SourceAlpha
+				&& alphaDestinationBlend == Blend::InverseSourceAlpha;
+		}		
+
 	private:
 		constexpr BlendState(
 			Blend colorSrcBlend,
@@ -126,7 +150,7 @@ namespace Xna {
 		}
 
 		inline void Apply(GraphicsDevice& graphicsDevice) { 
-			Platform::BlendState_Apply(*this, graphicsDevice); 
+			//TODO:: apply blendState
 		}
 
 		BlendOperation alphaBlendFunction{ BlendOperation::Add };

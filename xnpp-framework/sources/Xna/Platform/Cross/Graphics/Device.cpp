@@ -21,13 +21,13 @@ namespace Xna {
 
 		constexpr BgfxBlendState() = default;
 		constexpr BgfxBlendState(BlendState const& blend) {
-			if (blend == BlendState::Opaque())
+			if (blend.IsOpaque())
 				value = BgfxBlendState::Opaque;
-			else if (blend == BlendState::AlphaBlend())
+			else if (blend.IsAlphaBlend())
 				value = BgfxBlendState::AlphaBlend;
-			else if (blend == BlendState::NonPremultiplied())
+			else if (blend.IsNonPremultiplied())
 				value = BgfxBlendState::NonPremultiplied;
-			else if (blend == BlendState::Additive())
+			else if (blend.IsAdditive())
 				value = BgfxBlendState::Additive;
 			else {
 				throw std::runtime_error("Invalid BlendState");
