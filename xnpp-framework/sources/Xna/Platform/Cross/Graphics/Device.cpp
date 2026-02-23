@@ -10,6 +10,7 @@
 #include "Xna/Framework/Graphics/BlendState.hpp"
 #include "Xna/Framework/Graphics/DepthStencilState.hpp"
 #include "Xna/Framework/Graphics/GraphicsDevice.hpp"
+#include "Xna/Framework/Graphics/RasterizerState.hpp"
 
 namespace Xna {
 	//Padrão do BlendState para Bgfx
@@ -183,11 +184,12 @@ namespace Xna {
 		//usa a função bgfx::createProgram.
 		bgfx::ProgramHandle program{};
 
-		//state = cacheBlendState + cacheDepthBuffer
+		//state = cacheBlendState | cacheDepthBuffer | cachedRasterizerState
 		//bgfx::setState(state, blendFactor);
 		uint64_t cachedBlendState{ 0 };
 		uint64_t cachedBlendFactor{ 0 };
 		uint64_t cachedDepthBuffer{ 0 }; 
+		uint64_t cachedRasterizerState{ 0 };
 
 		//fStencil = Front Face
 		//bStencil = Back Face (CounterClockWise)
@@ -195,9 +197,21 @@ namespace Xna {
 		uint32_t cachedFrontFaceStencil{0};
 		uint32_t cachedBackFaceStencil{0};
 
+		// Para habilitar (equivalente a ScissorTestEnable = true)
+		//bgfx::setScissor(x, y, width, height);
+		// Para desabilitar (equivalente a ScissorTestEnable = false)
+		//bgfx::setScissor(); // Chama sem argumentos ou com zeros
+		bool cachedScissorTestEnable{ false };
+
+		//XNA: DepthBias = 0.001f, SlopeScaleDepthBias = 1.5f
+		//bgfx::setDepthBias(0.001f, 1.5f);
+		float depthBias{ 0 };
+		float SlopeScaleDepthBias{ 0 };
+
 		void LazyInitialization1(intptr_t windowHandle) override;
 		void ApplyBlendState(BlendState const& blend) override;
 		void ApplyDepthStencilState(DepthStencilState const& depth) override;
+		void ApplyRasterizerState(RasterizerState const& rasterizer) override;
 	};
 
 	//Com DirectX11 inicializamos o Swapchain após a criação da janela no GameHost.
@@ -240,8 +254,7 @@ namespace Xna {
 		uint64_t state = 0
 			| BGFX_STATE_WRITE_RGB
 			| BGFX_STATE_WRITE_A
-			| BGFX_STATE_DEPTH_TEST_LESS
-			| BGFX_STATE_MSAA;
+			| BGFX_STATE_DEPTH_TEST_LESS;
 
 		// 2: Adicionar o bit específico de Blend
 		const BgfxBlendState blendState = blend;
@@ -361,5 +374,30 @@ namespace Xna {
 		else {
 			bgfx::setStencil(BGFX_STENCIL_NONE);
 		}
+	}
+
+	void BgfxGraphicsDevice::ApplyRasterizerState(RasterizerState const& rasterizer) {
+		uint64_t state = 0;
+
+		if (rasterizer.MultiSampleAntiAlias)
+			state |= BGFX_STATE_MSAA;
+
+		const auto cullMode = rasterizer.CullMode;
+
+		//None: Comportamento padrão do bgfx.
+		if (cullMode == CullMode::CullClockwiseFace)
+			state |= BGFX_STATE_CULL_CW;
+		else if (cullMode == CullMode::CullCounterClockwiseFace)
+			state |= BGFX_STATE_CULL_CCW;
+
+		const auto fillMode = rasterizer.FillMode;
+
+		//Solid: Comportamento padrão do bgfx.
+		if (fillMode == FillMode::WireFrame)
+			state |= BGFX_STATE_PT_LINES;
+		
+
+		cachedScissorTestEnable = rasterizer.ScissorTestEnable;
+		cachedRasterizerState = state;
 	}
 }

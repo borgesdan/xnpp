@@ -460,6 +460,7 @@ namespace Xna {
 			XNPP_API virtual void LazyInitialization1(intptr_t windowHandle) = 0;
 			XNPP_API virtual void ApplyBlendState(BlendState const& blend) = 0;
 			XNPP_API virtual void ApplyDepthStencilState(DepthStencilState const& depth) = 0;
+			XNPP_API virtual void ApplyRasterizerState(RasterizerState const& rasterizer) = 0;
 		};
 	}
 }

@@ -46,7 +46,7 @@ add_library(xnpp
         "sources/Xna/Framework/Graphics/GraphicsResource.cpp"
         
         
-        "sources/Xna/Framework/Graphics/RasterizerState.cpp"
+        
         "sources/Xna/Framework/Graphics/SamplerState.cpp"
         "sources/Xna/Framework/Graphics/Texture3D.cpp"
         "sources/Xna/Framework/Graphics/Texture2D.cpp"        
