@@ -7,7 +7,7 @@ namespace Xna {
 	//Contains rasterizer state, which determines how to convert vector data (shapes) into raster data (pixels). 
 	class RasterizerState {
 	public:
-		RasterizerState() = default;
+		constexpr RasterizerState() = default;
 
 		//Specifies the conditions for culling or removing triangles. The default value is CullMode.CounterClockwise. 
 		Xna::CullMode CullMode{ Xna::CullMode::None };
