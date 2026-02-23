@@ -88,7 +88,7 @@ namespace Xna {
 	};
 
 	//Defines comparison functions that can be chosen for alpha, stencil, or depth-buffer tests. 
-	enum class ComparisonFunction {
+	enum class CompareFunction {
 		//Always fail the test.
 		Never,
 		//Accept the new pixel if its value is less than the value of the current pixel.
@@ -96,7 +96,7 @@ namespace Xna {
 		//Accept the new pixel if its value is equal to the value of the current pixel.
 		Equal,
 		//Accept the new pixel if its value is less than or equal to the value of the current pixel.
-		LessEquals,
+		LessEqual,
 		//Accept the new pixel if its value is greater than the value of the current pixel. 
 		Greater,
 		//Accept the new pixel if its value does not equal the value of the current pixel.
@@ -428,8 +428,6 @@ namespace Xna {
 		//Single, positive floating-point value. (TessellateFactor with UsageIndex = 0) specifies a tessellation factor used in the tessellation unit to control the rate of tessellation.
 		TessellateFactor,
 	};
-	
-	using CompareFunction = ComparisonFunction;
 
 	inline static const int SURFACE_FORMAT_COUNT = 19;
 	inline static const int DEFAULT_BACKBUFFER_WIDTH = 800;

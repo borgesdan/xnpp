@@ -454,13 +454,12 @@ namespace Xna {
 			XNPP_API static IMediaPlayer& GetInstance();
 		};
 
-		XNPP_API static void GraphicsDevice_Apply_BlendState(GraphicsDevice& device, BlendState const& blend);
-
 		struct IGraphicsDevice {
 			XNPP_API virtual ~IGraphicsDevice() = default;
 
 			XNPP_API virtual void LazyInitialization1(intptr_t windowHandle) = 0;
 			XNPP_API virtual void ApplyBlendState(BlendState const& blend) = 0;
+			XNPP_API virtual void ApplyDepthStencilState(DepthStencilState const& depth) = 0;
 		};
 	}
 }

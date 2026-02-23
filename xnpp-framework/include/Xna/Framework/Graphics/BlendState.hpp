@@ -65,7 +65,7 @@ namespace Xna {
 		//Gets or sets the arithmetic operation when blending color values. The default is BlendFunction.Add. 
 		constexpr BlendOperation ColorBlendFunction() const { return colorBlendFunction; }
 		//Gets or sets the arithmetic operation when blending color values. The default is BlendFunction.Add. 
-		constexpr void ColorBlendFunction(BlendOperation value) {  colorBlendFunction = value;  }
+		constexpr void ColorBlendFunction(BlendOperation value) { colorBlendFunction = value; }
 		//Gets or sets the blend factor for the destination color. The default is Blend.One. 
 		constexpr Blend ColorDestinationBlend() const { return colorDestinationBlend; }
 		//Gets or sets the blend factor for the destination color. The default is Blend.One. 
@@ -105,9 +105,9 @@ namespace Xna {
 		//Gets or sets the four-component (RGBA) blend factor for alpha blending.
 		constexpr Color BlendFactor() const { return blendFactor; }
 		//Gets or sets the four - component(RGBA) blend factor for alpha blending.
-		constexpr void BlendFactor(Color const& value) { blendFactor = value; }		
+		constexpr void BlendFactor(Color const& value) { blendFactor = value; }
 
-		constexpr bool operator==(BlendState const& other) const noexcept = default;		
+		constexpr bool operator==(BlendState const& other) const noexcept = default;
 
 		constexpr bool IsOpaque() const noexcept {
 			return colorSourceBlend == Blend::One
@@ -135,23 +135,11 @@ namespace Xna {
 				&& colorDestinationBlend == Blend::InverseSourceAlpha
 				&& alphaSourceBlend == Blend::SourceAlpha
 				&& alphaDestinationBlend == Blend::InverseSourceAlpha;
-		}		
-
-	private:
-		constexpr BlendState(
-			Blend colorSrcBlend,
-			Blend colorDestBlend,
-			Blend alphaSrcBlend,
-			Blend alphaDestBlend) {
-
-			colorSourceBlend = colorSrcBlend;
-			colorDestinationBlend = colorDestBlend;
-			alphaSourceBlend = alphaSrcBlend;
-			alphaDestinationBlend = alphaDestBlend;
 		}
 
-		inline void Apply(GraphicsDevice& graphicsDevice) { 
-			PlatformNS::GraphicsDevice_Apply_BlendState(graphicsDevice, *this);
+	private:
+		constexpr BlendState(Blend colorSrcBlend, Blend colorDestBlend, Blend alphaSrcBlend, Blend alphaDestBlend)
+			: colorSourceBlend(colorSrcBlend), colorDestinationBlend(colorDestBlend), alphaSourceBlend(alphaSrcBlend), alphaDestinationBlend(alphaDestBlend) {
 		}
 
 		BlendOperation alphaBlendFunction{ BlendOperation::Add };
@@ -165,10 +153,7 @@ namespace Xna {
 		Xna::ColorWriteChannels colorWriteChannels0{ ColorWriteChannels::None };
 		Xna::ColorWriteChannels colorWriteChannels1{ ColorWriteChannels::None };
 		Xna::ColorWriteChannels colorWriteChannels2{ ColorWriteChannels::None };
-		Xna::ColorWriteChannels colorWriteChannels3{ ColorWriteChannels::None };		
-
-		friend class GraphicsDevice;
-		friend struct Platform;
+		Xna::ColorWriteChannels colorWriteChannels3{ ColorWriteChannels::None };
 	};
 }
 

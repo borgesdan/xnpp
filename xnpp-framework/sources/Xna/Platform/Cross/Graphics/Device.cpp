@@ -8,6 +8,7 @@
 #include "Xna/Platform/_Platform.hpp"
 
 #include "Xna/Framework/Graphics/BlendState.hpp"
+#include "Xna/Framework/Graphics/DepthStencilState.hpp"
 #include "Xna/Framework/Graphics/GraphicsDevice.hpp"
 
 namespace Xna {
@@ -71,7 +72,7 @@ namespace Xna {
 
 		uint64_t value{ 0 };
 	};
-	
+
 	//Padrão do ColorWriterChannel para Bgfx
 	struct BgfxColorWriteChannel {
 		static constexpr uint64_t Red = BGFX_STATE_WRITE_R;
@@ -122,13 +123,13 @@ namespace Xna {
 		static constexpr uint64_t DestinationColor = BGFX_STATE_BLEND_DST_COLOR;
 		static constexpr uint64_t InverseDestinationColor = BGFX_STATE_BLEND_INV_DST_COLOR;
 		static constexpr uint64_t SourceAlphaSaturation = BGFX_STATE_BLEND_SRC_ALPHA_SAT;
-		static constexpr uint64_t BlendFactor = BGFX_STATE_BLEND_FACTOR;		
+		static constexpr uint64_t BlendFactor = BGFX_STATE_BLEND_FACTOR;
 		static constexpr uint64_t InverseBlendFactor = BGFX_STATE_WRITE_RGB | BGFX_STATE_WRITE_A;
 
 		constexpr BgfxBlend() = default;
 		constexpr BgfxBlend(Blend blend) {
 			switch (blend)
-			{			
+			{
 			case Xna::Blend::One:
 				value = One;
 				break;
@@ -174,13 +175,66 @@ namespace Xna {
 		uint64_t value{ 0 };
 	};
 
+	//Padrão do CompareFunction para Bgfx
+	struct BgfxCompareFunction {
+		static constexpr uint64_t Never = BGFX_STENCIL_TEST_NEVER;
+		static constexpr uint64_t Less = BGFX_STENCIL_TEST_LESS;
+		static constexpr uint64_t Equal = BGFX_STENCIL_TEST_EQUAL;
+		static constexpr uint64_t LessEqual = BGFX_STENCIL_TEST_LEQUAL;
+		static constexpr uint64_t Greater = BGFX_STENCIL_TEST_GREATER;
+		static constexpr uint64_t NotEqual = BGFX_STENCIL_TEST_NOTEQUAL;
+		static constexpr uint64_t GreaterEqual = BGFX_STENCIL_TEST_GEQUAL;
+		static constexpr uint64_t Always = BGFX_STENCIL_TEST_ALWAYS;
+
+		constexpr BgfxCompareFunction(CompareFunction func) {
+			switch (func)
+			{
+			case Xna::CompareFunction::Never:
+				value = Never;
+				break;
+			case Xna::CompareFunction::Less:
+				value = Less;
+				break;
+			case Xna::CompareFunction::Equal:
+				value = Equal;
+				break;
+			case Xna::CompareFunction::LessEqual:
+				value = LessEqual;
+				break;
+			case Xna::CompareFunction::Greater:
+				value = Greater;
+				break;
+			case Xna::CompareFunction::NotEqual:
+				value = NotEqual;
+				break;
+			case Xna::CompareFunction::GreaterEqual:
+				value = GreaterEqual;
+				break;
+			case Xna::CompareFunction::Always:
+				value = Always;
+				break;
+			default:
+				break;
+			}
+		}
+
+		constexpr operator uint64_t() const noexcept { return value; }
+		uint64_t value{ 0 };
+	};	
+
+	// Bgfx: Stateless por design
+	// Ao contrário do XNA o bgfx limpa o estado configurado após cada bgfx::submit().
+	// Necessário chamar bgfx::setState (funções set/apply) em cada frame para cada objeto de desenho.
 	struct BgfxGraphicsDevice final : public PlatformNS::IGraphicsDevice {
 		//O program é o handle de um par de shaders compilados e vinculados: o Vertex Shader e o Fragment Shader.
 		//usa a função bgfx::createProgram.
 		bgfx::ProgramHandle program{};
+		uint64_t cacheBlendState{ 0 };
+		uint64_t cacheBlendFactor{ 0 };
 
 		void LazyInitialization1(intptr_t windowHandle) override;
 		void ApplyBlendState(BlendState const& blend) override;
+		void ApplyDepthStencilState(DepthStencilState const& depth) override;
 	};
 
 	//Com DirectX11 inicializamos o Swapchain após a criação da janela no GameHost.
@@ -228,7 +282,7 @@ namespace Xna {
 
 		// 2: Adicionar o bit específico de Blend
 		const BgfxBlendState blendState = blend;
-		state |= blendState;	
+		state |= blendState;
 
 		const BgfxBlendOperation rgbOp = blend.ColorBlendFunction();
 		const BgfxBlendOperation alphaOp = blend.AlphaBlendFunction();
@@ -236,13 +290,13 @@ namespace Xna {
 		// 3: Definir a operação
 		if (rgbOp != alphaOp)
 			state |= BGFX_STATE_BLEND_EQUATION_SEPARATE(rgbOp, alphaOp);
-		else if(rgbOp != BgfxBlendOperation::Add) //Add é o padrão no bgfx
+		else if (rgbOp != BgfxBlendOperation::Add) //Add é o padrão no bgfx
 			state |= rgbOp;
 
 		// 4: Aplicar canais de cores
 
 		const BgfxColorWriteChannel channel0 = blend.ColorWriteChannels();
-		
+
 		//TODO: O state é global por draw
 		//XNA suporta ColorWriteChannels0..3
 		//bgfx suporta apenas uma máscara por draw
@@ -252,21 +306,25 @@ namespace Xna {
 		//bgfx é global por draw, não por render target.
 		state |= channel0;
 
-		// 5. Aplicar blend factor		
-		//TODO: OK! Não sei como aplicar o blend factor!
-		
-		BX_TRACE("BlendState: BlendFactor ignored.");
 		BX_TRACE("BlendState: ColorWriteChannels1 ignored.");
 		BX_TRACE("BlendState: ColorWriteChannels2 ignored.");
-		BX_TRACE("BlendState: ColorWriteChannels3 ignored.");		
-		BX_TRACE("BlendState: MultiSampleMask ignored.");		
+		BX_TRACE("BlendState: ColorWriteChannels3 ignored.");
+		BX_TRACE("BlendState: MultiSampleMask ignored.");
 
-		// 6: Aplicar o estado		
-		bgfx::setState(state);
+		// 6: Aplicar o estado + blendFactor
+		uint32_t blendFactor = 0U;
+
+		if ((state & BGFX_STATE_BLEND_FACTOR) == BGFX_STATE_BLEND_FACTOR
+			|| (state & BGFX_STATE_BLEND_INV_FACTOR) == BGFX_STATE_BLEND_INV_FACTOR) {
+			blendFactor = blend.BlendFactor().PackedValue();
+		}
+
+		cacheBlendState = state;
+		cacheBlendFactor = blendFactor;
 	}
 
-	void PlatformNS::GraphicsDevice_Apply_BlendState(GraphicsDevice& device, BlendState const& blend) {
-		auto& deviceBackend = device.GetBackend();
-		deviceBackend.ApplyBlendState(blend);
+	void BgfxGraphicsDevice::ApplyDepthStencilState(DepthStencilState const& depth) {
+		uint64_t state = 0;	
+		
 	}
 }
