@@ -42,7 +42,7 @@ namespace Xna {
 	};
 
 	//Defines how to combine a source color with the destination color already on the render target for color blending.
-	enum class BlendOperation {
+	enum class BlendFunction {
 		//The result is the destination added to the source.
 		//Result = (Source Color * Source Blend) + (Destination Color * Destination Blend)
 		Add = 0,

@@ -59,6 +59,8 @@ namespace Xna {
 		//Enables or disables two-sided stenciling. The default is false.
 		bool TwoSidedStencilMode{ true };
 
+		constexpr bool operator==(DepthStencilState const& other) const noexcept = default;
+
 	private:
 		constexpr DepthStencilState(bool dbEnable, bool dbwEnable)
 			:DepthBufferEnable(dbEnable), DepthBufferWriteEnable(dbwEnable) {
