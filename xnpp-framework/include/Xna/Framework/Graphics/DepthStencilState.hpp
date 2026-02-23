@@ -2,16 +2,12 @@
 #define XNA_FRAMEWORK_GRAPHICS_DEPTHSTENCILSTATE_HPP
 
 #include "Shared.hpp"
-#include "GraphicsResource.hpp"
 #include <cstdint>
-#include <memory>
-#include "Xna/Platform/Platform.hpp"
-#include "Xna/Internal/Export.hpp"
 
 namespace Xna {
 
 	//Contains depth-stencil state for the device. 
-	class DepthStencilState {
+	struct DepthStencilState {
 	public:
 		//Creates an instance of DepthStencilState with default values.
 		constexpr DepthStencilState() = default;
@@ -49,9 +45,9 @@ namespace Xna {
 		CompareFunction StencilFunction{ CompareFunction::Always };
 		//Gets or sets the mask applied to the reference value and each stencil buffer entry to determine the significant bits for the stencil test.
 		//The default mask is Int32.MaxValue. 
-		int32_t StencilMask { 255 };		
+		int32_t StencilMask { 0x7FFFFFFF };
 		//Gets or sets the write mask applied to values written into the stencil buffer. The default mask is Int32.MaxValue. 
-		int32_t StencilWriteMask{ 255 };		
+		int32_t StencilWriteMask{ 0x7FFFFFFF };
 		//Gets or sets the stencil operation to perform if the stencil test passes. The default is StencilOperation.Keep. 
 		StencilOperation StencilPass{ StencilOperation::Keep };
 		//Gets or sets the stencil operation to perform if the stencil test passes and the depth-test fails. The default is StencilOperation.Keep. 

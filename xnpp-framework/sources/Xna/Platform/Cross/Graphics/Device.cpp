@@ -174,54 +174,7 @@ namespace Xna {
 		constexpr operator uint64_t() const noexcept { return value; }
 		uint64_t value{ 0 };
 	};
-
-	//Padrão do CompareFunction para Bgfx
-	struct BgfxCompareFunction {
-		static constexpr uint64_t Never = BGFX_STENCIL_TEST_NEVER;
-		static constexpr uint64_t Less = BGFX_STENCIL_TEST_LESS;
-		static constexpr uint64_t Equal = BGFX_STENCIL_TEST_EQUAL;
-		static constexpr uint64_t LessEqual = BGFX_STENCIL_TEST_LEQUAL;
-		static constexpr uint64_t Greater = BGFX_STENCIL_TEST_GREATER;
-		static constexpr uint64_t NotEqual = BGFX_STENCIL_TEST_NOTEQUAL;
-		static constexpr uint64_t GreaterEqual = BGFX_STENCIL_TEST_GEQUAL;
-		static constexpr uint64_t Always = BGFX_STENCIL_TEST_ALWAYS;
-
-		constexpr BgfxCompareFunction(CompareFunction func) {
-			switch (func)
-			{
-			case Xna::CompareFunction::Never:
-				value = Never;
-				break;
-			case Xna::CompareFunction::Less:
-				value = Less;
-				break;
-			case Xna::CompareFunction::Equal:
-				value = Equal;
-				break;
-			case Xna::CompareFunction::LessEqual:
-				value = LessEqual;
-				break;
-			case Xna::CompareFunction::Greater:
-				value = Greater;
-				break;
-			case Xna::CompareFunction::NotEqual:
-				value = NotEqual;
-				break;
-			case Xna::CompareFunction::GreaterEqual:
-				value = GreaterEqual;
-				break;
-			case Xna::CompareFunction::Always:
-				value = Always;
-				break;
-			default:
-				break;
-			}
-		}
-
-		constexpr operator uint64_t() const noexcept { return value; }
-		uint64_t value{ 0 };
-	};	
-
+	
 	// Bgfx: Stateless por design
 	// Ao contrário do XNA o bgfx limpa o estado configurado após cada bgfx::submit().
 	// Necessário chamar bgfx::setState (funções set/apply) em cada frame para cada objeto de desenho.
@@ -229,8 +182,18 @@ namespace Xna {
 		//O program é o handle de um par de shaders compilados e vinculados: o Vertex Shader e o Fragment Shader.
 		//usa a função bgfx::createProgram.
 		bgfx::ProgramHandle program{};
-		uint64_t cacheBlendState{ 0 };
-		uint64_t cacheBlendFactor{ 0 };
+
+		//state = cacheBlendState + cacheDepthBuffer
+		//bgfx::setState(state, blendFactor);
+		uint64_t cachedBlendState{ 0 };
+		uint64_t cachedBlendFactor{ 0 };
+		uint64_t cachedDepthBuffer{ 0 }; 
+
+		//fStencil = Front Face
+		//bStencil = Back Face (CounterClockWise)
+		//bgfx::setStencil(fStencil, bStencil);
+		uint32_t cachedFrontFaceStencil{0};
+		uint32_t cachedBackFaceStencil{0};
 
 		void LazyInitialization1(intptr_t windowHandle) override;
 		void ApplyBlendState(BlendState const& blend) override;
@@ -319,12 +282,84 @@ namespace Xna {
 			blendFactor = blend.BlendFactor.PackedValue();
 		}
 
-		cacheBlendState = state;
-		cacheBlendFactor = blendFactor;
+		cachedBlendState = state;
+		cachedBlendFactor = blendFactor;
+	}
+
+	// Mapeamento de ComparisonFunction (XNA) para bgfx
+	static uint64_t toBgfxDepthFunc(CompareFunction func) {
+		switch (func) {
+		case CompareFunction::Never:        return BGFX_STATE_DEPTH_TEST_NEVER;
+		case CompareFunction::Less:         return BGFX_STATE_DEPTH_TEST_LESS;
+		case CompareFunction::Equal:        return BGFX_STATE_DEPTH_TEST_EQUAL;
+		case CompareFunction::LessEqual:    return BGFX_STATE_DEPTH_TEST_LEQUAL;
+		case CompareFunction::Greater:      return BGFX_STATE_DEPTH_TEST_GREATER;
+		case CompareFunction::NotEqual:     return BGFX_STATE_DEPTH_TEST_NOTEQUAL;
+		case CompareFunction::GreaterEqual: return BGFX_STATE_DEPTH_TEST_GEQUAL;
+		case CompareFunction::Always:       return BGFX_STATE_DEPTH_TEST_ALWAYS;
+		default: return BGFX_STATE_DEPTH_TEST_LEQUAL;
+		}
+	}
+
+	// Mapeamento de StencilOperation (XNA) para bgfx
+	// O parâmetro 'shift' ajusta se a operação é para Fail, ZFail ou Pass
+	static uint32_t toBgfxStencilOp(StencilOperation op, uint32_t shift) {
+		uint32_t val = 0;
+		switch (op) {
+		case StencilOperation::Keep:                val = BGFX_STENCIL_OP_FAIL_S_KEEP; break;
+		case StencilOperation::Zero:                val = BGFX_STENCIL_OP_FAIL_S_ZERO; break;
+		case StencilOperation::Replace:             val = BGFX_STENCIL_OP_FAIL_S_REPLACE; break;
+		case StencilOperation::IncrementSaturation: val = BGFX_STENCIL_OP_FAIL_S_INCRSAT; break;
+		case StencilOperation::DecrementSaturation: val = BGFX_STENCIL_OP_FAIL_S_DECRSAT; break;
+		case StencilOperation::Invert:              val = BGFX_STENCIL_OP_FAIL_S_INVERT; break;
+		case StencilOperation::Increment:           val = BGFX_STENCIL_OP_FAIL_S_INCR; break;
+		case StencilOperation::Decrement:           val = BGFX_STENCIL_OP_FAIL_S_DECR; break;
+		}
+		return val << shift;
 	}
 
 	void BgfxGraphicsDevice::ApplyDepthStencilState(DepthStencilState const& depth) {
-		uint64_t state = 0;	
-		
+		uint64_t outStateBits = 0;
+
+		if (depth.DepthBufferEnable) {
+			outStateBits |= toBgfxDepthFunc(depth.DepthBufferFunction);
+			if (depth.DepthBufferWriteEnable) {
+				outStateBits |= BGFX_STATE_WRITE_Z;
+			}
+		}
+
+		cachedDepthBuffer = outStateBits;
+
+		// --- STENCIL SECTION ---
+		if (depth.StencilEnable) {
+			// Front Face
+			uint32_t fStencil = BGFX_STENCIL_FUNC_REF(depth.ReferenceStencil)
+				| BGFX_STENCIL_FUNC_RMASK(depth.StencilMask)
+				| (uint32_t)toBgfxDepthFunc(depth.StencilFunction) // Reutiliza mapeamento de comparação
+				| toBgfxStencilOp(depth.StencilFail, 0)             // SFail
+				| toBgfxStencilOp(depth.StencilDepthBufferFail, 4)  // ZFail
+				| toBgfxStencilOp(depth.StencilPass, 8);            // Pass
+
+			// Back Face (CCW)
+			uint32_t bStencil = BGFX_STENCIL_NONE;
+			if (depth.TwoSidedStencilMode) {
+				bStencil = BGFX_STENCIL_FUNC_REF(depth.ReferenceStencil)
+					| BGFX_STENCIL_FUNC_RMASK(depth.StencilMask)
+					| (uint32_t)toBgfxDepthFunc(depth.CounterClockwiseStencilFunction)
+					| toBgfxStencilOp(depth.CounterClockwiseStencilFail, 0)
+					| toBgfxStencilOp(depth.CounterClockwiseStencilDepthBufferFail, 4)
+					| toBgfxStencilOp(depth.CounterClockwiseStencilPass, 8);
+			}
+
+			cachedFrontFaceStencil = fStencil;
+			cachedBackFaceStencil = bStencil;
+			
+			// Nota: O Write Mask é global para o stencil no bgfx
+			// Talvez precisamos gerenciar o write mask via bgfx::setState se for complexo, 
+			// mas geralmente setStencil deve resolver.
+		}
+		else {
+			bgfx::setStencil(BGFX_STENCIL_NONE);
+		}
 	}
 }

@@ -4,11 +4,10 @@
 #include <cstdint>
 #include "Shared.hpp"
 #include "Xna/Framework/Color.hpp"
-#include "Xna/Platform/Platform.hpp"
 
 namespace Xna {
 	//Contains blend state for the device. 
-	class BlendState {
+	struct BlendState {
 	public:
 		//Creates an instance of the BlendState class with default values, using additive color and alpha blending.
 		constexpr BlendState() = default;
