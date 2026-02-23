@@ -284,8 +284,8 @@ namespace Xna {
 		const BgfxBlendState blendState = blend;
 		state |= blendState;
 
-		const BgfxBlendOperation rgbOp = blend.ColorBlendFunction();
-		const BgfxBlendOperation alphaOp = blend.AlphaBlendFunction();
+		const BgfxBlendOperation rgbOp = blend.ColorBlendFunction;
+		const BgfxBlendOperation alphaOp = blend.AlphaBlendFunction;
 
 		// 3: Definir a operação
 		if (rgbOp != alphaOp)
@@ -295,7 +295,7 @@ namespace Xna {
 
 		// 4: Aplicar canais de cores
 
-		const BgfxColorWriteChannel channel0 = blend.ColorWriteChannels();
+		const BgfxColorWriteChannel channel0 = blend.ColorWriteChannels;
 
 		//TODO: O state é global por draw
 		//XNA suporta ColorWriteChannels0..3
@@ -316,7 +316,7 @@ namespace Xna {
 
 		if ((state & BGFX_STATE_BLEND_FACTOR) == BGFX_STATE_BLEND_FACTOR
 			|| (state & BGFX_STATE_BLEND_INV_FACTOR) == BGFX_STATE_BLEND_INV_FACTOR) {
-			blendFactor = blend.BlendFactor().PackedValue();
+			blendFactor = blend.BlendFactor.PackedValue();
 		}
 
 		cacheBlendState = state;
