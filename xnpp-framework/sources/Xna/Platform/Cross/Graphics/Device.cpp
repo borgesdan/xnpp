@@ -212,12 +212,13 @@ namespace Xna {
 		void ApplyBlendState(BlendState const& blend) override;
 		void ApplyDepthStencilState(DepthStencilState const& depth) override;
 		void ApplyRasterizerState(RasterizerState const& rasterizer) override;
+		void Clear(ClearOptions options, Color const& color, float depth, int32_t stencil) override;
 	};
 
 	//Com DirectX11 inicializamos o Swapchain após a criação da janela no GameHost.
 	//O dispositivo gráfico é criado antes, após o GameHost criar a janela e depois o Swapchain é criado.
 	//Com o bgfx precisamos da informação da janela para inicializá-lo.
-	void BgfxGraphicsDevice::LazyInitialization1(intptr_t windowHandle) {
+	void BgfxGraphicsDevice::LazyInitialization(intptr_t windowHandle) {
 		auto window = reinterpret_cast<SDL_Window*>(windowHandle);
 
 		bgfx::PlatformData pd{};
@@ -241,12 +242,27 @@ namespace Xna {
 		pd.nwh = (void*)SDL_GetPointerProperty(SDL_GetWindowProperties(window), SDL_PROP_WINDOW_COCOA_WINDOW_POINTER, NULL);
 #endif	
 
+		int w, h;
+		if(!SDL_GetWindowSize(window, &w, &h))
+			throw std::runtime_error("Invalid game window.");
+
 		bgfx::Init init{};
-		init.platformData = pd;
 		init.type = bgfx::RendererType::Count;
+		init.resolution.width = static_cast<uint32_t>(w);
+		init.resolution.height = static_cast<uint32_t>(h);
+		init.resolution.reset = BGFX_RESET_VSYNC;
+		init.platformData = pd;
 
 		if (!bgfx::init(init))
 			throw std::runtime_error("bgfx init failed");
+
+		// Definindo o View 0 (o "canvas" principal)
+		bgfx::setViewRect(0, 0, 0, static_cast<uint16_t>(w), static_cast<uint16_t>(h));
+
+		//Cornflower Blue (RGBA)		
+		//uint32_t clearColor = 0x6495EDFF;
+		const auto clearColor = Colors::CornflowerBlue.PackedValue();
+		bgfx::setViewClear(0, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, clearColor, 1.0f, 0);		
 	}
 
 	void BgfxGraphicsDevice::ApplyBlendState(BlendState const& blend) {
