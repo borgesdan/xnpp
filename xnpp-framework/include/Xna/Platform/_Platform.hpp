@@ -170,6 +170,7 @@ namespace Xna {
 	enum class GamePadDeadZone;
 	enum class SoundState;
 	enum class SetDataOptions;
+	enum class ClearOptions;
 
 	struct PlatformImpl {
 		struct BlendStateImpl;
@@ -291,14 +292,7 @@ namespace Xna {
 		XNPP_API static GamePadCapabilities GamePad_GetCapabilities(PlayerIndex index);
 		XNPP_API static bool GamePad_SetVibration(PlayerIndex index, float leftMotor, float rightMotor, float leftTrigger, float rightTrigger);
 		XNPP_API static void GamePad_Suspend();
-		XNPP_API static void GamePad_Resume();
-
-		//States
-
-		XNPP_API static void BlendState_Apply(BlendState const& blendState, GraphicsDevice& device);
-		XNPP_API static void DepthStencilState_Apply(DepthStencilState const& depthStencil, GraphicsDevice& device);
-		XNPP_API static void RasterizerState_Apply(RasterizerState const& state, GraphicsDevice& device);
-		XNPP_API static void SamplerState_Apply(SamplerState const& state, GraphicsDevice& device, size_t samplerIndex, SamplerStateApplyType type);
+		XNPP_API static void GamePad_Resume();		
 
 		//GraphicsAdapter
 
@@ -310,21 +304,6 @@ namespace Xna {
 			DepthFormat depthFormat, int32_t multiSampleCount, SurfaceFormat& selectedFormat, DepthFormat& selectedDepthFormat, int32_t& selectedMultiSampleCount);
 		XNPP_API static bool GraphicsAdapter_QueryRenderTargetFormat(GraphicsAdapter const& adapter, GraphicsProfile graphicsProfile, SurfaceFormat format,
 			DepthFormat depthFormat, int32_t multiSampleCount, SurfaceFormat& selectedFormat, DepthFormat& selectedDepthFormat, int32_t& selectedMultiSampleCount);
-
-		// GraphicsDevice
-
-		XNPP_API static void GraphicsDevice_CreateDevice(GraphicsDevice& graphicsDevice, GraphicsAdapter const& adapter, Xna::PresentationParameters const& presentationParameters);
-		XNPP_API static void GraphicsDevice_Present(GraphicsDevice const& graphicsDevice, std::optional<Rectangle> const& rec, std::optional<Rectangle> const& destination, intptr_t overrideWindowHandle);
-		XNPP_API static void GraphicsDevice_SetViewport(GraphicsDevice const& graphicsDevice, Viewport const& viewport);
-		XNPP_API static void GraphicsDevice_MakeWindowAssociation(GraphicsDevice const& graphicsDevice, PresentationParameters const& pp);
-		XNPP_API static void GraphicsDevice_GetScissorRectangles(GraphicsDevice const& graphicsDevice, std::vector<Xna::Rectangle>& scissors);
-		XNPP_API static void GraphicsDevice_SetScissorRectangles(GraphicsDevice const& graphicsDevice, std::vector<Xna::Rectangle>& scissors);
-		XNPP_API static void GraphicsDevice_ClearRenderTarget(GraphicsDevice const& graphicsDevice, Color const& color);
-		XNPP_API static RenderTarget2D GraphicsDevice_CreateBackBufferRenderTarget(GraphicsDevice const& graphicsDevice);
-		XNPP_API static void GraphicsDevice_SetRenderTargets(GraphicsDevice const& graphicsDevice);
-		XNPP_API static void GraphicsDevice_Reset(GraphicsDevice& device, Xna::PresentationParameters const& presentationParameters, GraphicsAdapter const& graphicsAdapter);
-		XNPP_API static void GraphicsDevice_LazyInitialization(GraphicsDevice& device, intptr_t windowHandle);
-
 
 		//Texture2D
 
@@ -404,6 +383,8 @@ namespace Xna {
 	};
 
 	namespace PlatformNS {
+		XNPP_API size_t Graphics_GetMaxSamplerStates();
+
 		enum class MediaState {
 			Playing,
 			Paused,
@@ -457,11 +438,18 @@ namespace Xna {
 		struct IGraphicsDevice {
 			XNPP_API virtual ~IGraphicsDevice() = default;
 
+			XNPP_API virtual void CreateDevice(GraphicsAdapter const& adapter, Xna::PresentationParameters const& presentationParameters) = 0;
+			XNPP_API virtual void Present(std::optional<Rectangle> const& rec, std::optional<Rectangle> const& destination, intptr_t overrideWindowHandle) = 0;
+			XNPP_API virtual void SetViewport(Viewport const& viewport) = 0;
+			XNPP_API virtual void MakeWindowAssociation(PresentationParameters const& pp) = 0;
+			XNPP_API virtual void Reset(Xna::PresentationParameters const& presentationParameters, GraphicsAdapter const& graphicsAdapter) = 0;
 			XNPP_API virtual void LazyInitialization(intptr_t windowHandle) = 0;
 			XNPP_API virtual void ApplyBlendState(BlendState const& blend) = 0;
 			XNPP_API virtual void ApplyDepthStencilState(DepthStencilState const& depth) = 0;
 			XNPP_API virtual void ApplyRasterizerState(RasterizerState const& rasterizer) = 0;
 			XNPP_API virtual void Clear(ClearOptions options, Color const& color, float depth, int32_t stencil) = 0;
+
+			XNPP_API static std::unique_ptr<IGraphicsDevice> Create();
 		};
 	}
 }

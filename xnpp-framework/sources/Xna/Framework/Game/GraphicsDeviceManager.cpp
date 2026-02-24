@@ -255,8 +255,8 @@ namespace Xna {
 		if (!EnsureDevice())
 			return false;
 
-		impl->beginDrawOk = true;
-		Platform::GraphicsDevice_SetRenderTargets(impl->device.value());
+		impl->beginDrawOk = true;		
+		//TODO:: aqui tinha uma chamada de código a Platform::GraphicsDevice_SetRenderTargets
 
 		return true;
 	}

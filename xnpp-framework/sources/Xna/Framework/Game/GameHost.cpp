@@ -56,10 +56,16 @@ namespace Xna {
 
 		impl->gameWindow.Create();
 
-		auto graphicsDevice = impl->game->GraphicsDevice();
+		auto graphicsDevice = impl->game->GraphicsDevice();		
+
+		//[!] -- Sobre a inicialização tardia -- [!]
 		//Uma inicialização tardia pois a janela foi criada neste momento
-		//e o dispositivo gráfico foi criado sem o swapChain.
-		Platform::GraphicsDevice_LazyInitialization(graphicsDevice, impl->gameWindow.Handle());
+		//e o dispositivo gráfico foi criado sem o swapChain.		
+		//No XNA, que usava DirectX 9, aparentemente, poderia criar o dispositivo gráfico antes
+		//e depois vincular a janela.
+		//No DX11 precisa do SwapChain e este precisa do handle da janela.
+		auto& backend = graphicsDevice.GetBackend();
+		backend.LazyInitialization(impl->gameWindow.Handle());
 
 		Platform::GameHost_Tick(*this);
 

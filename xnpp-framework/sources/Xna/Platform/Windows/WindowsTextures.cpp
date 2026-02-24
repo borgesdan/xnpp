@@ -14,7 +14,7 @@ namespace Xna {
 
 	void Platform::Texture2D_Init(Texture2D& texture, GraphicsDevice const& device, size_t width, size_t height, bool mipMap, SurfaceFormat format) {
 		auto& adpImpl = texture.impl->platformImpl;
-		auto& grfImpl = device.implGraphicsDevice->platformImpl;
+		auto& grfImpl = device.impl->platformImpl;
 
 		D3D11_TEXTURE2D_DESC desc{};
 		desc.Width = width;
@@ -509,7 +509,7 @@ namespace Xna {
 		auto& texture2D = impl->texture2D;
 		auto& implTex2D = texture2D.impl;
 		auto& platformTex2D = implTex2D->platformImpl;
-		auto& deviceImpl = device.implGraphicsDevice->platformImpl;				
+		auto& deviceImpl = device.impl->platformImpl;				
 
 		// 1) Criar TEXTURE2D base (já criada pela base Texture2D)
 		// Mas agora precisamos recriar com bind flags extras.
@@ -609,7 +609,7 @@ namespace Xna {
 
 	void Platform::Texture3D_Init(Texture3D& texture, GraphicsDevice& graphicsDevice, size_t width, size_t height, size_t depth, bool mipMap, SurfaceFormat format) {
 		auto& impl = texture.impl->platformImpl;
-		auto& deviceImpl = graphicsDevice.implGraphicsDevice->platformImpl;
+		auto& deviceImpl = graphicsDevice.impl->platformImpl;
 
 		auto& device = deviceImpl.device;
 		//auto& context = deviceImpl.context;				

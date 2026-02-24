@@ -4,11 +4,6 @@
       "name": "directxtk",
       "features": [ "xaudio2-9" ]
     },
-    {
-      "name": "lua",
-      "features": [ "cpp" ]
-    },
-    "sol2",
     "nlohmann-json",
     "stb",
     "pugixml",

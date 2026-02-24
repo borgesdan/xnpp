@@ -191,13 +191,6 @@ namespace Xna {
 			case D3D11_BLEND_INV_BLEND_FACTOR:
 				return Blend::InverseBlendFactor;
 			case D3D11_BLEND_SRC1_COLOR:
-				return Blend::Source1Color;
-			case D3D11_BLEND_INV_SRC1_COLOR:
-				return Blend::InverseSource1Color;
-			case D3D11_BLEND_SRC1_ALPHA:
-				return Blend::Source1Alpha;
-			case D3D11_BLEND_INV_SRC1_ALPHA:
-				return Blend::InverseSource1Alpha;
 			default:
 				return Blend::Zero;
 			}
@@ -232,25 +225,17 @@ namespace Xna {
 				return D3D11_BLEND_BLEND_FACTOR;
 			case Xna::Blend::InverseBlendFactor:
 				return D3D11_BLEND_INV_BLEND_FACTOR;
-			case Xna::Blend::Source1Color:
-				return D3D11_BLEND_SRC1_COLOR;
-			case Xna::Blend::InverseSource1Color:
-				return D3D11_BLEND_INV_SRC1_COLOR;
-			case Xna::Blend::Source1Alpha:
-				return D3D11_BLEND_SRC1_ALPHA;
-			case Xna::Blend::InverseSource1Alpha:
-				return D3D11_BLEND_INV_SRC1_ALPHA;
 			default:
 				return D3D11_BLEND_ZERO;
 			}
 		}
 
-		static constexpr D3D11_BLEND_OP BlendOperationToDx(BlendOperation op) {
+		static constexpr D3D11_BLEND_OP BlendOperationToDx(BlendFunction op) {
 			return static_cast<D3D11_BLEND_OP>(static_cast<int>(op) + 1);
 		}
 
-		static constexpr BlendOperation BlendOperationToXna(D3D11_BLEND_OP op) {
-			return static_cast<BlendOperation>(static_cast<int>(op) - 1);
+		static constexpr BlendFunction BlendOperationToXna(D3D11_BLEND_OP op) {
+			return static_cast<BlendFunction>(static_cast<int>(op) - 1);
 		}
 
 		static constexpr D3D11_COLOR_WRITE_ENABLE ColorWriteChannelsToDx(ColorWriteChannels colorWrite) {

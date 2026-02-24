@@ -21,7 +21,7 @@ namespace Xna {
 			desc.CPUAccessFlags = 0;
 		}
 
-		auto& device = b.GetGraphicsDevice()->implGraphicsDevice->platformImpl.device;
+		auto& device = b.GetGraphicsDevice()->impl->platformImpl.device;
 
 		const auto hr = device->CreateBuffer(
 			&desc,
@@ -36,7 +36,7 @@ namespace Xna {
 		const void* data, size_t sizeOfData, size_t startIndex, size_t elementCount, size_t vertexStride, std::optional<SetDataOptions> options) {
 
 		auto& impl = b.impl;
-		auto& device = b.GetGraphicsDevice()->implGraphicsDevice->platformImpl.device;
+		auto& device = b.GetGraphicsDevice()->impl->platformImpl.device;
 		auto& buffer = impl->platformImpl.buffer;
 		const auto _data = reinterpret_cast<const uint8_t*>(data);
 		Microsoft::WRL::ComPtr<ID3D11DeviceContext> context;
@@ -101,7 +101,7 @@ namespace Xna {
 		size_t vertexStride) {
 
 		auto& impl = b.impl;
-		auto& device = b.GetGraphicsDevice()->implGraphicsDevice->platformImpl.device;
+		auto& device = b.GetGraphicsDevice()->impl->platformImpl.device;
 		auto& buffer = impl->platformImpl.buffer;
 		D3D11_BUFFER_DESC bufferDesc;
 		buffer->GetDesc(&bufferDesc);

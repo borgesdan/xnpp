@@ -1,6 +1,6 @@
 #include <bgfx/bgfx.h>
 #include <bgfx/platform.h>
-#include <bx/macros.h>
+#include <bx/bx.h>
 #include <bx/debug.h>
 #include <cstdint>
 #include <stdexcept>
@@ -51,21 +51,21 @@ namespace Xna {
 		constexpr operator uint64_t() const noexcept { return value; }
 
 		constexpr BgfxBlendOperation() = default;
-		constexpr BgfxBlendOperation(BlendOperation op) {
+		constexpr BgfxBlendOperation(BlendFunction op) {
 			switch (op) {
-			case BlendOperation::Add:
+			case BlendFunction::Add:
 				value = BgfxBlendOperation::Add;
 				break;
-			case BlendOperation::Subtract:
+			case BlendFunction::Subtract:
 				value = BgfxBlendOperation::Subtract;
 				break;
-			case BlendOperation::ReverseSubtract:
+			case BlendFunction::ReverseSubtract:
 				value = BgfxBlendOperation::ReverseSubtract;
 				break;
-			case BlendOperation::Min:
+			case BlendFunction::Min:
 				value = BgfxBlendOperation::Min;
 				break;
-			case BlendOperation::Max:
+			case BlendFunction::Max:
 				value = BgfxBlendOperation::Max;
 				break;
 			}
@@ -208,12 +208,30 @@ namespace Xna {
 		float depthBias{ 0 };
 		float SlopeScaleDepthBias{ 0 };
 
-		void LazyInitialization1(intptr_t windowHandle) override;
+		void CreateDevice(GraphicsAdapter const& adapter, Xna::PresentationParameters const& presentationParameters) override {
+			//Nada a fazer
+			//Diferente do DirectX11, não necessitamos criar o dispositivo gráfico aqui
+			//A criação será feita no LazyInitialization onde receberemos a janela de jogo
+		}
+
+		void Present(std::optional<Rectangle> const& rec, std::optional<Rectangle> const& destination, intptr_t overrideWindowHandle) override {
+
+		}
+
+		void SetViewport(Viewport const& viewport) override {
+
+		}
+		
+		void MakeWindowAssociation(PresentationParameters const& pp) override {}
+		void Reset(Xna::PresentationParameters const& presentationParameters, GraphicsAdapter const& graphicsAdapter) {}
+		void LazyInitialization(intptr_t windowHandle) override;
 		void ApplyBlendState(BlendState const& blend) override;
 		void ApplyDepthStencilState(DepthStencilState const& depth) override;
 		void ApplyRasterizerState(RasterizerState const& rasterizer) override;
-		void Clear(ClearOptions options, Color const& color, float depth, int32_t stencil) override;
-	};
+		void Clear(ClearOptions options, Color const& color, float depth, int32_t stencil) override {}
+
+		~BgfxGraphicsDevice() override = default;
+	};	
 
 	//Com DirectX11 inicializamos o Swapchain após a criação da janela no GameHost.
 	//O dispositivo gráfico é criado antes, após o GameHost criar a janela e depois o Swapchain é criado.
@@ -415,5 +433,13 @@ namespace Xna {
 
 		cachedScissorTestEnable = rasterizer.ScissorTestEnable;
 		cachedRasterizerState = state;
+	}
+
+	std::unique_ptr<PlatformNS::IGraphicsDevice> PlatformNS::IGraphicsDevice::Create() {
+		return std::make_unique<BgfxGraphicsDevice>();
+	}
+
+	size_t PlatformNS::Graphics_GetMaxSamplerStates() {
+		return 16;
 	}
 }

@@ -51,7 +51,7 @@ namespace Xna {
 		// The default value is ColorWriteChannels.None.
 		Xna::ColorWriteChannels ColorWriteChannels3{ ColorWriteChannels::None };
 		//Gets or sets a bitmask which defines which samples can be written during multisampling. The default is 0xffffffff.
-		int32_t MultiSampleMask{ 0xffffffff };
+		int32_t MultiSampleMask{ static_cast<int32_t>(0xffffffff) };
 		//Gets or sets the four-component (RGBA) blend factor for alpha blending.
 		Color BlendFactor{ Color::White() };
 

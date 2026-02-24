@@ -80,8 +80,6 @@ add_library(xnpp
         "sources/Xna/Framework/Content/ContentReader.cpp"
         "sources/Xna/Framework/Content/ContentTypeReaderManager.cpp"
         "sources/Xna/Platform/Windows/WindowsPlatform.cpp"
-        "sources/Xna/Platform/Windows/WindowsGraphicsDevice.cpp"
-        "sources/Xna/Platform/Windows/WindowsStates.cpp"
         "sources/Xna/Platform/Windows/WindowsSpriteBatch.cpp"
         "sources/Xna/Platform/Windows/WindowsTextures.cpp"
         "sources/Xna/Platform/Windows/WindowsAdapter.cpp"

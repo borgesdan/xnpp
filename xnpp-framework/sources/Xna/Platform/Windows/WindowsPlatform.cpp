@@ -235,7 +235,7 @@ namespace Xna {
 	}
 
 	void Platform::Effect_BasicEffect_Create(BasicEffect const& e, GraphicsDevice const& d) {
-		auto& device = d.implGraphicsDevice->platformImpl.device;
+		auto& device = d.impl->platformImpl.device;
 
 		e.impl->platformImpl.basicEffect = std::make_unique<DirectX::BasicEffect>(device.Get());
 	}
@@ -308,7 +308,7 @@ namespace Xna {
 	void Platform::Effect_BasicEffect_Apply(BasicEffect const& e) {
 		auto device = e.GetGraphicsDevice();
 		auto& effect = e.impl->platformImpl.basicEffect;
-		effect->Apply(device->implGraphicsDevice->platformImpl.context.Get());
+		effect->Apply(device->impl->platformImpl.context.Get());
 	}
 }
 

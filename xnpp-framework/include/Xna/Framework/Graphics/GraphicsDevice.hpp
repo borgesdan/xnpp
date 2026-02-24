@@ -31,9 +31,9 @@ namespace Xna {
 
 		std::vector<RenderTarget2D> current2DRenderTargets{ 1 };		
 
-		std::optional<Xna::BlendState> blendState;
-		std::optional<Xna::DepthStencilState> depthStencilState;
-		std::optional<Xna::RasterizerState> rasterizerState;
+		Xna::BlendState blendState{};
+		Xna::DepthStencilState depthStencilState{};
+		Xna::RasterizerState rasterizerState{};
 
 		SamplerStateCollection samplerState;
 		SamplerStateCollection vertexSamplerState;
@@ -47,36 +47,41 @@ namespace Xna {
 		std::unique_ptr<PlatformNS::IGraphicsDevice> backend;
 	};	
 
-	inline GraphicsAdapter GraphicsDevice::Adapter() const { return implGraphicsDevice->adapter.value(); }
-	inline Xna::BlendState GraphicsDevice::BlendState() const { return implGraphicsDevice->blendState.value(); }
-	inline Color GraphicsDevice::BlendFactor() const { return implGraphicsDevice->blendState->blendFactor; }
-	inline Xna::DepthStencilState GraphicsDevice::DepthStencilState() const { return implGraphicsDevice->depthStencilState.value(); }
-	inline int32_t GraphicsDevice::MultiSampleMask() const { return implGraphicsDevice->multiSampleMask; }
-	inline Xna::PresentationParameters& GraphicsDevice::PresentationParameters() { return implGraphicsDevice->presentationParameters; }
-	inline Xna::RasterizerState GraphicsDevice::RasterizerState() const { return implGraphicsDevice->rasterizerState.value(); }
-	inline int32_t GraphicsDevice::ReferenceStencil() const { return implGraphicsDevice->referenceStencil; }
-	inline SamplerStateCollection GraphicsDevice::SamplerStates() const { return implGraphicsDevice->samplerState; }
-	inline Xna::Viewport GraphicsDevice::Viewport() const { return implGraphicsDevice->viewports[0]; }
-	inline Rectangle GraphicsDevice::ScissorRectangle() const { return implGraphicsDevice->scissorRectangles[0]; }
-	inline RenderTarget2D GraphicsDevice::CreateBackBufferRenderTarget() const { return Platform::GraphicsDevice_CreateBackBufferRenderTarget(*this); };
+	inline GraphicsAdapter GraphicsDevice::Adapter() const { return impl->adapter.value(); }
+	inline Xna::BlendState GraphicsDevice::BlendState() const { return impl->blendState; }
+	inline Color GraphicsDevice::BlendFactor() const { return impl->blendState.BlendFactor; }
+	inline Xna::DepthStencilState GraphicsDevice::DepthStencilState() const { return impl->depthStencilState; }
+	inline int32_t GraphicsDevice::MultiSampleMask() const { return impl->multiSampleMask; }
+	inline Xna::PresentationParameters& GraphicsDevice::PresentationParameters() { return impl->presentationParameters; }
+	inline Xna::RasterizerState GraphicsDevice::RasterizerState() const { return impl->rasterizerState; }
+	inline int32_t GraphicsDevice::ReferenceStencil() const { return impl->referenceStencil; }
+	inline SamplerStateCollection GraphicsDevice::SamplerStates() const { return impl->samplerState; }
+	inline Xna::Viewport GraphicsDevice::Viewport() const { return impl->viewports[0]; }
+	inline Rectangle GraphicsDevice::ScissorRectangle() const { return impl->scissorRectangles[0]; }
+	
+	inline RenderTarget2D GraphicsDevice::CreateBackBufferRenderTarget() const { 
+		//TODO: Implementar CreateBackBufferRenderTarget
+		return { nullptr };
+	};
+
 	inline void GraphicsDevice::Clear(Color const& color) { Clear(ClearOptions::Target, color, 0, 0); }
-	inline void GraphicsDevice::Reset() { Reset(implGraphicsDevice->presentationParameters); }
-	inline void GraphicsDevice::Reset(Xna::PresentationParameters const& presentationParameters) { Reset(presentationParameters, *implGraphicsDevice->adapter); }
+	inline void GraphicsDevice::Reset() { Reset(impl->presentationParameters); }
+	inline void GraphicsDevice::Reset(Xna::PresentationParameters const& presentationParameters) { Reset(presentationParameters, *impl->adapter); }
 	inline void GraphicsDevice::Reset(Xna::PresentationParameters const& presentationParameters, GraphicsAdapter const& graphicsAdapter) { 
-		Platform::GraphicsDevice_Reset(*this, presentationParameters, graphicsAdapter); 
+		impl->backend->Reset(presentationParameters, graphicsAdapter);
 	}
 
 	inline std::vector<RenderTargetBinding> GraphicsDevice::GetRenderTargets() { return std::vector<RenderTargetBinding>(); } // TODO
 	inline std::vector<VertexBufferBinding> GraphicsDevice::GetVertexBuffers() { return std::vector<VertexBufferBinding>(); } // TODO
 	inline TextureCollection GraphicsDevice::Textures() const { return TextureCollection(); } //TODO
 
-	inline CSharp::Event<CSharp::EventArgs> GraphicsDevice::DeviceResetting() { return implGraphicsDevice->deviceResetting; }
-	inline CSharp::Event<CSharp::EventArgs> GraphicsDevice::DeviceReset() { return implGraphicsDevice->deviceReset; }
-	inline CSharp::Event<CSharp::EventArgs> GraphicsDevice::DeviceLost() { return implGraphicsDevice->deviceLost; }
-	inline CSharp::Event<CSharp::EventArgs> GraphicsDevice::Disposing() { return implGraphicsDevice->disposing; }
+	inline CSharp::Event<CSharp::EventArgs> GraphicsDevice::DeviceResetting() { return impl->deviceResetting; }
+	inline CSharp::Event<CSharp::EventArgs> GraphicsDevice::DeviceReset() { return impl->deviceReset; }
+	inline CSharp::Event<CSharp::EventArgs> GraphicsDevice::DeviceLost() { return impl->deviceLost; }
+	inline CSharp::Event<CSharp::EventArgs> GraphicsDevice::Disposing() { return impl->disposing; }
 
 	inline PlatformNS::IGraphicsDevice& GraphicsDevice::GetBackend() {
-		return *implGraphicsDevice->backend.get();
+		return *impl->backend.get();
 	}
 }
 

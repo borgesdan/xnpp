@@ -13,7 +13,7 @@ namespace Xna {
 	//
 
 	void Platform::SpriteBatch_InitializeSpriteBatch(SpriteBatch const& sb, GraphicsDevice const& device) {
-		sb.impl->platformImpl.spriteBatch = std::make_unique<DirectX::SpriteBatch>(device.implGraphicsDevice->platformImpl.context.Get());
+		sb.impl->platformImpl.spriteBatch = std::make_unique<DirectX::SpriteBatch>(device.impl->platformImpl.context.Get());
 	}
 
 	void Platform::SpriteBatch_Begin(SpriteBatch const& sb, SpriteSortMode sortMode, std::optional<BlendState> const& blendState, std::optional<SamplerState> const& samplerState,
@@ -30,10 +30,10 @@ namespace Xna {
 
 		sb.impl->platformImpl.spriteBatch->Begin(
 			sort,
-			_blend.impl->platformImpl.blendState.Get(),
-			_sampler.impl->platformImpl.samplerState.Get(),
-			_depth.impl->platformImpl.depthStencil.Get(),
-			_rasterizer.impl->platformImpl.rasterizerState.Get(),
+			nullptr,
+			nullptr,
+			nullptr,
+			nullptr,
 			_effect,
 			DxHelpers::MatrixToDx(_matrix));
 	}
