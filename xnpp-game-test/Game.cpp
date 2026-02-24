@@ -20,12 +20,6 @@ public:
 	}
 
 	void LoadContent() override {
-		auto device = GraphicsDevice();
-		spriteBatch = Xna::SpriteBatch(device);
-
-		soundEffect = Content().Load<Xna::SoundEffect>("Sounds/PlayerFall");
-		song = Content().Load<Xna::Song>("Sounds/Music");
-
 		base::LoadContent();
 	}
 
@@ -111,13 +105,6 @@ public:
 
 	void Draw(Xna::GameTime& gameTime) override {
 		graphics.GraphicsDevice()->Clear(backColor);
-		bool draw = false;
-		spriteBatch.Begin();
-		
-		if (draw)
-			spriteBatch.Draw(nullptr, Xna::Vector2::Zero(), Xna::Color::White());
-
-		spriteBatch.End();
 
 		base::Draw(gameTime);
 	}

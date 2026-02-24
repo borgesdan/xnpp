@@ -13,6 +13,16 @@
 #include "Xna/Framework/Graphics/RasterizerState.hpp"
 
 namespace Xna {
+	static constexpr uint32_t swapXnaColor(Color const& color) {
+		uint32_t xnaColor = color.PackedValue();
+		uint32_t bgfxColor = ((xnaColor & 0x000000FF) << 24) | // R
+			((xnaColor & 0x0000FF00) << 8) | // G
+			((xnaColor & 0x00FF0000) >> 8) | // B
+			((xnaColor & 0xFF000000) >> 24);  // A
+
+		return bgfxColor;
+	}
+
 	//Padrão do BlendState para Bgfx
 	struct BgfxBlendState {
 		static constexpr uint64_t Opaque = 0;
@@ -215,7 +225,8 @@ namespace Xna {
 		}
 
 		void Present(std::optional<Rectangle> const& rec, std::optional<Rectangle> const& destination, intptr_t overrideWindowHandle) override {
-
+			// 2. Avança o frame e renderiza o que foi enviado
+			bgfx::frame();
 		}
 
 		void SetViewport(Viewport const& viewport) override {
@@ -228,7 +239,10 @@ namespace Xna {
 		void ApplyBlendState(BlendState const& blend) override;
 		void ApplyDepthStencilState(DepthStencilState const& depth) override;
 		void ApplyRasterizerState(RasterizerState const& rasterizer) override;
-		void Clear(ClearOptions options, Color const& color, float depth, int32_t stencil) override {}
+		void Clear(ClearOptions options, Color const& color, float depth, int32_t stencil) override {
+			// 1. Garante que o View 0 seja processado (mesmo sem draw calls)
+			bgfx::touch(0);			
+		}		
 
 		~BgfxGraphicsDevice() override = default;
 	};	
@@ -279,7 +293,7 @@ namespace Xna {
 
 		//Cornflower Blue (RGBA)		
 		//uint32_t clearColor = 0x6495EDFF;
-		const auto clearColor = Colors::CornflowerBlue.PackedValue();
+		const auto clearColor = swapXnaColor(Colors::CornflowerBlue);
 		bgfx::setViewClear(0, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, clearColor, 1.0f, 0);		
 	}
 
