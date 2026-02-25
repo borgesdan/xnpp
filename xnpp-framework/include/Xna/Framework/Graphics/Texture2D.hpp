@@ -89,6 +89,7 @@ namespace Xna {
 			size_t height{ 0 };			
 			SurfaceFormat format{};
 			PlatformImpl::Texture2DImpl platformImpl;
+			std::unique_ptr<PlatformNS::ITexture2D> backend;
 		};
 	
 		std::shared_ptr<Implementation> impl;	

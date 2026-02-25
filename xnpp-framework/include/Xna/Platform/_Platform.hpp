@@ -451,6 +451,13 @@ namespace Xna {
 
 			XNPP_API static std::unique_ptr<IGraphicsDevice> Create();
 		};
+
+		struct ITexture2D {
+			XNPP_API virtual ~ITexture2D() = default;
+			XNPP_API virtual void Texture2D(size_t width, size_t height, bool mipMap, SurfaceFormat format) = 0;
+
+			XNPP_API static std::unique_ptr<ITexture2D> Create();
+		};
 	}
 }
 

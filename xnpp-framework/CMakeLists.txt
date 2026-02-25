@@ -18,7 +18,7 @@ set(XNPP_PLATFORM_SRC
     "sources/Xna/Platform/Cross/Input.cpp" 
     "sources/Xna/Platform/Cross/Audio.cpp"
     "sources/Xna/Platform/Cross/Graphics/Device.cpp"
-)
+ "sources/Xna/Platform/Cross/Graphics/Texture.cpp")
 
 # Add source to this project's executable.
 add_library(xnpp
