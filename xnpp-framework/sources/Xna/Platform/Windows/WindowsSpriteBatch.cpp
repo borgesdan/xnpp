@@ -54,7 +54,7 @@ namespace Xna {
 		const auto v4 = color.ToVector4();
 		DirectX::XMFLOAT4 _color{ v4.X, v4.Y, v4.Z, v4.W };
 
-		sb.impl->platformImpl.spriteBatch->Draw(
+		/*sb.impl->platformImpl.spriteBatch->Draw(
 			texture.impl->platformImpl.shaderResource.Get(),
 			DirectX::XMLoadFloat2(&_position),
 			rectangleHasValue ? &_sourceRect : nullptr,
@@ -64,7 +64,7 @@ namespace Xna {
 			DirectX::XMLoadFloat2(&_scale),
 			DxHelpers::SpriteEffectsToDx(effects),
 			layerDepth
-		);
+		);*/
 	}
 
 	void Platform::SpriteBatch_Draw(SpriteBatch const& sb, Texture2D const& texture, Rectangle const& destinationRectangle, std::optional<Rectangle> const& sourceRectangle, Color const& color,
@@ -78,7 +78,7 @@ namespace Xna {
 		DirectX::XMFLOAT4 f4(v4.X, v4.Y, v4.Z, v4.W);
 		DirectX::XMFLOAT2 _origin{ origin.X, origin.Y };
 
-		sb.impl->platformImpl.spriteBatch->Draw(
+		/*sb.impl->platformImpl.spriteBatch->Draw(
 			texture.impl->platformImpl.shaderResource.Get(),
 			_destinationRect,
 			sourceRectHasValue ? &_sourceRect : nullptr,
@@ -87,7 +87,7 @@ namespace Xna {
 			_origin,
 			DxHelpers::SpriteEffectsToDx(effects),
 			layerDepth
-		);
+		);*/
 	}
 
 	void Platform::SpriteBatch_DrawString(SpriteBatch const& sb, SpriteFont const& sf, std::string const& text, Vector2 const& position, Color const& color, float rotation, Vector2 const& origin,
@@ -146,16 +146,16 @@ namespace Xna {
 			dxGlyps[i] = g;
 		}
 
-		sf.impl->platformImpl.spriteFont = std::make_unique<DirectX::SpriteFont>(
-			//ID3D11ShaderResourceView* texture
-			texture.impl->platformImpl.shaderResource.Get(),
-			//Glyph const* glyphs
-			dxGlyps.data(),
-			//size_t glyphCount
-			glyphs.size(),
-			//float lineSpacing
-			static_cast<float>(lineSpacing)
-		);
+		//sf.impl->platformImpl.spriteFont = std::make_unique<DirectX::SpriteFont>(
+		//	//ID3D11ShaderResourceView* texture
+		//	texture.impl->platformImpl.shaderResource.Get(),
+		//	//Glyph const* glyphs
+		//	dxGlyps.data(),
+		//	//size_t glyphCount
+		//	glyphs.size(),
+		//	//float lineSpacing
+		//	static_cast<float>(lineSpacing)
+		//);
 
 		if (defaultCharacter.has_value()) {
 			const auto wchar = Xna::Misc::Char32ToWString(*defaultCharacter);

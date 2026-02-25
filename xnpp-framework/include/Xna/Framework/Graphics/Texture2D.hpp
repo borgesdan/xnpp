@@ -44,7 +44,7 @@ namespace Xna {
 		void GetData(size_t level, std::optional<Rectangle> const& rect, std::vector<T>& data, size_t startIndex, size_t elementCount) {
 			size_t sizeOfT = sizeof(T);
 			auto ptr = reinterpret_cast<void*>(data.data());
-			Platform::Texture2D_GetData(*this, level, rect, ptr, startIndex, elementCount, sizeOfT);
+			impl->backend->GetData(level, rect, data, startIndex, elementCount);
 		}
 
 		//Sets data to the texture.
@@ -59,7 +59,7 @@ namespace Xna {
 			//size_t sizeOfT = sizeof(T);
 			size_t sizeOfT = sizeof(Color);
 			auto ptr = reinterpret_cast<const void*>(data.data());
-			Platform::Texture2D_SetData(*this, level, rect, ptr, startIndex, elementCount, impl->hasMipmaps, sizeOfT);
+			impl->backend->SetData(level, rect, ptr, startIndex, elementCount, impl->hasMipmaps, sizeOfT);
 		}
 
 		//Saves texture data as a .jpg.
@@ -80,15 +80,12 @@ namespace Xna {
 		inline explicit operator bool() const noexcept { return impl != nullptr; }
 
 	private:
-		static inline constexpr size_t MaxTextureSize = 4096;
-
-	private:
 		struct Implementation {
 			bool hasMipmaps{ false };
 			size_t width{ 0 };
 			size_t height{ 0 };			
 			SurfaceFormat format{};
-			PlatformImpl::Texture2DImpl platformImpl;
+			
 			std::unique_ptr<PlatformNS::ITexture2D> backend;
 		};
 	

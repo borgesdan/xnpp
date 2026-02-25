@@ -298,8 +298,8 @@ namespace Xna {
 		effect->SetTextureEnabled(e.TextureEnabled());
 
 		if (e.TextureEnabled() && e.Texture().has_value()) {
-			auto& shader = e.Texture()->impl->platformImpl.shaderResource;
-			effect->SetTexture(shader.Get());
+			/*auto& shader = e.Texture()->impl->platformImpl.shaderResource;
+			effect->SetTexture(shader.Get());*/
 		}
 
 		effect->SetVertexColorEnabled(e.VertexColorEnabled());

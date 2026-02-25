@@ -70,7 +70,6 @@ namespace Xna {
 			size_t multiSampleCount{ 0 };
 			Xna::RenderTargetUsage usage{};
 			CSharp::Event<CSharp::EventArgs> contentLost;
-			PlatformImpl::RenderTarget2DImpl platformImpl;
 		};
 
 		std::shared_ptr<Implementation> impl;	

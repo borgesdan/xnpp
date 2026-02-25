@@ -4,18 +4,22 @@
 #include <bx/bx.h>
 #include <bx/debug.h>
 #include <stdexcept>
+#include <cstdint>
 
 #include "Xna/Framework/Graphics/Texture2D.hpp"
 
 namespace Xna {
-	struct BgfxTexture2D final : PlatformNS::ITexture {
+	struct BgfxTexture2D final : PlatformNS::ITexture2D {
 		bgfx::TextureHandle textureHandle{};
 		size_t width{ 0 };
 		size_t height{ 0 };
+		bool mipMap{ false };
 
-		void Texture2D(size_t width, size_t height, bool mipMap, SurfaceFormat format) override;
+		void Initialize(size_t width, size_t height, bool mipMap, SurfaceFormat format) override;
 		void SetData(size_t level, std::optional<Rectangle> const& rect, const void* data,
 			size_t startIndex, size_t elementCount, bool hasMipMap, size_t sizeOfData) override;
+		void GetData(size_t level, std::optional<Rectangle> const& rect, void* data,
+			size_t startIndex, size_t elementCount, size_t sizeOfData) override;
 
 		~BgfxTexture2D() override {
 			if (bgfx::isValid(textureHandle))
@@ -23,11 +27,11 @@ namespace Xna {
 		}
 	};
 
-	std::unique_ptr<PlatformNS::ITexture> PlatformNS::ITexture::Create() {
+	std::unique_ptr<PlatformNS::ITexture2D> PlatformNS::ITexture2D::Create() {
 		return std::make_unique<BgfxTexture2D>();
 	}
 
-	void BgfxTexture2D::Texture2D(size_t width, size_t height, bool mipMap, SurfaceFormat format) {
+	void BgfxTexture2D::Initialize(size_t width, size_t height, bool mipMap, SurfaceFormat format) {
 		if (bgfx::isValid(textureHandle)) 
 			bgfx::destroy(textureHandle);
 
@@ -55,10 +59,11 @@ namespace Xna {
 
 		this->width = width;
 		this->height = height;
+		this->mipMap = mipMap;
 	}
 
 	void BgfxTexture2D::SetData(size_t level, std::optional<Rectangle> const& rect, const void* data,
-		size_t startIndex, size_t elementCount, bool hasMipMap, size_t sizeOfData) {		
+		size_t startIndex, size_t elementCount, bool hasMipMap, size_t sizeOfData) {			
 		
 		assert(data != nullptr && "data cannot be null.");
 		assert(startIndex < elementCount && "startIndex >= elementCount");
@@ -70,10 +75,10 @@ namespace Xna {
 		int h = height;
 
 		if (rect) {
-			assert(rect->Width <= width && "rect->Width > textureHandle width");
-			assert(rect->Height <= height && "rect->Height > textureHandle height");
-			assert(rect->X >= 0 && rect->X < width && "rect->X < 0 || rect->X >= width");
-			assert(rect->Y >= 0 && rect->Y < height && "rect->Y < 0 || rect->Y >= height");
+			assert((rect->Width >= 0 && rect->Width <= width) && "rect->Width > textureHandle width");
+			assert((rect->Height >= 0 && rect->Height <= height) && "rect->Height > textureHandle height");
+			assert((rect->X >= 0 && rect->X < width) && "rect->X < 0 || rect->X >= width");
+			assert((rect->Y >= 0 && rect->Y < height) && "rect->Y < 0 || rect->Y >= height");
 
 			x = static_cast<int>(rect->X);
 			y = static_cast<int>(rect->Y);
@@ -93,6 +98,12 @@ namespace Xna {
 			x, y,					// Coordenadas X e Y
 			w, h,					// Largura e Altura da região
 			mem						// O bloco de memória com os novos pixels
-		);
+		);		
+	}
+
+	void BgfxTexture2D::GetData(size_t level, std::optional<Rectangle> const& rect, void* data,
+		size_t startIndex, size_t elementCount, size_t sizeOfData) {
+
+		//TODO: não implementado
 	}
 }

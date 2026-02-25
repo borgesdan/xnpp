@@ -219,12 +219,13 @@ namespace Xna {
 	};
 
 	struct Value2 {
-		intptr_t One{0};
-		intptr_t Two{0};
+		intptr_t One{ 0 };
+		intptr_t Two{ 0 };
 
 		constexpr Value2() = default;
 		constexpr Value2(intptr_t one, intptr_t two)
-			: One(one), Two(two){ }
+			: One(one), Two(two) {
+		}
 	};
 
 	struct Platform {
@@ -241,11 +242,11 @@ namespace Xna {
 		XNPP_API static void Resume();
 
 		//System		
-		
+
 		XNPP_API static PlatformRectangle System_ClientRect(intptr_t hwnd);
 		XNPP_API static PlatformRectangle System_WindowRect(intptr_t hwnd);
 		XNPP_API static size_t System_GetClockCounter();
-		XNPP_API static size_t System_GetClockFrequency();		
+		XNPP_API static size_t System_GetClockFrequency();
 		XNPP_API static bool System_MultiMonitorSupport();
 		XNPP_API static PlatformRectangle System_VirtualScreen();
 		XNPP_API static PlatformSize System_PrimaryMonitorSize();
@@ -257,7 +258,7 @@ namespace Xna {
 		XNPP_API static std::string System_MonitorDeviceName(intptr_t monitor);
 		XNPP_API static PlatformRectangle System_MonitorArea(intptr_t monitor);
 		XNPP_API static bool System_MonitorIsPrimary(intptr_t monitor);
-		XNPP_API static int32_t System_MonitorBitDepth(intptr_t monitor, intptr_t hdc);		
+		XNPP_API static int32_t System_MonitorBitDepth(intptr_t monitor, intptr_t hdc);
 		XNPP_API static std::vector<Value2> System_GetAllMonitorHandlers();
 
 		//platform dependent
@@ -274,7 +275,7 @@ namespace Xna {
 		XNPP_API static void GameWindow_SetMouseVisible(GameWindow const& gw, bool value);
 		XNPP_API static void GameWindow_AllowUserResizing(GameWindow const& gw, bool value);
 		XNPP_API static Rectangle GameWindow_ClientBounds(GameWindow const& gw);
-		XNPP_API static void GameWindow_SetTitle(GameWindow const& gw, std::string const& title);		
+		XNPP_API static void GameWindow_SetTitle(GameWindow const& gw, std::string const& title);
 
 		//GameHost
 
@@ -292,7 +293,7 @@ namespace Xna {
 		XNPP_API static GamePadCapabilities GamePad_GetCapabilities(PlayerIndex index);
 		XNPP_API static bool GamePad_SetVibration(PlayerIndex index, float leftMotor, float rightMotor, float leftTrigger, float rightTrigger);
 		XNPP_API static void GamePad_Suspend();
-		XNPP_API static void GamePad_Resume();		
+		XNPP_API static void GamePad_Resume();
 
 		//GraphicsAdapter
 
@@ -304,33 +305,6 @@ namespace Xna {
 			DepthFormat depthFormat, int32_t multiSampleCount, SurfaceFormat& selectedFormat, DepthFormat& selectedDepthFormat, int32_t& selectedMultiSampleCount);
 		XNPP_API static bool GraphicsAdapter_QueryRenderTargetFormat(GraphicsAdapter const& adapter, GraphicsProfile graphicsProfile, SurfaceFormat format,
 			DepthFormat depthFormat, int32_t multiSampleCount, SurfaceFormat& selectedFormat, DepthFormat& selectedDepthFormat, int32_t& selectedMultiSampleCount);
-
-		//Texture2D
-
-		enum class Texture2D_SaveFileType {
-			Png,
-			Jpeg
-		};
-
-		XNPP_API static void Texture2D_Init(Texture2D& texture, GraphicsDevice const& device, size_t width, size_t height, bool mipMap, SurfaceFormat format);
-		XNPP_API static Texture2D Texture2D_FromStream(GraphicsDevice const& device, CSharp::Stream& stream, size_t width, size_t height, bool zoom);
-		XNPP_API static void Texture2D_SaveFile(Texture2D& texture, CSharp::Stream& stream, size_t width, size_t height, Texture2D_SaveFileType type);
-		XNPP_API static int32_t Texture2D_LevelCount(Texture2D const& texture);
-		XNPP_API static void Texture2D_SetData(Texture2D& texture, size_t level, std::optional<Rectangle> const& rect, const void* data, size_t startIndex, size_t elementCount, bool hasMipMap, size_t sizeOfData);
-		XNPP_API static void Texture2D_GetData(Texture2D& texture, size_t level, std::optional<Rectangle> const& rect, void* data, size_t startIndex, size_t elementCount, size_t sizeOfData);
-
-		//Texture3D
-
-		XNPP_API static void Texture3D_Init(Texture3D& texture, GraphicsDevice& graphicsDevice, size_t width, size_t height, size_t depth, bool mipMap, SurfaceFormat format);
-		void Texture3D_SetData(Texture3D& texture, size_t level, size_t left, size_t top, size_t right, size_t bottom, size_t front, size_t back,
-			const void* data, size_t startIndex, size_t elementCount);
-		XNPP_API static void Texture3D_GetData(Texture3D& texture, size_t level, size_t left, size_t top, size_t right, size_t bottom, size_t front, size_t back,
-			void* data, size_t startIndex, size_t elementCount, size_t sizeOfData);
-
-		//RenderTarget2D
-
-		XNPP_API static void RenderTarget2D_Init(RenderTarget2D& renderTarget, GraphicsDevice& device, DepthFormat preferredDepthFormat,
-			size_t preferredMultiSampleCount, RenderTargetUsage usage);
 
 		//SpriteBatch
 
@@ -352,7 +326,7 @@ namespace Xna {
 			std::vector<char32_t> const& charMap, int32_t lineSpacing, float spacing,
 			std::vector<Vector3> const& kerning, std::optional<char32_t> const& defaultCharacter);
 		XNPP_API static Vector2 SpriteFont_MeasureString(SpriteFont const& sf, std::string const& text, bool ignoreWhiteSpace);
-		XNPP_API static Vector2 SpriteFont_MeasureString(SpriteFont const& sf, std::wstring const& text, bool ignoreWhiteSpace);				
+		XNPP_API static Vector2 SpriteFont_MeasureString(SpriteFont const& sf, std::wstring const& text, bool ignoreWhiteSpace);
 
 		//Effects
 
@@ -379,7 +353,7 @@ namespace Xna {
 			size_t startIndex,
 			size_t elementCount,
 			size_t vertexStride
-		);		
+		);
 	};
 
 	namespace PlatformNS {
@@ -393,14 +367,14 @@ namespace Xna {
 
 		struct MasterAudio {
 			XNPP_API static void SetMasterVolume(float value);
-		};		
+		};
 
 		struct ISoundEffect {
 			virtual ~ISoundEffect() = default;
 
 			XNPP_API virtual void Load(std::vector<uint8_t> const& format, std::vector<uint8_t> const& data, size_t offset, size_t count, size_t loopStart, size_t loopLength) = 0;
 
-			XNPP_API static std::unique_ptr<ISoundEffect> Create();	
+			XNPP_API static std::unique_ptr<ISoundEffect> Create();
 		};
 
 		struct ISoundEffectInstance {
@@ -408,17 +382,17 @@ namespace Xna {
 			XNPP_API virtual void Load(ISoundEffect* baseSE) = 0;
 			XNPP_API virtual void SetVolume(float value) = 0;
 			XNPP_API virtual void SetPan(float value) = 0;
-			XNPP_API virtual void SetPitch(float value) = 0;			
+			XNPP_API virtual void SetPitch(float value) = 0;
 			XNPP_API virtual void IsLooped(bool value) = 0;
 			XNPP_API virtual void Play() = 0;
 			XNPP_API virtual void Pause() = 0;
 			XNPP_API virtual void Stop() = 0;
-			XNPP_API virtual MediaState GetState() = 0;			
+			XNPP_API virtual MediaState GetState() = 0;
 
 			XNPP_API static std::unique_ptr<ISoundEffectInstance> Create();
-		};		
+		};
 
-		struct IMediaPlayer {			
+		struct IMediaPlayer {
 			XNPP_API virtual void Play(std::filesystem::path const& song) = 0;
 			XNPP_API virtual void Pause() = 0;
 			XNPP_API virtual void Resume() = 0;
@@ -452,19 +426,15 @@ namespace Xna {
 			XNPP_API static std::unique_ptr<IGraphicsDevice> Create();
 		};
 
-		struct ITexture {
-			XNPP_API virtual ~ITexture() = default;
-			XNPP_API virtual void Texture2D(size_t width, size_t height, bool mipMap, SurfaceFormat format) = 0;
-			XNPP_API virtual void SetData(
-				size_t level,
-				std::optional<Rectangle> const& rect,
-				const void* data,
-				size_t startIndex,
-				size_t elementCount,
-				bool hasMipMap,
-				size_t sizeOfData);
+		struct ITexture2D {
+			XNPP_API virtual ~ITexture2D() = default;
+			XNPP_API virtual void Initialize(size_t width, size_t height, bool mipMap, SurfaceFormat format) = 0;
+			XNPP_API virtual void SetData(size_t level, std::optional<Rectangle> const& rect, const void* data,
+				size_t startIndex, size_t elementCount, bool hasMipMap, size_t sizeOfData) = 0;
+			XNPP_API virtual void GetData(size_t level, std::optional<Rectangle> const& rect, void* data,
+				size_t startIndex, size_t elementCount, size_t sizeOfData) = 0;
 
-			XNPP_API static std::unique_ptr<ITexture> Create();
+			XNPP_API static std::unique_ptr<ITexture2D> Create();
 		};
 
 		struct ISpriteBatch {
