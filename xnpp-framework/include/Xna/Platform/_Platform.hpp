@@ -455,8 +455,20 @@ namespace Xna {
 		struct ITexture {
 			XNPP_API virtual ~ITexture() = default;
 			XNPP_API virtual void Texture2D(size_t width, size_t height, bool mipMap, SurfaceFormat format) = 0;
+			XNPP_API virtual void SetData(
+				size_t level,
+				std::optional<Rectangle> const& rect,
+				const void* data,
+				size_t startIndex,
+				size_t elementCount,
+				bool hasMipMap,
+				size_t sizeOfData);
 
 			XNPP_API static std::unique_ptr<ITexture> Create();
+		};
+
+		struct ISpriteBatch {
+			XNPP_API virtual ~ISpriteBatch() = default;
 		};
 	}
 }
