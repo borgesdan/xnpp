@@ -8,7 +8,7 @@
 #include "Xna/Framework/Graphics/Texture2D.hpp"
 
 namespace Xna {
-	struct BgfxTexture2D final : PlatformNS::ITexture2D {
+	struct BgfxTexture2D final : PlatformNS::ITexture {
 		bgfx::TextureHandle texture{};
 
 		void Texture2D(size_t width, size_t height, bool mipMap, SurfaceFormat format) override;
@@ -19,8 +19,8 @@ namespace Xna {
 		}
 	};
 
-	std::unique_ptr<PlatformNS::ITexture2D> PlatformNS::ITexture2D::Create() {
-		return std::make_unique< PlatformNS::ITexture2D>();
+	std::unique_ptr<PlatformNS::ITexture> PlatformNS::ITexture::Create() {
+		return std::make_unique<BgfxTexture2D>();
 	}
 
 	void BgfxTexture2D::Texture2D(size_t width, size_t height, bool mipMap, SurfaceFormat format) {
