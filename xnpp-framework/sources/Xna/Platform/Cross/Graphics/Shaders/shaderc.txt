@@ -1,0 +1,30 @@
+:: Clone o shaderc
+git clone https://github.com/google/shaderc
+cd shaderc
+
+:: Baixe as dependências manualmente
+git clone https://github.com/google/googletest.git third_party/googletest
+git clone https://github.com/KhronosGroup/glslang.git third_party/glslang
+git clone https://github.com/KhronosGroup/SPIRV-Headers.git third_party/spirv-headers
+git clone https://github.com/KhronosGroup/SPIRV-Tools.git third_party/spirv-tools
+
+:: Configure as dependências do SPIRV-Tools
+cd third_party\spirv-tools
+git clone https://github.com/KhronosGroup/SPIRV-Headers.git external/spirv-headers
+cd ..\..
+
+:: Crie diretório de build
+mkdir build
+cd build
+
+:: Configure com CMake
+cmake -GNinja -DCMAKE_BUILD_TYPE=Release ^
+    -DSHADERC_SKIP_TESTS=ON ^
+    -DSPIRV_SKIP_TESTS=ON ^
+    -DSPIRV_SKIP_EXECUTABLES=OFF ^
+    ..
+
+:: Compile
+ninja
+
+:: O executável estará em build\glslc\glslc.exe
