@@ -16,11 +16,25 @@ namespace Xna {
 	class GameWindow;
 	class GameTime;
 
+	//Define o modo de execução do jogo dentro da classe Game.
+	enum class GameRunMode {
+		//Modo de execução do XNA, 
+		//por exemplo, ocorre a execução do Initialize(), LoadContent() e Update()
+		//antes da criação da janela.
+		Classic,
+
+		//Modo de execução específica para o Bgfx.
+		//O backend Bgfx necessita que a janela seja criada antes de sua inicialização.
+		//No modo classic LoadContent() é chamado antes da criação da janela e o Bgfx
+		//pode não estar preparado para carregar recursos gráficos.
+		Bgfx
+	};
+
 	//Provides basic graphics device initialization, game logic, and rendering code.
 	class Game {
 	public:
 		//Initializes a new instance of this class, which provides basic graphics device initialization, game logic, rendering code, and a game loop.
-		XNPP_API Game();
+		XNPP_API Game(GameRunMode runMode = GameRunMode::Bgfx);
 
 		//Gets the collection of GameComponents owned by the game.
 		inline GameComponentCollection Components() const;
@@ -83,19 +97,19 @@ namespace Xna {
 		//Starts the drawing of a frame. This method is followed by calls to Draw and EndDraw.
 		XNPP_API virtual bool BeginDraw();
 		//Called after all components are initialized but before the first update in the game loop.
-		XNPP_API virtual void BeginRun(){}
+		XNPP_API virtual void BeginRun() {}
 		//Called when the game determines it is time to draw a frame.
 		XNPP_API virtual void Draw(GameTime& gameTime);
 		//Ends the drawing of a frame. This method is preceeded by calls to Draw and BeginDraw.
 		XNPP_API virtual void EndDraw();
 		//Called after the game loop has stopped running before exiting.
-		XNPP_API virtual void EndRun(){}
+		XNPP_API virtual void EndRun() {}
 		//Called after the Game and GraphicsDevice are created, but before LoadContent.
 		XNPP_API virtual void Initialize();
 		//Called when graphics resources need to be loaded.
-		XNPP_API virtual void LoadContent(){}
+		XNPP_API virtual void LoadContent() {}
 		//Called when graphics resources need to be unloaded. Override this method to unload any game-specific graphics resources.
-		XNPP_API virtual void UnloadContent(){}
+		XNPP_API virtual void UnloadContent() {}
 		//Called when the game has determined that game logic needs to be processed.
 		XNPP_API virtual void Update(GameTime& gameTime);
 
@@ -110,6 +124,8 @@ namespace Xna {
 		inline bool operator==(Game const& other) const noexcept { return impl == other.impl; }
 		inline bool operator==(std::nullptr_t) const noexcept { return impl == nullptr; }
 		inline explicit operator bool() const noexcept { return impl != nullptr; }
+
+		static GameRunMode CurrentRunMode();
 
 	private:
 		void RunGame(bool useBlockingRun);
@@ -130,7 +146,7 @@ namespace Xna {
 
 		void DeviceResetting(void* sender, CSharp::EventArgs const& e);
 		void DeviceReset(void* sender, CSharp::EventArgs const& e);
-		void DeviceCreated(void* sender, CSharp::EventArgs const& e);	
+		void DeviceCreated(void* sender, CSharp::EventArgs const& e);
 		bool IsActiveIgnoringGuide() const { return true; } //TODO
 
 		void GameComponentAdded(void* sender, GameComponentCollectionEventArgs e);
@@ -138,9 +154,12 @@ namespace Xna {
 
 	public:
 		struct Implementation;
-		std::shared_ptr<Implementation> impl = nullptr;	
+		std::shared_ptr<Implementation> impl = nullptr;
 
 		friend class GraphicsDeviceManager;
+
+	private:
+		static GameRunMode RunMode;
 	};
 }
 

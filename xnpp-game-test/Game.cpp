@@ -10,7 +10,7 @@
 class Game1 : public Xna::Game{
 	using base = Xna::Game;
 public:
-	Game1() : Xna::Game() {
+	Game1() : Xna::Game(Xna::GameRunMode::Bgfx) {
 		graphics = Xna::GraphicsDeviceManager(*this);
 		Content().RootDirectory("Content");
 	}
@@ -21,6 +21,8 @@ public:
 
 	void LoadContent() override {
 		base::LoadContent();
+
+		auto gem = Content().Load<Xna::Texture2D>("Sprites/Gem");
 	}
 
 	void Update(Xna::GameTime& gameTime) override {

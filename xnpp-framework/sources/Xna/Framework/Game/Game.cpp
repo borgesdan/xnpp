@@ -10,7 +10,13 @@
 using Xna::CSharp::TimeSpan;
 
 namespace Xna {
-    Game::Game() {
+    GameRunMode Game::RunMode = GameRunMode::Bgfx;
+
+    GameRunMode Game::CurrentRunMode() { return RunMode; }
+
+    Game::Game(GameRunMode runMode) {
+        RunMode = runMode;
+
         FrameworkDispatcher::Update();
         impl = std::make_shared<Implementation>();
         impl->content = ContentManager(impl->gameServices);
@@ -84,14 +90,16 @@ namespace Xna {
 		if (impl->graphicsDeviceManager != nullptr)
 			impl->graphicsDeviceManager->CreateDevice();
 
-		Initialize();
-		impl->isRun = true;
-		BeginRun();
-		impl->gameTime.ElapsedGameTime(CSharp::TimeSpan::Zero());
-		impl->gameTime.TotalGameTime(impl->totalGameTime);
-		impl->isRunnningSlowly = false;        
-		Update(impl->gameTime);
-		impl->doneFirstUpdate = true;
+        if (RunMode == GameRunMode::Classic) {
+            Initialize();
+            impl->isRun = true;
+            BeginRun();
+            impl->gameTime.ElapsedGameTime(CSharp::TimeSpan::Zero());
+            impl->gameTime.TotalGameTime(impl->totalGameTime);
+            impl->isRunnningSlowly = false;
+            Update(impl->gameTime);
+            impl->doneFirstUpdate = true;
+        }	
 
 		if (useBlockingRun){
             if(impl->host.has_value())
@@ -388,6 +396,28 @@ namespace Xna {
     void Game::HostActivated(void* sender, CSharp::EventArgs const& e) {
         if (impl->isActive)
             return;
+
+        if (RunMode == GameRunMode::Bgfx) {
+            auto graphicsDevice = GraphicsDevice();
+
+            //[!] -- Sobre a inicialização tardia -- [!]
+            //Uma inicialização tardia pois a janela foi criada neste momento
+            //e o dispositivo gráfico foi criado sem o swapChain.		
+            //No XNA, que usava DirectX 9, aparentemente, poderia criar o dispositivo gráfico antes
+            //e depois vincular a janela.
+            //No DX11 precisa do SwapChain e este precisa do handle da janela.
+            auto& backend = graphicsDevice.GetBackend();
+            backend.LazyInitialization(impl->host->Window().Handle());
+
+            Initialize();
+            impl->isRun = true;
+            BeginRun();
+            impl->gameTime.ElapsedGameTime(CSharp::TimeSpan::Zero());
+            impl->gameTime.TotalGameTime(impl->totalGameTime);
+            impl->isRunnningSlowly = false;
+            Update(impl->gameTime);
+            impl->doneFirstUpdate = true;
+        }
 
         impl->isActive = true;
         OnActivated(this, CSharp::EventArgs::Empty);

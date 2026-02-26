@@ -32,8 +32,8 @@ namespace Xna {
 	}
 
 	void BgfxTexture2D::Initialize(size_t width, size_t height, bool mipMap, SurfaceFormat format) {
-		if (bgfx::isValid(textureHandle)) 
-			bgfx::destroy(textureHandle);
+		if (textureHandle.idx != 0 && bgfx::isValid(textureHandle)) 
+			bgfx::destroy(textureHandle);		
 
 		assert(format == SurfaceFormat::Color && "Image format not supported.");
 		assert(width > 0 && "The textureHandle width must be greater than 0.");
