@@ -152,6 +152,8 @@ namespace Xna {
 		void GameComponentAdded(void* sender, GameComponentCollectionEventArgs e);
 		void GameComponentRemoved(void* sender, GameComponentCollectionEventArgs e);
 
+		void InternalRunGame();
+
 	public:
 		struct Implementation;
 		std::shared_ptr<Implementation> impl = nullptr;

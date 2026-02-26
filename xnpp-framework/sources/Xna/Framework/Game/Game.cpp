@@ -84,6 +84,17 @@ namespace Xna {
         Platform::Dispose();
     }	
 
+    void Game::InternalRunGame() {
+        Initialize();
+        impl->isRun = true;
+        BeginRun();
+        impl->gameTime.ElapsedGameTime(CSharp::TimeSpan::Zero());
+        impl->gameTime.TotalGameTime(impl->totalGameTime);
+        impl->isRunnningSlowly = false;
+        Update(impl->gameTime);
+        impl->doneFirstUpdate = true;
+    }
+
 	void Game::RunGame(bool useBlockingRun) {
 		impl->graphicsDeviceManager = impl->gameServices.GetService<IGraphicsDeviceManager>();
 
@@ -91,14 +102,7 @@ namespace Xna {
 			impl->graphicsDeviceManager->CreateDevice();
 
         if (RunMode == GameRunMode::Classic) {
-            Initialize();
-            impl->isRun = true;
-            BeginRun();
-            impl->gameTime.ElapsedGameTime(CSharp::TimeSpan::Zero());
-            impl->gameTime.TotalGameTime(impl->totalGameTime);
-            impl->isRunnningSlowly = false;
-            Update(impl->gameTime);
-            impl->doneFirstUpdate = true;
+            InternalRunGame();
         }	
 
 		if (useBlockingRun){
@@ -409,14 +413,7 @@ namespace Xna {
             auto& backend = graphicsDevice.GetBackend();
             backend.LazyInitialization(impl->host->Window().Handle());
 
-            Initialize();
-            impl->isRun = true;
-            BeginRun();
-            impl->gameTime.ElapsedGameTime(CSharp::TimeSpan::Zero());
-            impl->gameTime.TotalGameTime(impl->totalGameTime);
-            impl->isRunnningSlowly = false;
-            Update(impl->gameTime);
-            impl->doneFirstUpdate = true;
+            InternalRunGame();
         }
 
         impl->isActive = true;
