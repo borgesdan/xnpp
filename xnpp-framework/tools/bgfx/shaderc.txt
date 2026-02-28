@@ -20,6 +20,10 @@ cmake -GNinja -DCMAKE_BUILD_TYPE=Release ..
 cmake --build . --config Release
 
 ---------------------------------------------------------------
+.\shaderc.exe -f "C:/Users/Borges/source/repos/xnpp/xnpp-framework/shaders/sprite.vs.sc" -o "C:/Users/Borges/source/repos/xnpp/xnpp-framework/shaders/sprite.vs.bin" --platform windows --profile s_5_0 --type vertex --varyingdef "C:/Users/Borges/source/repos/xnpp/xnpp-framework/shaders/varying.def.sc" --verbose
+
+.\shaderc.exe -f "C:/Users/Borges/source/repos/xnpp/xnpp-framework/shaders/sprite.fs.sc" -o "C:/Users/Borges/source/repos/xnpp/xnpp-framework/shaders/sprite.fs.bin" --platform windows --profile s_5_0 --type fragment --varyingdef "C:/Users/Borges/source/repos/xnpp/xnpp-framework/shaders/varying.def.sc" --verbose
+---------------------------------------------------------------
 
 :: Clone o shaderc da Google
 git clone https://github.com/google/shaderc
