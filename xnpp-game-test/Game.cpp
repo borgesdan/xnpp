@@ -22,7 +22,7 @@ public:
 	void LoadContent() override {
 		base::LoadContent();
 
-		
+		spriteBatch = Xna::SpriteBatch(GraphicsDevice());
 		texture = Content().Load<Xna::Texture2D>("Sprites/Gem");
 	}
 
@@ -107,14 +107,11 @@ public:
 	}
 
 	void Draw(Xna::GameTime& gameTime) override {
-		graphics.GraphicsDevice()->Clear(backColor);
+		//graphics.GraphicsDevice()->Clear(backColor);
 
-		//spriteBatch.Begin();
-		//spriteBatch.Draw(texture, Xna::Vector2(100, 100), Xna::Color::White());
-		//spriteBatch.End();
-
-		if(spriteBatch == nullptr)
-			spriteBatch = Xna::SpriteBatch(GraphicsDevice());
+		spriteBatch.Begin();
+		spriteBatch.Draw(texture, Xna::Vector2(100, 100), Xna::Color::White());
+		spriteBatch.End();
 
 		base::Draw(gameTime);
 	}

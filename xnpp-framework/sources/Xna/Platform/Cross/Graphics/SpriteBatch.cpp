@@ -35,14 +35,7 @@ namespace Xna {
 		float u1, v1, u2, v2;
 		uint32_t color;
 		bgfx::TextureHandle texture;
-	};	
-
-	// Estrutura para armazenar informações da textura
-	struct TextureInfo {
-		uint16_t width;
-		uint16_t height;
-		bool hasAlpha;
-	};
+	};		
 
 	struct BgfxSpriteBatch final : public PlatformNS::ISpriteBatch {
 		BgfxSpriteBatch() : m_beginCalled(false), m_currentSpriteCount(0) {
@@ -73,7 +66,10 @@ namespace Xna {
 				indices[idx + 5] = base;
 			}
 
-			m_ib = bgfx::createDynamicIndexBuffer(kMaxIndices, BGFX_BUFFER_NONE);
+			m_ib = bgfx::createDynamicIndexBuffer(
+				bgfx::copy(indices, kMaxIndices * sizeof(uint16_t)),
+				BGFX_BUFFER_NONE
+			);
 
 			delete[] indices;
 
@@ -126,7 +122,7 @@ namespace Xna {
 			sprite.v1 = v1;
 			sprite.u2 = u2;
 			sprite.v2 = v2;
-			sprite.color = SwapXnaColor(color);
+			sprite.color = 0xffffffff; //SwapXnaColor(color);
 			sprite.texture = bgfxTex->textureHandle;
 
 			m_sprites.push_back(sprite);
@@ -161,9 +157,7 @@ namespace Xna {
 			}
 
 			// Atualizar vertex buffer
-			bgfx::update(m_vb, 0,
-				bgfx::makeRef(vertices.data(),
-					vertices.size() * sizeof(SpriteVertex)));
+			bgfx::update(m_vb, 0, bgfx::copy(vertices.data(), vertices.size() * sizeof(SpriteVertex)));
 
 			// Setar estado de renderização
 			uint64_t state = BGFX_STATE_WRITE_RGB

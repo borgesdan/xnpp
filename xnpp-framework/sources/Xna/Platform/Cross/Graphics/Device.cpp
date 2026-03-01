@@ -13,6 +13,7 @@
 #include "Xna/Framework/Graphics/DepthStencilState.hpp"
 #include "Xna/Framework/Graphics/GraphicsDevice.hpp"
 #include "Xna/Framework/Graphics/RasterizerState.hpp"
+#include <bx/math.h>
 
 namespace Xna {
 	//Padrão do BlendState para Bgfx
@@ -281,12 +282,17 @@ namespace Xna {
 			throw std::runtime_error("bgfx init failed");
 
 		// Definindo o View 0 (o "canvas" principal)
-		bgfx::setViewRect(0, 0, 0, static_cast<uint16_t>(w), static_cast<uint16_t>(h));
+		//bgfx::setViewRect(0, 0, 0, static_cast<uint16_t>(w), static_cast<uint16_t>(h));			
+
+		float ortho[16];
+		bx::mtxOrtho(ortho, 0.0f, w, h, 0.0f, 0.0f, 1.0f, 0.0f, bgfx::getCaps()->homogeneousDepth);
+		bgfx::setViewTransform(0, NULL, ortho);
+		bgfx::setViewRect(0, 0, 0, w, h);
 
 		//Cornflower Blue (RGBA)		
 		//uint32_t clearColor = 0x6495EDFF;
 		const auto clearColor = SwapXnaColor(Colors::CornflowerBlue);
-		bgfx::setViewClear(0, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, clearColor, 1.0f, 0);		
+		bgfx::setViewClear(0, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, clearColor, 1.0f, 0);
 	}
 
 	void BgfxGraphicsDevice::ApplyBlendState(BlendState const& blend) {
