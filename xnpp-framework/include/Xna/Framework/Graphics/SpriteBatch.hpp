@@ -122,6 +122,7 @@ namespace Xna {
 			std::optional<GraphicsDevice> device;
 			bool beginCalled{ false };
 			PlatformImpl::SpriteBatchImpl platformImpl;
+			std::unique_ptr<PlatformNS::ISpriteBatch> backend;
 		};
 
 		std::shared_ptr<Implementation> impl;

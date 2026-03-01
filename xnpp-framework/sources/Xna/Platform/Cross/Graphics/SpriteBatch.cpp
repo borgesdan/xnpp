@@ -1,4 +1,3 @@
-#include "Xna/Platform/_Platform.hpp"
 #include <bgfx/bgfx.h>
 #include <bgfx/platform.h>
 #include <bx/bx.h>
@@ -7,6 +6,9 @@
 #include <stdexcept>
 
 #include "Xna/Framework/Graphics/SpriteBatch.hpp"
+#include "Xna/Framework/Rectangle.hpp"
+#include "Xna/Framework/Vector2.hpp"
+#include "BgfxGraphics.hpp"
 
 namespace Xna {
 	struct SpriteVertex {
@@ -33,18 +35,7 @@ namespace Xna {
 		float u1, v1, u2, v2;
 		uint32_t color;
 		bgfx::TextureHandle texture;
-	};
-
-	// Estrutura para representar um retângulo (já que bgfx não tem Rect)
-	struct Rect {
-		int32_t x, y;
-		int32_t width, height;
-
-		Rect() : x(0), y(0), width(0), height(0) {}
-		Rect(int32_t _x, int32_t _y, int32_t _w, int32_t _h)
-			: x(_x), y(_y), width(_w), height(_h) {
-		}
-	};
+	};	
 
 	// Estrutura para armazenar informações da textura
 	struct TextureInfo {
@@ -60,10 +51,14 @@ namespace Xna {
 
 			// Criar buffers com tamanho máximo
 			m_vb = bgfx::createDynamicVertexBuffer(
-				bgfx::makeRef(nullptr, 0),
-				m_layout,
-				BGFX_BUFFER_NONE
+				kMaxVertices,    // Capacidade total pré-alocada
+				m_layout,        // Layout dos vértices
+				BGFX_BUFFER_NONE // Ou BGFX_BUFFER_ALLOW_RESIZE se quiser que ele cresça dinamicamente
 			);
+
+			if (!bgfx::isValid(m_vb)) {
+				throw std::runtime_error("");
+			}
 
 			// Índices estáticos (triângulos para quads)
 			uint16_t* indices = new uint16_t[kMaxIndices];
@@ -78,9 +73,7 @@ namespace Xna {
 				indices[idx + 5] = base;
 			}
 
-			m_ib = bgfx::createIndexBuffer(
-				bgfx::makeRef(indices, kMaxIndices * sizeof(uint16_t))
-			);
+			m_ib = bgfx::createDynamicIndexBuffer(kMaxIndices, BGFX_BUFFER_NONE);
 
 			delete[] indices;
 
@@ -88,83 +81,58 @@ namespace Xna {
 			m_textureUniform = bgfx::createUniform("s_texture", bgfx::UniformType::Sampler);
 
 			// Criar shaders (você precisará compilar seus próprios shaders)
-			m_program = loadShaderProgram("vs_sprite.bin", "fs_sprite.bin");
+			m_program = loadShaderProgram("C:/Users/Borges/source/repos/xnpp/xnpp-framework/shaders/sprite.vs.bin", "C:/Users/Borges/source/repos/xnpp/xnpp-framework/shaders/sprite.fs.bin");
 		}
 
-		void begin() {
+		void Begin() override {
 			m_beginCalled = true;
 			m_currentSpriteCount = 0;
 			m_sprites.clear();
 			m_currentTexture.idx = bgfx::kInvalidHandle;
-		}
-
-		// Overload sem source rect
-		void draw(bgfx::TextureHandle texture, float x, float y,
-			uint32_t color = 0xffffffff) {
-			draw(texture, x, y, 1.0f, 1.0f, nullptr, color);
-		}
-
-		// Overload com scale
-		void draw(bgfx::TextureHandle texture, float x, float y,
-			float scaleX, float scaleY,
-			uint32_t color = 0xffffffff) {
-			draw(texture, x, y, scaleX, scaleY, nullptr, color);
-		}
-
-		// Overload com source rect (usando nossa estrutura Rect)
-		void draw(bgfx::TextureHandle texture, float x, float y,
-			const Rect* sourceRect,
-			uint32_t color = 0xffffffff) {
-			draw(texture, x, y, 1.0f, 1.0f, sourceRect, color);
-		}
+		}		
 
 		// Método principal que todos os outros chamam
-		void draw(bgfx::TextureHandle texture, float x, float y,
-			float scaleX, float scaleY,
-			const Rect* sourceRect,
-			uint32_t color = 0xffffffff) {
-			if (!m_beginCalled) return;
-
-			// Você precisa obter as dimensões reais da textura
-			// Por enquanto, vamos usar valores padrão
-			TextureInfo texInfo = getTextureInfo(texture);
+		void Draw(PlatformNS::ITexture2D const& texture, const Rectangle* sourceRect, Vector2 const& pos, Vector2 const& scale, Color const& color) override {
+			if (!m_beginCalled) return;			
 
 			float width, height;
 			float u1 = 0.0f, v1 = 0.0f, u2 = 1.0f, v2 = 1.0f;
 
+			const auto bgfxTex = reinterpret_cast<const BgfxTexture2D*>(&texture);
+
 			if (sourceRect) {
-				width = static_cast<float>(sourceRect->width);
-				height = static_cast<float>(sourceRect->height);
+				width = static_cast<float>(sourceRect->Width);
+				height = static_cast<float>(sourceRect->Height);
 
 				// Calcular UVs baseado nas dimensões da textura
-				if (texInfo.width > 0 && texInfo.height > 0) {
-					u1 = sourceRect->x / static_cast<float>(texInfo.width);
-					v1 = sourceRect->y / static_cast<float>(texInfo.height);
-					u2 = (sourceRect->x + sourceRect->width) / static_cast<float>(texInfo.width);
-					v2 = (sourceRect->y + sourceRect->height) / static_cast<float>(texInfo.height);
+				if (bgfxTex->width > 0 && bgfxTex->height > 0) {
+					u1 = sourceRect->X / static_cast<float>(bgfxTex->width);
+					v1 = sourceRect->Y / static_cast<float>(bgfxTex->height);
+					u2 = (sourceRect->X + sourceRect->Width) / static_cast<float>(bgfxTex->width);
+					v2 = (sourceRect->Y + sourceRect->Height) / static_cast<float>(bgfxTex->height);
 				}
 			}
 			else {
-				width = static_cast<float>(texInfo.width);
-				height = static_cast<float>(texInfo.height);
+				width = static_cast<float>(bgfxTex->width);
+				height = static_cast<float>(bgfxTex->height);
 			}
 
 			Sprite sprite;
-			sprite.x = x;
-			sprite.y = y;
-			sprite.width = width * scaleX;
-			sprite.height = height * scaleY;
+			sprite.x = pos.X;
+			sprite.y = pos.Y;
+			sprite.width = width * scale.X;
+			sprite.height = height * scale.Y;
 			sprite.u1 = u1;
 			sprite.v1 = v1;
 			sprite.u2 = u2;
 			sprite.v2 = v2;
-			sprite.color = color;
-			sprite.texture = texture;
+			sprite.color = SwapXnaColor(color);
+			sprite.texture = bgfxTex->textureHandle;
 
 			m_sprites.push_back(sprite);
 		}
 
-		void end() {
+		void End() override  {
 			if (!m_beginCalled) return;
 
 			if (!m_sprites.empty()) {
@@ -231,19 +199,7 @@ namespace Xna {
 			vertices.push_back({ right, top, 0.0f, sprite.color, sprite.u2, sprite.v1 });
 			vertices.push_back({ right, bottom, 0.0f, sprite.color, sprite.u2, sprite.v2 });
 			vertices.push_back({ left, bottom, 0.0f, sprite.color, sprite.u1, sprite.v2 });
-		}
-
-		// Função para obter informações da textura
-		// Você precisa implementar isso baseado em como você carrega texturas
-		TextureInfo getTextureInfo(bgfx::TextureHandle texture) {
-			TextureInfo info = { 256, 256, true }; // Valores padrão
-
-			// TODO: Implementar recuperação real das dimensões da textura
-			// bgfx não tem uma função direta para obter info de texture handle
-			// Você precisa manter um mapa de textura -> info quando carrega			
-
-			return info;
-		}
+		}		
 
 		bgfx::ProgramHandle loadShaderProgram(const char* vsPath, const char* fsPath) {
 			// Função auxiliar para carregar shader
@@ -260,10 +216,11 @@ namespace Xna {
 				char* data = new char[size];
 				fread(data, 1, size, file);
 				fclose(file);
-
-				const bgfx::Memory* mem = bgfx::makeRef(data, size);
-				bgfx::ShaderHandle handle = bgfx::createShader(mem);
+				
+				const bgfx::Memory* mem = bgfx::copy(data, size);
 				delete[] data;
+				
+				bgfx::ShaderHandle handle = bgfx::createShader(mem);
 
 				return handle;
 				};
@@ -283,7 +240,7 @@ namespace Xna {
 		bgfx::ProgramHandle m_program;
 		bgfx::UniformHandle m_textureUniform;
 		bgfx::TextureHandle m_currentTexture;
-		bgfx::IndexBufferHandle m_ib;
+		bgfx::DynamicIndexBufferHandle m_ib;
 		bgfx::DynamicVertexBufferHandle m_vb;
 		bgfx::VertexLayout m_layout;
 
@@ -294,4 +251,8 @@ namespace Xna {
 		static constexpr uint16_t kMaxVertices = kMaxSprites * 4;
 		static constexpr uint16_t kMaxIndices = kMaxSprites * 6;
 	};
+
+	std::unique_ptr<PlatformNS::ISpriteBatch> PlatformNS::ISpriteBatch::Create() {
+		return std::make_unique<BgfxSpriteBatch>();
+	}
 }

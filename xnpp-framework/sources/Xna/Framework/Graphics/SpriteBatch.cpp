@@ -5,7 +5,8 @@ namespace Xna {
 	SpriteBatch::SpriteBatch(GraphicsDevice const& device) {
 		impl = std::make_shared<Implementation>();
 		impl->device = device;
-		Platform::SpriteBatch_InitializeSpriteBatch(*this, device);
+		impl->backend = PlatformNS::ISpriteBatch::Create();
+		//Platform::SpriteBatch_InitializeSpriteBatch(*this, device);
 	}
 
 	void SpriteBatch::Begin(SpriteSortMode sortMode, std::optional<BlendState> const& blendState, std::optional<SamplerState> const& samplerState,
@@ -14,7 +15,8 @@ namespace Xna {
 		if (impl->beginCalled)
 			throw CSharp::InvalidOperationException("Invalid attempt to call the Begin method twice.");
 		
-		Platform::SpriteBatch_Begin(*this, sortMode, blendState, samplerState, depthStencilState, rasterizerState, effect, transformMatrix);
+		//Platform::SpriteBatch_Begin(*this, sortMode, blendState, samplerState, depthStencilState, rasterizerState, effect, transformMatrix);
+		impl->backend->Begin();
 
 		impl->beginCalled = true;
 	}
@@ -23,7 +25,8 @@ namespace Xna {
 		if (!impl->beginCalled)
 			throw CSharp::InvalidOperationException("Invalid attempt to call the End method before Begin.");
 
-		Platform::SpriteBatch_End(*this); 
+		//Platform::SpriteBatch_End(*this); 
+		impl->backend->End();
 
 		impl->beginCalled = false;
 	}
@@ -33,8 +36,8 @@ namespace Xna {
 
 		if (!impl->beginCalled)
 			throw CSharp::InvalidOperationException("The Begin method was not called before the Draw method.");
-
-		Platform::SpriteBatch_Draw(*this, texture, destinationRectangle, sourceRectangle, color, rotation, origin, effects, layerDepth);
+		
+		//Platform::SpriteBatch_Draw(*this, texture, destinationRectangle, sourceRectangle, color, rotation, origin, effects, layerDepth);
 	}
 
 	void SpriteBatch::Draw(Texture2D const& texture, Vector2 const& position, std::optional<Rectangle> const& sourceRectangle, Color const& color,
@@ -42,7 +45,10 @@ namespace Xna {
 		if (!impl->beginCalled)
 			throw CSharp::InvalidOperationException("The Begin method was not called before the Draw method.");
 
-		Platform::SpriteBatch_Draw(*this, texture, position, sourceRectangle, color, rotation, origin, scale, effects, layerDepth);
+		const auto& texBackend = texture.GetBackend();
+		impl->backend->Draw(texBackend, nullptr, position, scale, color);
+
+		//Platform::SpriteBatch_Draw(*this, texture, position, sourceRectangle, color, rotation, origin, scale, effects, layerDepth);
 	}
 
 	void SpriteBatch::DrawString(SpriteFont const& spriteFont, std::string const& text, Vector2 const& position, Color const& color, float rotation, Vector2 const& origin,

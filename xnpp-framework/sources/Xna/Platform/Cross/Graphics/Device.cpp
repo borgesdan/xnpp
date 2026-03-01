@@ -7,22 +7,14 @@
 #include "SDL3/SDL.h"
 #include "Xna/Platform/_Platform.hpp"
 
+#include "BgfxGraphics.hpp"
+
 #include "Xna/Framework/Graphics/BlendState.hpp"
 #include "Xna/Framework/Graphics/DepthStencilState.hpp"
 #include "Xna/Framework/Graphics/GraphicsDevice.hpp"
 #include "Xna/Framework/Graphics/RasterizerState.hpp"
 
 namespace Xna {
-	static constexpr uint32_t swapXnaColor(Color const& color) {
-		uint32_t xnaColor = color.PackedValue();
-		uint32_t bgfxColor = ((xnaColor & 0x000000FF) << 24) | // R
-			((xnaColor & 0x0000FF00) << 8) | // G
-			((xnaColor & 0x00FF0000) >> 8) | // B
-			((xnaColor & 0xFF000000) >> 24);  // A
-
-		return bgfxColor;
-	}
-
 	//Padrão do BlendState para Bgfx
 	struct BgfxBlendState {
 		static constexpr uint64_t Opaque = 0;
@@ -293,7 +285,7 @@ namespace Xna {
 
 		//Cornflower Blue (RGBA)		
 		//uint32_t clearColor = 0x6495EDFF;
-		const auto clearColor = swapXnaColor(Colors::CornflowerBlue);
+		const auto clearColor = SwapXnaColor(Colors::CornflowerBlue);
 		bgfx::setViewClear(0, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, clearColor, 1.0f, 0);		
 	}
 

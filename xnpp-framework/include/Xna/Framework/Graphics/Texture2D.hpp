@@ -79,6 +79,14 @@ namespace Xna {
 		inline bool operator==(std::nullptr_t) const noexcept { return impl == nullptr; }
 		inline explicit operator bool() const noexcept { return impl != nullptr; }
 
+		PlatformNS::ITexture2D& GetBackend() {
+			return *impl->backend.get();
+		}
+
+		const PlatformNS::ITexture2D& GetBackend() const {
+			return *impl->backend.get();
+		}
+
 	private:
 		struct Implementation {
 			bool hasMipmaps{ false };

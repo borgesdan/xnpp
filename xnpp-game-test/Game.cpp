@@ -22,7 +22,8 @@ public:
 	void LoadContent() override {
 		base::LoadContent();
 
-		auto gem = Content().Load<Xna::Texture2D>("Sprites/Gem");
+		
+		texture = Content().Load<Xna::Texture2D>("Sprites/Gem");
 	}
 
 	void Update(Xna::GameTime& gameTime) override {
@@ -108,6 +109,13 @@ public:
 	void Draw(Xna::GameTime& gameTime) override {
 		graphics.GraphicsDevice()->Clear(backColor);
 
+		//spriteBatch.Begin();
+		//spriteBatch.Draw(texture, Xna::Vector2(100, 100), Xna::Color::White());
+		//spriteBatch.End();
+
+		if(spriteBatch == nullptr)
+			spriteBatch = Xna::SpriteBatch(GraphicsDevice());
+
 		base::Draw(gameTime);
 	}
 
@@ -122,6 +130,7 @@ private:
 	Xna::SoundEffect soundEffect = nullptr;
 	Xna::Song song = nullptr;
 	std::shared_ptr<Xna::SoundEffectInstance> soundEffectInstance = nullptr;
+	Xna::Texture2D texture = nullptr;
 	bool one = false;
 };
 

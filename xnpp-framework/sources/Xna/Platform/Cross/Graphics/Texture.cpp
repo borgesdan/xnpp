@@ -1,32 +1,10 @@
-#include "Xna/Platform/_Platform.hpp"
-#include <bgfx/bgfx.h>
 #include <bgfx/platform.h>
 #include <bx/bx.h>
 #include <bx/debug.h>
 #include <stdexcept>
-#include <cstdint>
-
-#include "Xna/Framework/Graphics/Texture2D.hpp"
+#include "BgfxGraphics.hpp"
 
 namespace Xna {
-	struct BgfxTexture2D final : PlatformNS::ITexture2D {
-		bgfx::TextureHandle textureHandle{};
-		size_t width{ 0 };
-		size_t height{ 0 };
-		bool mipMap{ false };
-
-		void Initialize(size_t width, size_t height, bool mipMap, SurfaceFormat format) override;
-		void SetData(size_t level, std::optional<Rectangle> const& rect, const void* data,
-			size_t startIndex, size_t elementCount, bool hasMipMap, size_t sizeOfData) override;
-		void GetData(size_t level, std::optional<Rectangle> const& rect, void* data,
-			size_t startIndex, size_t elementCount, size_t sizeOfData) override;
-
-		~BgfxTexture2D() override {
-			if (bgfx::isValid(textureHandle))
-				bgfx::destroy(textureHandle);
-		}
-	};
-
 	std::unique_ptr<PlatformNS::ITexture2D> PlatformNS::ITexture2D::Create() {
 		return std::make_unique<BgfxTexture2D>();
 	}
@@ -88,7 +66,7 @@ namespace Xna {
 
 		// O bgfx::copy cria uma cópia segura dos dados para a GPU
 		const auto buffer = reinterpret_cast<const uint8_t*>(data);
-		const bgfx::Memory* mem = bgfx::copy(buffer + startIndex, elementCount * sizeOfData);
+		const bgfx::Memory* mem = bgfx::copy(buffer + startIndex, elementCount / sizeOfData);
 
 		// 2. Atualize a textura
 		bgfx::updateTexture2D(
