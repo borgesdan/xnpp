@@ -66,7 +66,7 @@ namespace Xna {
 
 		// O bgfx::copy cria uma cópia segura dos dados para a GPU
 		const auto buffer = reinterpret_cast<const uint8_t*>(data);
-		const bgfx::Memory* mem = bgfx::copy(buffer + startIndex, elementCount / sizeOfData);
+		const bgfx::Memory* mem = bgfx::copy(buffer + startIndex, elementCount);
 
 		// 2. Atualize a textura
 		bgfx::updateTexture2D(
