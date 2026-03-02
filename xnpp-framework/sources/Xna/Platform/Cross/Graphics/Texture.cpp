@@ -27,7 +27,7 @@ namespace Xna {
 			//O layout dos bits na memória.
 			bgfx::TextureFormat::RGBA8,
 			//Flags de Recurso e Sampler
-			BGFX_TEXTURE_NONE | BGFX_SAMPLER_U_CLAMP | BGFX_SAMPLER_V_CLAMP,
+			BGFX_TEXTURE_NONE | BGFX_SAMPLER_U_CLAMP | BGFX_SAMPLER_V_CLAMP | BGFX_SAMPLER_MIN_POINT | BGFX_SAMPLER_MAG_POINT,
 			//O ponteiro para os dados da imagem.
 			NULL // Dados da imagem
 		);		
@@ -72,7 +72,7 @@ namespace Xna {
 		bgfx::updateTexture2D(
 			textureHandle,          // O handle da textura
 			0,						// Camada 0 para texturas simples
-			hasMipMap ? 1 : 0,		// Nível de Mip
+			0,		// Nível de Mip
 			x, y,					// Coordenadas X e Y
 			w, h,					// Largura e Altura da região
 			mem						// O bloco de memória com os novos pixels

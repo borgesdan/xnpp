@@ -16,169 +16,6 @@
 #include <bx/math.h>
 
 namespace Xna {
-	//Padrão do BlendState para Bgfx
-	struct BgfxBlendState {
-		static constexpr uint64_t Opaque = 0;
-		static constexpr uint64_t AlphaBlend = BGFX_STATE_BLEND_FUNC(BGFX_STATE_BLEND_SRC_ALPHA, BGFX_STATE_BLEND_INV_SRC_ALPHA);
-		static constexpr uint64_t NonPremultiplied = AlphaBlend;
-		static constexpr uint64_t Additive = BGFX_STATE_BLEND_FUNC(BGFX_STATE_BLEND_ONE, BGFX_STATE_BLEND_ONE);
-
-		constexpr operator uint64_t() const noexcept { return value; }
-
-		constexpr BgfxBlendState() = default;
-		constexpr BgfxBlendState(BlendState const& blend) {
-			if (blend.IsOpaque())
-				value = BgfxBlendState::Opaque;
-			else if (blend.IsAlphaBlend())
-				value = BgfxBlendState::AlphaBlend;
-			else if (blend.IsNonPremultiplied())
-				value = BgfxBlendState::NonPremultiplied;
-			else if (blend.IsAdditive())
-				value = BgfxBlendState::Additive;
-			else {
-				throw std::runtime_error("Invalid BlendState");
-			}
-		}
-
-		uint64_t value{ 0 };
-	};
-
-	//Padrão do BlendOperation para Bgfx
-	struct BgfxBlendOperation {
-		static constexpr uint64_t Add = BGFX_STATE_BLEND_EQUATION_ADD;
-		static constexpr uint64_t Subtract = BGFX_STATE_BLEND_EQUATION_SUB;
-		static constexpr uint64_t ReverseSubtract = BGFX_STATE_BLEND_EQUATION_REVSUB;
-		static constexpr uint64_t Min = BGFX_STATE_BLEND_EQUATION_MIN;
-		static constexpr uint64_t Max = BGFX_STATE_BLEND_EQUATION_MAX;
-
-		constexpr operator uint64_t() const noexcept { return value; }
-
-		constexpr BgfxBlendOperation() = default;
-		constexpr BgfxBlendOperation(BlendFunction op) {
-			switch (op) {
-			case BlendFunction::Add:
-				value = BgfxBlendOperation::Add;
-				break;
-			case BlendFunction::Subtract:
-				value = BgfxBlendOperation::Subtract;
-				break;
-			case BlendFunction::ReverseSubtract:
-				value = BgfxBlendOperation::ReverseSubtract;
-				break;
-			case BlendFunction::Min:
-				value = BgfxBlendOperation::Min;
-				break;
-			case BlendFunction::Max:
-				value = BgfxBlendOperation::Max;
-				break;
-			}
-		}
-
-		uint64_t value{ 0 };
-	};
-
-	//Padrão do ColorWriterChannel para Bgfx
-	struct BgfxColorWriteChannel {
-		static constexpr uint64_t Red = BGFX_STATE_WRITE_R;
-		static constexpr uint64_t Green = BGFX_STATE_WRITE_G;
-		static constexpr uint64_t Blue = BGFX_STATE_WRITE_B;
-		static constexpr uint64_t Alpha = BGFX_STATE_WRITE_A;
-		static constexpr uint64_t All = BGFX_STATE_WRITE_RGB | BGFX_STATE_WRITE_A;
-
-		constexpr BgfxColorWriteChannel() = default;
-
-		constexpr BgfxColorWriteChannel(ColorWriteChannels channel) {
-			switch (channel)
-			{
-			case ColorWriteChannels::Red:
-				value = Red;
-				break;
-			case ColorWriteChannels::Green:
-				value = Green;
-				break;
-			case ColorWriteChannels::Blue:
-				value = Blue;
-				break;
-			case ColorWriteChannels::Alpha:
-				value = Alpha;
-				break;
-			case ColorWriteChannels::All:
-				value = All;
-				break;
-			default:
-				break;
-			}
-		}
-
-		constexpr operator uint64_t() const noexcept { return value; }
-
-		uint64_t value{ 0 };
-	};
-
-	//Padrão do Blend para Bgfx
-	struct BgfxBlend {
-		static constexpr uint64_t One = BGFX_STATE_BLEND_ONE;
-		static constexpr uint64_t SourceColor = BGFX_STATE_BLEND_SRC_COLOR;
-		static constexpr uint64_t InverseSourceColor = BGFX_STATE_BLEND_INV_SRC_COLOR;
-		static constexpr uint64_t SourceAlpha = BGFX_STATE_BLEND_SRC_ALPHA;
-		static constexpr uint64_t InverseSourceAlpha = BGFX_STATE_BLEND_INV_SRC_ALPHA;
-		static constexpr uint64_t DestinationAlpha = BGFX_STATE_BLEND_DST_ALPHA;
-		static constexpr uint64_t InverseDestinationAlpha = BGFX_STATE_BLEND_INV_DST_ALPHA;
-		static constexpr uint64_t DestinationColor = BGFX_STATE_BLEND_DST_COLOR;
-		static constexpr uint64_t InverseDestinationColor = BGFX_STATE_BLEND_INV_DST_COLOR;
-		static constexpr uint64_t SourceAlphaSaturation = BGFX_STATE_BLEND_SRC_ALPHA_SAT;
-		static constexpr uint64_t BlendFactor = BGFX_STATE_BLEND_FACTOR;
-		static constexpr uint64_t InverseBlendFactor = BGFX_STATE_WRITE_RGB | BGFX_STATE_WRITE_A;
-
-		constexpr BgfxBlend() = default;
-		constexpr BgfxBlend(Blend blend) {
-			switch (blend)
-			{
-			case Xna::Blend::One:
-				value = One;
-				break;
-			case Xna::Blend::SourceColor:
-				value = SourceColor;
-				break;
-			case Xna::Blend::InverseSourceColor:
-				value = InverseSourceColor;
-				break;
-			case Xna::Blend::SourceAlpha:
-				value = SourceAlpha;
-				break;
-			case Xna::Blend::InverseSourceAlpha:
-				value = InverseSourceAlpha;
-				break;
-			case Xna::Blend::DestinationAlpha:
-				value = DestinationAlpha;
-				break;
-			case Xna::Blend::InverseDestinationAlpha:
-				value = InverseDestinationAlpha;
-				break;
-			case Xna::Blend::DestinationColor:
-				value = DestinationColor;
-				break;
-			case Xna::Blend::InverseDestinationColor:
-				value = InverseDestinationColor;
-				break;
-			case Xna::Blend::SourceAlphaSaturation:
-				value = SourceAlphaSaturation;
-				break;
-			case Xna::Blend::BlendFactor:
-				value = BlendFactor;
-				break;
-			case Xna::Blend::InverseBlendFactor:
-				value = InverseBlendFactor;
-				break;
-			default:
-				break;
-			}
-		}
-
-		constexpr operator uint64_t() const noexcept { return value; }
-		uint64_t value{ 0 };
-	};
-
 	// Bgfx: Stateless por design
 	// Ao contrário do XNA o bgfx limpa o estado configurado após cada bgfx::submit().
 	// Necessário chamar bgfx::setState (funções set/apply) em cada frame para cada objeto de desenho.
@@ -283,18 +120,13 @@ namespace Xna {
 		init.platformData = pd;
 
 		if (!bgfx::init(init))
-			throw std::runtime_error("bgfx init failed");
-
-		// Definindo o View 0 (o "canvas" principal)
-		//bgfx::setViewRect(0, 0, 0, static_cast<uint16_t>(w), static_cast<uint16_t>(h));			
+			throw std::runtime_error("bgfx init failed");				
 
 		float ortho[16];
 		bx::mtxOrtho(ortho, 0.0f, w, h, 0.0f, 0.0f, 1.0f, 0.0f, bgfx::getCaps()->homogeneousDepth);
 		bgfx::setViewTransform(0, NULL, ortho);
 		bgfx::setViewRect(0, 0, 0, w, h);
-
-		//Cornflower Blue (RGBA)		
-		//uint32_t clearColor = 0x6495EDFF;
+		
 		const auto clearColor = SwapXnaColor(Colors::CornflowerBlue);
 		bgfx::setViewClear(0, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, clearColor, 1.0f, 0);
 	}
