@@ -161,7 +161,7 @@ namespace Xna {
 			}
 
 			// 1. Atualiza o buffer com TODOS os vértices do frame de uma vez
-			bgfx::update(m_vb, 0, bgfx::copy(m_vertices.data(), verticesSize * sizeof(SpriteVertex)));
+			bgfx::update(m_vb, 0, bgfx::makeRef(m_vertices.data(), verticesSize * sizeof(SpriteVertex)));
 
 			uint64_t state = BGFX_STATE_WRITE_RGB | BGFX_STATE_WRITE_A |
 				BGFX_STATE_BLEND_FUNC(BGFX_STATE_BLEND_SRC_ALPHA, BGFX_STATE_BLEND_INV_SRC_ALPHA);
@@ -183,7 +183,6 @@ namespace Xna {
 					bgfx::setTexture(0, m_textureUniform, currentTex);
 					bgfx::setState(state);
 					bgfx::submit(0, m_program);
-
 
 					if (!isLast) {
 						currentTex = m_sprites[i].texture;
