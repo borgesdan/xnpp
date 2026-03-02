@@ -3,6 +3,7 @@
 
 #include "Shared.hpp"
 #include <cstdint>
+#include <optional>
 
 namespace Xna {
 
@@ -56,6 +57,10 @@ namespace Xna {
 		bool TwoSidedStencilMode{ true };
 
 		constexpr bool operator==(DepthStencilState const& other) const noexcept = default;
+
+		constexpr operator std::optional<DepthStencilState>() const {
+			return std::make_optional<DepthStencilState>(*this);
+		}
 
 	private:
 		constexpr DepthStencilState(bool dbEnable, bool dbwEnable)

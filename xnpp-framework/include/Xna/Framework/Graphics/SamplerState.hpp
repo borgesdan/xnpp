@@ -6,14 +6,8 @@
 #include <memory>
 #include <vector>
 #include <optional>
-#include "_GraphicsDevice.hpp"
 
 namespace Xna {
-	enum class SamplerStateApplyType {
-		Pixel,
-		Vertex,
-	};
-
 	//Contains sampler state, which determines how to sample texture data. 
 	struct SamplerState {
 	public:
@@ -37,30 +31,25 @@ namespace Xna {
 		float MinMipLevel{ 0 };
 
 		//Contains default state for point filtering and texture coordinate wrapping.
-		static SamplerState PoinWrap() { return SamplerState(TextureFilter::Point, TextureAddressMode::Clamp); }
+		static constexpr SamplerState PoinWrap() { return SamplerState(TextureFilter::Point, TextureAddressMode::Clamp); }
 		//Contains default state for point filtering and texture coordinate clamping.
-		static SamplerState PointClamp() { return SamplerState(TextureFilter::Point, TextureAddressMode::Clamp); }
+		static constexpr SamplerState PointClamp() { return SamplerState(TextureFilter::Point, TextureAddressMode::Clamp); }
 		//Contains default state for linear filtering and texture coordinate wrapping.
-		static SamplerState LinearWrap() { return SamplerState(TextureFilter::Linear, TextureAddressMode::Wrap); }
+		static constexpr SamplerState LinearWrap() { return SamplerState(TextureFilter::Linear, TextureAddressMode::Wrap); }
 		//Contains default state for linear filtering and texture coordinate clamping.
-		static SamplerState LinearClamp() { return SamplerState(TextureFilter::Linear, TextureAddressMode::Clamp); }
+		static constexpr SamplerState LinearClamp() { return SamplerState(TextureFilter::Linear, TextureAddressMode::Clamp); }
 		//Contains default state for anisotropic filtering and texture coordinate wrapping.
-		static SamplerState AnisotropicWrap() { return SamplerState(TextureFilter::Anisotropic, TextureAddressMode::Wrap); }
+		static constexpr SamplerState AnisotropicWrap() { return SamplerState(TextureFilter::Anisotropic, TextureAddressMode::Wrap); }
 		//Contains default state for anisotropic filtering and texture coordinate clamping.
-		static SamplerState AnisotropicClamp() { return SamplerState(TextureFilter::Anisotropic, TextureAddressMode::Clamp); }
+		static constexpr SamplerState AnisotropicClamp() { return SamplerState(TextureFilter::Anisotropic, TextureAddressMode::Clamp); }
+
+		constexpr operator std::optional<SamplerState>() const {
+			return std::make_optional<SamplerState>(*this);
+		}
 
 	private:
 		constexpr SamplerState(TextureFilter filter, TextureAddressMode uvw )
 			:Filter(filter), AddressU(uvw), AddressV(uvw), AddressW(uvw){ }
-
-		int32_t maxAnisotropy{};
-		TextureFilter filter{};
-		TextureAddressMode addressU{};
-		TextureAddressMode addressV{};
-		TextureAddressMode addressW{};
-		float mipMapLevelOfDetailBias{};
-		float maxMipLevel{};
-		float minMipLevel{};
 
 		friend class SamplerStateCollection;
 	};

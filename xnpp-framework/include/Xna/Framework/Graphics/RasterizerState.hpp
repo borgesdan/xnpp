@@ -2,6 +2,7 @@
 #define XNA_FRAMEWORK_RASTERIZERSTATE_HPP
 
 #include "Shared.hpp"
+#include <optional>
 
 namespace Xna {
 	//Contains rasterizer state, which determines how to convert vector data (shapes) into raster data (pixels). 
@@ -32,6 +33,10 @@ namespace Xna {
 		static constexpr RasterizerState CullCounterClockwise() { return RasterizerState(Xna::CullMode::CullCounterClockwiseFace, Xna::FillMode::Solid); }
 
 		constexpr bool operator==(RasterizerState const& other) const noexcept = default;
+
+		constexpr operator std::optional<RasterizerState>() const {
+			return std::make_optional<RasterizerState>(*this);
+		}
 
 	private:
 		constexpr RasterizerState(Xna::CullMode cullMode, Xna::FillMode fillMode)

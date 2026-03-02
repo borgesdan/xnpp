@@ -2,6 +2,7 @@
 #define XNA_FRAMEWORK_GRAPHICS_BLENDSTATE_HPP
 
 #include <cstdint>
+#include <optional>
 #include "Shared.hpp"
 #include "Xna/Framework/Color.hpp"
 
@@ -17,13 +18,13 @@ namespace Xna {
 		static constexpr BlendState Opaque() { return BlendState(Blend::One, Blend::Zero, Blend::One, Blend::Zero); }
 		//A built-in state object with settings for alpha blend, 
 		//that is blending the source and destination data using alpha.
-		static BlendState AlphaBlend() { return BlendState(Blend::One, Blend::InverseSourceAlpha, Blend::One, Blend::InverseSourceAlpha); }
+		static constexpr BlendState AlphaBlend() { return BlendState(Blend::One, Blend::InverseSourceAlpha, Blend::One, Blend::InverseSourceAlpha); }
 		//A built-in state object with settings for additive blend, 
 		//that is adding the destination data to the source data without using alpha.
-		static BlendState Additive() { return BlendState(Blend::SourceAlpha, Blend::One, Blend::SourceAlpha, Blend::One); }
+		static constexpr BlendState Additive() { return BlendState(Blend::SourceAlpha, Blend::One, Blend::SourceAlpha, Blend::One); }
 		//A built-in state object with settings for blending with non-premultipled alpha, 
 		//that is blending source and destination data using alpha while assuming the color data contains no alpha information.
-		static BlendState NonPremultiplied() { return BlendState(Blend::SourceAlpha, Blend::InverseSourceAlpha, Blend::SourceAlpha, Blend::InverseSourceAlpha); }
+		static constexpr BlendState NonPremultiplied() { return BlendState(Blend::SourceAlpha, Blend::InverseSourceAlpha, Blend::SourceAlpha, Blend::InverseSourceAlpha); }
 
 		//Gets or sets the arithmetic operation when blending alpha values. The default is BlendFunction.Add. 
 		BlendFunction AlphaBlendFunction{ BlendFunction::Add };
@@ -56,6 +57,10 @@ namespace Xna {
 		Color BlendFactor{ Color::White() };
 
 		constexpr bool operator==(BlendState const& other) const noexcept = default;
+
+		constexpr operator std::optional<BlendState>() const {
+			return std::make_optional<BlendState>(*this);
+		}
 
 		constexpr bool IsOpaque() const noexcept {
 			return ColorSourceBlend == Blend::One
