@@ -25,7 +25,7 @@ public:
 		spriteBatch = Xna::SpriteBatch(GraphicsDevice());
 		texture = Content().Load<Xna::Texture2D>("Sprites/Gem");
 		texture2 = Content().Load<Xna::Texture2D>("Sprites/Player/Idle");
-		//texture2 = Content().Load<Xna::Texture2D>("Sprites/Red");
+		texture3 = Content().Load<Xna::Texture2D>("Overlays/you_died");
 	}
 
 	void Update(Xna::GameTime& gameTime) override {
@@ -113,8 +113,10 @@ public:
 		graphics.GraphicsDevice()->Clear(backColor);
 
 		spriteBatch.Begin();
+		spriteBatch.Draw(texture3, Xna::Vector2(0,0), Xna::Color::White());
 		spriteBatch.Draw(texture2, Xna::Vector2(100,100), Xna::Color::White());
-		spriteBatch.Draw(texture, texPos, Xna::Color::White());
+		spriteBatch.Draw(texture, texPos, Xna::Color::Black());
+		spriteBatch.Draw(texture, Xna::Vector2(300, 100), Xna::Color::White());
 		spriteBatch.End();
 
 		base::Draw(gameTime);
@@ -133,6 +135,7 @@ private:
 	std::shared_ptr<Xna::SoundEffectInstance> soundEffectInstance = nullptr;
 	Xna::Texture2D texture = nullptr;
 	Xna::Texture2D texture2 = nullptr;
+	Xna::Texture2D texture3 = nullptr;
 	Xna::Vector2 texPos{};
 	bool one = false;
 };

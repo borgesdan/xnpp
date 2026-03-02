@@ -35,7 +35,7 @@ namespace Xna {
 		float u1, v1, u2, v2;
 		uint32_t color;
 		bgfx::TextureHandle texture;
-	};		
+	};
 
 	struct BgfxSpriteBatch final : public PlatformNS::ISpriteBatch {
 		BgfxSpriteBatch() : m_beginCalled(false), m_currentSpriteCount(0) {
@@ -85,11 +85,11 @@ namespace Xna {
 			m_currentSpriteCount = 0;
 			m_sprites.clear();
 			m_currentTexture.idx = bgfx::kInvalidHandle;
-		}		
+		}
 
 		// Método principal que todos os outros chamam
 		void Draw(PlatformNS::ITexture2D const& texture, const Rectangle* sourceRect, Vector2 const& pos, Vector2 const& scale, Color const& color) override {
-			if (!m_beginCalled) return;			
+			if (!m_beginCalled) return;
 
 			float width, height;
 			float u1 = 0.0f, v1 = 0.0f, u2 = 1.0f, v2 = 1.0f;
@@ -113,7 +113,7 @@ namespace Xna {
 				height = static_cast<float>(bgfxTex->height);
 			}
 
-			Sprite sprite;
+			Sprite sprite{};
 			sprite.x = pos.X;
 			sprite.y = pos.Y;
 			sprite.width = width * scale.X;
@@ -122,13 +122,13 @@ namespace Xna {
 			sprite.v1 = v1;
 			sprite.u2 = u2;
 			sprite.v2 = v2;
-			sprite.color = SwapXnaColor(color);
+			sprite.color = color;
 			sprite.texture = bgfxTex->textureHandle;
 
 			m_sprites.push_back(sprite);
 		}
 
-		void End() override  {
+		void End() override {
 			if (!m_beginCalled) return;
 
 			if (!m_sprites.empty()) {
@@ -148,7 +148,7 @@ namespace Xna {
 	private:
 		void flush() {
 			if (m_sprites.empty()) return;
-
+			
 			std::vector<SpriteVertex> vertices;
 			vertices.reserve(m_sprites.size() * 4);
 
@@ -156,28 +156,39 @@ namespace Xna {
 				addSpriteVertices(vertices, sprite);
 			}
 
-			// Atualizar vertex buffer
+			// 1. Atualiza o buffer com TODOS os vértices do frame de uma vez
 			bgfx::update(m_vb, 0, bgfx::copy(vertices.data(), vertices.size() * sizeof(SpriteVertex)));
 
-			// Setar estado de renderização
-			uint64_t state = BGFX_STATE_WRITE_RGB
-				| BGFX_STATE_WRITE_A
-				| BGFX_STATE_BLEND_FUNC(
-					BGFX_STATE_BLEND_SRC_ALPHA,
-					BGFX_STATE_BLEND_INV_SRC_ALPHA);
+			uint64_t state = BGFX_STATE_WRITE_RGB | BGFX_STATE_WRITE_A |
+				BGFX_STATE_BLEND_FUNC(BGFX_STATE_BLEND_SRC_ALPHA, BGFX_STATE_BLEND_INV_SRC_ALPHA);
 
-			// Setar vertex e index buffer
-			bgfx::setVertexBuffer(0, m_vb, 0, vertices.size());
-			bgfx::setIndexBuffer(m_ib, 0, m_sprites.size() * 6);
+			uint32_t startSprite = 0;
+			bgfx::TextureHandle currentTex = m_sprites[0].texture;
 
-			// Setar textura
-			bgfx::setTexture(0, m_textureUniform, m_sprites[0].texture);
+			for (uint32_t i = 0; i <= m_sprites.size(); ++i) {
+				// Se a textura mudou OU chegamos ao fim da lista, submetemos o batch atual
+				bool isLast = (i == m_sprites.size());
 
-			// Setar estado de renderização
-			bgfx::setState(state);
+				if (isLast || m_sprites[i].texture.idx != currentTex.idx) {
+					uint32_t spriteCount = i - startSprite;
 
-			// Submeter
-			bgfx::submit(0, m_program);
+					// Setar os buffers com OFFSETS específicos para este batch
+					// O 3º parâmetro de setVertexBuffer é o vértice inicial
+					// O 4º parâmetro é a quantidade de vértices
+					bgfx::setVertexBuffer(0, m_vb, 0, spriteCount * 4);
+					bgfx::setIndexBuffer(m_ib, startSprite * 6, spriteCount * 6);
+
+					bgfx::setTexture(0, m_textureUniform, currentTex);
+					bgfx::setState(state);
+					bgfx::submit(0, m_program);
+
+
+					if (!isLast) {
+						currentTex = m_sprites[i].texture;
+						startSprite = i;
+					}
+				}
+			}
 
 			m_sprites.clear();
 		}
@@ -193,7 +204,7 @@ namespace Xna {
 			vertices.push_back({ right, top, 0.0f, sprite.color, sprite.u2, sprite.v1 });
 			vertices.push_back({ right, bottom, 0.0f, sprite.color, sprite.u2, sprite.v2 });
 			vertices.push_back({ left, bottom, 0.0f, sprite.color, sprite.u1, sprite.v2 });
-		}		
+		}
 
 		bgfx::ProgramHandle loadShaderProgram(const char* vsPath, const char* fsPath) {
 			// Função auxiliar para carregar shader
@@ -210,10 +221,10 @@ namespace Xna {
 				char* data = new char[size];
 				fread(data, 1, size, file);
 				fclose(file);
-				
+
 				const bgfx::Memory* mem = bgfx::copy(data, size);
 				delete[] data;
-				
+
 				bgfx::ShaderHandle handle = bgfx::createShader(mem);
 
 				return handle;
@@ -227,7 +238,7 @@ namespace Xna {
 			}
 
 			return bgfx::createProgram(vsh, fsh, true); // true = destroy shaders when program is destro
-		}		
+		}
 
 	private:
 		std::vector<Sprite> m_sprites;
@@ -236,7 +247,7 @@ namespace Xna {
 		bgfx::TextureHandle m_currentTexture;
 		bgfx::DynamicIndexBufferHandle m_ib;
 		bgfx::DynamicVertexBufferHandle m_vb;
-		bgfx::VertexLayout m_layout;
+		bgfx::VertexLayout m_layout;		
 
 		bool m_beginCalled;
 		uint32_t m_currentSpriteCount;
