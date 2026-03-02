@@ -122,7 +122,7 @@ namespace Xna {
 			sprite.v1 = v1;
 			sprite.u2 = u2;
 			sprite.v2 = v2;
-			sprite.color = 0xffffffff; //SwapXnaColor(color);
+			sprite.color = SwapXnaColor(color);
 			sprite.texture = bgfxTex->textureHandle;
 
 			m_sprites.push_back(sprite);

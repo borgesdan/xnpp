@@ -24,6 +24,8 @@ public:
 
 		spriteBatch = Xna::SpriteBatch(GraphicsDevice());
 		texture = Content().Load<Xna::Texture2D>("Sprites/Gem");
+		texture2 = Content().Load<Xna::Texture2D>("Sprites/Player/Idle");
+		//texture2 = Content().Load<Xna::Texture2D>("Sprites/Red");
 	}
 
 	void Update(Xna::GameTime& gameTime) override {
@@ -111,6 +113,7 @@ public:
 		graphics.GraphicsDevice()->Clear(backColor);
 
 		spriteBatch.Begin();
+		spriteBatch.Draw(texture2, Xna::Vector2(100,100), Xna::Color::White());
 		spriteBatch.Draw(texture, texPos, Xna::Color::White());
 		spriteBatch.End();
 
@@ -129,6 +132,7 @@ private:
 	Xna::Song song = nullptr;
 	std::shared_ptr<Xna::SoundEffectInstance> soundEffectInstance = nullptr;
 	Xna::Texture2D texture = nullptr;
+	Xna::Texture2D texture2 = nullptr;
 	Xna::Vector2 texPos{};
 	bool one = false;
 };
