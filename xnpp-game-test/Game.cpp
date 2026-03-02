@@ -124,16 +124,16 @@ public:
 		graphics.GraphicsDevice()->Clear(backColor);
 
 		spriteBatch.Begin();
-		if (one)
+		//if (one)
 			spriteBatch.Draw(texture3, Xna::Vector2(0, 0), Xna::Color::White());
 
-		if (two)
+		//if (two)
 			spriteBatch.Draw(texture2, Xna::Vector2(100, 100), Xna::Color::White());
 
-		if (three)
+		//if (three)
 			spriteBatch.Draw(texture, texPos, Xna::Color::Black());
 
-		if (four)
+		//if (four)
 			spriteBatch.Draw(texture, Xna::Vector2(300, 100), Xna::Color::White());
 
 		spriteBatch.End();

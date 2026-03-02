@@ -151,6 +151,7 @@ namespace Xna {
 			
 			const auto verticesSize = m_sprites.size() * 4;
 
+			//[TODO] Tem um total de kMaxVertices, deve-se fazer um flush quando exceder o limite?!
 			if (m_vertices.size() < verticesSize) 
 				m_vertices.resize(verticesSize);
 
@@ -248,7 +249,7 @@ namespace Xna {
 		bgfx::DynamicIndexBufferHandle m_ib;
 		bgfx::DynamicVertexBufferHandle m_vb;
 		bgfx::VertexLayout m_layout;
-		std::vector<SpriteVertex> m_vertices;
+		std::vector<SpriteVertex> m_vertices{ kMaxVertices };
 
 		bool m_beginCalled;
 		uint32_t m_currentSpriteCount;
