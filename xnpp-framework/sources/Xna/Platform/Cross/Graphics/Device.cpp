@@ -178,7 +178,7 @@ namespace Xna {
 		constexpr operator uint64_t() const noexcept { return value; }
 		uint64_t value{ 0 };
 	};
-	
+
 	// Bgfx: Stateless por design
 	// Ao contrário do XNA o bgfx limpa o estado configurado após cada bgfx::submit().
 	// Necessário chamar bgfx::setState (funções set/apply) em cada frame para cada objeto de desenho.
@@ -191,14 +191,14 @@ namespace Xna {
 		//bgfx::setState(state, blendFactor);
 		uint64_t cachedBlendState{ 0 };
 		uint64_t cachedBlendFactor{ 0 };
-		uint64_t cachedDepthBuffer{ 0 }; 
+		uint64_t cachedDepthBuffer{ 0 };
 		uint64_t cachedRasterizerState{ 0 };
 
 		//fStencil = Front Face
 		//bStencil = Back Face (CounterClockWise)
 		//bgfx::setStencil(fStencil, bStencil);
-		uint32_t cachedFrontFaceStencil{0};
-		uint32_t cachedBackFaceStencil{0};
+		uint32_t cachedFrontFaceStencil{ 0 };
+		uint32_t cachedBackFaceStencil{ 0 };
 
 		// Para habilitar (equivalente a ScissorTestEnable = true)
 		//bgfx::setScissor(x, y, width, height);
@@ -225,7 +225,7 @@ namespace Xna {
 		void SetViewport(Viewport const& viewport) override {
 
 		}
-		
+
 		void MakeWindowAssociation(PresentationParameters const& pp) override {}
 		void Reset(Xna::PresentationParameters const& presentationParameters, GraphicsAdapter const& graphicsAdapter) {}
 		void LazyInitialization(intptr_t windowHandle) override;
@@ -234,11 +234,15 @@ namespace Xna {
 		void ApplyRasterizerState(RasterizerState const& rasterizer) override;
 		void Clear(ClearOptions options, Color const& color, float depth, int32_t stencil) override {
 			// 1. Garante que o View 0 seja processado (mesmo sem draw calls)
-			bgfx::touch(0);			
-		}		
+			//bgfx::touch(0);		
+			const auto clearColor = SwapXnaColor(color);
+			bgfx::setViewClear(0, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, clearColor, 1.0f, 0);
+
+			bgfx::touch(0);
+		}
 
 		~BgfxGraphicsDevice() override = default;
-	};	
+	};
 
 	//Com DirectX11 inicializamos o Swapchain após a criação da janela no GameHost.
 	//O dispositivo gráfico é criado antes, após o GameHost criar a janela e depois o Swapchain é criado.
@@ -268,7 +272,7 @@ namespace Xna {
 #endif	
 
 		int w, h;
-		if(!SDL_GetWindowSize(window, &w, &h))
+		if (!SDL_GetWindowSize(window, &w, &h))
 			throw std::runtime_error("Invalid game window.");
 
 		bgfx::Init init{};
@@ -412,7 +416,7 @@ namespace Xna {
 
 			cachedFrontFaceStencil = fStencil;
 			cachedBackFaceStencil = bStencil;
-			
+
 			// Nota: O Write Mask é global para o stencil no bgfx
 			// Talvez precisamos gerenciar o write mask via bgfx::setState se for complexo, 
 			// mas geralmente setStencil deve resolver.
@@ -441,7 +445,7 @@ namespace Xna {
 		//Solid: Comportamento padrão do bgfx.
 		if (fillMode == FillMode::WireFrame)
 			state |= BGFX_STATE_PT_LINES;
-		
+
 
 		cachedScissorTestEnable = rasterizer.ScissorTestEnable;
 		cachedRasterizerState = state;

@@ -32,13 +32,14 @@ public:
 
 		if (curKState.IsKeyDown(Xna::Keys::Right) && oldKState.IsKeyUp(Xna::Keys::Right)) {
 			backColor = Xna::Color::Red();
-			auto soundEffectInstance1 = soundEffect.CreateInstance();			
-			soundEffectInstance1.Play();			
+			/*auto soundEffectInstance1 = soundEffect.CreateInstance();			
+			soundEffectInstance1.Play();		*/	
 		}		
 
 		if (curKState.IsKeyDown(Xna::Keys::A) && oldKState.IsKeyUp(Xna::Keys::A)) {
 			backColor = Xna::Color::Green();
-			Xna::MediaPlayer::Play(song);			
+			/*Xna::MediaPlayer::Play(song);	*/		
+			texPos.X += 5;
 		}
 
 		if (curKState.IsKeyDown(Xna::Keys::Left) && oldKState.IsKeyUp(Xna::Keys::Left)) {
@@ -107,10 +108,10 @@ public:
 	}
 
 	void Draw(Xna::GameTime& gameTime) override {
-		//graphics.GraphicsDevice()->Clear(backColor);
+		graphics.GraphicsDevice()->Clear(backColor);
 
 		spriteBatch.Begin();
-		spriteBatch.Draw(texture, Xna::Vector2(100, 100), Xna::Color::White());
+		spriteBatch.Draw(texture, texPos, Xna::Color::White());
 		spriteBatch.End();
 
 		base::Draw(gameTime);
@@ -128,6 +129,7 @@ private:
 	Xna::Song song = nullptr;
 	std::shared_ptr<Xna::SoundEffectInstance> soundEffectInstance = nullptr;
 	Xna::Texture2D texture = nullptr;
+	Xna::Vector2 texPos{};
 	bool one = false;
 };
 
