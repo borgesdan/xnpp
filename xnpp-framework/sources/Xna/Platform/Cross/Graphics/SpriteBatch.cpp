@@ -149,15 +149,19 @@ namespace Xna {
 		void flush() {
 			if (m_sprites.empty()) return;
 			
-			std::vector<SpriteVertex> vertices;
-			vertices.reserve(m_sprites.size() * 4);
+			const auto verticesSize = m_sprites.size() * 4;
 
-			for (const auto& sprite : m_sprites) {
-				addSpriteVertices(vertices, sprite);
+			if (m_vertices.size() < verticesSize) 
+				m_vertices.resize(verticesSize);
+
+			size_t vertexIndex = 0;
+			for (size_t i = 0; i < m_sprites.size(); ++i) {
+				updateSpriteVertices(vertexIndex, m_sprites[i]);
+				vertexIndex += 4;
 			}
 
 			// 1. Atualiza o buffer com TODOS os vértices do frame de uma vez
-			bgfx::update(m_vb, 0, bgfx::copy(vertices.data(), vertices.size() * sizeof(SpriteVertex)));
+			bgfx::update(m_vb, 0, bgfx::copy(m_vertices.data(), verticesSize * sizeof(SpriteVertex)));
 
 			uint64_t state = BGFX_STATE_WRITE_RGB | BGFX_STATE_WRITE_A |
 				BGFX_STATE_BLEND_FUNC(BGFX_STATE_BLEND_SRC_ALPHA, BGFX_STATE_BLEND_INV_SRC_ALPHA);
@@ -173,8 +177,6 @@ namespace Xna {
 					uint32_t spriteCount = i - startSprite;
 
 					// Setar os buffers com OFFSETS específicos para este batch
-					// O 3º parâmetro de setVertexBuffer é o vértice inicial
-					// O 4º parâmetro é a quantidade de vértices
 					bgfx::setVertexBuffer(0, m_vb, 0, spriteCount * 4);
 					bgfx::setIndexBuffer(m_ib, startSprite * 6, spriteCount * 6);
 
@@ -191,19 +193,18 @@ namespace Xna {
 			}
 
 			m_sprites.clear();
-		}
+		}		
 
-		void addSpriteVertices(std::vector<SpriteVertex>& vertices, const Sprite& sprite) {
+		void updateSpriteVertices(size_t index, Sprite const& sprite) {
 			float left = sprite.x;
 			float right = sprite.x + sprite.width;
 			float top = sprite.y;
 			float bottom = sprite.y + sprite.height;
 
-			// Vertex order: top-left, top-right, bottom-right, bottom-left
-			vertices.push_back({ left, top, 0.0f, sprite.color, sprite.u1, sprite.v1 });
-			vertices.push_back({ right, top, 0.0f, sprite.color, sprite.u2, sprite.v1 });
-			vertices.push_back({ right, bottom, 0.0f, sprite.color, sprite.u2, sprite.v2 });
-			vertices.push_back({ left, bottom, 0.0f, sprite.color, sprite.u1, sprite.v2 });
+			m_vertices[index] = {left, top, 0.0f, sprite.color, sprite.u1, sprite.v1};
+			m_vertices[++index] = { right, top, 0.0f, sprite.color, sprite.u2, sprite.v1 };
+			m_vertices[++index] = { right, bottom, 0.0f, sprite.color, sprite.u2, sprite.v2 };
+			m_vertices[++index] = { left, bottom, 0.0f, sprite.color, sprite.u1, sprite.v2 };
 		}
 
 		bgfx::ProgramHandle loadShaderProgram(const char* vsPath, const char* fsPath) {
@@ -247,7 +248,8 @@ namespace Xna {
 		bgfx::TextureHandle m_currentTexture;
 		bgfx::DynamicIndexBufferHandle m_ib;
 		bgfx::DynamicVertexBufferHandle m_vb;
-		bgfx::VertexLayout m_layout;		
+		bgfx::VertexLayout m_layout;
+		std::vector<SpriteVertex> m_vertices;
 
 		bool m_beginCalled;
 		uint32_t m_currentSpriteCount;
