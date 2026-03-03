@@ -1,4 +1,4 @@
-#include <bgfx/bgfx.h>
+Ôªø#include <bgfx/bgfx.h>
 #include <bgfx/platform.h>
 #include <bx/bx.h>
 #include <bx/math.h>
@@ -6,6 +6,7 @@
 #include <stdexcept>
 #include <algorithm>
 #include <numeric>
+#include <cmath>
 
 #include "Xna/Framework/Graphics/SpriteBatch.hpp"
 #include "Xna/Framework/Rectangle.hpp"
@@ -36,6 +37,13 @@ namespace Xna {
 		float x, y, width, height;
 		float u1, v1, u2, v2;
 		float layerDepth;
+		float cosR;
+		float sinR;
+		float rotation;
+		float originX;
+		float originY;
+		float scaleX;
+		float scaleY;
 		uint32_t color;
 		bgfx::TextureHandle texture;
 	};
@@ -45,18 +53,18 @@ namespace Xna {
 			SpriteVertex::init();
 			m_layout = SpriteVertex::ms_layout;
 
-			// Criar buffers com tamanho m·ximo
+			// Criar buffers com tamanho m√°ximo
 			m_vb = bgfx::createDynamicVertexBuffer(
-				kMaxVertices,    // Capacidade total prÈ-alocada
-				m_layout,        // Layout dos vÈrtices
-				BGFX_BUFFER_NONE // Ou BGFX_BUFFER_ALLOW_RESIZE se quiser que ele cresÁa dinamicamente
+				kMaxVertices,    // Capacidade total pr√©-alocada
+				m_layout,        // Layout dos v√©rtices
+				BGFX_BUFFER_NONE // Ou BGFX_BUFFER_ALLOW_RESIZE se quiser que ele cres√ßa dinamicamente
 			);
 
 			if (!bgfx::isValid(m_vb)) {
 				throw std::runtime_error("");
 			}
 
-			// Õndices est·ticos (tri‚ngulos para quads)
+			// √çndices est√°ticos (tri√¢ngulos para quads)
 			uint16_t* indices = new uint16_t[kMaxIndices];
 			for (uint16_t i = 0; i < kMaxSprites; ++i) {
 				uint16_t base = i * 4;
@@ -79,7 +87,7 @@ namespace Xna {
 			// Criar uniform para textura
 			m_textureUniform = bgfx::createUniform("s_texture", bgfx::UniformType::Sampler);
 
-			// Criar shaders (vocÍ precisar· compilar seus prÛprios shaders)
+			// Criar shaders (voc√™ precisar√° compilar seus pr√≥prios shaders)
 			m_program = loadShaderProgram("C:/Users/Borges/source/repos/xnpp/xnpp-framework/shaders/sprite.vs.bin", "C:/Users/Borges/source/repos/xnpp/xnpp-framework/shaders/sprite.fs.bin");
 		}
 
@@ -89,8 +97,8 @@ namespace Xna {
 			m_sprites.clear();
 			m_currentTexture.idx = bgfx::kInvalidHandle;
 		}
-		
-		void Draw(PlatformNS::ITexture2D const& texture, Vector2 const& pos, const Rectangle* sourceRect, Vector2 const& origin, Vector2 const& scale, Color const& color, float layerDepth) override {
+
+		void Draw(PlatformNS::ITexture2D const& texture, Vector2 const& pos, const Rectangle* sourceRect, Vector2 const& origin, Vector2 const& scale, float rotation, Color const& color, float layerDepth) override {
 			if (!m_beginCalled) return;
 
 			float width, height;
@@ -102,7 +110,7 @@ namespace Xna {
 				width = static_cast<float>(sourceRect->Width);
 				height = static_cast<float>(sourceRect->Height);
 
-				// Calcular UVs baseado nas dimensıes da textura
+				// Calcular UVs baseado nas dimens√µes da textura
 				if (bgfxTex->width > 0 && bgfxTex->height > 0) {
 					u1 = sourceRect->X / static_cast<float>(bgfxTex->width);
 					v1 = sourceRect->Y / static_cast<float>(bgfxTex->height);
@@ -116,16 +124,23 @@ namespace Xna {
 			}
 
 			Sprite sprite{};
-			sprite.x = pos.X - origin.X;
-			sprite.y = pos.Y - origin.Y;
-			sprite.width = width * scale.X;
-			sprite.height = height * scale.Y;
+			sprite.x = pos.X;
+			sprite.y = pos.Y;
+			sprite.width = width;
+			sprite.height = height;
+			sprite.originX = origin.X;
+			sprite.originY = origin.Y;
+			sprite.scaleY = scale.Y;
+			sprite.scaleX = scale.X;
 			sprite.u1 = u1;
 			sprite.v1 = v1;
 			sprite.u2 = u2;
 			sprite.v2 = v2;
 			sprite.color = color;
 			sprite.layerDepth = layerDepth;
+			sprite.rotation = rotation;
+			sprite.cosR = std::cos(rotation);
+			sprite.sinR = std::sin(rotation);
 			sprite.texture = bgfxTex->textureHandle;
 
 			if (m_sortMode != SpriteSortMode::Immediate)
@@ -156,11 +171,11 @@ namespace Xna {
 			if (m_sprites.empty()) return;
 
 			sortSprites();
-			
+
 			const auto verticesSize = m_sprites.size() * 4;
 
 			//TODO: Tem um total de kMaxVertices, deve-se fazer um flush quando exceder o limite?!
-			if (m_vertices.size() < verticesSize) 
+			if (m_vertices.size() < verticesSize)
 				m_vertices.resize(verticesSize);
 
 			size_t vertexIndex = 0;
@@ -169,25 +184,25 @@ namespace Xna {
 				vertexIndex += 4;
 			}
 
-			// 1. Atualiza o buffer com TODOS os vÈrtices do frame de uma vez
+			// 1. Atualiza o buffer com TODOS os v√©rtices do frame de uma vez
 			bgfx::update(m_vb, 0, bgfx::makeRef(m_vertices.data(), verticesSize * sizeof(SpriteVertex)));
 
 			uint64_t state = BGFX_STATE_WRITE_RGB | BGFX_STATE_WRITE_A |
-				BGFX_STATE_BLEND_FUNC(BGFX_STATE_BLEND_SRC_ALPHA, BGFX_STATE_BLEND_INV_SRC_ALPHA);			
+				BGFX_STATE_BLEND_FUNC(BGFX_STATE_BLEND_SRC_ALPHA, BGFX_STATE_BLEND_INV_SRC_ALPHA);
 
 			for (uint32_t i = 0; i < m_sprites.size(); ++i) {
 				auto& sprite = m_sortMode == SpriteSortMode::Deferred
 					? m_sprites[i]
 					: m_sprites[m_spriteIndices[i]];
-				
+
 				bgfx::setVertexBuffer(0, m_vb, 0, 4);
 				bgfx::setIndexBuffer(m_ib, i * 6, 6);
 
 				bgfx::setTexture(0, m_textureUniform, sprite.texture);
 				bgfx::setState(state);
-				bgfx::submit(0, m_program);				
+				bgfx::submit(0, m_program);
 			}
-		}		
+		}
 
 		void immediateFlush(Sprite const& sprite) {
 			updateSpriteVertices(0, sprite);
@@ -200,7 +215,7 @@ namespace Xna {
 			bgfx::update(m_vb, 0, bgfx::makeRef(m_vertices.data(), verticesSize * sizeof(SpriteVertex)));
 
 			uint64_t state = BGFX_STATE_WRITE_RGB | BGFX_STATE_WRITE_A |
-				BGFX_STATE_BLEND_FUNC(BGFX_STATE_BLEND_SRC_ALPHA, BGFX_STATE_BLEND_INV_SRC_ALPHA);			
+				BGFX_STATE_BLEND_FUNC(BGFX_STATE_BLEND_SRC_ALPHA, BGFX_STATE_BLEND_INV_SRC_ALPHA);
 
 			bgfx::setVertexBuffer(0, m_vb, 0, spriteCount * 4);
 			bgfx::setIndexBuffer(m_ib, startSprite * 6, spriteCount * 6);
@@ -211,25 +226,25 @@ namespace Xna {
 		}
 
 		void sortSprites() {
-			// 1. Criamos um vetor de Ìndices (0, 1, 2, 3...)
+			// 1. Criamos um vetor de √≠ndices (0, 1, 2, 3...)
 			if (m_spriteIndices.size() != m_sprites.size())
 				m_spriteIndices.resize(m_sprites.size());
 
 			switch (m_sortMode)
-			{			
+			{
 			case Xna::SpriteSortMode::Texture:
 				std::sort(m_spriteIndices.begin(), m_spriteIndices.end(), [&](uint32_t a, uint32_t b) {
 					return m_sprites[a].texture.idx < m_sprites[b].texture.idx;
 					});
 				break;
 			case Xna::SpriteSortMode::BackToFront:
-				// 2. Ordenamos os ÕNDICES, comparando os valores no vetor original
+				// 2. Ordenamos os √çNDICES, comparando os valores no vetor original
 				std::stable_sort(m_spriteIndices.begin(), m_spriteIndices.end(), [&](uint32_t a, uint32_t b) {
 					return m_sprites[a].layerDepth < m_sprites[b].layerDepth;
 					});
 				break;
 			case Xna::SpriteSortMode::FrontToBack:
-				// 2. Ordenamos os ÕNDICES, comparando os valores no vetor original
+				// 2. Ordenamos os √çNDICES, comparando os valores no vetor original
 				std::stable_sort(m_spriteIndices.begin(), m_spriteIndices.end(), [&](uint32_t a, uint32_t b) {
 					return m_sprites[a].layerDepth > m_sprites[b].layerDepth;
 					});
@@ -239,20 +254,71 @@ namespace Xna {
 			}
 		}
 
-		void updateSpriteVertices(size_t index, Sprite const& sprite) {
-			float left = sprite.x;
-			float right = sprite.x + sprite.width;
-			float top = sprite.y;
-			float bottom = sprite.y + sprite.height;
+		void updateSpriteVertices(size_t index, Sprite const& sprite)
+		{
+			float w = sprite.width;
+			float h = sprite.height;
 
-			m_vertices[index] = {left, top, 0.0f, sprite.color, sprite.u1, sprite.v1};
-			m_vertices[++index] = { right, top, 0.0f, sprite.color, sprite.u2, sprite.v1 };
-			m_vertices[++index] = { right, bottom, 0.0f, sprite.color, sprite.u2, sprite.v2 };
-			m_vertices[++index] = { left, bottom, 0.0f, sprite.color, sprite.u1, sprite.v2 };
+			float ox = sprite.originX;
+			float oy = sprite.originY;
+
+			float posX = sprite.x;   // posi√ß√£o final (n√£o subtraia origin aqui)
+			float posY = sprite.y;
+
+			float cosR = sprite.cosR;
+			float sinR = sprite.sinR;
+
+			float scaleX = sprite.scaleX;
+			float scaleY = sprite.scaleY;
+
+			// 1Ô∏è‚É£ Pontos locais relativos ao pivot
+			float localX[4] = {
+				-ox,
+				 w - ox,
+				 w - ox,
+				-ox
+			};
+
+			float localY[4] = {
+				-oy,
+				-oy,
+				 h - oy,
+				 h - oy
+			};
+
+			for (int i = 0; i < 4; ++i)
+			{
+				// 2Ô∏è: Scale
+				float sx = localX[i] * scaleX;
+				float sy = localY[i] * scaleY;
+
+				// 3Ô∏è: Rotate
+				float rx = sx * cosR - sy * sinR;
+				float ry = sx * sinR + sy * cosR;
+
+				// 4Ô∏è: Translate
+				m_vertices[index + i].x = posX + rx;
+				m_vertices[index + i].y = posY + ry;
+				m_vertices[index + i].z = 0.0f;
+				m_vertices[index + i].color = sprite.color;
+			}
+
+			// UVs (inalterado)
+			m_vertices[index + 0].u = sprite.u1;
+			m_vertices[index + 0].v = sprite.v1;
+
+			m_vertices[index + 1].u = sprite.u2;
+			m_vertices[index + 1].v = sprite.v1;
+
+			m_vertices[index + 2].u = sprite.u2;
+			m_vertices[index + 2].v = sprite.v2;
+
+			m_vertices[index + 3].u = sprite.u1;
+			m_vertices[index + 3].v = sprite.v2;
 		}
 
 		bgfx::ProgramHandle loadShaderProgram(const char* vsPath, const char* fsPath) {
-			// FunÁ„o auxiliar para carregar shader
+			// Fun√ß√£o auxiliar para carregar shader
 			auto loadShader = [](const char* filePath) -> bgfx::ShaderHandle {
 				FILE* file = fopen(filePath, "rb");
 				if (!file) {
@@ -294,7 +360,7 @@ namespace Xna {
 		bgfx::DynamicVertexBufferHandle m_vb;
 		bgfx::VertexLayout m_layout;
 		std::vector<SpriteVertex> m_vertices{ kMaxVertices };
-		
+
 		std::vector<uint32_t> m_spriteIndices;
 		SpriteSortMode m_sortMode{ SpriteSortMode::Deferred };
 

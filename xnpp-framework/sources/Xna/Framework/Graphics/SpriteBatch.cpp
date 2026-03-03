@@ -46,6 +46,7 @@ namespace Xna {
 			Vector2(
 				static_cast<float>(texture.Width()) / static_cast<float>(destRect.Width),
 				static_cast<float>(texture.Height()) / static_cast<float>(destRect.Height)),
+			rotation,
 			color,
 			layerDepth);
 	}
@@ -62,6 +63,7 @@ namespace Xna {
 			sourceRectangle ? &sourceRectangle.value() : nullptr,
 			origin,
 			scale,
+			rotation,
 			color,
 			layerDepth);
 	}

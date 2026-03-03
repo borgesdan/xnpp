@@ -446,6 +446,7 @@ namespace Xna {
 				const Rectangle* sourceRect,
 				Vector2 const& origin,
 				Vector2 const& scale,
+				float rotation,
 				Color const& color,
 				float layerDepth) = 0;
 

@@ -32,6 +32,8 @@ public:
 		oldKState = curKState;
 		curKState = Xna::Keyboard::GetState();
 
+		rotation += gameTime.ElapsedGameTime().Milliseconds() * 0.001f;
+
 		if (curKState.IsKeyDown(Xna::Keys::Right) && oldKState.IsKeyUp(Xna::Keys::Right)) {
 			backColor = Xna::Color::Red();
 			/*auto soundEffectInstance1 = soundEffect.CreateInstance();
@@ -127,12 +129,13 @@ public:
 		//if (one)
 		spriteBatch.Draw(
 			texture3,
-			Xna::Vector2(0, 0),
+			Xna::Vector2(200, 300),
 			std::nullopt,
 			Xna::Color::White(),
-			0,
+			rotation,
 			Xna::Vector2(texture3.Width() / 2, texture3.Height() / 2),
-			Xna::Vector2(2,2),
+			//Xna::Vector2(0,0),
+			Xna::Vector2(0.5f, 0.5f),
 			Xna::SpriteEffects::None,
 			0);
 
@@ -165,6 +168,7 @@ private:
 	Xna::Texture2D texture2 = nullptr;
 	Xna::Texture2D texture3 = nullptr;
 	Xna::Vector2 texPos{};
+	float rotation = 0;
 
 	bool one = false;
 	bool two = false;
