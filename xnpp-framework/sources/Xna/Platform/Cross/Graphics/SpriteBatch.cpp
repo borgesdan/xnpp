@@ -36,14 +36,12 @@ namespace Xna {
 	struct Sprite {
 		float x, y, width, height;
 		float u1, v1, u2, v2;
+		float originX, originY;
+		float scaleX, scaleY;
 		float layerDepth;
-		float cosR;
-		float sinR;
-		float rotation;
-		float originX;
-		float originY;
-		float scaleX;
-		float scaleY;
+		float m00, m01;
+		float m10, m11;
+		float m02, m12;
 		uint32_t color;
 		bgfx::TextureHandle texture;
 	};
@@ -138,9 +136,23 @@ namespace Xna {
 			sprite.v2 = v2;
 			sprite.color = color;
 			sprite.layerDepth = layerDepth;
-			sprite.rotation = rotation;
-			sprite.cosR = std::cos(rotation);
-			sprite.sinR = std::sin(rotation);
+			
+			const auto cosR = std::cos(rotation);
+			const auto sinR = std::sin(rotation);
+			const auto m00 = cosR * scale.X;
+			const auto m01 = -sinR * scale.Y;
+			const auto m10 = sinR * scale.X;
+			const auto m11 = cosR * scale.Y;
+			const auto m02 = pos.X - origin.X * m00 - origin.Y * m01;
+			const auto m12 = pos.Y - origin.X * m10 - origin.Y * m11;
+
+			sprite.m00 = m00;
+			sprite.m01 = m01;
+			sprite.m10 = m10;
+			sprite.m11 = m11;
+			sprite.m02 = m02;
+			sprite.m12 = m12;
+
 			sprite.texture = bgfxTex->textureHandle;
 
 			if (m_sortMode != SpriteSortMode::Immediate)
@@ -225,8 +237,7 @@ namespace Xna {
 			bgfx::submit(0, m_program);
 		}
 
-		void sortSprites() {
-			// 1. Criamos um vetor de índices (0, 1, 2, 3...)
+		void sortSprites() {			
 			if (m_spriteIndices.size() != m_sprites.size())
 				m_spriteIndices.resize(m_sprites.size());
 
@@ -237,14 +248,12 @@ namespace Xna {
 					return m_sprites[a].texture.idx < m_sprites[b].texture.idx;
 					});
 				break;
-			case Xna::SpriteSortMode::BackToFront:
-				// 2. Ordenamos os ÍNDICES, comparando os valores no vetor original
+			case Xna::SpriteSortMode::BackToFront:				
 				std::stable_sort(m_spriteIndices.begin(), m_spriteIndices.end(), [&](uint32_t a, uint32_t b) {
 					return m_sprites[a].layerDepth < m_sprites[b].layerDepth;
 					});
 				break;
-			case Xna::SpriteSortMode::FrontToBack:
-				// 2. Ordenamos os ÍNDICES, comparando os valores no vetor original
+			case Xna::SpriteSortMode::FrontToBack:				
 				std::stable_sort(m_spriteIndices.begin(), m_spriteIndices.end(), [&](uint32_t a, uint32_t b) {
 					return m_sprites[a].layerDepth > m_sprites[b].layerDepth;
 					});
@@ -254,67 +263,30 @@ namespace Xna {
 			}
 		}
 
-		void updateSpriteVertices(size_t index, Sprite const& sprite)
+		void updateSpriteVertices(size_t index, Sprite const& s)
 		{
-			float w = sprite.width;
-			float h = sprite.height;
+			float w = s.width;
+			float h = s.height;
 
-			float ox = sprite.originX;
-			float oy = sprite.originY;
-
-			float posX = sprite.x;   // posição final (não subtraia origin aqui)
-			float posY = sprite.y;
-
-			float cosR = sprite.cosR;
-			float sinR = sprite.sinR;
-
-			float scaleX = sprite.scaleX;
-			float scaleY = sprite.scaleY;
-
-			// 1️⃣ Pontos locais relativos ao pivot
-			float localX[4] = {
-				-ox,
-				 w - ox,
-				 w - ox,
-				-ox
-			};
-
-			float localY[4] = {
-				-oy,
-				-oy,
-				 h - oy,
-				 h - oy
-			};
+			// pontos locais simples (sem origin!)
+			float localX[4] = { 0.0f, w, w, 0.0f };
+			float localY[4] = { 0.0f, 0.0f, h, h };
 
 			for (int i = 0; i < 4; ++i)
 			{
-				// 2️: Scale
-				float sx = localX[i] * scaleX;
-				float sy = localY[i] * scaleY;
+				float x = localX[i];
+				float y = localY[i];
 
-				// 3️: Rotate
-				float rx = sx * cosR - sy * sinR;
-				float ry = sx * sinR + sy * cosR;
-
-				// 4️: Translate
-				m_vertices[index + i].x = posX + rx;
-				m_vertices[index + i].y = posY + ry;
+				m_vertices[index + i].x = x * s.m00 + y * s.m01 + s.m02;
+				m_vertices[index + i].y = x * s.m10 + y * s.m11 + s.m12;
 				m_vertices[index + i].z = 0.0f;
-				m_vertices[index + i].color = sprite.color;
+				m_vertices[index + i].color = s.color;
 			}
 
-			// UVs (inalterado)
-			m_vertices[index + 0].u = sprite.u1;
-			m_vertices[index + 0].v = sprite.v1;
-
-			m_vertices[index + 1].u = sprite.u2;
-			m_vertices[index + 1].v = sprite.v1;
-
-			m_vertices[index + 2].u = sprite.u2;
-			m_vertices[index + 2].v = sprite.v2;
-
-			m_vertices[index + 3].u = sprite.u1;
-			m_vertices[index + 3].v = sprite.v2;
+			m_vertices[index + 0].u = s.u1; m_vertices[index + 0].v = s.v1;
+			m_vertices[index + 1].u = s.u2; m_vertices[index + 1].v = s.v1;
+			m_vertices[index + 2].u = s.u2; m_vertices[index + 2].v = s.v2;
+			m_vertices[index + 3].u = s.u1; m_vertices[index + 3].v = s.v2;
 		}
 
 		bgfx::ProgramHandle loadShaderProgram(const char* vsPath, const char* fsPath) {
