@@ -31,13 +31,22 @@ namespace Xna {
 		impl->beginCalled = false;
 	}
 
-	void SpriteBatch::Draw(Texture2D const& texture, Rectangle const& destinationRectangle, std::optional<Rectangle> const& sourceRectangle, Color const& color,
+	void SpriteBatch::Draw(Texture2D const& texture, Rectangle const& destRect, std::optional<Rectangle> const& sourceRectangle, Color const& color,
 		float rotation, Vector2 const& origin, SpriteEffects effects, float layerDepth) {
 
 		if (!impl->beginCalled)
 			throw CSharp::InvalidOperationException("The Begin method was not called before the Draw method.");
 		
-		//Platform::SpriteBatch_Draw(*this, texture, destinationRectangle, sourceRectangle, color, rotation, origin, effects, layerDepth);
+		const auto& texBackend = texture.GetBackend();
+		impl->backend->Draw(
+			texBackend,
+			destRect.Location(),
+			sourceRectangle ? &sourceRectangle.value() : nullptr,
+			Vector2(
+				static_cast<float>(texture.Width()) / static_cast<float>(destRect.Width),
+				static_cast<float>(texture.Height()) / static_cast<float>(destRect.Height)),
+			color,
+			layerDepth);
 	}
 
 	void SpriteBatch::Draw(Texture2D const& texture, Vector2 const& position, std::optional<Rectangle> const& sourceRectangle, Color const& color,
@@ -46,7 +55,13 @@ namespace Xna {
 			throw CSharp::InvalidOperationException("The Begin method was not called before the Draw method.");
 
 		const auto& texBackend = texture.GetBackend();
-		impl->backend->Draw(texBackend, nullptr, position, scale, color, layerDepth);
+		impl->backend->Draw(
+			texBackend,
+			position,			
+			sourceRectangle ? &sourceRectangle.value() : nullptr,
+			scale,
+			color,
+			layerDepth);
 	}
 
 	void SpriteBatch::DrawString(SpriteFont const& spriteFont, std::string const& text, Vector2 const& position, Color const& color, float rotation, Vector2 const& origin,

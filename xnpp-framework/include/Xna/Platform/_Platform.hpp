@@ -440,7 +440,14 @@ namespace Xna {
 		struct ISpriteBatch {
 			XNPP_API virtual ~ISpriteBatch() = default;
 			XNPP_API virtual void Begin(SpriteSortMode sortMode) = 0;
-			XNPP_API virtual void Draw(ITexture2D const& texture, const Rectangle* sourceRect, Vector2 const& pos, Vector2 const& scale, Color const& color, float layerDepth) = 0;
+			XNPP_API virtual void Draw(
+				ITexture2D const& texture,
+				Vector2 const& pos,				
+				const Rectangle* sourceRect,
+				Vector2 const& scale,
+				Color const& color,
+				float layerDepth) = 0;
+
 			XNPP_API virtual void End() = 0;
 
 			XNPP_API static std::unique_ptr<ISpriteBatch> Create();

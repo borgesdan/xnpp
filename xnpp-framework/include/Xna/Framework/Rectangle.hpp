@@ -45,6 +45,13 @@ namespace Xna {
 			X = p.X;
 			Y = p.Y;
 		}
+		//Gets or sets the width and height values of the Rectangle.
+		constexpr Point Size() const { return { Width, Height }; }
+		//Gets or sets the width and height values of the Rectangle.
+		constexpr void Size(Point const& p) {
+			Width = p.X;
+			Height = p.Y;
+		}
 		//Gets the Point that specifies the center of the rectangle.
 		constexpr Point Center() const { return { X + Width / 2, Y + Height / 2 }; }
 		//Returns a Rectangle with all of its values set to zero.

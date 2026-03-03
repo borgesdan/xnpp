@@ -89,9 +89,8 @@ namespace Xna {
 			m_sprites.clear();
 			m_currentTexture.idx = bgfx::kInvalidHandle;
 		}
-
-		// Método principal que todos os outros chamam
-		void Draw(PlatformNS::ITexture2D const& texture, const Rectangle* sourceRect, Vector2 const& pos, Vector2 const& scale, Color const& color, float layerDepth) override {
+		
+		void Draw(PlatformNS::ITexture2D const& texture, Vector2 const& pos, const Rectangle* sourceRect, Vector2 const& scale, Color const& color, float layerDepth) override {
 			if (!m_beginCalled) return;
 
 			float width, height;
