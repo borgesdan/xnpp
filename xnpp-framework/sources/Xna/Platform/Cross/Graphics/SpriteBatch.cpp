@@ -43,6 +43,7 @@ namespace Xna {
 		float m10, m11;
 		float m02, m12;
 		uint32_t color;
+		uint8_t effects;
 		bgfx::TextureHandle texture;
 	};
 
@@ -96,7 +97,7 @@ namespace Xna {
 			m_currentTexture.idx = bgfx::kInvalidHandle;
 		}
 
-		void Draw(PlatformNS::ITexture2D const& texture, Vector2 const& pos, const Rectangle* sourceRect, Vector2 const& origin, Vector2 const& scale, float rotation, Color const& color, float layerDepth) override {
+		void Draw(PlatformNS::ITexture2D const& texture, Vector2 const& pos, const Rectangle* sourceRect, Vector2 const& origin, Vector2 const& scale, float rotation, Color const& color, SpriteEffects effects, float layerDepth) override {
 			if (!m_beginCalled) return;
 
 			float width, height;
@@ -154,6 +155,7 @@ namespace Xna {
 			sprite.m12 = m12;
 
 			sprite.texture = bgfxTex->textureHandle;
+			sprite.effects = static_cast<uint8_t>(effects);
 
 			if (m_sortMode != SpriteSortMode::Immediate)
 				m_sprites.push_back(sprite);
@@ -283,10 +285,21 @@ namespace Xna {
 				m_vertices[index + i].color = s.color;
 			}
 
-			m_vertices[index + 0].u = s.u1; m_vertices[index + 0].v = s.v1;
-			m_vertices[index + 1].u = s.u2; m_vertices[index + 1].v = s.v1;
-			m_vertices[index + 2].u = s.u2; m_vertices[index + 2].v = s.v2;
-			m_vertices[index + 3].u = s.u1; m_vertices[index + 3].v = s.v2;
+			float u1 = s.u1;
+			float v1 = s.v1;
+			float u2 = s.u2;
+			float v2 = s.v2;
+
+			if (s.effects & (uint8_t)SpriteEffects::FlipHorizontally)
+				std::swap(u1, u2);
+
+			if (s.effects & (uint8_t)SpriteEffects::FlipVertically)
+				std::swap(v1, v2);
+
+			m_vertices[index + 0].u = u1; m_vertices[index + 0].v = v1;
+			m_vertices[index + 1].u = u2; m_vertices[index + 1].v = v1;
+			m_vertices[index + 2].u = u2; m_vertices[index + 2].v = v2;
+			m_vertices[index + 3].u = u1; m_vertices[index + 3].v = v2;
 		}
 
 		bgfx::ProgramHandle loadShaderProgram(const char* vsPath, const char* fsPath) {

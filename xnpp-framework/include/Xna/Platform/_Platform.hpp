@@ -448,6 +448,7 @@ namespace Xna {
 				Vector2 const& scale,
 				float rotation,
 				Color const& color,
+				SpriteEffects effects,
 				float layerDepth) = 0;
 
 			XNPP_API virtual void End() = 0;

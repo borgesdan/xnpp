@@ -132,11 +132,11 @@ public:
 			Xna::Vector2(200, 300),
 			std::nullopt,
 			Xna::Color::White(),
-			rotation,
+			0,
 			Xna::Vector2(texture3.Width() / 2, texture3.Height() / 2),
 			//Xna::Vector2(0,0),
-			Xna::Vector2(0.5f, 0.5f),
-			Xna::SpriteEffects::None,
+			Xna::Vector2(1),
+			Xna::SpriteEffects::Both,
 			0);
 
 		//if (two)

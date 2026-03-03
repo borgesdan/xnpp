@@ -288,9 +288,10 @@ namespace Xna {
 
 	enum class SpriteEffects
 	{
-		None = 0,
-		FlipHorizontally = 1,
-		FlipVertically = 2,
+		None = 1 << 0,
+		FlipHorizontally = 1 << 1,
+		FlipVertically = 1 << 2,
+		Both = (int)FlipHorizontally | (int)FlipVertically,
 	};
 
 	//Defines sprite sort-rendering options.

@@ -48,6 +48,7 @@ namespace Xna {
 				static_cast<float>(texture.Height()) / static_cast<float>(destRect.Height)),
 			rotation,
 			color,
+			effects,
 			layerDepth);
 	}
 
@@ -65,6 +66,7 @@ namespace Xna {
 			scale,
 			rotation,
 			color,
+			effects,
 			layerDepth);
 	}
 
