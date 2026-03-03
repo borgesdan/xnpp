@@ -125,7 +125,16 @@ public:
 
 		spriteBatch.Begin();
 		//if (one)
-			spriteBatch.Draw(texture3, Xna::Vector2(0, 0), Xna::Color::White());
+		spriteBatch.Draw(
+			texture3,
+			Xna::Vector2(0, 0),
+			std::nullopt,
+			Xna::Color::White(),
+			0,
+			Xna::Vector2(texture3.Width() / 2, texture3.Height() / 2),
+			Xna::Vector2(2,2),
+			Xna::SpriteEffects::None,
+			0);
 
 		//if (two)
 			spriteBatch.Draw(texture2, Xna::Vector2(100, 100), Xna::Color::White());

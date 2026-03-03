@@ -444,6 +444,7 @@ namespace Xna {
 				ITexture2D const& texture,
 				Vector2 const& pos,				
 				const Rectangle* sourceRect,
+				Vector2 const& origin,
 				Vector2 const& scale,
 				Color const& color,
 				float layerDepth) = 0;

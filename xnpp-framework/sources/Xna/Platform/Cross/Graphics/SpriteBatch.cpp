@@ -90,7 +90,7 @@ namespace Xna {
 			m_currentTexture.idx = bgfx::kInvalidHandle;
 		}
 		
-		void Draw(PlatformNS::ITexture2D const& texture, Vector2 const& pos, const Rectangle* sourceRect, Vector2 const& scale, Color const& color, float layerDepth) override {
+		void Draw(PlatformNS::ITexture2D const& texture, Vector2 const& pos, const Rectangle* sourceRect, Vector2 const& origin, Vector2 const& scale, Color const& color, float layerDepth) override {
 			if (!m_beginCalled) return;
 
 			float width, height;
@@ -116,8 +116,8 @@ namespace Xna {
 			}
 
 			Sprite sprite{};
-			sprite.x = pos.X;
-			sprite.y = pos.Y;
+			sprite.x = pos.X - origin.X;
+			sprite.y = pos.Y - origin.Y;
 			sprite.width = width * scale.X;
 			sprite.height = height * scale.Y;
 			sprite.u1 = u1;

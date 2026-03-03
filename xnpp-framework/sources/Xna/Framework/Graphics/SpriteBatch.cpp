@@ -42,6 +42,7 @@ namespace Xna {
 			texBackend,
 			destRect.Location(),
 			sourceRectangle ? &sourceRectangle.value() : nullptr,
+			origin,
 			Vector2(
 				static_cast<float>(texture.Width()) / static_cast<float>(destRect.Width),
 				static_cast<float>(texture.Height()) / static_cast<float>(destRect.Height)),
@@ -59,6 +60,7 @@ namespace Xna {
 			texBackend,
 			position,			
 			sourceRectangle ? &sourceRectangle.value() : nullptr,
+			origin,
 			scale,
 			color,
 			layerDepth);
