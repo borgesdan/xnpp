@@ -16,7 +16,7 @@ namespace Xna {
 			throw CSharp::InvalidOperationException("Invalid attempt to call the Begin method twice.");
 		
 		//Platform::SpriteBatch_Begin(*this, sortMode, blendState, samplerState, depthStencilState, rasterizerState, effect, transformMatrix);
-		impl->backend->Begin();
+		impl->backend->Begin(sortMode);
 
 		impl->beginCalled = true;
 	}
@@ -46,9 +46,7 @@ namespace Xna {
 			throw CSharp::InvalidOperationException("The Begin method was not called before the Draw method.");
 
 		const auto& texBackend = texture.GetBackend();
-		impl->backend->Draw(texBackend, nullptr, position, scale, color);
-
-		//Platform::SpriteBatch_Draw(*this, texture, position, sourceRectangle, color, rotation, origin, scale, effects, layerDepth);
+		impl->backend->Draw(texBackend, nullptr, position, scale, color, layerDepth);
 	}
 
 	void SpriteBatch::DrawString(SpriteFont const& spriteFont, std::string const& text, Vector2 const& position, Color const& color, float rotation, Vector2 const& origin,

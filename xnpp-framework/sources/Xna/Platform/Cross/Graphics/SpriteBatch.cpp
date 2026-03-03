@@ -4,6 +4,8 @@
 #include <bx/math.h>
 #include <bx/debug.h>
 #include <stdexcept>
+#include <algorithm>
+#include <numeric>
 
 #include "Xna/Framework/Graphics/SpriteBatch.hpp"
 #include "Xna/Framework/Rectangle.hpp"
@@ -33,6 +35,7 @@ namespace Xna {
 	struct Sprite {
 		float x, y, width, height;
 		float u1, v1, u2, v2;
+		float layerDepth;
 		uint32_t color;
 		bgfx::TextureHandle texture;
 	};
@@ -80,7 +83,7 @@ namespace Xna {
 			m_program = loadShaderProgram("C:/Users/Borges/source/repos/xnpp/xnpp-framework/shaders/sprite.vs.bin", "C:/Users/Borges/source/repos/xnpp/xnpp-framework/shaders/sprite.fs.bin");
 		}
 
-		void Begin() override {
+		void Begin(SpriteSortMode sortMode) override {
 			m_beginCalled = true;
 			m_currentSpriteCount = 0;
 			m_sprites.clear();
@@ -88,7 +91,7 @@ namespace Xna {
 		}
 
 		// Método principal que todos os outros chamam
-		void Draw(PlatformNS::ITexture2D const& texture, const Rectangle* sourceRect, Vector2 const& pos, Vector2 const& scale, Color const& color) override {
+		void Draw(PlatformNS::ITexture2D const& texture, const Rectangle* sourceRect, Vector2 const& pos, Vector2 const& scale, Color const& color, float layerDepth) override {
 			if (!m_beginCalled) return;
 
 			float width, height;
@@ -123,9 +126,13 @@ namespace Xna {
 			sprite.u2 = u2;
 			sprite.v2 = v2;
 			sprite.color = color;
+			sprite.layerDepth = layerDepth;
 			sprite.texture = bgfxTex->textureHandle;
 
-			m_sprites.push_back(sprite);
+			if (m_sortMode != SpriteSortMode::Immediate)
+				m_sprites.push_back(sprite);
+			else
+				immediateFlush(sprite);
 		}
 
 		void End() override {
@@ -148,10 +155,12 @@ namespace Xna {
 	private:
 		void flush() {
 			if (m_sprites.empty()) return;
+
+			sortSprites();
 			
 			const auto verticesSize = m_sprites.size() * 4;
 
-			//[TODO] Tem um total de kMaxVertices, deve-se fazer um flush quando exceder o limite?!
+			//TODO: Tem um total de kMaxVertices, deve-se fazer um flush quando exceder o limite?!
 			if (m_vertices.size() < verticesSize) 
 				m_vertices.resize(verticesSize);
 
@@ -165,35 +174,71 @@ namespace Xna {
 			bgfx::update(m_vb, 0, bgfx::makeRef(m_vertices.data(), verticesSize * sizeof(SpriteVertex)));
 
 			uint64_t state = BGFX_STATE_WRITE_RGB | BGFX_STATE_WRITE_A |
-				BGFX_STATE_BLEND_FUNC(BGFX_STATE_BLEND_SRC_ALPHA, BGFX_STATE_BLEND_INV_SRC_ALPHA);
+				BGFX_STATE_BLEND_FUNC(BGFX_STATE_BLEND_SRC_ALPHA, BGFX_STATE_BLEND_INV_SRC_ALPHA);			
 
-			uint32_t startSprite = 0;
-			bgfx::TextureHandle currentTex = m_sprites[0].texture;
+			for (uint32_t i = 0; i < m_sprites.size(); ++i) {
+				auto& sprite = m_sortMode == SpriteSortMode::Deferred
+					? m_sprites[i]
+					: m_sprites[m_spriteIndices[i]];
+				
+				bgfx::setVertexBuffer(0, m_vb, 0, 4);
+				bgfx::setIndexBuffer(m_ib, i * 6, 6);
 
-			for (uint32_t i = 0; i <= m_sprites.size(); ++i) {
-				// Se a textura mudou OU chegamos ao fim da lista, submetemos o batch atual
-				bool isLast = (i == m_sprites.size());
-
-				if (isLast || m_sprites[i].texture.idx != currentTex.idx) {
-					uint32_t spriteCount = i - startSprite;
-
-					// Setar os buffers com OFFSETS específicos para este batch
-					bgfx::setVertexBuffer(0, m_vb, 0, spriteCount * 4);
-					bgfx::setIndexBuffer(m_ib, startSprite * 6, spriteCount * 6);
-
-					bgfx::setTexture(0, m_textureUniform, currentTex);
-					bgfx::setState(state);
-					bgfx::submit(0, m_program);
-
-					if (!isLast) {
-						currentTex = m_sprites[i].texture;
-						startSprite = i;
-					}
-				}
+				bgfx::setTexture(0, m_textureUniform, sprite.texture);
+				bgfx::setState(state);
+				bgfx::submit(0, m_program);				
 			}
-
-			m_sprites.clear();
 		}		
+
+		void immediateFlush(Sprite const& sprite) {
+			updateSpriteVertices(0, sprite);
+
+			const auto verticesSize = 4;
+			const auto spriteCount = 1;
+			const auto startSprite = 0;
+			const auto currentTex = sprite.texture;
+
+			bgfx::update(m_vb, 0, bgfx::makeRef(m_vertices.data(), verticesSize * sizeof(SpriteVertex)));
+
+			uint64_t state = BGFX_STATE_WRITE_RGB | BGFX_STATE_WRITE_A |
+				BGFX_STATE_BLEND_FUNC(BGFX_STATE_BLEND_SRC_ALPHA, BGFX_STATE_BLEND_INV_SRC_ALPHA);			
+
+			bgfx::setVertexBuffer(0, m_vb, 0, spriteCount * 4);
+			bgfx::setIndexBuffer(m_ib, startSprite * 6, spriteCount * 6);
+
+			bgfx::setTexture(0, m_textureUniform, currentTex);
+			bgfx::setState(state);
+			bgfx::submit(0, m_program);
+		}
+
+		void sortSprites() {
+			// 1. Criamos um vetor de índices (0, 1, 2, 3...)
+			if (m_spriteIndices.size() != m_sprites.size())
+				m_spriteIndices.resize(m_sprites.size());
+
+			switch (m_sortMode)
+			{			
+			case Xna::SpriteSortMode::Texture:
+				std::sort(m_spriteIndices.begin(), m_spriteIndices.end(), [&](uint32_t a, uint32_t b) {
+					return m_sprites[a].texture.idx < m_sprites[b].texture.idx;
+					});
+				break;
+			case Xna::SpriteSortMode::BackToFront:
+				// 2. Ordenamos os ÍNDICES, comparando os valores no vetor original
+				std::stable_sort(m_spriteIndices.begin(), m_spriteIndices.end(), [&](uint32_t a, uint32_t b) {
+					return m_sprites[a].layerDepth < m_sprites[b].layerDepth;
+					});
+				break;
+			case Xna::SpriteSortMode::FrontToBack:
+				// 2. Ordenamos os ÍNDICES, comparando os valores no vetor original
+				std::stable_sort(m_spriteIndices.begin(), m_spriteIndices.end(), [&](uint32_t a, uint32_t b) {
+					return m_sprites[a].layerDepth > m_sprites[b].layerDepth;
+					});
+				break;
+			default:
+				return;
+			}
+		}
 
 		void updateSpriteVertices(size_t index, Sprite const& sprite) {
 			float left = sprite.x;
@@ -250,6 +295,9 @@ namespace Xna {
 		bgfx::DynamicVertexBufferHandle m_vb;
 		bgfx::VertexLayout m_layout;
 		std::vector<SpriteVertex> m_vertices{ kMaxVertices };
+		
+		std::vector<uint32_t> m_spriteIndices;
+		SpriteSortMode m_sortMode{ SpriteSortMode::Deferred };
 
 		bool m_beginCalled;
 		uint32_t m_currentSpriteCount;
