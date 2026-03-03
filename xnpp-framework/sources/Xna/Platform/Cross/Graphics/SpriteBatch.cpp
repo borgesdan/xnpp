@@ -8,6 +8,7 @@
 #include <numeric>
 #include <cmath>
 
+
 #include "Xna/Framework/Graphics/SpriteBatch.hpp"
 #include "Xna/Framework/Rectangle.hpp"
 #include "Xna/Framework/Vector2.hpp"
@@ -90,11 +91,12 @@ namespace Xna {
 			m_program = loadShaderProgram("C:/Users/Borges/source/repos/xnpp/xnpp-framework/shaders/sprite.vs.bin", "C:/Users/Borges/source/repos/xnpp/xnpp-framework/shaders/sprite.fs.bin");
 		}
 
-		void Begin(SpriteSortMode sortMode) override {
+		void Begin(SpriteSortMode sortMode, const BlendState* blendState) override {
 			m_beginCalled = true;
 			m_currentSpriteCount = 0;
 			m_sprites.clear();
 			m_currentTexture.idx = bgfx::kInvalidHandle;
+			m_blendState |= blendState ? BgfxConvertBlendState(*blendState) : BgfxBlendState::NonPremultiplied;
 		}
 
 		void Draw(PlatformNS::ITexture2D const& texture, Vector2 const& pos, const Rectangle* sourceRect, Vector2 const& origin, Vector2 const& scale, float rotation, Color const& color, SpriteEffects effects, float layerDepth) override {
@@ -209,8 +211,7 @@ namespace Xna {
 			bgfx::update(m_vb, 0, mem);
 
 			// 3. Renderização por Batches (O "Pulo do Gato")
-			uint64_t state = BGFX_STATE_WRITE_RGB | BGFX_STATE_WRITE_A |
-				BGFX_STATE_BLEND_FUNC(BGFX_STATE_BLEND_SRC_ALPHA, BGFX_STATE_BLEND_INV_SRC_ALPHA);
+			uint64_t state = m_blendState;
 
 			uint32_t batchStart = 0;
 			bgfx::TextureHandle currentBatchTexture = (m_sortMode == SpriteSortMode::Deferred)
@@ -263,8 +264,7 @@ namespace Xna {
 			bgfx::update(m_vb, 0, mem);
 
 			// 4. Configuração de estado
-			uint64_t state = BGFX_STATE_WRITE_RGB | BGFX_STATE_WRITE_A |
-				BGFX_STATE_BLEND_FUNC(BGFX_STATE_BLEND_SRC_ALPHA, BGFX_STATE_BLEND_INV_SRC_ALPHA);
+			uint64_t state = m_blendState;
 
 			// 5. Submissão
 			// Usamos apenas os primeiros 6 índices do IB (referentes a 1 quad)
@@ -378,6 +378,8 @@ namespace Xna {
 
 		bool m_beginCalled;
 		uint32_t m_currentSpriteCount;
+
+		uint32_t m_blendState{ BGFX_STATE_WRITE_RGB | BGFX_STATE_WRITE_A };
 
 		static constexpr uint16_t kMaxSprites = 2048;
 		static constexpr uint16_t kMaxVertices = kMaxSprites * 4;

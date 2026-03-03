@@ -125,7 +125,7 @@ public:
 	void Draw(Xna::GameTime& gameTime) override {
 		graphics.GraphicsDevice()->Clear(backColor);
 
-		spriteBatch.Begin();
+		spriteBatch.Begin(Xna::SpriteSortMode::BackToFront, Xna::BlendState::Opaque());
 		//if (one)
 		spriteBatch.Draw(
 			texture3,

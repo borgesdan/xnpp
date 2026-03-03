@@ -199,6 +199,44 @@ namespace Xna {
 		constexpr operator uint64_t() const noexcept { return value; }
 		uint64_t value{ 0 };
 	};
+
+
+
+	inline uint32_t BgfxConvertBlendState(BlendState const& blend) {
+		// 1: Adicionar o estado padrão
+		uint64_t state = 0
+			| BGFX_STATE_WRITE_RGB
+			| BGFX_STATE_WRITE_A
+			| BGFX_STATE_DEPTH_TEST_LESS;
+
+		// 2: Adicionar o bit específico de Blend
+		const BgfxBlendState blendState = blend;
+		state |= blendState;
+
+		const BgfxBlendOperation rgbOp = blend.ColorBlendFunction;
+		const BgfxBlendOperation alphaOp = blend.AlphaBlendFunction;
+
+		// 3: Definir a operação
+		if (rgbOp != alphaOp)
+			state |= BGFX_STATE_BLEND_EQUATION_SEPARATE(rgbOp, alphaOp);
+		else if (rgbOp != BgfxBlendOperation::Add) //Add é o padrão no bgfx
+			state |= rgbOp;
+
+		// 4: Aplicar canais de cores
+
+		const BgfxColorWriteChannel channel0 = blend.ColorWriteChannels;
+
+		//TODO: O state é global por draw
+		//XNA suporta ColorWriteChannels0..3
+		//bgfx suporta apenas uma máscara por draw
+		//
+		//MRT: Multiple Render Targets.
+		//XNA máscara por render target.
+		//bgfx é global por draw, não por render target.
+		state |= channel0;				
+
+		return state;
+	}
 }
 
 #endif

@@ -439,7 +439,10 @@ namespace Xna {
 
 		struct ISpriteBatch {
 			XNPP_API virtual ~ISpriteBatch() = default;
-			XNPP_API virtual void Begin(SpriteSortMode sortMode) = 0;
+			XNPP_API virtual void Begin(
+				SpriteSortMode sortMode,
+				const BlendState* blendState) = 0;
+
 			XNPP_API virtual void Draw(
 				ITexture2D const& texture,
 				Vector2 const& pos,				

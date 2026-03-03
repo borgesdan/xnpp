@@ -16,7 +16,7 @@ namespace Xna {
 			throw CSharp::InvalidOperationException("Invalid attempt to call the Begin method twice.");
 		
 		//Platform::SpriteBatch_Begin(*this, sortMode, blendState, samplerState, depthStencilState, rasterizerState, effect, transformMatrix);
-		impl->backend->Begin(sortMode);
+		impl->backend->Begin(sortMode, blendState ? &blendState.value() : nullptr);
 
 		impl->beginCalled = true;
 	}
