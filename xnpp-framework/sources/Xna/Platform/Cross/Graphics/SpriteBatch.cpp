@@ -157,8 +157,14 @@ namespace Xna {
 			sprite.texture = bgfxTex->textureHandle;
 			sprite.effects = static_cast<uint8_t>(effects);
 
-			if (m_sortMode != SpriteSortMode::Immediate)
+			if (m_sortMode != SpriteSortMode::Immediate) {
+				
+				if (m_sprites.size() >= kMaxSprites) {
+					flush(); // Desenha o que tem até agora e limpa a lista
+				}
+
 				m_sprites.push_back(sprite);
+			}
 			else
 				immediateFlush(sprite);
 		}
@@ -182,59 +188,90 @@ namespace Xna {
 
 	private:
 		void flush() {
-			if (m_sprites.empty()) return;
+			if (m_sprites.size() == 0) return;
 
+			// 1. Ordenação (se necessário)
 			sortSprites();
 
-			const auto verticesSize = m_sprites.size() * 4;
+			// 2. Preparar buffer de vértices
+			// Usamos alloc para que o bgfx gerencie a memória de transição de forma thread-safe
+			const bgfx::Memory* mem = bgfx::alloc(static_cast<uint32_t>(m_sprites.size() * 4 * sizeof(SpriteVertex)));
+			SpriteVertex* verts = (SpriteVertex*)mem->data;
 
-			//TODO: Tem um total de kMaxVertices, deve-se fazer um flush quando exceder o limite?!
-			if (m_vertices.size() < verticesSize)
-				m_vertices.resize(verticesSize);
-
-			size_t vertexIndex = 0;
 			for (size_t i = 0; i < m_sprites.size(); ++i) {
-				updateSpriteVertices(vertexIndex, m_sprites[i]);
-				vertexIndex += 4;
+				// Se usou índices na ordenação, acessamos via m_spriteIndices
+				uint32_t spriteIdx = (m_sortMode == SpriteSortMode::Deferred) ? (uint32_t)i : m_spriteIndices[i];
+
+				// Pequeno ajuste: passamos o ponteiro destino para evitar cópias extras
+				updateSpriteVerticesDirect(verts + (i * 4), m_sprites[spriteIdx]);
 			}
 
-			// 1. Atualiza o buffer com TODOS os vértices do frame de uma vez
-			bgfx::update(m_vb, 0, bgfx::makeRef(m_vertices.data(), verticesSize * sizeof(SpriteVertex)));
+			bgfx::update(m_vb, 0, mem);
 
+			// 3. Renderização por Batches (O "Pulo do Gato")
 			uint64_t state = BGFX_STATE_WRITE_RGB | BGFX_STATE_WRITE_A |
 				BGFX_STATE_BLEND_FUNC(BGFX_STATE_BLEND_SRC_ALPHA, BGFX_STATE_BLEND_INV_SRC_ALPHA);
 
-			for (uint32_t i = 0; i < m_sprites.size(); ++i) {
-				auto& sprite = m_sortMode == SpriteSortMode::Deferred
-					? m_sprites[i]
-					: m_sprites[m_spriteIndices[i]];
+			uint32_t batchStart = 0;
+			bgfx::TextureHandle currentBatchTexture = (m_sortMode == SpriteSortMode::Deferred)
+				? m_sprites[0].texture
+				: m_sprites[m_spriteIndices[0]].texture;
 
-				bgfx::setVertexBuffer(0, m_vb, 0, 4);
-				bgfx::setIndexBuffer(m_ib, i * 6, 6);
+			for (uint32_t i = 0; i <= m_sprites.size(); ++i) {
+				bool isLast = (i == m_sprites.size());
+				bgfx::TextureHandle tex = BGFX_INVALID_HANDLE;
 
-				bgfx::setTexture(0, m_textureUniform, sprite.texture);
-				bgfx::setState(state);
-				bgfx::submit(0, m_program);
+				if (!isLast) {
+					uint32_t idx = (m_sortMode == SpriteSortMode::Deferred) ? i : m_spriteIndices[i];
+					tex = m_sprites[idx].texture;
+				}
+
+				// Se a textura mudou ou é o fim da lista, desenhamos o batch anterior
+				if (isLast || tex.idx != currentBatchTexture.idx) {
+					uint32_t spriteCount = i - batchStart;
+
+					bgfx::setVertexBuffer(0, m_vb, 0, m_sprites.size() * 4); // VB inteiro
+					// Setamos o range correto do Index Buffer
+					bgfx::setIndexBuffer(m_ib, batchStart * 6, spriteCount * 6);
+
+					bgfx::setTexture(0, m_textureUniform, currentBatchTexture);
+					bgfx::setState(state);
+					bgfx::submit(0, m_program);
+
+					// Inicia novo batch
+					if (!isLast) {
+						batchStart = i;
+						currentBatchTexture = tex;
+					}
+				}
 			}
+
+			m_sprites.clear();
+			m_spriteIndices.clear();
 		}
 
 		void immediateFlush(Sprite const& sprite) {
-			updateSpriteVertices(0, sprite);
+			// 1. Alocamos memória transiente apenas para 4 vértices (1 quad)
+			const bgfx::Memory* mem = bgfx::alloc(4 * sizeof(SpriteVertex));
+			SpriteVertex* verts = reinterpret_cast<SpriteVertex*>(mem->data);
 
-			const auto verticesSize = 4;
-			const auto spriteCount = 1;
-			const auto startSprite = 0;
-			const auto currentTex = sprite.texture;
+			// 2. Preenchemos os vértices diretamente na memória alocada
+			updateSpriteVerticesDirect(verts, sprite);
 
-			bgfx::update(m_vb, 0, bgfx::makeRef(m_vertices.data(), verticesSize * sizeof(SpriteVertex)));
+			// 3. Atualizamos o Dynamic Vertex Buffer
+			// Importante: usamos o offset 0 porque estamos submetendo IMEDIATAMENTE
+			bgfx::update(m_vb, 0, mem);
 
+			// 4. Configuração de estado
 			uint64_t state = BGFX_STATE_WRITE_RGB | BGFX_STATE_WRITE_A |
 				BGFX_STATE_BLEND_FUNC(BGFX_STATE_BLEND_SRC_ALPHA, BGFX_STATE_BLEND_INV_SRC_ALPHA);
 
-			bgfx::setVertexBuffer(0, m_vb, 0, spriteCount * 4);
-			bgfx::setIndexBuffer(m_ib, startSprite * 6, spriteCount * 6);
+			// 5. Submissão
+			// Usamos apenas os primeiros 6 índices do IB (referentes a 1 quad)
+			bgfx::setVertexBuffer(0, m_vb, 0, 4);
+			bgfx::setIndexBuffer(m_ib, 0, 6);
 
-			bgfx::setTexture(0, m_textureUniform, currentTex);
+			bgfx::setTexture(0, m_textureUniform, sprite.texture);
 			bgfx::setState(state);
 			bgfx::submit(0, m_program);
 		}
@@ -265,42 +302,33 @@ namespace Xna {
 			}
 		}
 
-		void updateSpriteVertices(size_t index, Sprite const& s)
-		{
+		void updateSpriteVerticesDirect(SpriteVertex* target, Sprite const& s) {
+			// Definimos os cantos locais (0,0 até width, height)
 			float w = s.width;
 			float h = s.height;
 
-			// pontos locais simples (sem origin!)
-			float localX[4] = { 0.0f, w, w, 0.0f };
-			float localY[4] = { 0.0f, 0.0f, h, h };
+			// Coordenadas locais dos 4 vértices
+			float px[4] = { 0.0f, w,    w,    0.0f };
+			float py[4] = { 0.0f, 0.0f, h,    h };
 
-			for (int i = 0; i < 4; ++i)
-			{
-				float x = localX[i];
-				float y = localY[i];
-
-				m_vertices[index + i].x = x * s.m00 + y * s.m01 + s.m02;
-				m_vertices[index + i].y = x * s.m10 + y * s.m11 + s.m12;
-				m_vertices[index + i].z = 0.0f;
-				m_vertices[index + i].color = s.color;
+			// Aplicamos a matriz de transformação pré-calculada no Draw()
+			for (int i = 0; i < 4; ++i) {
+				target[i].x = px[i] * s.m00 + py[i] * s.m01 + s.m02;
+				target[i].y = px[i] * s.m10 + py[i] * s.m11 + s.m12;
+				target[i].z = s.layerDepth; // Usamos o depth para o Z-buffer se necessário
+				target[i].color = s.color;
 			}
 
-			float u1 = s.u1;
-			float v1 = s.v1;
-			float u2 = s.u2;
-			float v2 = s.v2;
+			// Cálculo de UVs com suporte a Flip
+			float u1 = s.u1, v1 = s.v1, u2 = s.u2, v2 = s.v2;
+			if (s.effects & (uint8_t)SpriteEffects::FlipHorizontally) std::swap(u1, u2);
+			if (s.effects & (uint8_t)SpriteEffects::FlipVertically)   std::swap(v1, v2);
 
-			if (s.effects & (uint8_t)SpriteEffects::FlipHorizontally)
-				std::swap(u1, u2);
-
-			if (s.effects & (uint8_t)SpriteEffects::FlipVertically)
-				std::swap(v1, v2);
-
-			m_vertices[index + 0].u = u1; m_vertices[index + 0].v = v1;
-			m_vertices[index + 1].u = u2; m_vertices[index + 1].v = v1;
-			m_vertices[index + 2].u = u2; m_vertices[index + 2].v = v2;
-			m_vertices[index + 3].u = u1; m_vertices[index + 3].v = v2;
-		}
+			target[0].u = u1; target[0].v = v1;
+			target[1].u = u2; target[1].v = v1;
+			target[2].u = u2; target[2].v = v2;
+			target[3].u = u1; target[3].v = v2;
+		}		
 
 		bgfx::ProgramHandle loadShaderProgram(const char* vsPath, const char* fsPath) {
 			// Função auxiliar para carregar shader
@@ -344,7 +372,6 @@ namespace Xna {
 		bgfx::DynamicIndexBufferHandle m_ib;
 		bgfx::DynamicVertexBufferHandle m_vb;
 		bgfx::VertexLayout m_layout;
-		std::vector<SpriteVertex> m_vertices{ kMaxVertices };
 
 		std::vector<uint32_t> m_spriteIndices;
 		SpriteSortMode m_sortMode{ SpriteSortMode::Deferred };
