@@ -6,17 +6,18 @@ namespace Xna {
 		impl = std::make_shared<Implementation>();
 		impl->device = device;
 		impl->backend = PlatformNS::ISpriteBatch::Create();
-		//Platform::SpriteBatch_InitializeSpriteBatch(*this, device);
 	}
 
 	void SpriteBatch::Begin(SpriteSortMode sortMode, std::optional<BlendState> const& blendState, std::optional<SamplerState> const& samplerState,
 		std::optional<DepthStencilState> const& depthStencilState, std::optional<RasterizerState> const& rasterizerState, std::optional<Effect> const& effect, std::optional<Matrix> transformMatrix) {
 		
 		if (impl->beginCalled)
-			throw CSharp::InvalidOperationException("Invalid attempt to call the Begin method twice.");
+			throw CSharp::InvalidOperationException("Invalid attempt to call the Begin method twice.");		
 		
-		//Platform::SpriteBatch_Begin(*this, sortMode, blendState, samplerState, depthStencilState, rasterizerState, effect, transformMatrix);
-		impl->backend->Begin(sortMode, blendState ? &blendState.value() : nullptr);
+		impl->backend->Begin(
+			sortMode, 
+			blendState ? &blendState.value() : nullptr,
+			samplerState ? &samplerState.value() : nullptr);
 
 		impl->beginCalled = true;
 	}

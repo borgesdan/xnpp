@@ -91,12 +91,13 @@ namespace Xna {
 			m_program = loadShaderProgram("C:/Users/Borges/source/repos/xnpp/xnpp-framework/shaders/sprite.vs.bin", "C:/Users/Borges/source/repos/xnpp/xnpp-framework/shaders/sprite.fs.bin");
 		}
 
-		void Begin(SpriteSortMode sortMode, const BlendState* blendState) override {
+		void Begin(SpriteSortMode sortMode, const BlendState* blendState, const SamplerState* samplerState) override {
 			m_beginCalled = true;
 			m_currentSpriteCount = 0;
 			m_sprites.clear();
 			m_currentTexture.idx = bgfx::kInvalidHandle;
-			m_blendState |= blendState ? BgfxConvertBlendState(*blendState) : BgfxBlendState::NonPremultiplied;
+			m_blendState |= blendState ? BgfxConvertBlendState(*blendState) : BgfxColorWriteChannel::All | BgfxBlendState::NonPremultiplied;
+			m_samplerState |= samplerState ? BgfxConvertSamplerState(*samplerState) : 0;
 		}
 
 		void Draw(PlatformNS::ITexture2D const& texture, Vector2 const& pos, const Rectangle* sourceRect, Vector2 const& origin, Vector2 const& scale, float rotation, Color const& color, SpriteEffects effects, float layerDepth) override {
@@ -139,7 +140,7 @@ namespace Xna {
 			sprite.v2 = v2;
 			sprite.color = color;
 			sprite.layerDepth = layerDepth;
-			
+
 			const auto cosR = std::cos(rotation);
 			const auto sinR = std::sin(rotation);
 			const auto m00 = cosR * scale.X;
@@ -160,7 +161,7 @@ namespace Xna {
 			sprite.effects = static_cast<uint8_t>(effects);
 
 			if (m_sortMode != SpriteSortMode::Immediate) {
-				
+
 				if (m_sprites.size() >= kMaxSprites) {
 					flush(); // Desenha o que tem até agora e limpa a lista
 				}
@@ -211,7 +212,7 @@ namespace Xna {
 			bgfx::update(m_vb, 0, mem);
 
 			// 3. Renderização por Batches (O "Pulo do Gato")
-			uint64_t state = m_blendState;
+			uint64_t state = m_blendState;			
 
 			uint32_t batchStart = 0;
 			bgfx::TextureHandle currentBatchTexture = (m_sortMode == SpriteSortMode::Deferred)
@@ -235,8 +236,11 @@ namespace Xna {
 					// Setamos o range correto do Index Buffer
 					bgfx::setIndexBuffer(m_ib, batchStart * 6, spriteCount * 6);
 
-					bgfx::setTexture(0, m_textureUniform, currentBatchTexture);
-					bgfx::setState(state);
+					const auto samplerStateFlags = m_samplerState > 0 ? m_samplerState : UINT32_MAX;
+
+					bgfx::setTexture(0, m_textureUniform, currentBatchTexture, samplerStateFlags);
+					bgfx::setState(state);					
+
 					bgfx::submit(0, m_program);
 
 					// Inicia novo batch
@@ -276,7 +280,7 @@ namespace Xna {
 			bgfx::submit(0, m_program);
 		}
 
-		void sortSprites() {			
+		void sortSprites() {
 			if (m_spriteIndices.size() != m_sprites.size())
 				m_spriteIndices.resize(m_sprites.size());
 
@@ -287,12 +291,12 @@ namespace Xna {
 					return m_sprites[a].texture.idx < m_sprites[b].texture.idx;
 					});
 				break;
-			case Xna::SpriteSortMode::BackToFront:				
+			case Xna::SpriteSortMode::BackToFront:
 				std::stable_sort(m_spriteIndices.begin(), m_spriteIndices.end(), [&](uint32_t a, uint32_t b) {
 					return m_sprites[a].layerDepth < m_sprites[b].layerDepth;
 					});
 				break;
-			case Xna::SpriteSortMode::FrontToBack:				
+			case Xna::SpriteSortMode::FrontToBack:
 				std::stable_sort(m_spriteIndices.begin(), m_spriteIndices.end(), [&](uint32_t a, uint32_t b) {
 					return m_sprites[a].layerDepth > m_sprites[b].layerDepth;
 					});
@@ -328,7 +332,7 @@ namespace Xna {
 			target[1].u = u2; target[1].v = v1;
 			target[2].u = u2; target[2].v = v2;
 			target[3].u = u1; target[3].v = v2;
-		}		
+		}
 
 		bgfx::ProgramHandle loadShaderProgram(const char* vsPath, const char* fsPath) {
 			// Função auxiliar para carregar shader
@@ -379,7 +383,8 @@ namespace Xna {
 		bool m_beginCalled;
 		uint32_t m_currentSpriteCount;
 
-		uint32_t m_blendState{ BGFX_STATE_WRITE_RGB | BGFX_STATE_WRITE_A };
+		uint32_t m_blendState{ 0 };
+		uint32_t m_samplerState{ 0 };
 
 		static constexpr uint16_t kMaxSprites = 2048;
 		static constexpr uint16_t kMaxVertices = kMaxSprites * 4;

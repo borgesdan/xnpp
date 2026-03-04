@@ -441,7 +441,8 @@ namespace Xna {
 			XNPP_API virtual ~ISpriteBatch() = default;
 			XNPP_API virtual void Begin(
 				SpriteSortMode sortMode,
-				const BlendState* blendState) = 0;
+				const BlendState* blendState,
+				const SamplerState* samplerState) = 0;
 
 			XNPP_API virtual void Draw(
 				ITexture2D const& texture,

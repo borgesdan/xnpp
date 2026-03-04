@@ -3,6 +3,7 @@
 
 #include "Xna/Framework/Graphics/Texture2D.hpp"
 #include "Xna/Framework/Graphics/BlendState.hpp"
+#include "Xna/Framework/Graphics/SamplerState.hpp"
 #include "Xna/Platform/_Platform.hpp"
 #include "Xna/Framework/Color.hpp"
 #include <bgfx/bgfx.h>
@@ -203,9 +204,7 @@ namespace Xna {
 		constexpr operator uint64_t() const noexcept { return value; }
 
 		uint64_t value{ 0 };
-	};
-
-	
+	};	
 
 	constexpr uint32_t BgfxConvertBlendState(BlendState const& blend) {
 		// 1: Adicionar o estado padrão
@@ -234,6 +233,110 @@ namespace Xna {
 		//bgfx é global por draw, não por render target.					
 
 		return state;
+	}
+
+	constexpr uint32_t BgfxConvertSamplerState(const SamplerState& s)
+	{
+		uint32_t flags = 0;
+		
+		switch (s.AddressU)
+		{
+		case TextureAddressMode::Wrap: 
+			flags |= 0;
+			break;
+		case TextureAddressMode::Mirror:
+			flags |= BGFX_SAMPLER_U_MIRROR;
+			break;
+		case TextureAddressMode::Clamp:
+			flags |= BGFX_SAMPLER_U_CLAMP;
+			break;
+		case TextureAddressMode::Border:
+			flags |= BGFX_SAMPLER_U_BORDER;
+			break;
+		case TextureAddressMode::MirrorOnce:
+			//TODO: Não possui implementação
+			break;
+		default:
+			break;
+		}		
+
+		switch (s.AddressV)
+		{
+		case TextureAddressMode::Wrap:
+			flags |= 0;
+			break;
+		case TextureAddressMode::Mirror:
+			flags |= BGFX_SAMPLER_V_MIRROR;
+			break;
+		case TextureAddressMode::Clamp:
+			flags |= BGFX_SAMPLER_V_CLAMP;
+			break;
+		case TextureAddressMode::Border:
+			flags |= BGFX_SAMPLER_V_BORDER;
+			break;
+		case TextureAddressMode::MirrorOnce:
+			//TODO: Não possui implementação
+			break;
+		default:
+			break;
+		}	
+
+		switch (s.AddressW)
+		{
+		case TextureAddressMode::Wrap:
+			flags |= 0;
+			break;
+		case TextureAddressMode::Mirror:
+			flags |= BGFX_SAMPLER_W_MIRROR;
+			break;
+		case TextureAddressMode::Clamp:
+			flags |= BGFX_SAMPLER_W_CLAMP;
+			break;
+		case TextureAddressMode::Border:
+			flags |= BGFX_SAMPLER_W_BORDER;
+			break;
+		case TextureAddressMode::MirrorOnce:
+			//TODO: Não possui implementação
+			break;
+		default:
+			break;
+		}
+
+		// Filter
+		switch (s.Filter) {
+		case TextureFilter::Point:
+			flags |= BGFX_SAMPLER_MIN_POINT | BGFX_SAMPLER_MAG_POINT | BGFX_SAMPLER_MIP_POINT;
+
+		case TextureFilter::Anisotropic:
+			// Nota: No bgfx, o filtro anisotrópico geralmente assume linear como base
+			flags |= BGFX_SAMPLER_MIN_ANISOTROPIC | BGFX_SAMPLER_MAG_ANISOTROPIC;
+
+		case TextureFilter::LinearMipPoint:
+			// Min/Mag são lineares por padrão, forçamos apenas o Mip como Point
+			flags |= BGFX_SAMPLER_MIP_POINT;
+
+		case TextureFilter::PointMipLinear:
+			// Mip é linear por padrão, forçamos Min/Mag como Point
+			flags |= BGFX_SAMPLER_MIN_POINT | BGFX_SAMPLER_MAG_POINT;
+
+		case TextureFilter::MinLinearMagPointMipLinear:
+			flags |= BGFX_SAMPLER_MAG_POINT;
+
+		case TextureFilter::MinLinearMagPointMipPoint:
+			flags |= BGFX_SAMPLER_MAG_POINT | BGFX_SAMPLER_MIP_POINT;
+
+		case TextureFilter::MinPointMagLinearMipLinear:
+			flags |= BGFX_SAMPLER_MIN_POINT;
+
+		case TextureFilter::MinPointMagLinearMipPoint:
+			flags |= BGFX_SAMPLER_MIN_POINT | BGFX_SAMPLER_MIP_POINT;
+
+		case TextureFilter::Linear:
+		default:
+			flags |= 0;
+		}		
+
+		return flags;
 	}
 }
 
