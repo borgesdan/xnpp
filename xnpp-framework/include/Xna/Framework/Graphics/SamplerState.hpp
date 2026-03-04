@@ -31,21 +31,40 @@ namespace Xna {
 		float MinMipLevel{ 0 };
 
 		//Contains default state for point filtering and texture coordinate wrapping.
-		static constexpr SamplerState PoinWrap() { return SamplerState(TextureFilter::Point, TextureAddressMode::Clamp); }
-		//Contains default state for point filtering and texture coordinate clamping.
-		static constexpr SamplerState PointClamp() { return SamplerState(TextureFilter::Point, TextureAddressMode::Clamp); }
-		//Contains default state for linear filtering and texture coordinate wrapping.
-		static constexpr SamplerState LinearWrap() { return SamplerState(TextureFilter::Linear, TextureAddressMode::Wrap); }
-		//Contains default state for linear filtering and texture coordinate clamping.
-		static constexpr SamplerState LinearClamp() { return SamplerState(TextureFilter::Linear, TextureAddressMode::Clamp); }
-		//Contains default state for anisotropic filtering and texture coordinate wrapping.
-		static constexpr SamplerState AnisotropicWrap() { return SamplerState(TextureFilter::Anisotropic, TextureAddressMode::Wrap); }
-		//Contains default state for anisotropic filtering and texture coordinate clamping.
-		static constexpr SamplerState AnisotropicClamp() { return SamplerState(TextureFilter::Anisotropic, TextureAddressMode::Clamp); }
-
-		constexpr operator std::optional<SamplerState>() const {
-			return std::make_optional<SamplerState>(*this);
+		static const SamplerState& PoinWrap() { 
+			static auto sampler = SamplerState(TextureFilter::Point, TextureAddressMode::Clamp);
+			return sampler;
 		}
+
+		//Contains default state for point filtering and texture coordinate clamping.
+		static const SamplerState& PointClamp() { 
+			static auto sampler = SamplerState(TextureFilter::Point, TextureAddressMode::Clamp);
+			return sampler;
+		}
+
+		//Contains default state for linear filtering and texture coordinate wrapping.
+		static const SamplerState& LinearWrap() {
+			static auto sampler = SamplerState(TextureFilter::Linear, TextureAddressMode::Wrap);
+			return sampler;
+		}
+
+		//Contains default state for linear filtering and texture coordinate clamping.
+		static const SamplerState& LinearClamp() {
+			static auto sampler = SamplerState(TextureFilter::Linear, TextureAddressMode::Clamp);
+			return sampler;
+		}
+		//Contains default state for anisotropic filtering and texture coordinate wrapping.
+		static const SamplerState& AnisotropicWrap() { 
+			static auto sampler = SamplerState(TextureFilter::Anisotropic, TextureAddressMode::Wrap);
+			return sampler;
+		}
+		//Contains default state for anisotropic filtering and texture coordinate clamping.
+		static const SamplerState& AnisotropicClamp() { 
+			static auto sampler = SamplerState(TextureFilter::Anisotropic, TextureAddressMode::Clamp);
+			return sampler;
+		}
+
+		constexpr operator std::optional<SamplerState>() const noexcept { return *this; }
 
 	private:
 		constexpr SamplerState(TextureFilter filter, TextureAddressMode uvw )
