@@ -102,38 +102,6 @@ namespace Xna {
 		uint64_t value{ 0 };
 	};
 
-	//Padrão do BlendState para Bgfx
-	struct BgfxBlendState {
-		static constexpr uint64_t Opaque = 0;
-		static constexpr uint64_t AlphaBlend = BGFX_STATE_BLEND_FUNC_SEPARATE(BGFX_STATE_BLEND_ONE, BGFX_STATE_BLEND_INV_SRC_ALPHA, BGFX_STATE_BLEND_ONE, BGFX_STATE_BLEND_INV_SRC_ALPHA);
-		static constexpr uint64_t NonPremultiplied = BGFX_STATE_BLEND_FUNC_SEPARATE(BGFX_STATE_BLEND_SRC_ALPHA, BGFX_STATE_BLEND_INV_SRC_ALPHA, BGFX_STATE_BLEND_SRC_ALPHA, BGFX_STATE_BLEND_INV_SRC_ALPHA);
-		static constexpr uint64_t Additive = BGFX_STATE_BLEND_FUNC(BGFX_STATE_BLEND_ONE, BGFX_STATE_BLEND_ONE);
-
-		constexpr operator uint64_t() const noexcept { return value; }
-
-		constexpr BgfxBlendState() = default;
-		constexpr BgfxBlendState(BlendState const& blend) {
-			if (blend.IsOpaque())
-				value = BgfxBlendState::Opaque;
-			else if (blend.IsAlphaBlend())
-				value = BgfxBlendState::AlphaBlend;
-			else if (blend.IsNonPremultiplied())
-				value = BgfxBlendState::NonPremultiplied;
-			else if (blend.IsAdditive())
-				value = BgfxBlendState::Additive;
-			else {
-				const BgfxBlend srcRgb = blend.ColorSourceBlend;
-				const BgfxBlend destRgb = blend.ColorDestinationBlend;
-				const BgfxBlend srcAlp = blend.AlphaSourceBlend;
-				const BgfxBlend destAlp = blend.AlphaDestinationBlend;
-
-				value = BGFX_STATE_BLEND_FUNC_SEPARATE(srcRgb, destRgb, srcAlp, destAlp);
-			}
-		}
-
-		uint64_t value{ 0 };
-	};
-
 	//Padrão do BlendOperation para Bgfx
 	struct BgfxBlendOperation {
 		static constexpr uint64_t Add = BGFX_STATE_BLEND_EQUATION_ADD;
@@ -142,30 +110,30 @@ namespace Xna {
 		static constexpr uint64_t Min = BGFX_STATE_BLEND_EQUATION_MIN;
 		static constexpr uint64_t Max = BGFX_STATE_BLEND_EQUATION_MAX;
 
-		constexpr operator uint64_t() const noexcept { return value; }
+		constexpr operator uint64_t() const noexcept { return state; }
 
 		constexpr BgfxBlendOperation() = default;
 		constexpr BgfxBlendOperation(BlendFunction op) {
 			switch (op) {
 			case BlendFunction::Add:
-				value = BgfxBlendOperation::Add;
+				state = BgfxBlendOperation::Add;
 				break;
 			case BlendFunction::Subtract:
-				value = BgfxBlendOperation::Subtract;
+				state = BgfxBlendOperation::Subtract;
 				break;
 			case BlendFunction::ReverseSubtract:
-				value = BgfxBlendOperation::ReverseSubtract;
+				state = BgfxBlendOperation::ReverseSubtract;
 				break;
 			case BlendFunction::Min:
-				value = BgfxBlendOperation::Min;
+				state = BgfxBlendOperation::Min;
 				break;
 			case BlendFunction::Max:
-				value = BgfxBlendOperation::Max;
+				state = BgfxBlendOperation::Max;
 				break;
 			}
 		}
 
-		uint64_t value{ 0 };
+		uint64_t state{ 0 };
 	};
 
 	//Padrão do ColorWriterChannel para Bgfx
@@ -179,50 +147,108 @@ namespace Xna {
 		constexpr BgfxColorWriteChannel() = default;
 
 		constexpr BgfxColorWriteChannel(ColorWriteChannels channel) {
-			switch (channel)
-			{
-			case ColorWriteChannels::Red:
-				value = Red;
-				break;
-			case ColorWriteChannels::Green:
-				value = Green;
-				break;
-			case ColorWriteChannels::Blue:
-				value = Blue;
-				break;
-			case ColorWriteChannels::Alpha:
-				value = Alpha;
-				break;
-			case ColorWriteChannels::All:
-				value = All;
-				break;
-			default:				
-				break;
+			if (channel == ColorWriteChannels::None)
+				return;
+
+			if (channel == ColorWriteChannels::All)
+				state |= BGFX_STATE_WRITE_RGB | BGFX_STATE_WRITE_A;
+			else {
+				state |= ((int)channel & (int)ColorWriteChannels::Red) == (int)ColorWriteChannels::Red ? BGFX_STATE_WRITE_R : 0;
+				state |= ((int)channel & (int)ColorWriteChannels::Green) == (int)ColorWriteChannels::Green ? BGFX_STATE_WRITE_G : 0;
+				state |= ((int)channel & (int)ColorWriteChannels::Blue) == (int)ColorWriteChannels::Blue ? BGFX_STATE_WRITE_B : 0;
 			}
 		}
 
-		constexpr operator uint64_t() const noexcept { return value; }
+		constexpr operator uint64_t() const noexcept { return state; }
 
-		uint64_t value{ 0 };
-	};	
+		uint64_t state{ 0 };
+	};
+
+	//Padrão do BlendState para Bgfx
+	struct BgfxBlendState {
+		static constexpr uint64_t OpaqueFlags = BGFX_STATE_WRITE_RGB | BGFX_STATE_WRITE_A;
+
+		static constexpr uint64_t AlphaBlendFlags = (BGFX_STATE_WRITE_RGB | BGFX_STATE_WRITE_A) |
+			BGFX_STATE_BLEND_FUNC_SEPARATE(BGFX_STATE_BLEND_ONE, BGFX_STATE_BLEND_INV_SRC_ALPHA, BGFX_STATE_BLEND_ONE, BGFX_STATE_BLEND_INV_SRC_ALPHA);
+
+		static constexpr uint64_t NonPremultipliedFlags = (BGFX_STATE_WRITE_RGB | BGFX_STATE_WRITE_A) |
+			BGFX_STATE_BLEND_FUNC_SEPARATE(BGFX_STATE_BLEND_SRC_ALPHA, BGFX_STATE_BLEND_INV_SRC_ALPHA, BGFX_STATE_BLEND_SRC_ALPHA, BGFX_STATE_BLEND_INV_SRC_ALPHA);
+
+		static constexpr uint64_t AdditiveFlags = (BGFX_STATE_WRITE_RGB | BGFX_STATE_WRITE_A) |
+			BGFX_STATE_BLEND_FUNC(BGFX_STATE_BLEND_ONE, BGFX_STATE_BLEND_ONE);
+
+		static constexpr BgfxBlendState Opaque() {
+			BgfxBlendState b;
+			b.state = OpaqueFlags;
+			return b;
+		}
+
+		static constexpr BgfxBlendState AlphaBlend() {
+			BgfxBlendState b;
+			b.state = AlphaBlendFlags;
+			return b;
+		}
+
+		static constexpr BgfxBlendState NonPremultiplied() {
+			BgfxBlendState b;
+			b.state = NonPremultipliedFlags;
+			return b;
+		}
+
+		static constexpr BgfxBlendState Additive() {
+			BgfxBlendState b;
+			b.state = AdditiveFlags;
+			return b;
+		}
+
+		constexpr BgfxBlendState(BlendState const& b) {
+			const BgfxBlend srcRgb = b.ColorSourceBlend;
+			const BgfxBlend destRgb = b.ColorDestinationBlend;
+			const BgfxBlend srcAlp = b.AlphaSourceBlend;
+			const BgfxBlend destAlp = b.AlphaDestinationBlend;
+
+			state |= BGFX_STATE_BLEND_FUNC_SEPARATE(srcRgb, destRgb, srcAlp, destAlp);
+
+			//XNA suporta ColorWriteChannels0..3
+			//bgfx suporta apenas uma máscara por draw
+			state |= BgfxColorWriteChannel(b.ColorWriteChannels);
+
+			const BgfxBlendOperation rgbOp = b.ColorBlendFunction;
+			const BgfxBlendOperation alphaOp = b.AlphaBlendFunction;
+
+			// 3: Definir a operação
+			if (rgbOp != alphaOp)
+				state |= BGFX_STATE_BLEND_EQUATION_SEPARATE(rgbOp, alphaOp);
+			else if (rgbOp != BgfxBlendOperation::Add) //Add é o padrão no bgfx
+				state |= rgbOp;
+
+			blendFactor = SwapXnaColor(b.BlendFactor);
+		}
+
+		constexpr BgfxBlendState() = default;
+		constexpr operator uint64_t() const noexcept { return state; }
+
+		uint64_t state{ 0 };
+		uint64_t blendFactor{ 0 };
+	};
 
 	constexpr uint32_t BgfxConvertBlendState(BlendState const& blend) {
 		// 1: Adicionar o estado padrão
 		uint64_t state = 0;
-		
+
 		const BgfxColorWriteChannel channel0 = blend.ColorWriteChannels;
 		state |= channel0;
-		
+
 		const BgfxBlendState blendState = blend;
 		state |= blendState;
 
 		const BgfxBlendOperation rgbOp = blend.ColorBlendFunction;
 		const BgfxBlendOperation alphaOp = blend.AlphaBlendFunction;
-		
+
 		if (rgbOp != alphaOp)
 			state |= BGFX_STATE_BLEND_EQUATION_SEPARATE(rgbOp, alphaOp);
 		else if (rgbOp != BgfxBlendOperation::Add) //Add é o padrão no bgfx
-			state |= rgbOp;		
+			state |= rgbOp;
 
 		//TODO: O state é global por draw
 		//XNA suporta ColorWriteChannels0..3
@@ -238,10 +264,10 @@ namespace Xna {
 	constexpr uint32_t BgfxConvertSamplerState(const SamplerState& s)
 	{
 		uint32_t flags = 0;
-		
+
 		switch (s.AddressU)
 		{
-		case TextureAddressMode::Wrap: 
+		case TextureAddressMode::Wrap:
 			flags |= 0;
 			break;
 		case TextureAddressMode::Mirror:
@@ -258,7 +284,7 @@ namespace Xna {
 			break;
 		default:
 			break;
-		}		
+		}
 
 		switch (s.AddressV)
 		{
@@ -279,7 +305,7 @@ namespace Xna {
 			break;
 		default:
 			break;
-		}	
+		}
 
 		switch (s.AddressW)
 		{
@@ -334,7 +360,7 @@ namespace Xna {
 		case TextureFilter::Linear:
 		default:
 			flags |= 0;
-		}		
+		}
 
 		return flags;
 	}

@@ -73,18 +73,18 @@ namespace Xna {
 
 	//Defines the color channels that can be chosen for a per-channel write to a render target color buffer. 
 	enum class ColorWriteChannels {
-		//Red channel of a buffer.
-		Red,
-		//Green channel of a buffer.
-		Green,
-		//Blue channel of a buffer.
-		Blue,
-		//Alpha channel of a buffer.
-		Alpha,
-		//All buffer channels.
-		All,
 		//No channel selected.
-		None
+		None = 1 << 0,
+		//Red channel of a buffer.
+		Red = 1 << 1,
+		//Green channel of a buffer.
+		Green = 1 << 2,
+		//Blue channel of a buffer.
+		Blue = 1 << 3,
+		//Alpha channel of a buffer.
+		Alpha = 1 << 4,
+		//All buffer channels.
+		All = Red | Green | Blue | Alpha,
 	};
 
 	//Defines comparison functions that can be chosen for alpha, stencil, or depth-buffer tests. 

@@ -96,7 +96,7 @@ namespace Xna {
 			m_currentSpriteCount = 0;
 			m_sprites.clear();
 			m_currentTexture.idx = bgfx::kInvalidHandle;
-			m_blendState |= blendState ? BgfxConvertBlendState(*blendState) : BgfxColorWriteChannel::All | BgfxBlendState::NonPremultiplied;
+			m_blendState = blendState ? BgfxBlendState(*blendState) : BgfxBlendState::NonPremultiplied();
 			m_samplerState |= samplerState ? BgfxConvertSamplerState(*samplerState) : 0;
 		}
 
@@ -239,7 +239,7 @@ namespace Xna {
 					const auto samplerStateFlags = m_samplerState > 0 ? m_samplerState : UINT32_MAX;
 
 					bgfx::setTexture(0, m_textureUniform, currentBatchTexture, samplerStateFlags);
-					bgfx::setState(state);					
+					bgfx::setState(state, m_blendState.blendFactor);					
 
 					bgfx::submit(0, m_program);
 
@@ -383,7 +383,7 @@ namespace Xna {
 		bool m_beginCalled;
 		uint32_t m_currentSpriteCount;
 
-		uint32_t m_blendState{ 0 };
+		BgfxBlendState m_blendState{};
 		uint32_t m_samplerState{ 0 };
 
 		static constexpr uint16_t kMaxSprites = 2048;

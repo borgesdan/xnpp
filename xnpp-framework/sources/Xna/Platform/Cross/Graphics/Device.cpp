@@ -132,53 +132,11 @@ namespace Xna {
 	}
 
 	void BgfxGraphicsDevice::ApplyBlendState(BlendState const& blend) {
-		// 1: Adicionar o estado padrão
-		uint64_t state = 0
-			| BGFX_STATE_WRITE_RGB
-			| BGFX_STATE_WRITE_A
-			| BGFX_STATE_DEPTH_TEST_LESS;
+		//BGFX_STATE_DEPTH_TEST_LESS
+		const BgfxBlendState b = blend;
 
-		// 2: Adicionar o bit específico de Blend
-		const BgfxBlendState blendState = blend;
-		state |= blendState;
-
-		const BgfxBlendOperation rgbOp = blend.ColorBlendFunction;
-		const BgfxBlendOperation alphaOp = blend.AlphaBlendFunction;
-
-		// 3: Definir a operação
-		if (rgbOp != alphaOp)
-			state |= BGFX_STATE_BLEND_EQUATION_SEPARATE(rgbOp, alphaOp);
-		else if (rgbOp != BgfxBlendOperation::Add) //Add é o padrão no bgfx
-			state |= rgbOp;
-
-		// 4: Aplicar canais de cores
-
-		const BgfxColorWriteChannel channel0 = blend.ColorWriteChannels;
-
-		//TODO: O state é global por draw
-		//XNA suporta ColorWriteChannels0..3
-		//bgfx suporta apenas uma máscara por draw
-		//
-		//MRT: Multiple Render Targets.
-		//XNA máscara por render target.
-		//bgfx é global por draw, não por render target.
-		state |= channel0;
-
-		BX_TRACE("BlendState: ColorWriteChannels1 ignored.");
-		BX_TRACE("BlendState: ColorWriteChannels2 ignored.");
-		BX_TRACE("BlendState: ColorWriteChannels3 ignored.");
-		BX_TRACE("BlendState: MultiSampleMask ignored.");
-
-		// 6: Aplicar o estado + blendFactor
-		uint32_t blendFactor = 0U;
-
-		if ((state & BGFX_STATE_BLEND_FACTOR) == BGFX_STATE_BLEND_FACTOR
-			|| (state & BGFX_STATE_BLEND_INV_FACTOR) == BGFX_STATE_BLEND_INV_FACTOR) {
-			blendFactor = blend.BlendFactor.PackedValue();
-		}
-
-		cachedBlendState = state;
-		cachedBlendFactor = blendFactor;
+		cachedBlendState = b.state;
+		cachedBlendFactor = b.blendFactor;
 	}
 
 	// Mapeamento de ComparisonFunction (XNA) para bgfx
