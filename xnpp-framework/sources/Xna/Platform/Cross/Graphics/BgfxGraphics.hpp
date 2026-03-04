@@ -40,8 +40,8 @@ namespace Xna {
 	//Padrão do BlendState para Bgfx
 	struct BgfxBlendState {
 		static constexpr uint64_t Opaque = 0;
-		static constexpr uint64_t AlphaBlend = BGFX_STATE_BLEND_FUNC(BGFX_STATE_BLEND_SRC_ALPHA, BGFX_STATE_BLEND_INV_SRC_ALPHA);
-		static constexpr uint64_t NonPremultiplied = AlphaBlend;
+		static constexpr uint64_t AlphaBlend = BGFX_STATE_BLEND_FUNC_SEPARATE(BGFX_STATE_BLEND_ONE, BGFX_STATE_BLEND_INV_SRC_ALPHA, BGFX_STATE_BLEND_ONE, BGFX_STATE_BLEND_INV_SRC_ALPHA);
+		static constexpr uint64_t NonPremultiplied = BGFX_STATE_BLEND_FUNC_SEPARATE(BGFX_STATE_BLEND_SRC_ALPHA, BGFX_STATE_BLEND_INV_SRC_ALPHA, BGFX_STATE_BLEND_SRC_ALPHA, BGFX_STATE_BLEND_INV_SRC_ALPHA);
 		static constexpr uint64_t Additive = BGFX_STATE_BLEND_FUNC(BGFX_STATE_BLEND_ONE, BGFX_STATE_BLEND_ONE);
 
 		constexpr operator uint64_t() const noexcept { return value; }
