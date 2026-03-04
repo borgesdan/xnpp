@@ -97,7 +97,7 @@ namespace Xna {
 			m_sprites.clear();
 			m_currentTexture.idx = bgfx::kInvalidHandle;
 			m_blendState = blendState ? BgfxBlendState(*blendState) : BgfxBlendState::NonPremultiplied();
-			m_samplerState |= samplerState ? BgfxConvertSamplerState(*samplerState) : 0;
+			m_samplerState = samplerState ? BgfxSamplerState(*samplerState) : BgfxSamplerState();
 		}
 
 		void Draw(PlatformNS::ITexture2D const& texture, Vector2 const& pos, const Rectangle* sourceRect, Vector2 const& origin, Vector2 const& scale, float rotation, Color const& color, SpriteEffects effects, float layerDepth) override {
@@ -275,8 +275,10 @@ namespace Xna {
 			bgfx::setVertexBuffer(0, m_vb, 0, 4);
 			bgfx::setIndexBuffer(m_ib, 0, 6);
 
-			bgfx::setTexture(0, m_textureUniform, sprite.texture);
-			bgfx::setState(state);
+			const auto samplerStateFlags = m_samplerState > 0 ? m_samplerState : UINT32_MAX;
+
+			bgfx::setTexture(0, m_textureUniform, sprite.texture, samplerStateFlags);
+			bgfx::setState(state, m_blendState.blendFactor);
 			bgfx::submit(0, m_program);
 		}
 
@@ -384,7 +386,7 @@ namespace Xna {
 		uint32_t m_currentSpriteCount;
 
 		BgfxBlendState m_blendState{};
-		uint32_t m_samplerState{ 0 };
+		BgfxSamplerState m_samplerState{};
 
 		static constexpr uint16_t kMaxSprites = 2048;
 		static constexpr uint16_t kMaxVertices = kMaxSprites * 4;
