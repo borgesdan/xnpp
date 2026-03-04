@@ -214,7 +214,7 @@ namespace Xna {
 	}
 
 	void BgfxGraphicsDevice::ApplyDepthStencilState(DepthStencilState const& depth) {
-		uint64_t outStateBits = 0;
+		uint64_t outStateBits = 0 | BGFX_STATE_DEPTH_TEST_LESS;
 
 		if (depth.DepthBufferEnable) {
 			outStateBits |= toBgfxDepthFunc(depth.DepthBufferFunction);
