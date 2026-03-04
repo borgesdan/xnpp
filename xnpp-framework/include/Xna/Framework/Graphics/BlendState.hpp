@@ -15,16 +15,28 @@ namespace Xna {
 
 		//A built-in state object with settings for opaque blend,
 		//that is overwriting the source with the destination data.
-		static constexpr BlendState Opaque() { return BlendState(Blend::One, Blend::Zero, Blend::One, Blend::Zero); }
+		static inline const BlendState& Opaque() { 
+			static const auto blend = BlendState(Blend::One, Blend::Zero, Blend::One, Blend::Zero);
+			return blend;
+		}
 		//A built-in state object with settings for alpha blend, 
 		//that is blending the source and destination data using alpha.
-		static constexpr BlendState AlphaBlend() { return BlendState(Blend::One, Blend::InverseSourceAlpha, Blend::One, Blend::InverseSourceAlpha); }
+		static inline const BlendState& AlphaBlend() { 
+			static const auto blend = BlendState(Blend::One, Blend::InverseSourceAlpha, Blend::One, Blend::InverseSourceAlpha);
+			return blend;
+		}
 		//A built-in state object with settings for additive blend, 
 		//that is adding the destination data to the source data without using alpha.
-		static constexpr BlendState Additive() { return BlendState(Blend::SourceAlpha, Blend::One, Blend::SourceAlpha, Blend::One); }
+		static inline const BlendState& Additive() { 
+			static const auto blend = BlendState(Blend::SourceAlpha, Blend::One, Blend::SourceAlpha, Blend::One);
+			return blend;
+		}
 		//A built-in state object with settings for blending with non-premultipled alpha, 
 		//that is blending source and destination data using alpha while assuming the color data contains no alpha information.
-		static constexpr BlendState NonPremultiplied() { return BlendState(Blend::SourceAlpha, Blend::InverseSourceAlpha, Blend::SourceAlpha, Blend::InverseSourceAlpha); }
+		static inline const BlendState& NonPremultiplied() { 
+			static const auto blend = BlendState(Blend::SourceAlpha, Blend::InverseSourceAlpha, Blend::SourceAlpha, Blend::InverseSourceAlpha);
+			return blend;
+		}
 
 		//Gets or sets the arithmetic operation when blending alpha values. The default is BlendFunction.Add. 
 		BlendFunction AlphaBlendFunction{ BlendFunction::Add };
@@ -94,7 +106,7 @@ namespace Xna {
 		constexpr BlendState(Blend colorSrcBlend, Blend colorDestBlend, Blend alphaSrcBlend, Blend alphaDestBlend)
 			: ColorSourceBlend(colorSrcBlend), ColorDestinationBlend(colorDestBlend),
 			AlphaSourceBlend(alphaSrcBlend), AlphaDestinationBlend(alphaDestBlend) {
-		}		
+		}	
 	};
 }
 
