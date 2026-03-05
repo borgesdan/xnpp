@@ -64,7 +64,8 @@ namespace Xna {
 			return sampler;
 		}
 
-		constexpr operator std::optional<SamplerState>() const noexcept { return *this; }
+		constexpr operator std::optional<SamplerState>() const noexcept { return std::make_optional<SamplerState>(*this); }
+		constexpr operator std::optional<std::reference_wrapper<const SamplerState>>() const noexcept { return std::cref(*this); }
 
 	private:
 		constexpr SamplerState(TextureFilter filter, TextureAddressMode uvw )

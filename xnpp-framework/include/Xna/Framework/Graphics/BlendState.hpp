@@ -70,9 +70,8 @@ namespace Xna {
 
 		constexpr bool operator==(BlendState const& other) const noexcept = default;
 
-		constexpr operator std::optional<BlendState>() const {
-			return std::make_optional<BlendState>(*this);
-		}
+		constexpr operator std::optional<BlendState>() const noexcept { return std::make_optional<BlendState>(*this); }
+		constexpr operator std::optional<std::reference_wrapper<const BlendState>>() const noexcept { return std::cref(*this); }
 
 		constexpr bool IsOpaque() const noexcept {
 			return ColorSourceBlend == Blend::One

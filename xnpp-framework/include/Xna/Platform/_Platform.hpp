@@ -444,7 +444,8 @@ namespace Xna {
 				const BlendState* blendState,
 				const SamplerState* samplerState,
 				const DepthStencilState* depthStencilState,
-				const RasterizerState* rasterizerState) = 0;
+				const RasterizerState* rasterizerState,
+				const Matrix* matrix) = 0;
 
 			XNPP_API virtual void Draw(
 				ITexture2D const& texture,

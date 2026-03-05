@@ -68,9 +68,8 @@ namespace Xna {
 		//Enables or disables two-sided stenciling. The default is false.
 		bool TwoSidedStencilMode{ true };
 
-		constexpr bool operator==(DepthStencilState const& other) const noexcept = default;
-
-		constexpr operator std::optional<DepthStencilState>() const noexcept { return *this; }
+		constexpr operator std::optional<DepthStencilState>() const noexcept { return std::make_optional<DepthStencilState>(*this); }
+		constexpr operator std::optional<std::reference_wrapper<const DepthStencilState>>() const noexcept { return std::cref(*this); }
 
 	private:
 		constexpr DepthStencilState(bool dbEnable, bool dbwEnable)

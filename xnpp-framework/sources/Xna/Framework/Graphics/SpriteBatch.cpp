@@ -8,18 +8,48 @@ namespace Xna {
 		impl->backend = PlatformNS::ISpriteBatch::Create();
 	}
 
-	void SpriteBatch::Begin(SpriteSortMode sortMode, std::optional<BlendState> const& blendState, std::optional<SamplerState> const& samplerState,
-		std::optional<DepthStencilState> const& depthStencilState, std::optional<RasterizerState> const& rasterizerState, std::optional<Effect> const& effect, std::optional<Matrix> transformMatrix) {
+	void SpriteBatch::Begin(
+		SpriteSortMode sortMode,
+		const BlendState* blendState,
+		const SamplerState* samplerState,
+		const DepthStencilState* depthStencilState,
+		const RasterizerState* rasterizerState,
+		const Effect* effect,
+		const Matrix* transformMatrix) {
+
+		if (impl->beginCalled)
+			throw CSharp::InvalidOperationException("Invalid attempt to call the Begin method twice.");
+
+		impl->backend->Begin(
+			sortMode,
+			blendState,
+			samplerState,
+			depthStencilState,
+			rasterizerState,
+			transformMatrix);
+
+		impl->beginCalled = true;
+	}
+
+	void SpriteBatch::Begin(
+		SpriteSortMode sortMode,
+		std::optional<std::reference_wrapper<const BlendState>> const& blendState,
+		std::optional<std::reference_wrapper<const SamplerState>> const& samplerState,
+		std::optional<std::reference_wrapper<const DepthStencilState>> const& depthStencilState,
+		std::optional<std::reference_wrapper<const RasterizerState>> const& rasterizerState,
+		std::optional<std::reference_wrapper<const Effect>> const& effect,
+		std::optional<std::reference_wrapper<const Matrix>> transformMatrix) {
 		
 		if (impl->beginCalled)
 			throw CSharp::InvalidOperationException("Invalid attempt to call the Begin method twice.");		
 		
 		impl->backend->Begin(
 			sortMode, 
-			blendState ? &blendState.value() : nullptr,
-			samplerState ? &samplerState.value() : nullptr,
-			depthStencilState ? &depthStencilState.value() : nullptr,
-			rasterizerState ? &rasterizerState.value() : nullptr);
+			blendState ? &blendState.value().get() : nullptr,
+			samplerState ? &samplerState.value().get() : nullptr,
+			depthStencilState ? &depthStencilState.value().get() : nullptr,
+			rasterizerState ? &rasterizerState.value().get() : nullptr,
+			transformMatrix ? &transformMatrix.value().get() : nullptr);
 
 		impl->beginCalled = true;
 	}

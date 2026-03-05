@@ -34,9 +34,8 @@ namespace Xna {
 
 		constexpr bool operator==(RasterizerState const& other) const noexcept = default;
 
-		constexpr operator std::optional<RasterizerState>() const {
-			return std::make_optional<RasterizerState>(*this);
-		}
+		constexpr operator std::optional<RasterizerState>() const noexcept { return std::make_optional<RasterizerState>(*this); }
+		constexpr operator std::optional<std::reference_wrapper<const RasterizerState>>() const noexcept { return std::cref(*this); }
 
 	private:
 		constexpr RasterizerState(Xna::CullMode cullMode, Xna::FillMode fillMode)

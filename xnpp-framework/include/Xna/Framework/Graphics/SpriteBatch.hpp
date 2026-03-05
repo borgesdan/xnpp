@@ -25,55 +25,31 @@ namespace Xna {
 		//Initializes a new instance of the class, which enables a group of sprites to be drawn using the same settings.
 		XNPP_API SpriteBatch(GraphicsDevice const& graphicsDevice);
 
-		~SpriteBatch() override = default;
-
-		//Begins a sprite batch operation using deferred sort and default state objects 
-		// (BlendState.AlphaBlend, SamplerState.LinearClamp, DepthStencilState.None, RasterizerState.CullCounterClockwise).
-		inline void Begin() {
-			Begin(SpriteSortMode::Deferred, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt);
-		}
-		
-		//Begins a sprite batch operation using the specified sort and blend state object and default state objects
-		// (DepthStencilState.None, SamplerState.LinearClamp, RasterizerState.CullCounterClockwise). If you pass a null blend state, the default is BlendState.AlphaBlend.
-		inline void Begin(SpriteSortMode sortMode, std::optional<BlendState> const& blendState) {
-			Begin(SpriteSortMode::Deferred, blendState, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt);
-		}
-		
-		//Begins a sprite batch operation using the specified sort, blend, sampler, depth stencil and rasterizer state objects.
-		//Passing null for any of the state objects selects the default default state objects (BlendState.AlphaBlend, SamplerState.LinearClamp, DepthStencilState.None, RasterizerState.CullCounterClockwise).
-		inline void Begin(
-			SpriteSortMode sortMode,
-			std::optional<BlendState> const& blendState,
-			std::optional<SamplerState> const& samplerState,
-			std::optional<DepthStencilState> const& depthStencilState,
-			std::optional<RasterizerState> const& rasterizerState) {
-			Begin(SpriteSortMode::Deferred, blendState, samplerState, depthStencilState, rasterizerState, std::nullopt, std::nullopt);
-		}
-		
-		//Begins a sprite batch operation using the specified sort, blend, sampler, depth stencil and rasterizer state objects, plus a custom effect.
-		//Passing null for any of the state objects selects the default default state objects(BlendState.AlphaBlend, DepthStencilState.None, RasterizerState.CullCounterClockwise, SamplerState.LinearClamp).
-		//Passing a null effect selects the default SpriteBatch Class shader.
-		inline void Begin(
-			SpriteSortMode sortMode,
-			std::optional<BlendState> const& blendState,
-			std::optional<SamplerState> const& samplerState,
-			std::optional<DepthStencilState> const& depthStencilState,
-			std::optional<RasterizerState> const& rasterizerState,
-			std::optional<Effect> const& effect) {
-			Begin(SpriteSortMode::Deferred, blendState, samplerState, depthStencilState, rasterizerState, effect, std::nullopt);
-		}
+		~SpriteBatch() override = default;		
 		
 		//Begins a sprite batch operation using the specified sort, blend, sampler, depth stencil, rasterizer state objects, plus a custom effect and a 2D transformation matrix.
 		//Passing null for any of the state objects selects the default default state objects (BlendState.AlphaBlend, DepthStencilState.None, RasterizerState.CullCounterClockwise, SamplerState.LinearClamp). 
 		//Passing a null effect selects the default SpriteBatch Class shader.
 		XNPP_API void Begin(
+			SpriteSortMode sortMode = SpriteSortMode::Deferred,
+			const BlendState* blendState = nullptr,
+			const SamplerState* samplerState = nullptr,
+			const DepthStencilState* depthStencilState = nullptr,
+			const RasterizerState* rasterizerState = nullptr,
+			const Effect* effect = nullptr,
+			const Matrix* transformMatrix = nullptr);
+
+		//Begins a sprite batch operation using the specified sort, blend, sampler, depth stencil, rasterizer state objects, plus a custom effect and a 2D transformation matrix.
+		//Passing null for any of the state objects selects the default default state objects (BlendState.AlphaBlend, DepthStencilState.None, RasterizerState.CullCounterClockwise, SamplerState.LinearClamp). 
+		//Passing a null effect selects the default SpriteBatch Class shader.
+		XNPP_API void Begin(
 			SpriteSortMode sortMode,
-			std::optional<BlendState> const& blendState,
-			std::optional<SamplerState> const& samplerState,
-			std::optional<DepthStencilState> const& depthStencilState,
-			std::optional<RasterizerState> const& rasterizerState,
-			std::optional<Effect> const& effect,
-			std::optional<Matrix> transformMatrix);
+			std::optional<std::reference_wrapper<const BlendState>> const& blendState,
+			std::optional<std::reference_wrapper<const SamplerState>> const& samplerState,
+			std::optional<std::reference_wrapper<const DepthStencilState>> const& depthStencilState,
+			std::optional<std::reference_wrapper<const RasterizerState>> const& rasterizerState,
+			std::optional<std::reference_wrapper<const Effect>> const& effect,
+			std::optional<std::reference_wrapper<const Matrix>> transformMatrix);
 
 		//Adds a sprite to a batch of sprites for rendering using the specified texture, destination rectangle, and color.
 		inline void Draw(

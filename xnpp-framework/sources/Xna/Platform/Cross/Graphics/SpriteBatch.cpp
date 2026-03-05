@@ -91,7 +91,8 @@ namespace Xna {
 			m_program = loadShaderProgram("C:/Users/Borges/source/repos/xnpp/xnpp-framework/shaders/sprite.vs.bin", "C:/Users/Borges/source/repos/xnpp/xnpp-framework/shaders/sprite.fs.bin");
 		}
 
-		void Begin(SpriteSortMode sortMode, const BlendState* blendState, const SamplerState* samplerState, const DepthStencilState* depthStencilState, const RasterizerState* rasterizerState) override {
+		void Begin(SpriteSortMode sortMode, const BlendState* blendState, const SamplerState* samplerState, 
+			const DepthStencilState* depthStencilState, const RasterizerState* rasterizerState, const Matrix* matrix) override {
 			m_beginCalled = true;
 			m_currentSpriteCount = 0;
 			m_sprites.clear();
@@ -99,7 +100,9 @@ namespace Xna {
 			m_blendState = blendState ? BgfxBlendState(*blendState) : BgfxBlendState::NonPremultiplied();
 			m_samplerState = samplerState ? BgfxSamplerState(*samplerState) : BgfxSamplerState();
 			m_depthStencilState = depthStencilState ? BgfxDepthStencilState(*depthStencilState) : BgfxDepthStencilState();
-			m_rasterizerState = rasterizerState ? BgfxRasterizerState(*rasterizerState) : BgfxRasterizerState();
+			m_rasterizerState = rasterizerState ? BgfxRasterizerState(*rasterizerState) : BgfxRasterizerState();			
+
+			m_matrix = matrix ? *matrix : Matrix::Identity();
 		}
 
 		void Draw(PlatformNS::ITexture2D const& texture, Vector2 const& pos, const Rectangle* sourceRect, Vector2 const& origin, Vector2 const& scale, float rotation, Color const& color, SpriteEffects effects, float layerDepth) override {
@@ -213,6 +216,10 @@ namespace Xna {
 
 			bgfx::update(m_vb, 0, mem);
 
+			//Aplicar transformação
+			Matrix transposed = Matrix::Transpose(m_matrix);
+			bgfx::setTransform(&transposed.M11);
+
 			// 3. Renderização por Batches (O "Pulo do Gato")
 			uint32_t batchStart = 0;
 			bgfx::TextureHandle currentBatchTexture = (m_sortMode == SpriteSortMode::Deferred)
@@ -234,15 +241,14 @@ namespace Xna {
 
 					bgfx::setVertexBuffer(0, m_vb, 0, m_sprites.size() * 4); // VB inteiro
 					// Setamos o range correto do Index Buffer
-					bgfx::setIndexBuffer(m_ib, batchStart * 6, spriteCount * 6);
+					bgfx::setIndexBuffer(m_ib, batchStart * 6, spriteCount * 6);					
 
-					//Aplicamos textura e estados
-					const auto samplerStateFlags = m_samplerState > 0 ? m_samplerState : UINT32_MAX;
-					
+					//Aplicamos textura e estados					
 					bgfx::setStencil(m_depthStencilState.frontStencil, m_depthStencilState.frontStencil);
 					uint64_t state = m_blendState.state | m_depthStencilState.depthBuffer | m_rasterizerState.state;
 					bgfx::setState(state, m_blendState.blendFactor);						
 
+					const auto samplerStateFlags = m_samplerState > 0 ? m_samplerState : UINT32_MAX;
 					bgfx::setTexture(0, m_textureUniform, currentBatchTexture, samplerStateFlags);
 
 					bgfx::submit(0, m_program);
@@ -271,18 +277,28 @@ namespace Xna {
 			// Importante: usamos o offset 0 porque estamos submetendo IMEDIATAMENTE
 			bgfx::update(m_vb, 0, mem);
 
+			//Aplicar transformação
+			Matrix transposed = Matrix::Transpose(m_matrix);
+			bgfx::setTransform(&transposed.M11);
+
 			// 4. Configuração de estado
-			uint64_t state = m_blendState;
+			uint64_t state = m_blendState.state | m_depthStencilState.depthBuffer | m_rasterizerState.state;
 
 			// 5. Submissão
 			// Usamos apenas os primeiros 6 índices do IB (referentes a 1 quad)
 			bgfx::setVertexBuffer(0, m_vb, 0, 4);
 			bgfx::setIndexBuffer(m_ib, 0, 6);
 
-			const auto samplerStateFlags = m_samplerState > 0 ? m_samplerState : UINT32_MAX;
+			//Aplicar transformação
+			bgfx::setTransform(&m_matrix);
 
-			bgfx::setTexture(0, m_textureUniform, sprite.texture, samplerStateFlags);
+			bgfx::setStencil(m_depthStencilState.frontStencil, m_depthStencilState.frontStencil);
+			
 			bgfx::setState(state, m_blendState.blendFactor);
+
+			const auto samplerStateFlags = m_samplerState > 0 ? m_samplerState : UINT32_MAX;
+			bgfx::setTexture(0, m_textureUniform, sprite.texture, samplerStateFlags);
+			
 			bgfx::submit(0, m_program);
 		}
 
@@ -393,6 +409,7 @@ namespace Xna {
 		BgfxSamplerState m_samplerState{};
 		BgfxDepthStencilState m_depthStencilState{};
 		BgfxRasterizerState m_rasterizerState{};
+		Matrix m_matrix{};
 
 		static constexpr uint16_t kMaxSprites = 2048;
 		static constexpr uint16_t kMaxVertices = kMaxSprites * 4;

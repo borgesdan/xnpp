@@ -809,13 +809,8 @@ namespace Xna {
 				&& M41 == other.M41 && M42 == other.M42 && M43 == other.M43 && M44 == other.M44;
 		}
 
-		constexpr operator std::optional<Matrix>() const {
-			return std::make_optional<Matrix>(
-				M11, M12, M13, M14,
-				M21, M22, M23, M24,
-				M31, M32, M33, M34,
-				M41, M42, M43, M44);
-		}
+		constexpr operator std::optional<Matrix>() const noexcept { return *this; }
+		constexpr operator std::optional<std::reference_wrapper<const Matrix>>() const noexcept { return std::cref(*this); }
 	};
 
 	constexpr Vector2 Vector2::Transform(Vector2 const& position, Matrix const& matrix) {
