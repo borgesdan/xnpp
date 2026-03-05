@@ -355,9 +355,6 @@ namespace Xna {
 		Clamp,
 		//Texture coordinates outside the range [0.0, 1.0] are set to the border color specified.
 		Border,
-		//Similar to Mirror and Clamp.
-		//Takes the absolute value of the texture coordinate (thus, mirroring around 0), and then clamps to the maximum value.
-		MirrorOnce
 	};
 
 	//Defines filtering types during texture sampling. 

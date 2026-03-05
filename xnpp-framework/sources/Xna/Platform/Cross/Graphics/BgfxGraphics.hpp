@@ -233,69 +233,71 @@ namespace Xna {
 	};	
 
 	struct BgfxTextureAddressMode {
-		constexpr BgfxTextureAddressMode(SamplerState const& s) {
-			switch (s.AddressU)
-			{
-			case TextureAddressMode::Wrap:
-				//Default
-				break;
-			case TextureAddressMode::Mirror:
-				state |= BGFX_SAMPLER_U_MIRROR;
-				break;
-			case TextureAddressMode::Clamp:
-				state |= BGFX_SAMPLER_U_CLAMP;
-				break;
-			case TextureAddressMode::Border:
-				state |= BGFX_SAMPLER_U_BORDER;
-				break;
-			case TextureAddressMode::MirrorOnce:
-				//TODO: Não possui implementação
-				break;
-			default:
-				break;
+		enum Mode {
+			U, V, W
+		};
+
+		constexpr BgfxTextureAddressMode(TextureAddressMode address, Mode mode) {
+
+			if (mode == U) {
+				switch (address)
+				{
+				case TextureAddressMode::Wrap:
+					//Default
+					break;
+				case TextureAddressMode::Mirror:
+					state |= BGFX_SAMPLER_U_MIRROR;
+					break;
+				case TextureAddressMode::Clamp:
+					state |= BGFX_SAMPLER_U_CLAMP;
+					break;
+				case TextureAddressMode::Border:
+					state |= BGFX_SAMPLER_U_BORDER;
+					break;
+				default:
+					break;
+				}
 			}
 
-			switch (s.AddressV)
-			{
-			case TextureAddressMode::Wrap:
-				//Default
-				break;
-			case TextureAddressMode::Mirror:
-				state |= BGFX_SAMPLER_V_MIRROR;
-				break;
-			case TextureAddressMode::Clamp:
-				state |= BGFX_SAMPLER_V_CLAMP;
-				break;
-			case TextureAddressMode::Border:
-				state |= BGFX_SAMPLER_V_BORDER;
-				break;
-			case TextureAddressMode::MirrorOnce:
-				//TODO: Não possui implementação
-				break;
-			default:
-				break;
+			if (mode == V) {
+				switch (address)
+				{
+				case TextureAddressMode::Wrap:
+					//Default
+					break;
+				case TextureAddressMode::Mirror:
+					state |= BGFX_SAMPLER_V_MIRROR;
+					break;
+				case TextureAddressMode::Clamp:
+					state |= BGFX_SAMPLER_V_CLAMP;
+					break;
+				case TextureAddressMode::Border:
+					state |= BGFX_SAMPLER_V_BORDER;
+					break;
+				default:
+					break;
+				}
 			}
-
-			switch (s.AddressW)
-			{
-			case TextureAddressMode::Wrap:
-				//Default
-				break;
-			case TextureAddressMode::Mirror:
-				state |= BGFX_SAMPLER_W_MIRROR;
-				break;
-			case TextureAddressMode::Clamp:
-				state |= BGFX_SAMPLER_W_CLAMP;
-				break;
-			case TextureAddressMode::Border:
-				state |= BGFX_SAMPLER_W_BORDER;
-				break;
-			case TextureAddressMode::MirrorOnce:
-				//TODO: Não possui implementação
-				break;
-			default:
-				break;
-			}
+			
+			if (mode == W) {
+				switch (address)
+				{
+				case TextureAddressMode::Wrap:
+					//Default
+					break;
+				case TextureAddressMode::Mirror:
+					state |= BGFX_SAMPLER_W_MIRROR;
+					break;
+				case TextureAddressMode::Clamp:
+					state |= BGFX_SAMPLER_W_CLAMP;
+					break;
+				case TextureAddressMode::Border:
+					state |= BGFX_SAMPLER_W_BORDER;
+					break;
+				default:
+					break;
+				}
+			}			
 		}		
 
 		constexpr BgfxTextureAddressMode() = default;
@@ -346,7 +348,10 @@ namespace Xna {
 	struct BgfxSamplerState {
 		constexpr BgfxSamplerState(SamplerState const& s) {		
 			uint32_t state = 0;
-			state |= BgfxTextureAddressMode(s);
+			
+			state |= BgfxTextureAddressMode(s.AddressU, BgfxTextureAddressMode::U);
+			state |= BgfxTextureAddressMode(s.AddressV, BgfxTextureAddressMode::V);
+			state |= BgfxTextureAddressMode(s.AddressW, BgfxTextureAddressMode::W);
 			state |= BgfxTextureFilter(s.Filter);
 		}
 

@@ -14,11 +14,23 @@ namespace Xna {
 		constexpr DepthStencilState() = default;
 
 		//A built-in state object with default settings for using a depth stencil buffer.
-		static constexpr DepthStencilState Default() { return DepthStencilState(false, false); }
+		static const DepthStencilState& Default() { 
+			static const auto state = DepthStencilState(false, false);
+			return state;
+		}
+
 		//A built-in state object with settings for enabling a read-only depth stencil buffer.
-		static constexpr DepthStencilState DepthRead() { return DepthStencilState(true, true); }
+		static const DepthStencilState& DepthRead() {
+			static const auto state = DepthStencilState(true, true);
+			return state;
+		}
+
 		//A built-in state object with settings for not using a depth stencil buffer.
-		static constexpr DepthStencilState None() { return DepthStencilState(true, false); }
+		static const DepthStencilState& None() { 
+			static const auto state = DepthStencilState(true, false);
+			return state;
+		}
+
 		//Gets or sets the stencil operation to perform if the stencil test passes and the depth-buffer test fails for a counterclockwise triangle.
 		//The default is StencilOperation.Keep. 
 		StencilOperation CounterClockwiseStencilDepthBufferFail{ StencilOperation::Keep };
@@ -58,9 +70,7 @@ namespace Xna {
 
 		constexpr bool operator==(DepthStencilState const& other) const noexcept = default;
 
-		constexpr operator std::optional<DepthStencilState>() const {
-			return std::make_optional<DepthStencilState>(*this);
-		}
+		constexpr operator std::optional<DepthStencilState>() const noexcept { return *this; }
 
 	private:
 		constexpr DepthStencilState(bool dbEnable, bool dbwEnable)
