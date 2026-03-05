@@ -41,12 +41,7 @@ namespace Xna {
 		//bgfx::setScissor(x, y, width, height);
 		// Para desabilitar (equivalente a ScissorTestEnable = false)
 		//bgfx::setScissor(); // Chama sem argumentos ou com zeros
-		bool cachedScissorTestEnable{ false };
-
-		//XNA: DepthBias = 0.001f, SlopeScaleDepthBias = 1.5f
-		//bgfx::setDepthBias(0.001f, 1.5f);
-		float depthBias{ 0 };
-		float SlopeScaleDepthBias{ 0 };
+		bool cachedScissorTestEnable{ false };		
 
 		void CreateDevice(GraphicsAdapter const& adapter, Xna::PresentationParameters const& presentationParameters) override {
 			//Nada a fazer
@@ -131,114 +126,25 @@ namespace Xna {
 		bgfx::setViewClear(0, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, clearColor, 1.0f, 0);
 	}
 
-	void BgfxGraphicsDevice::ApplyBlendState(BlendState const& blend) {
-		//BGFX_STATE_DEPTH_TEST_LESS
+	void BgfxGraphicsDevice::ApplyBlendState(BlendState const& blend) {		
 		const BgfxBlendState b = blend;
 
 		cachedBlendState = b.state;
 		cachedBlendFactor = b.blendFactor;
-	}
-
-	// Mapeamento de ComparisonFunction (XNA) para bgfx
-	static uint64_t toBgfxDepthFunc(CompareFunction func) {
-		switch (func) {
-		case CompareFunction::Never:        return BGFX_STATE_DEPTH_TEST_NEVER;
-		case CompareFunction::Less:         return BGFX_STATE_DEPTH_TEST_LESS;
-		case CompareFunction::Equal:        return BGFX_STATE_DEPTH_TEST_EQUAL;
-		case CompareFunction::LessEqual:    return BGFX_STATE_DEPTH_TEST_LEQUAL;
-		case CompareFunction::Greater:      return BGFX_STATE_DEPTH_TEST_GREATER;
-		case CompareFunction::NotEqual:     return BGFX_STATE_DEPTH_TEST_NOTEQUAL;
-		case CompareFunction::GreaterEqual: return BGFX_STATE_DEPTH_TEST_GEQUAL;
-		case CompareFunction::Always:       return BGFX_STATE_DEPTH_TEST_ALWAYS;
-		default: return BGFX_STATE_DEPTH_TEST_LEQUAL;
-		}
-	}
-
-	// Mapeamento de StencilOperation (XNA) para bgfx
-	// O parâmetro 'shift' ajusta se a operação é para Fail, ZFail ou Pass
-	static uint32_t toBgfxStencilOp(StencilOperation op, uint32_t shift) {
-		uint32_t val = 0;
-		switch (op) {
-		case StencilOperation::Keep:                val = BGFX_STENCIL_OP_FAIL_S_KEEP; break;
-		case StencilOperation::Zero:                val = BGFX_STENCIL_OP_FAIL_S_ZERO; break;
-		case StencilOperation::Replace:             val = BGFX_STENCIL_OP_FAIL_S_REPLACE; break;
-		case StencilOperation::IncrementSaturation: val = BGFX_STENCIL_OP_FAIL_S_INCRSAT; break;
-		case StencilOperation::DecrementSaturation: val = BGFX_STENCIL_OP_FAIL_S_DECRSAT; break;
-		case StencilOperation::Invert:              val = BGFX_STENCIL_OP_FAIL_S_INVERT; break;
-		case StencilOperation::Increment:           val = BGFX_STENCIL_OP_FAIL_S_INCR; break;
-		case StencilOperation::Decrement:           val = BGFX_STENCIL_OP_FAIL_S_DECR; break;
-		}
-		return val << shift;
-	}
+	}	
 
 	void BgfxGraphicsDevice::ApplyDepthStencilState(DepthStencilState const& depth) {
-		uint64_t outStateBits = 0 | BGFX_STATE_DEPTH_TEST_LESS;
-
-		if (depth.DepthBufferEnable) {
-			outStateBits |= toBgfxDepthFunc(depth.DepthBufferFunction);
-			if (depth.DepthBufferWriteEnable) {
-				outStateBits |= BGFX_STATE_WRITE_Z;
-			}
-		}
-
-		cachedDepthBuffer = outStateBits;
-
-		// --- STENCIL SECTION ---
-		if (depth.StencilEnable) {
-			// Front Face
-			uint32_t fStencil = BGFX_STENCIL_FUNC_REF(depth.ReferenceStencil)
-				| BGFX_STENCIL_FUNC_RMASK(depth.StencilMask)
-				| (uint32_t)toBgfxDepthFunc(depth.StencilFunction) // Reutiliza mapeamento de comparação
-				| toBgfxStencilOp(depth.StencilFail, 0)             // SFail
-				| toBgfxStencilOp(depth.StencilDepthBufferFail, 4)  // ZFail
-				| toBgfxStencilOp(depth.StencilPass, 8);            // Pass
-
-			// Back Face (CCW)
-			uint32_t bStencil = BGFX_STENCIL_NONE;
-			if (depth.TwoSidedStencilMode) {
-				bStencil = BGFX_STENCIL_FUNC_REF(depth.ReferenceStencil)
-					| BGFX_STENCIL_FUNC_RMASK(depth.StencilMask)
-					| (uint32_t)toBgfxDepthFunc(depth.CounterClockwiseStencilFunction)
-					| toBgfxStencilOp(depth.CounterClockwiseStencilFail, 0)
-					| toBgfxStencilOp(depth.CounterClockwiseStencilDepthBufferFail, 4)
-					| toBgfxStencilOp(depth.CounterClockwiseStencilPass, 8);
-			}
-
-			cachedFrontFaceStencil = fStencil;
-			cachedBackFaceStencil = bStencil;
-
-			// Nota: O Write Mask é global para o stencil no bgfx
-			// Talvez precisamos gerenciar o write mask via bgfx::setState se for complexo, 
-			// mas geralmente setStencil deve resolver.
-		}
-		else {
-			bgfx::setStencil(BGFX_STENCIL_NONE);
-		}
+		const BgfxDepthStencilState state = depth;
+		cachedDepthBuffer = state.depthBuffer;
+		cachedFrontFaceStencil = state.frontStencil;
+		cachedBackFaceStencil = state.backStencil;		
 	}
 
 	void BgfxGraphicsDevice::ApplyRasterizerState(RasterizerState const& rasterizer) {
-		uint64_t state = 0;
+		const BgfxRasterizerState state = rasterizer;
 
-		if (rasterizer.MultiSampleAntiAlias)
-			state |= BGFX_STATE_MSAA;
-
-		const auto cullMode = rasterizer.CullMode;
-
-		//None: Comportamento padrão do bgfx.
-		if (cullMode == CullMode::CullClockwiseFace)
-			state |= BGFX_STATE_CULL_CW;
-		else if (cullMode == CullMode::CullCounterClockwiseFace)
-			state |= BGFX_STATE_CULL_CCW;
-
-		const auto fillMode = rasterizer.FillMode;
-
-		//Solid: Comportamento padrão do bgfx.
-		if (fillMode == FillMode::WireFrame)
-			state |= BGFX_STATE_PT_LINES;
-
-
-		cachedScissorTestEnable = rasterizer.ScissorTestEnable;
 		cachedRasterizerState = state;
+		cachedScissorTestEnable = rasterizer.ScissorTestEnable;
 	}
 
 	std::unique_ptr<PlatformNS::IGraphicsDevice> PlatformNS::IGraphicsDevice::Create() {

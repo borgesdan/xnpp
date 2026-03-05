@@ -4,6 +4,8 @@
 #include "Xna/Framework/Graphics/Texture2D.hpp"
 #include "Xna/Framework/Graphics/BlendState.hpp"
 #include "Xna/Framework/Graphics/SamplerState.hpp"
+#include "Xna/Framework/Graphics/DepthStencilState.hpp"
+#include "Xna/Framework/Graphics/RasterizerState.hpp"
 #include "Xna/Platform/_Platform.hpp"
 #include "Xna/Framework/Color.hpp"
 #include <bgfx/bgfx.h>
@@ -301,8 +303,8 @@ namespace Xna {
 		}		
 
 		constexpr BgfxTextureAddressMode() = default;
-		constexpr operator uint64_t() const noexcept { return state; }
-		uint64_t state{ 0 };
+		constexpr operator uint32_t() const noexcept { return state; }
+		uint32_t state{ 0 };
 	};
 
 	struct BgfxTextureFilter {
@@ -310,30 +312,31 @@ namespace Xna {
 			switch (f) {
 			case TextureFilter::Point:
 				state |= BGFX_SAMPLER_MIN_POINT | BGFX_SAMPLER_MAG_POINT | BGFX_SAMPLER_MIP_POINT;
+				break;
 			case TextureFilter::Anisotropic:
 				// Nota: No bgfx, o filtro anisotrópico geralmente assume linear como base
 				state |= BGFX_SAMPLER_MIN_ANISOTROPIC | BGFX_SAMPLER_MAG_ANISOTROPIC;
-
+				break;
 			case TextureFilter::LinearMipPoint:
 				// Min/Mag são lineares por padrão, forçamos apenas o Mip como Point
 				state |= BGFX_SAMPLER_MIP_POINT;
-
+				break;
 			case TextureFilter::PointMipLinear:
 				// Mip é linear por padrão, forçamos Min/Mag como Point
 				state |= BGFX_SAMPLER_MIN_POINT | BGFX_SAMPLER_MAG_POINT;
-
+				break;
 			case TextureFilter::MinLinearMagPointMipLinear:
 				state |= BGFX_SAMPLER_MAG_POINT;
-
+				break;
 			case TextureFilter::MinLinearMagPointMipPoint:
 				state |= BGFX_SAMPLER_MAG_POINT | BGFX_SAMPLER_MIP_POINT;
-
+				break;
 			case TextureFilter::MinPointMagLinearMipLinear:
 				state |= BGFX_SAMPLER_MIN_POINT;
-
+				break;
 			case TextureFilter::MinPointMagLinearMipPoint:
 				state |= BGFX_SAMPLER_MIN_POINT | BGFX_SAMPLER_MIP_POINT;
-
+				break;
 			case TextureFilter::Linear:
 			default:
 				state |= 0;
@@ -341,8 +344,8 @@ namespace Xna {
 		}
 
 		constexpr BgfxTextureFilter() = default;
-		constexpr operator uint64_t() const noexcept { return state; }
-		uint64_t state{ 0 };
+		constexpr operator uint32_t() const noexcept { return state; }
+		uint32_t state{ 0 };
 	};
 
 	struct BgfxSamplerState {
@@ -358,6 +361,133 @@ namespace Xna {
 		constexpr BgfxSamplerState() = default;
 		constexpr operator uint64_t() const noexcept { return state; }
 		uint64_t state{ 0 };
+	};
+
+	// Mapeamento de ComparisonFunction (XNA) para bgfx
+	struct BgfxCompareFunction {
+
+		constexpr BgfxCompareFunction(CompareFunction func) {
+			switch (func) {
+			case CompareFunction::Never:        state = BGFX_STATE_DEPTH_TEST_NEVER;
+			case CompareFunction::Less:         state = BGFX_STATE_DEPTH_TEST_LESS;
+			case CompareFunction::Equal:        state = BGFX_STATE_DEPTH_TEST_EQUAL;
+			case CompareFunction::LessEqual:    state = BGFX_STATE_DEPTH_TEST_LEQUAL;
+			case CompareFunction::Greater:      state = BGFX_STATE_DEPTH_TEST_GREATER;
+			case CompareFunction::NotEqual:     state = BGFX_STATE_DEPTH_TEST_NOTEQUAL;
+			case CompareFunction::GreaterEqual: state = BGFX_STATE_DEPTH_TEST_GEQUAL;
+			case CompareFunction::Always:       state = BGFX_STATE_DEPTH_TEST_ALWAYS;
+			default: state = BGFX_STATE_DEPTH_TEST_LEQUAL;
+			}
+		}
+
+		constexpr BgfxCompareFunction() = default;
+		constexpr operator uint64_t() const noexcept { return state; }
+		uint64_t state{ 0 };
+	};
+
+	// Mapeamento de StencilOperation (XNA) para bgfx
+	// O parâmetro 'shift' ajusta se a operação é para Fail, ZFail ou Pass
+	struct BgfxStencilOperation {
+		constexpr BgfxStencilOperation(StencilOperation op, uint32_t shift) {
+			uint32_t val = 0;
+			switch (op) {
+			case StencilOperation::Keep:                val = BGFX_STENCIL_OP_FAIL_S_KEEP; break;
+			case StencilOperation::Zero:                val = BGFX_STENCIL_OP_FAIL_S_ZERO; break;
+			case StencilOperation::Replace:             val = BGFX_STENCIL_OP_FAIL_S_REPLACE; break;
+			case StencilOperation::IncrementSaturation: val = BGFX_STENCIL_OP_FAIL_S_INCRSAT; break;
+			case StencilOperation::DecrementSaturation: val = BGFX_STENCIL_OP_FAIL_S_DECRSAT; break;
+			case StencilOperation::Invert:              val = BGFX_STENCIL_OP_FAIL_S_INVERT; break;
+			case StencilOperation::Increment:           val = BGFX_STENCIL_OP_FAIL_S_INCR; break;
+			case StencilOperation::Decrement:           val = BGFX_STENCIL_OP_FAIL_S_DECR; break;
+			}
+			state = val << shift;
+		}
+
+		constexpr BgfxStencilOperation() = default;
+		constexpr operator uint32_t() const noexcept { return state; }
+		uint32_t state{ 0 };
+	};
+
+	struct BgfxDepthStencilState {
+		constexpr BgfxDepthStencilState(DepthStencilState const& depth) {
+			depthBuffer = 0 | BGFX_STATE_DEPTH_TEST_LESS;
+
+			if (depth.DepthBufferEnable) {
+				depthBuffer |= BgfxCompareFunction(depth.DepthBufferFunction);
+				if (depth.DepthBufferWriteEnable) {
+					depthBuffer |= BGFX_STATE_WRITE_Z;
+				}
+			}	
+
+			// --- STENCIL SECTION ---
+			if (depth.StencilEnable) {
+				// Front Face
+				uint32_t frontStencil = BGFX_STENCIL_FUNC_REF(depth.ReferenceStencil)
+					| BGFX_STENCIL_FUNC_RMASK(depth.StencilMask)
+					| (uint32_t)BgfxCompareFunction(depth.StencilFunction) // Reutiliza mapeamento de comparação
+					| BgfxStencilOperation(depth.StencilFail, 0)             // SFail
+					| BgfxStencilOperation(depth.StencilDepthBufferFail, 4)  // ZFail
+					| BgfxStencilOperation(depth.StencilPass, 8);            // Pass
+
+				// Back Face (CCW)
+				uint32_t bStencil = BGFX_STENCIL_NONE;
+				if (depth.TwoSidedStencilMode) {
+					backStencil = BGFX_STENCIL_FUNC_REF(depth.ReferenceStencil)
+						| BGFX_STENCIL_FUNC_RMASK(depth.StencilMask)
+						| (uint32_t)BgfxCompareFunction(depth.CounterClockwiseStencilFunction)
+						| BgfxStencilOperation(depth.CounterClockwiseStencilFail, 0)
+						| BgfxStencilOperation(depth.CounterClockwiseStencilDepthBufferFail, 4)
+						| BgfxStencilOperation(depth.CounterClockwiseStencilPass, 8);
+				}				
+
+				// Nota: O Write Mask é global para o stencil no bgfx
+				// Talvez precisamos gerenciar o write mask via bgfx::setState se for complexo, 
+				// mas geralmente setStencil deve resolver.
+			}
+		}
+
+		constexpr BgfxDepthStencilState() = default;
+		constexpr operator uint64_t() const noexcept { return depthBuffer; }
+		
+		uint64_t depthBuffer{ 0 };
+		uint32_t frontStencil{ BGFX_STENCIL_NONE };
+		uint32_t backStencil{ BGFX_STENCIL_NONE };
+	};
+
+	struct BgfxRasterizerState {
+		constexpr BgfxRasterizerState(RasterizerState const& rasterizer) {
+			if (rasterizer.MultiSampleAntiAlias)
+				state |= BGFX_STATE_MSAA;
+
+			const auto cullMode = rasterizer.CullMode;
+
+			//None: Comportamento padrão do bgfx.
+			if (cullMode == CullMode::CullClockwiseFace)
+				state |= BGFX_STATE_CULL_CW;
+			else if (cullMode == CullMode::CullCounterClockwiseFace)
+				state |= BGFX_STATE_CULL_CCW;
+
+			const auto fillMode = rasterizer.FillMode;
+
+			//Solid: Comportamento padrão do bgfx.
+			if (fillMode == FillMode::WireFrame)
+				state |= BGFX_STATE_PT_LINES;
+
+			scissorTestEnable = rasterizer.ScissorTestEnable;
+			depthBias = rasterizer.DepthBias;
+			slopeScaleDepthBias = rasterizer.SlopeScaleDepthBias;
+		}
+
+		constexpr BgfxRasterizerState() = default;
+		constexpr operator uint64_t() const noexcept { return state; }
+
+		uint64_t state{ 0 };
+		bool scissorTestEnable{ false };
+
+		//Não existe uma função no bgfx para aplicar o bias
+		//1. aplicar o bias manualmente no Vertex Shader da passagem de sombra ou no Fragment Shader durante a comparação.
+		float depthBias{ 0 };
+		float slopeScaleDepthBias{ 0 };
 	};
 }
 

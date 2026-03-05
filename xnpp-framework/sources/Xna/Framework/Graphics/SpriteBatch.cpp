@@ -17,7 +17,9 @@ namespace Xna {
 		impl->backend->Begin(
 			sortMode, 
 			blendState ? &blendState.value() : nullptr,
-			samplerState ? &samplerState.value() : nullptr);
+			samplerState ? &samplerState.value() : nullptr,
+			depthStencilState ? &depthStencilState.value() : nullptr,
+			rasterizerState ? &rasterizerState.value() : nullptr);
 
 		impl->beginCalled = true;
 	}

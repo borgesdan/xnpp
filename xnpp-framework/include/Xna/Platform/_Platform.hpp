@@ -442,7 +442,9 @@ namespace Xna {
 			XNPP_API virtual void Begin(
 				SpriteSortMode sortMode,
 				const BlendState* blendState,
-				const SamplerState* samplerState) = 0;
+				const SamplerState* samplerState,
+				const DepthStencilState* depthStencilState,
+				const RasterizerState* rasterizerState) = 0;
 
 			XNPP_API virtual void Draw(
 				ITexture2D const& texture,

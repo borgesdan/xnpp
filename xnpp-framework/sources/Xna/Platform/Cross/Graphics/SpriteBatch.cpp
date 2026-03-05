@@ -91,13 +91,15 @@ namespace Xna {
 			m_program = loadShaderProgram("C:/Users/Borges/source/repos/xnpp/xnpp-framework/shaders/sprite.vs.bin", "C:/Users/Borges/source/repos/xnpp/xnpp-framework/shaders/sprite.fs.bin");
 		}
 
-		void Begin(SpriteSortMode sortMode, const BlendState* blendState, const SamplerState* samplerState) override {
+		void Begin(SpriteSortMode sortMode, const BlendState* blendState, const SamplerState* samplerState, const DepthStencilState* depthStencilState, const RasterizerState* rasterizerState) override {
 			m_beginCalled = true;
 			m_currentSpriteCount = 0;
 			m_sprites.clear();
 			m_currentTexture.idx = bgfx::kInvalidHandle;
 			m_blendState = blendState ? BgfxBlendState(*blendState) : BgfxBlendState::NonPremultiplied();
 			m_samplerState = samplerState ? BgfxSamplerState(*samplerState) : BgfxSamplerState();
+			m_depthStencilState = depthStencilState ? BgfxDepthStencilState(*depthStencilState) : BgfxDepthStencilState();
+			m_rasterizerState = rasterizerState ? BgfxRasterizerState(*rasterizerState) : BgfxRasterizerState();
 		}
 
 		void Draw(PlatformNS::ITexture2D const& texture, Vector2 const& pos, const Rectangle* sourceRect, Vector2 const& origin, Vector2 const& scale, float rotation, Color const& color, SpriteEffects effects, float layerDepth) override {
@@ -212,8 +214,6 @@ namespace Xna {
 			bgfx::update(m_vb, 0, mem);
 
 			// 3. Renderização por Batches (O "Pulo do Gato")
-			uint64_t state = m_blendState;			
-
 			uint32_t batchStart = 0;
 			bgfx::TextureHandle currentBatchTexture = (m_sortMode == SpriteSortMode::Deferred)
 				? m_sprites[0].texture
@@ -236,10 +236,14 @@ namespace Xna {
 					// Setamos o range correto do Index Buffer
 					bgfx::setIndexBuffer(m_ib, batchStart * 6, spriteCount * 6);
 
+					//Aplicamos textura e estados
 					const auto samplerStateFlags = m_samplerState > 0 ? m_samplerState : UINT32_MAX;
+					
+					bgfx::setStencil(m_depthStencilState.frontStencil, m_depthStencilState.frontStencil);
+					uint64_t state = m_blendState.state | m_depthStencilState.depthBuffer | m_rasterizerState.state;
+					bgfx::setState(state, m_blendState.blendFactor);						
 
 					bgfx::setTexture(0, m_textureUniform, currentBatchTexture, samplerStateFlags);
-					bgfx::setState(state, m_blendState.blendFactor);					
 
 					bgfx::submit(0, m_program);
 
@@ -387,6 +391,8 @@ namespace Xna {
 
 		BgfxBlendState m_blendState{};
 		BgfxSamplerState m_samplerState{};
+		BgfxDepthStencilState m_depthStencilState{};
+		BgfxRasterizerState m_rasterizerState{};
 
 		static constexpr uint16_t kMaxSprites = 2048;
 		static constexpr uint16_t kMaxVertices = kMaxSprites * 4;
