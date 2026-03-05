@@ -57,13 +57,7 @@ namespace Xna {
 		}		
 
 		//Returns an instance of the identity matrix.
-		constexpr static Matrix Identity() {
-			return Matrix(
-				1.0f, 0.0f, 0.0f, 0.0f,
-				0.0f, 1.0f, 0.0f, 0.0f,
-				0.0f, 0.0f, 1.0f, 0.0f,
-				0.0f, 0.0f, 0.0f, 1.0f);
-		}
+		constexpr static const Matrix& Identity();
 
 		//Gets and sets the up vector of the Matrix.
 		constexpr Vector3 Up() const noexcept { return Vector3(M21, M22, M23); }
@@ -888,6 +882,18 @@ namespace Xna {
 		vector4.Z = num3;
 		vector4.W = num4;
 		return vector4;
+	}	
+
+	struct _Matrix {
+		static constexpr Matrix Identity = Matrix(
+			1.0f, 0.0f, 0.0f, 0.0f,
+			0.0f, 1.0f, 0.0f, 0.0f,
+			0.0f, 0.0f, 1.0f, 0.0f,
+			0.0f, 0.0f, 0.0f, 1.0f);
+	};
+
+	constexpr const Matrix& Xna::Matrix::Identity() {
+		return _Matrix::Identity;
 	}
 }
 
