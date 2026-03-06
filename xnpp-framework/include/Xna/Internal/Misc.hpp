@@ -101,19 +101,13 @@ namespace Xna::Misc {
 	//Returns null if the type is a smart pointer or default value if the type has a default constructor.
 	//Throws an exception if the object cannot be created
 	template<typename T>
-	static inline auto ReturnDefaultOrNull(SOURCE_LOCATION) {
+	static inline auto ReturnDefaultOrNull() {
 		if constexpr (IsSmartPointer<T>() || std::is_pointer<T>::value)
 			return (T)nullptr;
 		else if constexpr (std::is_default_constructible<T>::value)
 			return T();
-		else {
-			std::string error;
-			error.append("Could not return null or default value.");
-			error.append("In ");
-			error.append(location.function_name);
-
-			throw std::runtime_error(error);
-		}
+		else if constexpr (std::is_constructible_v<T, std::nullptr_t>)
+			return T(nullptr);		
 	}
 
 	static constexpr std::wstring Char32ToWString(char32_t c)

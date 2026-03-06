@@ -17,6 +17,7 @@
 #include "Xna/Framework/Color.hpp"
 #include "_ContentTypeReaderManager.hpp"
 #include "Xna/Internal/Export.hpp"
+#include "Xna/Internal/Misc.hpp"
 
 namespace Xna {
 	class ContentTypeReader;
@@ -146,7 +147,7 @@ namespace Xna {
 			auto contentTypeReader = dynamic_cast<ContentTypeReaderT<T>*>(&reader);
 
 			if (contentTypeReader != nullptr) {
-				T existingInstance1 = existingInstance == nullptr ? T() : *existingInstance;
+				T existingInstance1 = existingInstance == nullptr ? Xna::Misc::ReturnDefaultOrNull<T>() : *existingInstance;
 				return contentTypeReader->Read(*this, existingInstance1);
 			}
 			else {
@@ -193,8 +194,9 @@ namespace Xna {
 	T ContentReader::ReadObjectInternal(T* existingInstance) {
 		auto num = Read7BitEncodedInt();
 
-		if (num == 0)
-			return T();
+		if (num == 0) {
+			Xna::Misc::ReturnDefaultOrNull<T>();
+		}
 
 		auto index = num - 1;
 		const auto readersSize = impl->typeReaders.size();
