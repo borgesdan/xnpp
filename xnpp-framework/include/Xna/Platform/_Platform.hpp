@@ -304,20 +304,7 @@ namespace Xna {
 		XNPP_API static bool GraphicsAdapter_QueryBackBufferFormat(GraphicsAdapter const& adapter, GraphicsProfile graphicsProfile, SurfaceFormat format,
 			DepthFormat depthFormat, int32_t multiSampleCount, SurfaceFormat& selectedFormat, DepthFormat& selectedDepthFormat, int32_t& selectedMultiSampleCount);
 		XNPP_API static bool GraphicsAdapter_QueryRenderTargetFormat(GraphicsAdapter const& adapter, GraphicsProfile graphicsProfile, SurfaceFormat format,
-			DepthFormat depthFormat, int32_t multiSampleCount, SurfaceFormat& selectedFormat, DepthFormat& selectedDepthFormat, int32_t& selectedMultiSampleCount);
-
-		//SpriteBatch
-
-		XNPP_API static void SpriteBatch_InitializeSpriteBatch(SpriteBatch const& sb, GraphicsDevice const& device);
-		XNPP_API static void SpriteBatch_Begin(SpriteBatch const& sb, SpriteSortMode sortMode, std::optional<BlendState> const& blendState, std::optional<SamplerState> const& samplerState,
-			std::optional<DepthStencilState> const& depthStencilState, std::optional<RasterizerState> const& rasterizerState, std::optional<Effect> const& effect, std::optional<Matrix> transformMatrix);
-		XNPP_API static void SpriteBatch_End(SpriteBatch const& sb);
-		XNPP_API static void SpriteBatch_Draw(SpriteBatch const& sb, Texture2D const& texture, Vector2 const& position, std::optional<Rectangle> const& sourceRectangle, Color const& color,
-			float rotation, Vector2 const& origin, Vector2 const& scale, SpriteEffects effects, float layerDepth);
-		XNPP_API static void SpriteBatch_Draw(SpriteBatch const& sb, Texture2D const& texture, Rectangle const& destinationRectangle, std::optional<Rectangle> const& sourceRectangle, Color const& color,
-			float rotation, Vector2 const& origin, SpriteEffects effects, float layerDepth);
-		XNPP_API static void SpriteBatch_DrawString(SpriteBatch const& sb, SpriteFont const& sf, std::string const& text, Vector2 const& position, Color const& color, float rotation, Vector2 const& origin,
-			Vector2 const& scale, SpriteEffects effects, float layerDepth);
+			DepthFormat depthFormat, int32_t multiSampleCount, SurfaceFormat& selectedFormat, DepthFormat& selectedDepthFormat, int32_t& selectedMultiSampleCount);		
 
 		//SpriteFont
 

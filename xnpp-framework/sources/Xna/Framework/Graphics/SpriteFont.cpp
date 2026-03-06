@@ -20,20 +20,22 @@ namespace Xna {
 		impl->lineSpacing = lineSpacing;
 		impl->spacing = spacing;
 
-		Platform::SpriteFont_Create(*this, texture, glyphs, cropping, charMap, lineSpacing, spacing, kerning, defaultCharacter);
+		//Platform::SpriteFont_Create(*this, texture, glyphs, cropping, charMap, lineSpacing, spacing, kerning, defaultCharacter);
 	}
 
 	Vector2 SpriteFont::MeasureString(std::string const& text, bool ignoreWhiteSpace) {
 		if (text.empty())
 			return Vector2::Zero();
 
-		return Platform::SpriteFont_MeasureString(*this, text, ignoreWhiteSpace);
+		//return Platform::SpriteFont_MeasureString(*this, text, ignoreWhiteSpace);
+		return {};
 	}
 	
 	Vector2 SpriteFont::MeasureString(std::wstring const& text, bool ignoreWhiteSpace) {
 		if (text.empty())
 			return Vector2::Zero();
 
-		return Platform::SpriteFont_MeasureString(*this, text, ignoreWhiteSpace);
+		//return Platform::SpriteFont_MeasureString(*this, text, ignoreWhiteSpace);
+		return {};
 	}
 }

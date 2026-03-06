@@ -1,7 +1,7 @@
 #ifndef XNA_FRAMEWORK_GRAPHICS_SPRITEBATCH_HPP
 #define XNA_FRAMEWORK_GRAPHICS_SPRITEBATCH_HPP
 
-#include "GraphicsResource.hpp"
+#include "_GraphicsDevice.hpp"
 #include "BlendState.hpp"
 #include "SamplerState.hpp"
 #include "RasterizerState.hpp"
@@ -20,12 +20,10 @@
 
 namespace Xna {
 	//Enables a group of sprites to be drawn using the same settings.
-	class SpriteBatch final : public GraphicsResource {
+	class SpriteBatch {
 	public:
 		//Initializes a new instance of the class, which enables a group of sprites to be drawn using the same settings.
 		XNPP_API SpriteBatch(GraphicsDevice const& graphicsDevice);
-
-		~SpriteBatch() override = default;		
 		
 		//Begins a sprite batch operation using the specified sort, blend, sampler, depth stencil, rasterizer state objects, plus a custom effect and a 2D transformation matrix.
 		//Passing null for any of the state objects selects the default default state objects (BlendState.AlphaBlend, DepthStencilState.None, RasterizerState.CullCounterClockwise, SamplerState.LinearClamp). 
@@ -160,22 +158,13 @@ namespace Xna {
 		//Flushes the sprite batch and restores the device state to how it was before Begin was called.
 		XNPP_API void End();
 		
-		inline SpriteBatch(std::nullptr_t) { impl = nullptr; }
-		inline bool operator==(SpriteBatch const& other) const noexcept { return impl == other.impl; }
-		inline bool operator==(std::nullptr_t) const noexcept { return impl == nullptr; }
-		inline explicit operator bool() const noexcept { return impl != nullptr; }
+		inline SpriteBatch(std::nullptr_t) { backend = nullptr; }
+		inline bool operator==(SpriteBatch const& other) const noexcept { return backend == other.backend; }
+		inline bool operator==(std::nullptr_t) const noexcept { return backend == nullptr; }
+		inline explicit operator bool() const noexcept { return backend != nullptr; }
 
 	private:
-		struct Implementation {		
-			std::optional<GraphicsDevice> device;
-			bool beginCalled{ false };
-			PlatformImpl::SpriteBatchImpl platformImpl;
-			std::unique_ptr<PlatformNS::ISpriteBatch> backend;
-		};
-
-		std::shared_ptr<Implementation> impl;
-
-		friend struct Platform;
+		std::shared_ptr<PlatformNS::ISpriteBatch> backend;
 	};
 }
 

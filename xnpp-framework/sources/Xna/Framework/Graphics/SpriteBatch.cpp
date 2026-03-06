@@ -3,9 +3,9 @@
 
 namespace Xna {
 	SpriteBatch::SpriteBatch(GraphicsDevice const& device) {
-		impl = std::make_shared<Implementation>();
-		impl->device = device;
-		impl->backend = PlatformNS::ISpriteBatch::Create();
+		//[TODO]: GraphicsDevice é recebido como argumento mas o backend padrão com bgfx não precisa dele.
+		//Talvez para outro backend gráfico seja necessário.
+		backend = PlatformNS::ISpriteBatch::Create();
 	}
 
 	void SpriteBatch::Begin(
@@ -17,18 +17,15 @@ namespace Xna {
 		const Effect* effect,
 		Matrix const& transformMatrix) {
 
-		if (impl->beginCalled)
-			throw CSharp::InvalidOperationException("Invalid attempt to call the Begin method twice.");
-
-		impl->backend->Begin(
+		//Aqui teria uma exceção ("Invalid attempt to call the Begin method twice.") caso o  campo 'beginCalled' fosse true.
+		//A validação ficou a cargo do backend, mas um assert ou um 'return' caso true é mais do que necessário.
+		backend->Begin(
 			sortMode,
 			blendState,
 			samplerState,
 			depthStencilState,
 			rasterizerState,
 			&transformMatrix);
-
-		impl->beginCalled = true;
 	}
 
 	void SpriteBatch::Begin(
@@ -40,38 +37,36 @@ namespace Xna {
 		std::optional<std::reference_wrapper<const Effect>> const& effect,
 		std::optional<std::reference_wrapper<const Matrix>> transformMatrix) {
 		
-		if (impl->beginCalled)
-			throw CSharp::InvalidOperationException("Invalid attempt to call the Begin method twice.");		
-		
-		impl->backend->Begin(
+		//Aqui teria uma exceção ("Invalid attempt to call the Begin method twice.") caso o  campo 'beginCalled' fosse true.
+		//A validação ficou a cargo do backend, mas um assert ou um 'return' caso true é mais do que necessário.
+		backend->Begin(
 			sortMode, 
 			blendState ? &blendState.value().get() : nullptr,
 			samplerState ? &samplerState.value().get() : nullptr,
 			depthStencilState ? &depthStencilState.value().get() : nullptr,
 			rasterizerState ? &rasterizerState.value().get() : nullptr,
 			transformMatrix ? &transformMatrix.value().get() : nullptr);
-
-		impl->beginCalled = true;
 	}
 
 	void SpriteBatch::End() { 
-		if (!impl->beginCalled)
-			throw CSharp::InvalidOperationException("Invalid attempt to call the End method before Begin.");
-
-		//Platform::SpriteBatch_End(*this); 
-		impl->backend->End();
-
-		impl->beginCalled = false;
+		//Aqui teria uma exceção ("Invalid attempt to call the End method before Begin.") caso o  campo 'beginCalled' fosse false.		
+		//A validação ficou a cargo do backend, mas um assert ou um 'return' caso false é mais do que necessário.
+		backend->End();
 	}
 
 	void SpriteBatch::Draw(Texture2D const& texture, Rectangle const& destRect, std::optional<Rectangle> const& sourceRectangle, Color const& color,
 		float rotation, Vector2 const& origin, SpriteEffects effects, float layerDepth) {
 
-		if (!impl->beginCalled)
-			throw CSharp::InvalidOperationException("The Begin method was not called before the Draw method.");
-		
+		assert(texture != nullptr && "texture is null.");
+		assert((layerDepth >= 0.0f && layerDepth <= 1.0f) && "layerDepth out of bounds.");
+		assert((destRect.Width > 0 && destRect.Height > 0) && "destRect is empty.");
+		assert(((!sourceRectangle.has_value() || (sourceRectangle->Width > 0 && sourceRectangle->Height > 0))) && "sourceRectangle is empty.");
+
+		//Aqui teria uma exceção ("The Begin method was not called before the Draw method.") caso o  campo 'beginCalled' fosse false.
+		//A validação ficou a cargo do backend, mas um assert ou um 'return' caso false é mais do que necessário.
 		const auto& texBackend = texture.GetBackend();
-		impl->backend->Draw(
+
+		backend->Draw(
 			texBackend,
 			destRect.Location(),
 			sourceRectangle ? &sourceRectangle.value() : nullptr,
@@ -87,11 +82,16 @@ namespace Xna {
 
 	void SpriteBatch::Draw(Texture2D const& texture, Vector2 const& position, std::optional<Rectangle> const& sourceRectangle, Color const& color,
 		float rotation, Vector2 const& origin, Vector2 const& scale, SpriteEffects effects, float layerDepth) {
-		if (!impl->beginCalled)
-			throw CSharp::InvalidOperationException("The Begin method was not called before the Draw method.");
+		
+		assert(texture != nullptr && "texture is null.");
+		assert((layerDepth >= 0.0f && layerDepth <= 1.0f) && "layerDepth out of bounds.");
+		assert(((!sourceRectangle.has_value() || (sourceRectangle->Width > 0 && sourceRectangle->Height > 0))) && "sourceRectangle is empty.");
+
+		//Aqui teria uma exceção ("The Begin method was not called before the Draw method.") caso o  campo 'beginCalled' fosse false.
+		//A validação ficou a cargo do backend, mas um assert ou um 'return' caso false é mais do que necessário.		
 
 		const auto& texBackend = texture.GetBackend();
-		impl->backend->Draw(
+		backend->Draw(
 			texBackend,
 			position,			
 			sourceRectangle ? &sourceRectangle.value() : nullptr,
@@ -105,13 +105,16 @@ namespace Xna {
 
 	void SpriteBatch::DrawString(SpriteFont const& spriteFont, std::string const& text, Vector2 const& position, Color const& color, float rotation, Vector2 const& origin,
 		Vector2 const& scale, SpriteEffects effects, float layerDepth) {
+
+		assert(spriteFont != nullptr && "spriteFont is null.");
+		assert((layerDepth >= 0.0f && layerDepth <= 1.0f) && "layerDepth out of bounds.");
 		
-		if (!impl->beginCalled)
-			throw CSharp::InvalidOperationException("The Begin method was not called before the DrawFont method.");
+		//Aqui teria uma exceção ("The Begin method was not called before the Draw method.") caso o  campo 'beginCalled' fosse false.
+		//A validação ficou a cargo do backend, mas um assert ou um 'return' caso false é mais do que necessário.
 
 		if (text.empty())
 			return;
 
-		Platform::SpriteBatch_DrawString(*this, spriteFont, text, position, color, rotation, origin, scale, effects, layerDepth);
+		//Platform::SpriteBatch_DrawString(*this, spriteFont, text, position, color, rotation, origin, scale, effects, layerDepth);
 	}
 }
