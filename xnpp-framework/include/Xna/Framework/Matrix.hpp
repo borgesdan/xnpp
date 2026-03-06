@@ -464,11 +464,10 @@ namespace Xna {
 		}
 
 		//Builds a perspective projection matrix.
-		static constexpr Matrix CreatePerspective(
-			float width, float height, float nearPlaneDistance, float farPlaneDistance) {
-			if (nearPlaneDistance <= 0.0 || farPlaneDistance <= 0.0 || nearPlaneDistance >= farPlaneDistance) {
-				return Matrix();
-			}
+		static constexpr Matrix CreatePerspective(float width, float height, float nearPlaneDistance, float farPlaneDistance) {
+			assert(nearPlaneDistance > 0.0 && "nearPlaneDistance <= 0");
+			assert(farPlaneDistance > 0.0 && "farPlaneDistance <= 0");
+			assert((nearPlaneDistance < farPlaneDistance) && "(nearPlaneDistance >= farPlaneDistance");
 
 			Matrix perspective;
 			perspective.M11 = 2.0f * nearPlaneDistance / width;
@@ -484,12 +483,10 @@ namespace Xna {
 		}
 
 		//Builds a customized, orthogonal projection matrix.
-		static constexpr Matrix CreatePerspectiveOffCenter(
-			float left, float right, float bottom, float top,
-			float nearPlaneDistance, float farPlaneDistance) {
-			if (nearPlaneDistance <= 0.0 || farPlaneDistance <= 0.0 || nearPlaneDistance >= farPlaneDistance) {
-				return Matrix();
-			}
+		static constexpr Matrix CreatePerspectiveOffCenter(float left, float right, float bottom, float top, float nearPlaneDistance, float farPlaneDistance) {
+			assert(nearPlaneDistance > 0.0 && "nearPlaneDistance <= 0");
+			assert(farPlaneDistance > 0.0 && "farPlaneDistance <= 0");
+			assert((nearPlaneDistance < farPlaneDistance) && "(nearPlaneDistance >= farPlaneDistance");
 
 			Matrix perspectiveOffCenter;
 			perspectiveOffCenter.M11 = (2.0F * nearPlaneDistance / (right - left));
