@@ -15,28 +15,16 @@ namespace Xna {
 
 		//A built-in state object with settings for opaque blend,
 		//that is overwriting the source with the destination data.
-		static inline const BlendState& Opaque() {
-			static const auto blend = BlendState(Blend::One, Blend::Zero, Blend::One, Blend::Zero);
-			return blend;
-		}
+		static constexpr const BlendState& Opaque();
 		//A built-in state object with settings for alpha blend, 
 		//that is blending the source and destination data using alpha.
-		static inline const BlendState& AlphaBlend() {
-			static const auto blend = BlendState(Blend::One, Blend::InverseSourceAlpha, Blend::One, Blend::InverseSourceAlpha);
-			return blend;
-		}
+		static constexpr const BlendState& AlphaBlend();
 		//A built-in state object with settings for additive blend, 
 		//that is adding the destination data to the source data without using alpha.
-		static inline const BlendState& Additive() {
-			static const auto blend = BlendState(Blend::SourceAlpha, Blend::One, Blend::SourceAlpha, Blend::One);
-			return blend;
-		}
+		static constexpr const BlendState& Additive();
 		//A built-in state object with settings for blending with non-premultipled alpha, 
 		//that is blending source and destination data using alpha while assuming the color data contains no alpha information.
-		static inline const BlendState& NonPremultiplied() {
-			static const auto blend = BlendState(Blend::SourceAlpha, Blend::InverseSourceAlpha, Blend::SourceAlpha, Blend::InverseSourceAlpha);
-			return blend;
-		}
+		static constexpr const BlendState& NonPremultiplied();
 
 		//Gets or sets the arithmetic operation when blending alpha values. The default is BlendFunction.Add. 
 		BlendFunction AlphaBlendFunction{ BlendFunction::Add };
@@ -106,7 +94,21 @@ namespace Xna {
 			: ColorSourceBlend(colorSrcBlend), ColorDestinationBlend(colorDestBlend),
 			AlphaSourceBlend(alphaSrcBlend), AlphaDestinationBlend(alphaDestBlend) {
 		}
+
+		friend struct _BlendState;
 	};
+
+	struct _BlendState {		
+		static constexpr BlendState Opaque = BlendState(Blend::One, Blend::Zero, Blend::One, Blend::Zero);
+		static constexpr BlendState AlphaBlend = BlendState(Blend::One, Blend::InverseSourceAlpha, Blend::One, Blend::InverseSourceAlpha);
+		static constexpr BlendState Additive = BlendState(Blend::SourceAlpha, Blend::One, Blend::SourceAlpha, Blend::One);
+		static constexpr BlendState NonPremultiplied = BlendState(Blend::SourceAlpha, Blend::InverseSourceAlpha, Blend::SourceAlpha, Blend::InverseSourceAlpha);
+	};
+	
+	constexpr const BlendState& BlendState::Opaque() { return _BlendState::Opaque; }
+	constexpr const BlendState& BlendState::AlphaBlend() { return _BlendState::AlphaBlend; }
+	constexpr const BlendState& BlendState::Additive() { return _BlendState::Additive; }
+	constexpr const BlendState& BlendState::NonPremultiplied() { return _BlendState::NonPremultiplied; }
 }
 
 #endif

@@ -14,22 +14,11 @@ namespace Xna {
 		constexpr DepthStencilState() = default;
 
 		//A built-in state object with default settings for using a depth stencil buffer.
-		static const DepthStencilState& Default() { 
-			static const auto state = DepthStencilState(false, false);
-			return state;
-		}
-
+		static constexpr const DepthStencilState& Default();
 		//A built-in state object with settings for enabling a read-only depth stencil buffer.
-		static const DepthStencilState& DepthRead() {
-			static const auto state = DepthStencilState(true, true);
-			return state;
-		}
-
+		static constexpr const DepthStencilState& DepthRead();
 		//A built-in state object with settings for not using a depth stencil buffer.
-		static const DepthStencilState& None() { 
-			static const auto state = DepthStencilState(true, false);
-			return state;
-		}
+		static constexpr const DepthStencilState& None();
 
 		//Gets or sets the stencil operation to perform if the stencil test passes and the depth-buffer test fails for a counterclockwise triangle.
 		//The default is StencilOperation.Keep. 
@@ -58,7 +47,7 @@ namespace Xna {
 		CompareFunction StencilFunction{ CompareFunction::Always };
 		//Gets or sets the mask applied to the reference value and each stencil buffer entry to determine the significant bits for the stencil test.
 		//The default mask is Int32.MaxValue. 
-		int32_t StencilMask { 0x7FFFFFFF };
+		int32_t StencilMask{ 0x7FFFFFFF };
 		//Gets or sets the write mask applied to values written into the stencil buffer. The default mask is Int32.MaxValue. 
 		int32_t StencilWriteMask{ 0x7FFFFFFF };
 		//Gets or sets the stencil operation to perform if the stencil test passes. The default is StencilOperation.Keep. 
@@ -74,8 +63,20 @@ namespace Xna {
 	private:
 		constexpr DepthStencilState(bool dbEnable, bool dbwEnable)
 			:DepthBufferEnable(dbEnable), DepthBufferWriteEnable(dbwEnable) {
-		}		
+		}
+
+		friend struct _DepthStencilState;
 	};
+
+	struct _DepthStencilState {
+		static constexpr DepthStencilState Default = DepthStencilState(false, false);
+		static constexpr DepthStencilState DepthRead = DepthStencilState(true, true);
+		static constexpr DepthStencilState None = DepthStencilState(true, false);
+	};
+	
+	constexpr const DepthStencilState& DepthStencilState::Default() { return _DepthStencilState::Default; }
+	constexpr const DepthStencilState& DepthStencilState::DepthRead() { return _DepthStencilState::DepthRead; }
+	constexpr const DepthStencilState& DepthStencilState::None() { return _DepthStencilState::None; }
 }
 
 #endif

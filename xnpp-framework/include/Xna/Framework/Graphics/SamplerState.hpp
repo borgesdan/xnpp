@@ -31,38 +31,17 @@ namespace Xna {
 		float MinMipLevel{ 0 };
 
 		//Contains default state for point filtering and texture coordinate wrapping.
-		static const SamplerState& PoinWrap() { 
-			static auto sampler = SamplerState(TextureFilter::Point, TextureAddressMode::Clamp);
-			return sampler;
-		}
-
+		static constexpr const SamplerState& PointWrap();
 		//Contains default state for point filtering and texture coordinate clamping.
-		static const SamplerState& PointClamp() { 
-			static auto sampler = SamplerState(TextureFilter::Point, TextureAddressMode::Clamp);
-			return sampler;
-		}
-
+		static constexpr const SamplerState& PointClamp();
 		//Contains default state for linear filtering and texture coordinate wrapping.
-		static const SamplerState& LinearWrap() {
-			static auto sampler = SamplerState(TextureFilter::Linear, TextureAddressMode::Wrap);
-			return sampler;
-		}
-
+		static constexpr const SamplerState& LinearWrap();
 		//Contains default state for linear filtering and texture coordinate clamping.
-		static const SamplerState& LinearClamp() {
-			static auto sampler = SamplerState(TextureFilter::Linear, TextureAddressMode::Clamp);
-			return sampler;
-		}
+		static constexpr const SamplerState& LinearClamp();
 		//Contains default state for anisotropic filtering and texture coordinate wrapping.
-		static const SamplerState& AnisotropicWrap() { 
-			static auto sampler = SamplerState(TextureFilter::Anisotropic, TextureAddressMode::Wrap);
-			return sampler;
-		}
+		static constexpr const SamplerState& AnisotropicWrap();
 		//Contains default state for anisotropic filtering and texture coordinate clamping.
-		static const SamplerState& AnisotropicClamp() { 
-			static auto sampler = SamplerState(TextureFilter::Anisotropic, TextureAddressMode::Clamp);
-			return sampler;
-		}
+		static constexpr const SamplerState& AnisotropicClamp();
 
 		constexpr operator std::optional<SamplerState>() const noexcept { return std::make_optional<SamplerState>(*this); }
 		constexpr operator std::optional<std::reference_wrapper<const SamplerState>>() const noexcept { return std::cref(*this); }
@@ -72,7 +51,24 @@ namespace Xna {
 			:Filter(filter), AddressU(uvw), AddressV(uvw), AddressW(uvw){ }
 
 		friend class SamplerStateCollection;
+		friend struct _SamplerState;
 	};
+
+	struct _SamplerState {		
+		static constexpr SamplerState PointWrap = SamplerState(TextureFilter::Point, TextureAddressMode::Wrap);
+		static constexpr SamplerState PointClamp = SamplerState(TextureFilter::Point, TextureAddressMode::Clamp);
+		static constexpr SamplerState LinearWrap = SamplerState(TextureFilter::Linear, TextureAddressMode::Wrap);
+		static constexpr SamplerState LinearClamp = SamplerState(TextureFilter::Linear, TextureAddressMode::Clamp);
+		static constexpr SamplerState AnisotropicWrap = SamplerState(TextureFilter::Anisotropic, TextureAddressMode::Wrap);
+		static constexpr SamplerState AnisotropicClamp = SamplerState(TextureFilter::Anisotropic, TextureAddressMode::Clamp);
+	};
+		
+	constexpr const SamplerState& SamplerState::PointWrap() { return _SamplerState::PointWrap; }
+	constexpr const SamplerState& SamplerState::PointClamp() { return _SamplerState::PointClamp; }
+	constexpr const SamplerState& SamplerState::LinearWrap() { return _SamplerState::LinearWrap; }
+	constexpr const SamplerState& SamplerState::LinearClamp() { return _SamplerState::LinearClamp; }
+	constexpr const SamplerState& SamplerState::AnisotropicWrap() { return _SamplerState::AnisotropicWrap; }
+	constexpr const SamplerState& SamplerState::AnisotropicClamp() { return _SamplerState::AnisotropicClamp; }
 
 	//Collection of SamplerState objects. 
 	class SamplerStateCollection {

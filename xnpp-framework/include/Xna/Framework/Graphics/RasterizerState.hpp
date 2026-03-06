@@ -26,11 +26,11 @@ namespace Xna {
 		bool ScissorTestEnable{ false };
 
 		//A built-in state object with settings for not culling any primitives.
-		static constexpr RasterizerState CullNone() { return RasterizerState(Xna::CullMode::None, Xna::FillMode::Solid); }
+		static constexpr const RasterizerState& CullNone();
 		//A built-in state object with settings for culling primitives with clockwise winding order.
-		static constexpr RasterizerState CullClockwise() { return RasterizerState(Xna::CullMode::CullClockwiseFace, Xna::FillMode::Solid); }
+		static constexpr const RasterizerState& CullClockwise();
 		//A built-in state object with settings for culling primitives with counter-clockwise winding order.
-		static constexpr RasterizerState CullCounterClockwise() { return RasterizerState(Xna::CullMode::CullCounterClockwiseFace, Xna::FillMode::Solid); }
+		static constexpr const RasterizerState& CullCounterClockwise();
 
 		constexpr bool operator==(RasterizerState const& other) const noexcept = default;
 
@@ -41,7 +41,19 @@ namespace Xna {
 		constexpr RasterizerState(Xna::CullMode cullMode, Xna::FillMode fillMode)
 			: CullMode(cullMode), FillMode(fillMode) {
 		}
+
+		friend struct _RasterizerState;
 	};
+
+	struct _RasterizerState {
+		static constexpr RasterizerState CullNone = RasterizerState(Xna::CullMode::None, Xna::FillMode::Solid);
+		static constexpr RasterizerState CullClockwise = RasterizerState(Xna::CullMode::CullClockwiseFace, Xna::FillMode::Solid);
+		static constexpr RasterizerState CullCounterClockwise = RasterizerState(Xna::CullMode::CullCounterClockwiseFace, Xna::FillMode::Solid);
+	};
+	
+	constexpr const RasterizerState& RasterizerState::CullNone() { return _RasterizerState::CullNone; }
+	constexpr const RasterizerState& RasterizerState::CullClockwise() { return _RasterizerState::CullClockwise; }
+	constexpr const RasterizerState& RasterizerState::CullCounterClockwise() { return _RasterizerState::CullCounterClockwise; }
 }
 
 #endif
