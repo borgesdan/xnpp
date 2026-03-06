@@ -2,6 +2,7 @@
 #define XNA_FRAMEWORK_MATRIX_HPP
 
 #include "Vector4.hpp"
+#include <cassert>
 
 namespace Xna {
 	struct Plane;
@@ -336,16 +337,131 @@ namespace Xna {
 		}
 
 		//Returns an x-axis rotation matrix.
-		static Matrix CreateRotationX(float radians);
+		static constexpr Matrix CreateRotationX(float radians) {
+			const auto num1 = MathHelper::Extensions::Cos(radians);
+			const auto num2 = MathHelper::Extensions::Sin(radians);
+			Matrix rotationX;
+			rotationX.M11 = 1.0f;
+			rotationX.M12 = 0.0f;
+			rotationX.M13 = 0.0f;
+			rotationX.M14 = 0.0f;
+			rotationX.M21 = 0.0f;
+			rotationX.M22 = num1;
+			rotationX.M23 = num2;
+			rotationX.M24 = 0.0f;
+			rotationX.M31 = 0.0f;
+			rotationX.M32 = -num2;
+			rotationX.M33 = num1;
+			rotationX.M34 = 0.0f;
+			rotationX.M41 = 0.0f;
+			rotationX.M42 = 0.0f;
+			rotationX.M43 = 0.0f;
+			rotationX.M44 = 1.00f;
+			return rotationX;
+		}
+
 		//Returns a y-axis rotation matrix.
-		static Matrix CreateRotationY(float radians);
+		static constexpr Matrix CreateRotationY(float radians) {
+			const auto num1 = MathHelper::Extensions::Cos(radians);
+			const auto num2 = MathHelper::Extensions::Sin(radians);
+			Matrix rotationY;
+			rotationY.M11 = num1;
+			rotationY.M12 = 0.0f;
+			rotationY.M13 = -num2;
+			rotationY.M14 = 0.0f;
+			rotationY.M21 = 0.0f;
+			rotationY.M22 = 1.0f;
+			rotationY.M23 = 0.0f;
+			rotationY.M24 = 0.0f;
+			rotationY.M31 = num2;
+			rotationY.M32 = 0.0f;
+			rotationY.M33 = num1;
+			rotationY.M34 = 0.0f;
+			rotationY.M41 = 0.0f;
+			rotationY.M42 = 0.0f;
+			rotationY.M43 = 0.0f;
+			rotationY.M44 = 1.0f;
+			return rotationY;
+		}
+
 		//Returns an z-axis rotation matrix.
-		static Matrix CreateRotationZ(float radians);
+		static Matrix CreateRotationZ(float radians) {
+			const auto num1 = MathHelper::Extensions::Cos(radians);
+			const auto num2 = MathHelper::Extensions::Sin(radians);
+			Matrix rotationZ;
+			rotationZ.M11 = num1;
+			rotationZ.M12 = num2;
+			rotationZ.M13 = 0.0f;
+			rotationZ.M14 = 0.0f;
+			rotationZ.M21 = -num2;
+			rotationZ.M22 = num1;
+			rotationZ.M23 = 0.0f;
+			rotationZ.M24 = 0.0f;
+			rotationZ.M31 = 0.0f;
+			rotationZ.M32 = 0.0f;
+			rotationZ.M33 = 1.0f;
+			rotationZ.M34 = 0.0f;
+			rotationZ.M41 = 0.0f;
+			rotationZ.M42 = 0.0f;
+			rotationZ.M43 = 0.0f;
+			rotationZ.M44 = 1.0f;
+			return rotationZ;
+		}
+
 		//Creates a new Matrix that rotates around an arbitrary vector.
-		static Matrix CreateFromAxisAngle(Vector3 const& axis, float angle);
+		static Matrix CreateFromAxisAngle(Vector3 const& axis, float angle) {
+			const auto x = axis.X;
+			const auto y = axis.Y;
+			const auto z = axis.Z;
+			const auto num1 = MathHelper::Extensions::Sin(angle);
+			const auto num2 = MathHelper::Extensions::Cos(angle);
+			const auto num3 = x * x;
+			const auto num4 = y * y;
+			const auto num5 = z * z;
+			const auto num6 = x * y;
+			const auto num7 = x * z;
+			const auto num8 = y * z;
+			Matrix fromAxisAngle;
+			fromAxisAngle.M11 = num3 + num2 * (1.0f - num3);
+			fromAxisAngle.M12 = (num6 - num2 * num6 + num1 * z);
+			fromAxisAngle.M13 = (num7 - num2 * num7 - num1 * y);
+			fromAxisAngle.M14 = 0.0f;
+			fromAxisAngle.M21 = (num6 - num2 * num6 - num1 * z);
+			fromAxisAngle.M22 = num4 + num2 * (1.0f - num4);
+			fromAxisAngle.M23 = (num8 - num2 * num8 + num1 * x);
+			fromAxisAngle.M24 = 0.0f;
+			fromAxisAngle.M31 = (num7 - num2 * num7 + num1 * y);
+			fromAxisAngle.M32 = (num8 - num2 * num8 - num1 * x);
+			fromAxisAngle.M33 = num5 + num2 * (1.0f - num5);
+			fromAxisAngle.M34 = 0.0f;
+			fromAxisAngle.M41 = 0.0f;
+			fromAxisAngle.M42 = 0.0f;
+			fromAxisAngle.M43 = 0.0f;
+			fromAxisAngle.M44 = 1.0f;
+			return fromAxisAngle;
+		}
 		//Builds a perspective projection matrix based on a field of view.
-		static Matrix CreatePerspectiveFieldOfView(
-			float fieldOfView, float aspectRatio, float nearPlaneDistance, float farPlaneDistance);
+		static inline Matrix CreatePerspectiveFieldOfView(float fieldOfView, float aspectRatio, float nearPlaneDistance, float farPlaneDistance) {
+			assert((fieldOfView > 0.0 || fieldOfView < 3.1415927410125732) && "fieldOfView out of range.");
+			assert(nearPlaneDistance > 0.0 && "nearPlaneDistance <= 0");
+			assert(farPlaneDistance > 0.0 && "farPlaneDistance <= 0");
+			assert((nearPlaneDistance < farPlaneDistance) && "(nearPlaneDistance >= farPlaneDistance");
+			
+			const auto num1 = 1.0f / std::tan(fieldOfView * 0.5f);
+			const auto num2 = num1 / aspectRatio;
+			Matrix perspectiveFieldOfView;
+			perspectiveFieldOfView.M11 = num2;
+			perspectiveFieldOfView.M12 = perspectiveFieldOfView.M13 = perspectiveFieldOfView.M14 = 0.0f;
+			perspectiveFieldOfView.M22 = num1;
+			perspectiveFieldOfView.M21 = perspectiveFieldOfView.M23 = perspectiveFieldOfView.M24 = 0.0f;
+			perspectiveFieldOfView.M31 = perspectiveFieldOfView.M32 = 0.0f;
+			perspectiveFieldOfView.M33 = farPlaneDistance / (nearPlaneDistance - farPlaneDistance);
+			perspectiveFieldOfView.M34 = -1.0f;
+			perspectiveFieldOfView.M41 = perspectiveFieldOfView.M42 = perspectiveFieldOfView.M44 = 0.0f;
+			perspectiveFieldOfView.M43 = nearPlaneDistance * farPlaneDistance / (nearPlaneDistance - farPlaneDistance);
+			return perspectiveFieldOfView;
+		}
+
 		//Builds a perspective projection matrix.
 		static constexpr Matrix CreatePerspective(
 			float width, float height, float nearPlaneDistance, float farPlaneDistance) {

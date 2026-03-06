@@ -13,9 +13,11 @@ namespace Xna {
 		if (textureHandle.idx != 0 && bgfx::isValid(textureHandle)) 
 			bgfx::destroy(textureHandle);		
 
-		assert(format == SurfaceFormat::Color && "Image format not supported.");
+		assert((format == SurfaceFormat::Color || format == SurfaceFormat::Dxt3) && "Image format not supported.");
 		assert(width > 0 && "The textureHandle width must be greater than 0.");
 		assert(height > 0 && "The textureHandle height must be greater than 0.");
+
+		auto bgfxFormat = format == SurfaceFormat::Color ? bgfx::TextureFormat::RGBA8 : bgfx::TextureFormat::BC2;
 
 		textureHandle = bgfx::createTexture2D(
 			//As dimensões da textura em pixels.
@@ -25,7 +27,7 @@ namespace Xna {
 			//Define se isso é uma única textura ou um Texture Array.
 			1,
 			//O layout dos bits na memória.
-			bgfx::TextureFormat::RGBA8,
+			bgfxFormat,
 			//Flags de Recurso e Sampler
 			BGFX_TEXTURE_NONE | BGFX_SAMPLER_U_CLAMP | BGFX_SAMPLER_V_CLAMP | BGFX_SAMPLER_MIN_POINT | BGFX_SAMPLER_MAG_POINT,
 			//O ponteiro para os dados da imagem.

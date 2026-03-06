@@ -26,6 +26,7 @@ public:
 		texture = Content().Load<Xna::Texture2D>("Sprites/Gem");
 		texture2 = Content().Load<Xna::Texture2D>("Sprites/Player/Idle");
 		texture3 = Content().Load<Xna::Texture2D>("Overlays/you_died");
+		font = Content().Load<Xna::SpriteFont>("Fonts/Hud");
 	}
 
 	void Update(Xna::GameTime& gameTime) override {
@@ -131,8 +132,8 @@ public:
 		spriteBatch.Draw(
 			texture3,
 			Xna::Vector2(200, 300),
-			std::nullopt,
 			Xna::Color::White(),
+			std::nullopt,
 			0,
 			Xna::Vector2(texture3.Width() / 2, texture3.Height() / 2),
 			//Xna::Vector2(0,0),
@@ -146,8 +147,10 @@ public:
 		//if (three)
 			spriteBatch.Draw(texture, texPos, Xna::Color::Black());
 
-		//if (four)
-			spriteBatch.Draw(texture, Xna::Vector2(300, 100), Xna::Color::White());
+		////if (four)
+		//	spriteBatch.Draw(texture, Xna::Vector2(300, 100), Xna::Color::White());
+
+			spriteBatch.DrawString(font, U"Teste", Xna::Vector2(500, 400), Xna::Color::Red());
 
 		spriteBatch.End();
 
@@ -169,6 +172,7 @@ private:
 	Xna::Texture2D texture2 = nullptr;
 	Xna::Texture2D texture3 = nullptr;
 	Xna::Vector2 texPos{};
+	Xna::SpriteFont font = nullptr;
 	float rotation = 0;
 
 	bool one = false;

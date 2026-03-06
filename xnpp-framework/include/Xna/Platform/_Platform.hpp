@@ -447,8 +447,8 @@ namespace Xna {
 
 			XNPP_API virtual void End() = 0;
 
-			XNPP_API static std::unique_ptr<ISpriteBatch> Create();
-		};
+			XNPP_API static std::unique_ptr<ISpriteBatch> Create(GraphicsDevice const& device);
+		};		
 	}
 }
 

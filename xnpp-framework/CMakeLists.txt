@@ -96,7 +96,7 @@ add_library(xnpp
         ${XNPP_FRAMEWORK_SRC}
         ${XNPP_PLATFORM_SRC}
         ${MINIAUDIO_VORBIS_SRC}        
-)
+ )
 
 target_compile_features(xnpp PUBLIC cxx_std_20)
 
