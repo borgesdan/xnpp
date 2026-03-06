@@ -440,14 +440,15 @@ namespace Xna {
 			fromAxisAngle.M44 = 1.0f;
 			return fromAxisAngle;
 		}
+
 		//Builds a perspective projection matrix based on a field of view.
-		static inline Matrix CreatePerspectiveFieldOfView(float fieldOfView, float aspectRatio, float nearPlaneDistance, float farPlaneDistance) {
+		static constexpr Matrix CreatePerspectiveFieldOfView(float fieldOfView, float aspectRatio, float nearPlaneDistance, float farPlaneDistance) {
 			assert((fieldOfView > 0.0 || fieldOfView < 3.1415927410125732) && "fieldOfView out of range.");
 			assert(nearPlaneDistance > 0.0 && "nearPlaneDistance <= 0");
 			assert(farPlaneDistance > 0.0 && "farPlaneDistance <= 0");
 			assert((nearPlaneDistance < farPlaneDistance) && "(nearPlaneDistance >= farPlaneDistance");
 			
-			const auto num1 = 1.0f / std::tan(fieldOfView * 0.5f);
+			const auto num1 = 1.0f / MathHelper::Extensions::Tan(fieldOfView * 0.5f);
 			const auto num2 = num1 / aspectRatio;
 			Matrix perspectiveFieldOfView;
 			perspectiveFieldOfView.M11 = num2;
