@@ -17,6 +17,7 @@
 #include <string>
 #include "Xna/Platform/Platform.hpp"
 #include "Xna/Internal/Export.hpp"
+#include "Xna/Internal/Macros.hpp"
 
 namespace Xna {
 	//Enables a group of sprites to be drawn using the same settings.
@@ -157,12 +158,8 @@ namespace Xna {
 		
 		//Flushes the sprite batch and restores the device state to how it was before Begin was called.
 		XNPP_API void End();
-		
-		inline SpriteBatch(std::nullptr_t) { backend = nullptr; }
-		inline bool operator==(SpriteBatch const& other) const noexcept { return backend == other.backend; }
-		inline bool operator==(std::nullptr_t) const noexcept { return backend == nullptr; }
-		inline explicit operator bool() const noexcept { return backend != nullptr; }
 
+		XNPP_DECLARE_IMPL_WRAPPER(SpriteBatch, backend);
 	private:
 		std::shared_ptr<PlatformNS::ISpriteBatch> backend;
 	};
