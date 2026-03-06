@@ -37,7 +37,7 @@ namespace Xna {
 			const DepthStencilState* depthStencilState = nullptr,
 			const RasterizerState* rasterizerState = nullptr,
 			const Effect* effect = nullptr,
-			const Matrix* transformMatrix = nullptr);
+			Matrix const& transformMatrix = Matrix::Identity());
 
 		//Begins a sprite batch operation using the specified sort, blend, sampler, depth stencil, rasterizer state objects, plus a custom effect and a 2D transformation matrix.
 		//Passing null for any of the state objects selects the default default state objects (BlendState.AlphaBlend, DepthStencilState.None, RasterizerState.CullCounterClockwise, SamplerState.LinearClamp). 
@@ -49,7 +49,7 @@ namespace Xna {
 			std::optional<std::reference_wrapper<const DepthStencilState>> const& depthStencilState,
 			std::optional<std::reference_wrapper<const RasterizerState>> const& rasterizerState,
 			std::optional<std::reference_wrapper<const Effect>> const& effect,
-			std::optional<std::reference_wrapper<const Matrix>> transformMatrix);
+			std::optional<std::reference_wrapper<const Matrix>> transformMatrix = Matrix::Identity());
 
 		//Adds a sprite to a batch of sprites for rendering using the specified texture, destination rectangle, and color.
 		inline void Draw(

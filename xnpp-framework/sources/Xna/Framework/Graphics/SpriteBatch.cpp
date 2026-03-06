@@ -15,7 +15,7 @@ namespace Xna {
 		const DepthStencilState* depthStencilState,
 		const RasterizerState* rasterizerState,
 		const Effect* effect,
-		const Matrix* transformMatrix) {
+		Matrix const& transformMatrix) {
 
 		if (impl->beginCalled)
 			throw CSharp::InvalidOperationException("Invalid attempt to call the Begin method twice.");
@@ -26,7 +26,7 @@ namespace Xna {
 			samplerState,
 			depthStencilState,
 			rasterizerState,
-			transformMatrix);
+			&transformMatrix);
 
 		impl->beginCalled = true;
 	}
