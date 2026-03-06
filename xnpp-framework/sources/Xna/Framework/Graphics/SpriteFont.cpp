@@ -6,7 +6,9 @@
 namespace Xna {
 	SpriteFont::SpriteFont(Texture2D const& texture, std::vector<Rectangle> const& glyphs, std::vector<Rectangle> const& cropping,
 		std::vector<char32_t> const& charMap, int32_t lineSpacing, float spacing, std::vector<Vector3> const& kerning, std::optional<char32_t> const& defaultCharacter) {		
-		impl = std::make_shared<Implementation>();
+        assert(texture != nullptr && "Texture is null.");
+        
+        impl = std::make_shared<Implementation>();
 		impl->textureValue = texture;
 		impl->glyphData = glyphs;
 		impl->croppingData = cropping;

@@ -102,7 +102,7 @@ namespace Xna {
 			m_depthStencilState = depthStencilState ? BgfxDepthStencilState(*depthStencilState) : BgfxDepthStencilState();
 			m_rasterizerState = rasterizerState ? BgfxRasterizerState(*rasterizerState) : BgfxRasterizerState();			
 
-			m_matrix = matrix ? *matrix : Matrix::Identity();
+			m_transformMatrix = matrix ? *matrix : Matrix::Identity();
 		}
 
 		void Draw(PlatformNS::ITexture2D const& texture, Vector2 const& pos, const Rectangle* sourceRect, Vector2 const& origin, Vector2 const& scale, float rotation, Color const& color, SpriteEffects effects, float layerDepth) override {
@@ -217,7 +217,7 @@ namespace Xna {
 			bgfx::update(m_vb, 0, mem);
 
 			//Aplicar transformação
-			Matrix transposed = Matrix::Transpose(m_matrix);
+			Matrix transposed = Matrix::Transpose(m_transformMatrix);
 			bgfx::setTransform(&transposed.M11);
 
 			// 3. Renderização por Batches (O "Pulo do Gato")
@@ -278,7 +278,7 @@ namespace Xna {
 			bgfx::update(m_vb, 0, mem);
 
 			//Aplicar transformação
-			Matrix transposed = Matrix::Transpose(m_matrix);
+			Matrix transposed = Matrix::Transpose(m_transformMatrix);
 			bgfx::setTransform(&transposed.M11);
 
 			// 4. Configuração de estado
@@ -290,7 +290,7 @@ namespace Xna {
 			bgfx::setIndexBuffer(m_ib, 0, 6);
 
 			//Aplicar transformação
-			bgfx::setTransform(&m_matrix);
+			bgfx::setTransform(&m_transformMatrix);
 
 			bgfx::setStencil(m_depthStencilState.frontStencil, m_depthStencilState.frontStencil);
 			
@@ -409,7 +409,7 @@ namespace Xna {
 		BgfxSamplerState m_samplerState{};
 		BgfxDepthStencilState m_depthStencilState{};
 		BgfxRasterizerState m_rasterizerState{};
-		Matrix m_matrix{};
+		Matrix m_transformMatrix{};
 
 		static constexpr uint16_t kMaxSprites = 2048;
 		static constexpr uint16_t kMaxVertices = kMaxSprites * 4;
