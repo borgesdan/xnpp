@@ -7,5 +7,15 @@
     inline bool operator==(std::nullptr_t) const noexcept { return Impl == nullptr; } \
     inline explicit operator bool() const noexcept { return Impl != nullptr; }
 
+#ifdef _WIN32
+#ifdef XNPP_EXPORT_DLL
+#define XNPP_API __declspec(dllexport)
+#else
+#define XNPP_API __declspec(dllimport)
+#endif
+#else
+#define XNPP_API
+#endif
+
 
 #endif
