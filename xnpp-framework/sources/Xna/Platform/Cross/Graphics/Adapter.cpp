@@ -139,14 +139,18 @@ namespace Xna {
 			
 			return {};
 		}
-		bool IsProfileSupported(GraphicsAdapter const& adapter, GraphicsProfile graphicsProfile) override { return false; }
+		
+		bool IsProfileSupported(GraphicsAdapter const& adapter, GraphicsProfile graphicsProfile) override {
+			return true; 
+		}
+
 		bool QueryBackBufferFormat(GraphicsAdapter const& adapter, GraphicsProfile graphicsProfile, SurfaceFormat format,
 			DepthFormat depthFormat, int32_t multiSampleCount, SurfaceFormat& selectedFormat, DepthFormat& selectedDepthFormat, int32_t& selectedMultiSampleCount) override {
-			return false;
+			return true;
 		}
 		bool QueryRenderTargetFormat(GraphicsAdapter const& adapter, GraphicsProfile graphicsProfile, SurfaceFormat format,
 			DepthFormat depthFormat, int32_t multiSampleCount, SurfaceFormat& selectedFormat, DepthFormat& selectedDepthFormat, int32_t& selectedMultiSampleCount) override {
-			return false;
+			return true;
 		}
 
 		~SdlGraphicsAdapter() override = default;

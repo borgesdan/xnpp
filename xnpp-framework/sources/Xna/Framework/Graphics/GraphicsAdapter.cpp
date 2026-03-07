@@ -58,8 +58,7 @@ namespace Xna {
 		SurfaceFormat& selectedFormat,
 		DepthFormat& selectedDepthFormat,
 		int32_t& selectedMultiSampleCount) const {
-		// return Platform::GraphicsAdapter_QueryRenderTargetFormat(*this, graphicsProfile, format, depthFormat, multiSampleCount, selectedFormat, selectedDepthFormat, selectedMultiSampleCount);
-		return true;
+		return impl->backend->QueryRenderTargetFormat(*this, graphicsProfile, format, depthFormat, multiSampleCount, selectedFormat, selectedDepthFormat, selectedMultiSampleCount);
 	}
 
 	bool GraphicsAdapter::QueryBackBufferFormat(GraphicsProfile graphicsProfile,
@@ -69,12 +68,10 @@ namespace Xna {
 		SurfaceFormat& selectedFormat,
 		DepthFormat& selectedDepthFormat,
 		int32_t& selectedMultiSampleCount) const {
-		//return Platform::GraphicsAdapter_QueryBackBufferFormat(*this, graphicsProfile, format, depthFormat, multiSampleCount, selectedFormat, selectedDepthFormat, selectedMultiSampleCount);
-		return true;
+		return impl->backend->QueryBackBufferFormat(*this, graphicsProfile, format, depthFormat, multiSampleCount, selectedFormat, selectedDepthFormat, selectedMultiSampleCount);
 	}
 
 	bool GraphicsAdapter::IsProfileSupported(GraphicsProfile graphicsProfile) {
-		//return Platform::GraphicsAdapter_IsProfileSupported(*this, graphicsProfile);
-		return true;
+		impl->backend->IsProfileSupported(*this, graphicsProfile);
 	}
 }
