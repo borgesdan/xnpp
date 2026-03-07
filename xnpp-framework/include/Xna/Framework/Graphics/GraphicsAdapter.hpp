@@ -7,7 +7,7 @@
 #include "DisplayMode.hpp"
 #include "DisplayModeCollection.hpp"
 #include "Xna/Platform/Platform.hpp"
-#include "Xna/Internal/Export.hpp"
+#include "Xna/Internal/Macros.hpp"
 
 namespace Xna {
 	//Provides methods to retrieve and manipulate graphics adapters.
@@ -66,7 +66,8 @@ namespace Xna {
 		
 		//Tests to see if the adapter supports the requested profile.
 		inline bool IsProfileSupported(GraphicsProfile graphicsProfile) {
-			return Platform::GraphicsAdapter_IsProfileSupported(*this, graphicsProfile);
+			//return Platform::GraphicsAdapter_IsProfileSupported(*this, graphicsProfile);
+			return true;
 		}
 
 		//Queries the adapter for support for the requested back buffer format.
@@ -77,7 +78,8 @@ namespace Xna {
 			SurfaceFormat& selectedFormat,
 			DepthFormat& selectedDepthFormat,
 			int32_t& selectedMultiSampleCount) const {
-			return Platform::GraphicsAdapter_QueryBackBufferFormat(*this, graphicsProfile, format, depthFormat, multiSampleCount, selectedFormat, selectedDepthFormat, selectedMultiSampleCount);
+			//return Platform::GraphicsAdapter_QueryBackBufferFormat(*this, graphicsProfile, format, depthFormat, multiSampleCount, selectedFormat, selectedDepthFormat, selectedMultiSampleCount);
+			return true;
 		}
 
 		//Queries the adapter for support for the requested render target format.
@@ -88,14 +90,12 @@ namespace Xna {
 			SurfaceFormat& selectedFormat,
 			DepthFormat& selectedDepthFormat,
 			int32_t& selectedMultiSampleCount) const {
-			return Platform::GraphicsAdapter_QueryRenderTargetFormat(*this, graphicsProfile, format, depthFormat, multiSampleCount, selectedFormat, selectedDepthFormat, selectedMultiSampleCount);
-		}
-		
-		inline GraphicsAdapter(std::nullptr_t) { impl = nullptr; }
-		inline bool operator==(GraphicsAdapter const& other) const noexcept { return impl == other.impl; }
-		inline bool operator==(std::nullptr_t) const noexcept { return impl == nullptr; }
-		inline explicit operator bool() const noexcept { return impl != nullptr; }
-		
+			// return Platform::GraphicsAdapter_QueryRenderTargetFormat(*this, graphicsProfile, format, depthFormat, multiSampleCount, selectedFormat, selectedDepthFormat, selectedMultiSampleCount);
+			return true;
+		}		
+
+		XNPP_DECLARE_IMPL_WRAPPER(GraphicsAdapter, impl);
+
 	private:
 		struct Implementation {
 			std::string description;
@@ -115,12 +115,17 @@ namespace Xna {
 			inline static bool UseReferenceDevice = false;
 
 			PlatformImpl::GraphicsAdapterImpl platformImpl;
+
+			std::unique_ptr<PlatformNS::IGraphicsAdapter> backend;
 		};		
 		
-		inline GraphicsAdapter() { impl = std::make_shared<Implementation>(); }
+		inline GraphicsAdapter() { 
+			impl = std::make_shared<Implementation>(); 
+			impl->backend = PlatformNS::IGraphicsAdapter::Create();
+		}
 		std::shared_ptr<Implementation> impl;		
 	
-		friend struct Platform;
+		friend struct Platform;		
 	};	
 }
 

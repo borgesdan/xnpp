@@ -27,6 +27,8 @@ public:
 		texture2 = Content().Load<Xna::Texture2D>("Sprites/Player/Idle");
 		texture3 = Content().Load<Xna::Texture2D>("Overlays/you_died");
 		font = Content().Load<Xna::SpriteFont>("Fonts/Hud");
+
+		auto adps = Xna::GraphicsAdapter::Adapters();
 	}
 
 	void Update(Xna::GameTime& gameTime) override {

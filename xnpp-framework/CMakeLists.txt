@@ -61,8 +61,7 @@ set(XNPP_FRAMEWORK_SRC
     "sources/Xna/Framework/Content/ContentManager.cpp"
     "sources/Xna/Framework/Content/ContentReader.cpp"
     "sources/Xna/Framework/Content/ContentTypeReaderManager.cpp"
-    "sources/Xna/Platform/Windows/WindowsPlatform.cpp"     
-    "sources/Xna/Platform/Windows/WindowsAdapter.cpp"
+    "sources/Xna/Platform/Windows/WindowsPlatform.cpp"    
     "sources/Xna/Platform/Windows/WindowsBuffer.cpp"
     "sources/Xna/App.cpp"
     "sources/Xna/Framework/Audio/AudioFormat.cpp"
@@ -86,7 +85,9 @@ set(XNPP_PLATFORM_SRC
     "sources/Xna/Platform/Cross/Audio.cpp"
     "sources/Xna/Platform/Cross/Graphics/Device.cpp"
     "sources/Xna/Platform/Cross/Graphics/Texture.cpp"
-    "sources/Xna/Platform/Cross/Graphics/SpriteBatch.cpp")
+    "sources/Xna/Platform/Cross/Graphics/SpriteBatch.cpp"
+    "sources/Xna/Platform/Cross/Graphics/Adapter.cpp"
+)
 
 set(MINIAUDIO_VORBIS_SRC 
     "sources/Xna/Platform/Cross/third-party/miniaudio/miniaudio_libvorbis.c"
@@ -95,8 +96,8 @@ set(MINIAUDIO_VORBIS_SRC
 add_library(xnpp
         ${XNPP_FRAMEWORK_SRC}
         ${XNPP_PLATFORM_SRC}
-        ${MINIAUDIO_VORBIS_SRC}        
- )
+        ${MINIAUDIO_VORBIS_SRC} 
+)
 
 target_compile_features(xnpp PUBLIC cxx_std_20)
 

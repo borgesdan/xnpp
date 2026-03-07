@@ -297,14 +297,14 @@ namespace Xna {
 
 		//GraphicsAdapter
 
-		XNPP_API static std::vector<std::optional<GraphicsAdapter>> GraphicsAdapter_GetAllGraphicsAdapters();
+		/*XNPP_API static std::vector<std::optional<GraphicsAdapter>> GraphicsAdapter_GetAllGraphicsAdapters();
 		XNPP_API static void GraphicsAdapter_SupportedDisplayModes(GraphicsAdapter const& adapter);
 		XNPP_API static void GraphicsAdapter_CurrentDisplayMode(GraphicsAdapter const& adapter);
 		XNPP_API static bool GraphicsAdapter_IsProfileSupported(GraphicsAdapter const& adapter, GraphicsProfile graphicsProfile);
 		XNPP_API static bool GraphicsAdapter_QueryBackBufferFormat(GraphicsAdapter const& adapter, GraphicsProfile graphicsProfile, SurfaceFormat format,
 			DepthFormat depthFormat, int32_t multiSampleCount, SurfaceFormat& selectedFormat, DepthFormat& selectedDepthFormat, int32_t& selectedMultiSampleCount);
 		XNPP_API static bool GraphicsAdapter_QueryRenderTargetFormat(GraphicsAdapter const& adapter, GraphicsProfile graphicsProfile, SurfaceFormat format,
-			DepthFormat depthFormat, int32_t multiSampleCount, SurfaceFormat& selectedFormat, DepthFormat& selectedDepthFormat, int32_t& selectedMultiSampleCount);		
+			DepthFormat depthFormat, int32_t multiSampleCount, SurfaceFormat& selectedFormat, DepthFormat& selectedDepthFormat, int32_t& selectedMultiSampleCount);*/		
 
 		//SpriteFont
 
@@ -394,6 +394,31 @@ namespace Xna {
 
 			XNPP_API virtual ~IMediaPlayer() = default;
 			XNPP_API static IMediaPlayer& GetInstance();
+		};
+
+		struct GaphicsAdapterDesc {
+			std::string description;
+			std::string deviceName;
+			intptr_t monitorHandle{ 0 };
+			uint32_t deviceId{ 0 };
+			uint32_t revision{ 0 };
+			uint32_t subSystemId{ 0 };
+			uint32_t vendorId{ 0 };
+		};
+
+		struct IGraphicsAdapter {
+			XNPP_API virtual ~IGraphicsAdapter() = default;
+
+			XNPP_API virtual std::vector<GaphicsAdapterDesc> GetAll() = 0;
+			XNPP_API virtual void SupportedDisplayModes(GraphicsAdapter const& adapter) = 0;
+			XNPP_API virtual void CurrentDisplayMode(GraphicsAdapter const& adapter) = 0;
+			XNPP_API virtual bool IsProfileSupported(GraphicsAdapter const& adapter, GraphicsProfile graphicsProfile) = 0;
+			XNPP_API virtual bool QueryBackBufferFormat(GraphicsAdapter const& adapter, GraphicsProfile graphicsProfile, SurfaceFormat format,
+				DepthFormat depthFormat, int32_t multiSampleCount, SurfaceFormat& selectedFormat, DepthFormat& selectedDepthFormat, int32_t& selectedMultiSampleCount) = 0;
+			XNPP_API virtual bool QueryRenderTargetFormat(GraphicsAdapter const& adapter, GraphicsProfile graphicsProfile, SurfaceFormat format,
+				DepthFormat depthFormat, int32_t multiSampleCount, SurfaceFormat& selectedFormat, DepthFormat& selectedDepthFormat, int32_t& selectedMultiSampleCount) = 0;
+
+			XNPP_API static std::unique_ptr<IGraphicsAdapter> Create();
 		};
 
 		struct IGraphicsDevice {
