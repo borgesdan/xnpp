@@ -2,11 +2,14 @@
 #include "Xna/Platform/Platform.hpp"
 
 namespace Xna {
-	std::optional<GraphicsAdapter> GraphicsAdapter::Implementation::DefaultAdapter = std::nullopt;
+	std::optional<GraphicsAdapter>  GraphicsAdapter::_DefaultAdapter = std::nullopt;
 
 	std::vector<std::optional<GraphicsAdapter>> GraphicsAdapter::Adapters() {
 		auto backend = PlatformNS::IGraphicsAdapter::Create();
 		auto adapters = backend->GetAll();
+
+		if (adapters.empty())
+			return {};
 
 		std::vector<std::optional<GraphicsAdapter>> all(adapters.size());
 		for (size_t i = 0; i < adapters.size(); ++i) {
@@ -21,41 +24,57 @@ namespace Xna {
 
 			all[i] = adp;
 		}
+		
+		_DefaultAdapter = all[0].value();
 
 		return all;
 	}
 
 	GraphicsAdapter GraphicsAdapter::DefaultAdapter() {
-		if (!Implementation::DefaultAdapter.has_value()) {
+		if (!_DefaultAdapter.has_value()) {
 			auto all = Adapters();
 
 			if (!all.empty())
-				Implementation::DefaultAdapter = all[0].value();
-			else
-				throw CSharp::InvalidOperationException("Default GraphicsAdapter not found.");
+				_DefaultAdapter = all[0].value();			
 		}			
 
-		return Implementation::DefaultAdapter.value();
+		return _DefaultAdapter.value_or(nullptr);
 	}
-
+	
 	DisplayModeCollection GraphicsAdapter::SupportedDisplayModes() const {
-		if (impl->supportedDisplayModes.Count() == 0) {
-			//Platform::GraphicsAdapter_SupportedDisplayModes(*this);
-			
-		}
-
-		return impl->supportedDisplayModes;
+		auto modes = impl->backend->SupportedDisplayModes();
+		auto collection = DisplayModeCollection(modes);
+		return collection;
 	}
 
 	DisplayMode GraphicsAdapter::CurrentDisplayMode() const {
-		if (!impl->currentDisplayMode.has_value()) {
-			//Platform::GraphicsAdapter_CurrentDisplayMode(*this);
-
-		}
-
-		if (!impl->currentDisplayMode.has_value())
-			return DisplayMode();
-
-		return impl->currentDisplayMode.value();
+		return impl->backend->CurrentDisplayMode();
 	}	
+
+	bool GraphicsAdapter::QueryRenderTargetFormat(GraphicsProfile graphicsProfile,
+		SurfaceFormat format,
+		DepthFormat depthFormat,
+		int32_t multiSampleCount,
+		SurfaceFormat& selectedFormat,
+		DepthFormat& selectedDepthFormat,
+		int32_t& selectedMultiSampleCount) const {
+		// return Platform::GraphicsAdapter_QueryRenderTargetFormat(*this, graphicsProfile, format, depthFormat, multiSampleCount, selectedFormat, selectedDepthFormat, selectedMultiSampleCount);
+		return true;
+	}
+
+	bool GraphicsAdapter::QueryBackBufferFormat(GraphicsProfile graphicsProfile,
+		SurfaceFormat format,
+		DepthFormat depthFormat,
+		int32_t multiSampleCount,
+		SurfaceFormat& selectedFormat,
+		DepthFormat& selectedDepthFormat,
+		int32_t& selectedMultiSampleCount) const {
+		//return Platform::GraphicsAdapter_QueryBackBufferFormat(*this, graphicsProfile, format, depthFormat, multiSampleCount, selectedFormat, selectedDepthFormat, selectedMultiSampleCount);
+		return true;
+	}
+
+	bool GraphicsAdapter::IsProfileSupported(GraphicsProfile graphicsProfile) {
+		//return Platform::GraphicsAdapter_IsProfileSupported(*this, graphicsProfile);
+		return true;
+	}
 }

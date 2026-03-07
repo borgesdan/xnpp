@@ -79,8 +79,66 @@ namespace Xna {
 			return adapters;
 		}
 
-		void SupportedDisplayModes(GraphicsAdapter const& adapter) override {}
-		void CurrentDisplayMode(GraphicsAdapter const& adapter) override {}
+		static SurfaceFormat MapSDLFormatToSurface(SDL_PixelFormat sdlFormat) {
+			switch (sdlFormat) {
+			case SDL_PIXELFORMAT_RGBA8888: return SurfaceFormat::Color;
+			case SDL_PIXELFORMAT_XRGB8888: return SurfaceFormat::Color;
+			case SDL_PIXELFORMAT_BGR565: return SurfaceFormat::Bgr565;
+			case SDL_PIXELFORMAT_BGRA5551: return SurfaceFormat::Bgra5551;
+			case SDL_PIXELFORMAT_BGRA4444: return SurfaceFormat::Bgra4444;
+			default: return SurfaceFormat::Unknown;
+			}
+		}
+
+		std::vector<DisplayMode> SupportedDisplayModes() override {
+			int displayCount = 0;
+			SDL_DisplayID* displays = SDL_GetDisplays(&displayCount);
+
+			std::vector<DisplayMode> displayModes;
+
+			if (displays) {
+				for (int i = 0; i < displayCount; ++i) {
+					int modeCount = 0;
+					// Obtém todos os modos disponíveis para este monitor específico
+					const auto modes = SDL_GetFullscreenDisplayModes(displays[i], &modeCount);
+					
+					if (modes) {
+						for (int j = 0; j < modeCount; ++j) {
+							const SDL_DisplayMode* mode = modes[j];
+
+							const auto format = MapSDLFormatToSurface(mode->format);
+
+							if (format == SurfaceFormat::Unknown)
+								continue;
+
+							const auto display = DisplayMode(mode->w, mode->h, format);
+							displayModes.push_back(display);
+						}
+						
+						SDL_free((void*)modes);
+					}
+				}
+				SDL_free(displays);
+			}
+
+			return displayModes;
+		}
+
+		DisplayMode CurrentDisplayMode() override {		
+			int displayCount = 0;
+			SDL_DisplayID* displays = SDL_GetDisplays(&displayCount);
+
+			if (displays) {
+				for (int i = 0; i < displayCount; ++i) {
+					auto mode = SDL_GetCurrentDisplayMode(displays[i]);
+					
+					const auto display = DisplayMode(mode->w, mode->h, MapSDLFormatToSurface(mode->format));
+					return display;
+				}
+			}
+			
+			return {};
+		}
 		bool IsProfileSupported(GraphicsAdapter const& adapter, GraphicsProfile graphicsProfile) override { return false; }
 		bool QueryBackBufferFormat(GraphicsAdapter const& adapter, GraphicsProfile graphicsProfile, SurfaceFormat format,
 			DepthFormat depthFormat, int32_t multiSampleCount, SurfaceFormat& selectedFormat, DepthFormat& selectedDepthFormat, int32_t& selectedMultiSampleCount) override {

@@ -12,7 +12,7 @@
 namespace Xna {
 	//Provides methods to retrieve and manipulate graphics adapters.
 	class GraphicsAdapter final {
-	public:				
+	public:
 		//Collection of available adapters on the system.
 		XNPP_API static std::vector<std::optional<GraphicsAdapter>> Adapters();
 		//Gets the current display mode.
@@ -46,57 +46,52 @@ namespace Xna {
 
 		//Gets or sets a NULL device. 
 		static constexpr bool UseNullDevice() {
-			return Implementation::useNullDevice;
+			return _UseNullDevice;
 		}
-		
+
 		//Gets or sets a NULL device. 
 		static constexpr void UseNullDevice(bool value) {
-			Implementation::useNullDevice = value;
+			_UseNullDevice = value;
 		}
-		
+
 		//Gets or sets a reference device.
 		static constexpr bool UseReferenceDevice() {
-			return Implementation::UseReferenceDevice;
+			return _UseReferenceDevice;
 		}
-		
+
 		//Gets or sets a reference device. 
 		static constexpr void UseReferenceDevice(bool value) {
-			Implementation::UseReferenceDevice = value;
+			_UseReferenceDevice = value;
 		}
-		
+
 		//Tests to see if the adapter supports the requested profile.
-		inline bool IsProfileSupported(GraphicsProfile graphicsProfile) {
-			//return Platform::GraphicsAdapter_IsProfileSupported(*this, graphicsProfile);
-			return true;
-		}
+		XNPP_API bool IsProfileSupported(GraphicsProfile graphicsProfile);
 
 		//Queries the adapter for support for the requested back buffer format.
-		inline bool QueryBackBufferFormat(GraphicsProfile graphicsProfile,
+		XNPP_API bool QueryBackBufferFormat(GraphicsProfile graphicsProfile,
 			SurfaceFormat format,
 			DepthFormat depthFormat,
 			int32_t multiSampleCount,
 			SurfaceFormat& selectedFormat,
 			DepthFormat& selectedDepthFormat,
-			int32_t& selectedMultiSampleCount) const {
-			//return Platform::GraphicsAdapter_QueryBackBufferFormat(*this, graphicsProfile, format, depthFormat, multiSampleCount, selectedFormat, selectedDepthFormat, selectedMultiSampleCount);
-			return true;
-		}
+			int32_t& selectedMultiSampleCount) const;
 
 		//Queries the adapter for support for the requested render target format.
-		inline bool QueryRenderTargetFormat(GraphicsProfile graphicsProfile,
+		XNPP_API bool QueryRenderTargetFormat(GraphicsProfile graphicsProfile,
 			SurfaceFormat format,
 			DepthFormat depthFormat,
 			int32_t multiSampleCount,
 			SurfaceFormat& selectedFormat,
 			DepthFormat& selectedDepthFormat,
-			int32_t& selectedMultiSampleCount) const {
-			// return Platform::GraphicsAdapter_QueryRenderTargetFormat(*this, graphicsProfile, format, depthFormat, multiSampleCount, selectedFormat, selectedDepthFormat, selectedMultiSampleCount);
-			return true;
-		}		
+			int32_t& selectedMultiSampleCount) const;
 
 		XNPP_DECLARE_IMPL_WRAPPER(GraphicsAdapter, impl);
 
 	private:
+		inline static bool _UseNullDevice = false;
+		inline static bool _UseReferenceDevice = false;
+		static std::optional<GraphicsAdapter> _DefaultAdapter;
+
 		struct Implementation {
 			std::string description;
 			std::string deviceName;
@@ -105,28 +100,18 @@ namespace Xna {
 			uint32_t revision{ 0 };
 			uint32_t subSystemId{ 0 };
 			uint32_t vendorId{ 0 };
-			bool isDefaultAdapter{ false };
-
-			std::optional<DisplayMode> currentDisplayMode;
-			DisplayModeCollection supportedDisplayModes;
-			static std::optional<GraphicsAdapter> DefaultAdapter;
-
-			inline static bool useNullDevice = false;
-			inline static bool UseReferenceDevice = false;
-
-			PlatformImpl::GraphicsAdapterImpl platformImpl;
-
+			bool isDefaultAdapter{ false };			
 			std::unique_ptr<PlatformNS::IGraphicsAdapter> backend;
-		};		
-		
-		inline GraphicsAdapter() { 
-			impl = std::make_shared<Implementation>(); 
+		};
+
+		inline GraphicsAdapter() {
+			impl = std::make_shared<Implementation>();
 			impl->backend = PlatformNS::IGraphicsAdapter::Create();
 		}
-		std::shared_ptr<Implementation> impl;		
-	
-		friend struct Platform;		
-	};	
+		std::shared_ptr<Implementation> impl;
+
+		friend struct Platform;
+	};
 }
 
 #endif

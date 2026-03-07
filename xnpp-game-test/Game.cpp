@@ -28,7 +28,8 @@ public:
 		texture3 = Content().Load<Xna::Texture2D>("Overlays/you_died");
 		font = Content().Load<Xna::SpriteFont>("Fonts/Hud");
 
-		auto adps = Xna::GraphicsAdapter::Adapters();
+		auto adp = Xna::GraphicsAdapter::DefaultAdapter();
+		auto display = adp.CurrentDisplayMode(); 
 	}
 
 	void Update(Xna::GameTime& gameTime) override {

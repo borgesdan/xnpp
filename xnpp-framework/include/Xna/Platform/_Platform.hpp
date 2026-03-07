@@ -410,8 +410,8 @@ namespace Xna {
 			XNPP_API virtual ~IGraphicsAdapter() = default;
 
 			XNPP_API virtual std::vector<GaphicsAdapterDesc> GetAll() = 0;
-			XNPP_API virtual void SupportedDisplayModes(GraphicsAdapter const& adapter) = 0;
-			XNPP_API virtual void CurrentDisplayMode(GraphicsAdapter const& adapter) = 0;
+			XNPP_API virtual std::vector<DisplayMode> SupportedDisplayModes() = 0;
+			XNPP_API virtual DisplayMode CurrentDisplayMode() = 0;
 			XNPP_API virtual bool IsProfileSupported(GraphicsAdapter const& adapter, GraphicsProfile graphicsProfile) = 0;
 			XNPP_API virtual bool QueryBackBufferFormat(GraphicsAdapter const& adapter, GraphicsProfile graphicsProfile, SurfaceFormat format,
 				DepthFormat depthFormat, int32_t multiSampleCount, SurfaceFormat& selectedFormat, DepthFormat& selectedDepthFormat, int32_t& selectedMultiSampleCount) = 0;

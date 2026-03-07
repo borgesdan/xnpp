@@ -328,8 +328,8 @@ namespace Xna {
 					auto modes = adapter->SupportedDisplayModes();
 					for (auto& supportedDisplayMode : modes)
 					{
-						if (supportedDisplayMode->Width() >= 640 && supportedDisplayMode->Height() >= 480)
-							AddDevices(*adapter, *supportedDisplayMode, baseDeviceInfo, foundDevices);
+						if (supportedDisplayMode.Width() >= 640 && supportedDisplayMode.Height() >= 480)
+							AddDevices(*adapter, supportedDisplayMode, baseDeviceInfo, foundDevices);
 					}
 				}
 			}
@@ -425,7 +425,7 @@ namespace Xna {
 			auto displayModes = adapter.SupportedDisplayModes()[presentationParameters.BackBufferFormat];
 
 			for (auto& displayMode : displayModes) {
-				if (displayMode->Width() == presentationParameters.BackBufferWidth && displayMode->Height() == presentationParameters.BackBufferHeight)
+				if (displayMode.Width() == presentationParameters.BackBufferWidth && displayMode.Height() == presentationParameters.BackBufferHeight)
 				{
 					flag = true;
 					break;
