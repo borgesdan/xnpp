@@ -258,12 +258,16 @@ namespace Xna {
 
 		if (length > 0)
 			path = std::filesystem::path(buffer, buffer + length);
+#elif
+		SDL_Log(exception.c_str());
 #endif
 	}
 
 	void Platform::System_ProcessException(std::string const& exception) {
 #ifdef PLATFORM_WINDOWS
-		MessageBox(nullptr, exception.c_str(), "XN++", MB_OK);
+		MessageBox(nullptr, exception.c_str(), "XN++", MB_OK);		
+#elif
+		SDL_Log(exception.c_str());
 #endif
 	}
 
