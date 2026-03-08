@@ -1,6 +1,6 @@
 #include <stdexcept>
 #include "SDL3/SDL.h"
-#include "Xna/Platform/_Platform.hpp"
+#include "Xna/Platform/Platform.hpp"
 #include "Xna/Framework/Graphics/GraphicsAdapter.hpp"
 
 #ifdef PLATFORM_WINDOWS

@@ -60,9 +60,7 @@ set(XNPP_FRAMEWORK_SRC
     "sources/Xna/Framework/Input/Input.cpp"
     "sources/Xna/Framework/Content/ContentManager.cpp"
     "sources/Xna/Framework/Content/ContentReader.cpp"
-    "sources/Xna/Framework/Content/ContentTypeReaderManager.cpp"
-    "sources/Xna/Platform/Windows/WindowsPlatform.cpp"    
-    "sources/Xna/Platform/Windows/WindowsBuffer.cpp"
+    "sources/Xna/Framework/Content/ContentTypeReaderManager.cpp"    
     "sources/Xna/App.cpp"
     "sources/Xna/Framework/Audio/AudioFormat.cpp"
     "sources/Xna/Framework/Audio/AudioHelper.cpp"
@@ -113,29 +111,23 @@ find_package(Vorbis CONFIG REQUIRED)
 #bgfx
 find_package(bgfx CONFIG REQUIRED)
 
-target_link_libraries(xnpp
-        PUBLIC
-            Microsoft::DirectXTK 
+target_link_libraries(xnpp       
+    PRIVATE 
+        SDL3::SDL3
+        Ogg::ogg
+        Vorbis::vorbis
+        Vorbis::vorbisfile
+        bgfx::bgfx
+        bgfx::bx
+        bgfx::bimg        
+)
+
+if(WIN32)
+    target_link_libraries(xnpp
         PRIVATE
             dxgi.lib
-            dxguid.lib
-            D3d11.lib 
-            windowscodecs.lib
-            Shlwapi.lib 
-            runtimeobject.lib
-            xaudio2.lib
-            Mfplat.lib
-            Oleaut32.lib
-            Ole32.lib
-            Propsys.lib
-            SDL3::SDL3
-            Ogg::ogg
-            Vorbis::vorbis
-            Vorbis::vorbisfile
-             bgfx::bgfx
-             bgfx::bx
-             bgfx::bimg
-)
+    )
+endif()
 
 target_include_directories(xnpp
     PUBLIC

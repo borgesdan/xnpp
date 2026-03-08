@@ -6,7 +6,7 @@
 #include "Xna/Framework/Graphics/SamplerState.hpp"
 #include "Xna/Framework/Graphics/DepthStencilState.hpp"
 #include "Xna/Framework/Graphics/RasterizerState.hpp"
-#include "Xna/Platform/_Platform.hpp"
+#include "Xna/Platform/Platform.hpp"
 #include "Xna/Framework/Color.hpp"
 #include <bgfx/bgfx.h>
 #include <cstdint>

@@ -5,7 +5,7 @@
 * Por padrão temos somente uma instância da engine de áudio que persistirá até o encerramento do programa.
 */
 
-#include "Xna/Platform/_Platform.hpp"
+#include "Xna/Platform/Platform.hpp"
 #include "Xna/Framework/Audio/SoundEffect.hpp"
 #include "Internal.hpp"
 #include <functional>

@@ -42,8 +42,7 @@ namespace Xna {
 		int32_t referenceStencil{ 0 };
 
 		bool lazyInitialization{ false };
-
-		PlatformImpl::GraphicsDeviceImpl platformImpl;
+		
 		std::unique_ptr<PlatformNS::IGraphicsDevice> backend;
 	};	
 

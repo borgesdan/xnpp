@@ -6,6 +6,7 @@
 #include <Xna/Media.hpp>
 #include <Xna/Audio.hpp>
 #include <Xna/Input.hpp>
+#include <Windows.h>
 
 class Game1 : public Xna::Game {
 	using base = Xna::Game;

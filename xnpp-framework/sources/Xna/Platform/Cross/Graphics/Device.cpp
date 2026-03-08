@@ -5,7 +5,8 @@
 #include <cstdint>
 #include <stdexcept>
 #include "SDL3/SDL.h"
-#include "Xna/Platform/_Platform.hpp"
+#include "Xna/Platform/Platform.hpp"
+#include "../Internal.hpp"
 
 #include "BgfxGraphics.hpp"
 
@@ -153,5 +154,9 @@ namespace Xna {
 
 	size_t PlatformNS::Graphics_GetMaxSamplerStates() {
 		return 16;
+	}
+
+	void Cross::System::DisposeVideo() {
+		//bgfx::shutdown();
 	}
 }

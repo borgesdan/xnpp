@@ -8,7 +8,7 @@ namespace Xna {
 		SpecularColor(Vector3::One());
 		SpecularPower(16.0f);
 
-		Platform::Effect_BasicEffect_Create(*this, device);
+		//Platform::Effect_BasicEffect_Create(*this, device);
 	}
 
 	void BasicEffect::World(Matrix const& value) {
@@ -120,7 +120,7 @@ namespace Xna {
 	}
 
 	void BasicEffect::OnApply() {
-		Platform::Effect_BasicEffect_SetValues(*this);
-		Platform::Effect_BasicEffect_Apply(*this);
+		//Platform::Effect_BasicEffect_SetValues(*this);
+		//Platform::Effect_BasicEffect_Apply(*this);
 	}
 }

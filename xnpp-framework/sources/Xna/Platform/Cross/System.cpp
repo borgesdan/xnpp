@@ -1,8 +1,13 @@
-#include "Xna/Platform/_Platform.hpp"
+#include "Xna/Platform/Platform.hpp"
 #include <algorithm>
 #include <SDL3/SDL.h>
 #include "Internal.hpp"
 #include <stdexcept>
+
+#ifdef PLATFORM_WINDOWS
+#define NOMINMAX
+#include "Windows.h"
+#endif
 
 namespace Xna {
 	void Cross::System::Initialize() {
@@ -19,6 +24,7 @@ namespace Xna {
 
 	void Cross::System::Dispose() {
 		DisposeAudio();
+		DisposeVideo();
 	}
 
 	PlatformRectangle Platform::System_ClientRect(intptr_t hwnd) {
@@ -243,5 +249,38 @@ namespace Xna {
 		}
 
 		return list;
+	}
+
+	void Platform::System_GetExecutablePath(std::filesystem::path& path) {
+#ifdef PLATFORM_WINDOWS
+		wchar_t buffer[MAX_PATH]{};
+		const auto length = GetModuleFileNameW(nullptr, buffer, MAX_PATH);
+
+		if (length > 0)
+			path = std::filesystem::path(buffer, buffer + length);
+#endif
+	}
+
+	void Platform::System_ProcessException(std::string const& exception) {
+#ifdef PLATFORM_WINDOWS
+		MessageBox(nullptr, exception.c_str(), "XN++", MB_OK);
+#endif
+	}
+
+	void Platform::Initialize() {
+		Cross::System::Initialize();
+	}
+
+	void Platform::Dispose() {
+		Cross::System::Dispose();
+	}
+
+	void Platform::Update() {
+	}
+
+	void Platform::Suspend() {
+	}
+
+	void Platform::Resume() {
 	}
 }

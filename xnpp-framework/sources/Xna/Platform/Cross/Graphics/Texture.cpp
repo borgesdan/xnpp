@@ -3,6 +3,7 @@
 #include <bx/debug.h>
 #include <stdexcept>
 #include "BgfxGraphics.hpp"
+#include <cassert>
 
 namespace Xna {
 	std::unique_ptr<PlatformNS::ITexture2D> PlatformNS::ITexture2D::Create() {

@@ -2,7 +2,7 @@
 #include "Xna/Framework/Input/Keyboard.hpp"
 #include "Xna/Framework/Input/Mouse.hpp"
 #include "Xna/Framework/Input/GamePad.hpp"
-#include "Xna/Platform/_Platform.hpp"
+#include "Xna/Platform/Platform.hpp"
 #include <array>
 #include <cmath>
 #include <SDL3/SDL.h>
