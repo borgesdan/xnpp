@@ -5,107 +5,81 @@
 
 namespace Xna {
     GraphicsDevice::GraphicsDevice(GraphicsAdapter const& adapter, Xna::GraphicsProfile const& graphicsProfile, Xna::PresentationParameters const& presentationParameters) {
-        implGraphicsDevice = std::make_shared<Implementation>();
-        implGraphicsDevice->adapter = adapter;
-        implGraphicsDevice->graphicsProfile = graphicsProfile;
-        implGraphicsDevice->presentationParameters = presentationParameters;
-        implGraphicsDevice->samplerState = Xna::SamplerStateCollection(*this, 0, Platform::MaxSamplerStates);
-        implGraphicsDevice->vertexSamplerState = Xna::SamplerStateCollection(*this, 0, Platform::MaxSamplerStates);
-        implGraphicsDevice->blendState = Xna::BlendState::Opaque();
-        implGraphicsDevice->depthStencilState = Xna::DepthStencilState::Default();
-        implGraphicsDevice->rasterizerState = Xna::RasterizerState::CullCounterClockwise();
+        impl = std::make_shared<Implementation>();
+        impl->backend = PlatformNS::IGraphicsDevice::Create();
 
-        implGraphicsDevice->lazyInitialization = presentationParameters.DeviceWindowHandle == 0;
+        impl->adapter = adapter;
+        impl->graphicsProfile = graphicsProfile;
+        impl->presentationParameters = presentationParameters;
+
+        const auto maxSamplerStates = PlatformNS::Graphics_GetMaxSamplerStates();
+
+        impl->samplerState = Xna::SamplerStateCollection(0, maxSamplerStates);
+        impl->vertexSamplerState = Xna::SamplerStateCollection(0, maxSamplerStates);
+        impl->blendState = Xna::BlendState::Opaque();
+        impl->depthStencilState = Xna::DepthStencilState::Default();
+        impl->rasterizerState = Xna::RasterizerState::CullCounterClockwise();
+
+        impl->lazyInitialization = presentationParameters.DeviceWindowHandle == 0;
 
         CreateDevice(adapter, presentationParameters);
 
-        if (!implGraphicsDevice->lazyInitialization)
-        {
-            Platform::GraphicsDevice_MakeWindowAssociation(*this, presentationParameters);
-            implGraphicsDevice->current2DRenderTargets[0] = CreateBackBufferRenderTarget();
-        }
-        
-        Viewport(Xna::Viewport(0, 0, presentationParameters.BackBufferWidth, presentationParameters.BackBufferHeight, 0, 1));
-        
-        implGraphicsDevice->blendState->Apply(*this);
-        implGraphicsDevice->depthStencilState->Apply(*this);
-        implGraphicsDevice->rasterizerState->Apply(*this);
-        implGraphicsDevice->samplerState.InitializeDeviceState(SamplerStateApplyType::Pixel);
-        implGraphicsDevice->vertexSamplerState.InitializeDeviceState(SamplerStateApplyType::Vertex);
-                
-        Platform::GraphicsDevice_SetRenderTargets(*this);
-        Platform::GraphicsDevice_GetScissorRectangles(*this, implGraphicsDevice->scissorRectangles);
+        if (impl->lazyInitialization)
+            return;
+
+        impl->backend->MakeWindowAssociation(presentationParameters);
     }
 
     void GraphicsDevice::BlendState(Xna::BlendState const& value) {        
-        implGraphicsDevice->blendState = value;
-        implGraphicsDevice->blendState->Apply(*this);
+        impl->blendState = value;
+        impl->backend->ApplyBlendState(value);
     }
 
     void GraphicsDevice::BlendFactor(Color const& color) {
-        implGraphicsDevice->blendState->impl->blendFactor = color;
-        implGraphicsDevice->blendState->Apply(*this);
+        impl->blendState.BlendFactor = color;
+        impl->backend->ApplyBlendState(impl->blendState);
     }
 
     void GraphicsDevice::DepthStencilState(Xna::DepthStencilState const& value) {
-        implGraphicsDevice->depthStencilState = value;
-        implGraphicsDevice->depthStencilState->Apply(*this);
+        impl->depthStencilState = value;
+        impl->backend->ApplyDepthStencilState(value);
     }
 
     void GraphicsDevice::MultiSampleMask(int32_t value) {
-        implGraphicsDevice->multiSampleMask = value;
+        impl->multiSampleMask = value;
+        //TODO: MultiSampleMask não é aplicado no backend
     }
 
     void GraphicsDevice::RasterizerState(Xna::RasterizerState const& value) {
-        implGraphicsDevice->rasterizerState = value;
-        implGraphicsDevice->rasterizerState->Apply(*this);
+        impl->rasterizerState = value;
+        impl->backend->ApplyRasterizerState(value);
     }
 
     void GraphicsDevice::ReferenceStencil(int32_t value) {
-        implGraphicsDevice->referenceStencil = value;
+        impl->referenceStencil = value;
+        //TODO: ReferenceStencil não é aplicado no backend
     }
 
     void GraphicsDevice::Viewport(Xna::Viewport const& viewport) {
-        implGraphicsDevice->viewports[0] = viewport;
-        Platform::GraphicsDevice_SetViewport(*this, viewport);
+        impl->viewports[0] = viewport;
+        impl->backend->SetViewport(viewport);
     }
 
     void GraphicsDevice::ScissorRectangle(Rectangle const& value) {
-        implGraphicsDevice->scissorRectangles[0] = value;
-        Platform::GraphicsDevice_SetScissorRectangles(*this, implGraphicsDevice->scissorRectangles);
+        impl->scissorRectangles[0] = value;
+        //TODO: implementar ScissorRectangle
     }
 
     void GraphicsDevice::CreateDevice(GraphicsAdapter const& adapter, Xna::PresentationParameters const& presentationParameters) {        
-        Platform::GraphicsDevice_CreateDevice(*this, adapter, presentationParameters);               
+        impl->backend->CreateDevice(adapter, presentationParameters);
     }
 
     void GraphicsDevice::Present(std::optional<Rectangle> const& rec, std::optional<Rectangle> const& destination, intptr_t overrideWindowHandle) {
-        Platform::GraphicsDevice_Present(*this, rec, destination, overrideWindowHandle);
-        Platform::GraphicsDevice_SetRenderTargets(*this);
+        //Platform::GraphicsDevice_Present(*this, rec, destination, overrideWindowHandle);
+        impl->backend->Present(rec, destination, overrideWindowHandle);
     }
     
     void GraphicsDevice::Clear(ClearOptions options, Color const& color, float depth, int32_t stencil) {
-        switch (options)
-        {
-        case Xna::ClearOptions::Target:
-        {
-            Platform::GraphicsDevice_ClearRenderTarget(*this, color);
-            break;
-        }
-        case Xna::ClearOptions::DepthBuffer:
-        {
-            throw CSharp::NotSupportedException("TODO: implementar");
-            //implementation->context->ClearDepthStencilView(nullptr, 0, 0, 0);
-            break;
-        }
-        case Xna::ClearOptions::Stencil:
-        {
-            throw CSharp::NotSupportedException("TODO: implementar");
-            //implementation->context->ClearDepthStencilView(nullptr, 0, 0, 0);
-            break;
-        }
-        default:
-            break;
-        }
+        impl->backend->Clear(options, color, depth, stencil);
     }    
 }

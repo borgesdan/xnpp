@@ -7,12 +7,12 @@
 #include "DisplayMode.hpp"
 #include "DisplayModeCollection.hpp"
 #include "Xna/Platform/Platform.hpp"
-#include "Xna/Internal/Export.hpp"
+#include "Xna/Internal/Macros.hpp"
 
 namespace Xna {
 	//Provides methods to retrieve and manipulate graphics adapters.
 	class GraphicsAdapter final {
-	public:				
+	public:
 		//Collection of available adapters on the system.
 		XNPP_API static std::vector<std::optional<GraphicsAdapter>> Adapters();
 		//Gets the current display mode.
@@ -20,108 +20,83 @@ namespace Xna {
 		//Gets the default adapter. 
 		XNPP_API static GraphicsAdapter DefaultAdapter();
 		//Retrieves a string used for presentation to the user.
-		inline std::string Description() const { return impl->description; }
+		inline std::string Description() const { return backend->GetDesc().description; }
 		//Retrieves a value that is used to help identify a particular chip set. 
-		inline uint32_t DeviceId() const { return impl->deviceId; }
+		inline uint32_t DeviceId() const { return backend->GetDesc().deviceId; }
 		//Retrieves a string that contains the device name.
-		inline std::string DeviceName() const { return impl->deviceName; }
+		inline std::string DeviceName() const { return backend->GetDesc().deviceName; }
 		//Determines if this instance of GraphicsAdapter is the default adapter.
 		inline bool IsDefaultAdapter() const {
-			return impl->isDefaultAdapter;
+			return backend->GetDesc().isDefaultAdapter;
 		}
 		//Determines if the graphics adapter is in widescreen mode.
 		inline bool IsWideScreen() const {
 			return CurrentDisplayMode().AspectRatio() > 1.6000000238418579;
 		}
 		//Retrieves the handle of the monitor
-		inline intptr_t MonitorHandle() const { return impl->monitorHandle; }
+		inline intptr_t MonitorHandle() const { return backend->GetDesc().monitorHandle; }
 		//Retrieves a value used to help identify the revision level of a particular chip set.
-		inline uint32_t Revision() const { return impl->revision; }
+		inline uint32_t Revision() const { return backend->GetDesc().revision; }
 		//Retrieves a value used to identify the subsystem.
-		inline uint32_t SubSystemId() const { return impl->subSystemId; }
+		inline uint32_t SubSystemId() const { return backend->GetDesc().subSystemId; }
 		//Returns a collection of supported display modes for the current adapter.
 		XNPP_API DisplayModeCollection SupportedDisplayModes() const;
 		//Retrieves a value used to identify the manufacturer.
-		inline uint32_t VendorId() const { return impl->vendorId; }
+		inline uint32_t VendorId() const { return backend->GetDesc().vendorId; }
 
 		//Gets or sets a NULL device. 
 		static constexpr bool UseNullDevice() {
-			return Implementation::useNullDevice;
+			return _UseNullDevice;
 		}
-		
+
 		//Gets or sets a NULL device. 
 		static constexpr void UseNullDevice(bool value) {
-			Implementation::useNullDevice = value;
+			_UseNullDevice = value;
 		}
-		
+
 		//Gets or sets a reference device.
 		static constexpr bool UseReferenceDevice() {
-			return Implementation::UseReferenceDevice;
+			return _UseReferenceDevice;
 		}
-		
+
 		//Gets or sets a reference device. 
 		static constexpr void UseReferenceDevice(bool value) {
-			Implementation::UseReferenceDevice = value;
+			_UseReferenceDevice = value;
 		}
-		
+
 		//Tests to see if the adapter supports the requested profile.
-		inline bool IsProfileSupported(GraphicsProfile graphicsProfile) {
-			return Platform::GraphicsAdapter_IsProfileSupported(*this, graphicsProfile);
-		}
+		XNPP_API bool IsProfileSupported(GraphicsProfile graphicsProfile);
 
 		//Queries the adapter for support for the requested back buffer format.
-		inline bool QueryBackBufferFormat(GraphicsProfile graphicsProfile,
+		XNPP_API bool QueryBackBufferFormat(GraphicsProfile graphicsProfile,
 			SurfaceFormat format,
 			DepthFormat depthFormat,
 			int32_t multiSampleCount,
 			SurfaceFormat& selectedFormat,
 			DepthFormat& selectedDepthFormat,
-			int32_t& selectedMultiSampleCount) const {
-			return Platform::GraphicsAdapter_QueryBackBufferFormat(*this, graphicsProfile, format, depthFormat, multiSampleCount, selectedFormat, selectedDepthFormat, selectedMultiSampleCount);
-		}
+			int32_t& selectedMultiSampleCount) const;
 
 		//Queries the adapter for support for the requested render target format.
-		inline bool QueryRenderTargetFormat(GraphicsProfile graphicsProfile,
+		XNPP_API bool QueryRenderTargetFormat(GraphicsProfile graphicsProfile,
 			SurfaceFormat format,
 			DepthFormat depthFormat,
 			int32_t multiSampleCount,
 			SurfaceFormat& selectedFormat,
 			DepthFormat& selectedDepthFormat,
-			int32_t& selectedMultiSampleCount) const {
-			return Platform::GraphicsAdapter_QueryRenderTargetFormat(*this, graphicsProfile, format, depthFormat, multiSampleCount, selectedFormat, selectedDepthFormat, selectedMultiSampleCount);
-		}
-		
-		inline GraphicsAdapter(std::nullptr_t) { impl = nullptr; }
-		inline bool operator==(GraphicsAdapter const& other) const noexcept { return impl == other.impl; }
-		inline bool operator==(std::nullptr_t) const noexcept { return impl == nullptr; }
-		inline explicit operator bool() const noexcept { return impl != nullptr; }
-		
+			int32_t& selectedMultiSampleCount) const;
+
+		XNPP_DECLARE_IMPL_WRAPPER(GraphicsAdapter, backend);
+
 	private:
-		struct Implementation {
-			std::string description;
-			std::string deviceName;
-			intptr_t monitorHandle{ 0 };
-			uint32_t deviceId{ 0 };
-			uint32_t revision{ 0 };
-			uint32_t subSystemId{ 0 };
-			uint32_t vendorId{ 0 };
-			bool isDefaultAdapter{ false };
+		inline static bool _UseNullDevice = false;
+		inline static bool _UseReferenceDevice = false;
 
-			std::optional<DisplayMode> currentDisplayMode;
-			DisplayModeCollection supportedDisplayModes;
-			static std::optional<GraphicsAdapter> DefaultAdapter;
+		std::shared_ptr<PlatformNS::IGraphicsAdapter> backend;
 
-			inline static bool useNullDevice = false;
-			inline static bool UseReferenceDevice = false;
-
-			PlatformImpl::GraphicsAdapterImpl platformImpl;
-		};		
-		
-		inline GraphicsAdapter() { impl = std::make_shared<Implementation>(); }
-		std::shared_ptr<Implementation> impl;		
-	
-		friend struct Platform;
-	};	
+		inline GraphicsAdapter() {			
+			backend = PlatformNS::IGraphicsAdapter::Create();
+		}
+	};
 }
 
 #endif

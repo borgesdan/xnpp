@@ -38,15 +38,11 @@ namespace Xna {
 		//Each component of the color is multiplied by a constant set in BlendFactor. 
 		BlendFactor,
 		//Each component of the color is multiplied by the inverse of a constant set in BlendFactor. 
-		InverseBlendFactor,
-		Source1Color,
-		InverseSource1Color,
-		Source1Alpha,
-		InverseSource1Alpha
+		InverseBlendFactor,		
 	};
 
 	//Defines how to combine a source color with the destination color already on the render target for color blending.
-	enum class BlendOperation {
+	enum class BlendFunction {
 		//The result is the destination added to the source.
 		//Result = (Source Color * Source Blend) + (Destination Color * Destination Blend)
 		Add = 0,
@@ -77,22 +73,22 @@ namespace Xna {
 
 	//Defines the color channels that can be chosen for a per-channel write to a render target color buffer. 
 	enum class ColorWriteChannels {
-		//Red channel of a buffer.
-		Red,
-		//Green channel of a buffer.
-		Green,
-		//Blue channel of a buffer.
-		Blue,
-		//Alpha channel of a buffer.
-		Alpha,
-		//All buffer channels.
-		All,
 		//No channel selected.
-		None
+		None = 1 << 0,
+		//Red channel of a buffer.
+		Red = 1 << 1,
+		//Green channel of a buffer.
+		Green = 1 << 2,
+		//Blue channel of a buffer.
+		Blue = 1 << 3,
+		//Alpha channel of a buffer.
+		Alpha = 1 << 4,
+		//All buffer channels.
+		All = Red | Green | Blue | Alpha,
 	};
 
 	//Defines comparison functions that can be chosen for alpha, stencil, or depth-buffer tests. 
-	enum class ComparisonFunction {
+	enum class CompareFunction {
 		//Always fail the test.
 		Never,
 		//Accept the new pixel if its value is less than the value of the current pixel.
@@ -100,7 +96,7 @@ namespace Xna {
 		//Accept the new pixel if its value is equal to the value of the current pixel.
 		Equal,
 		//Accept the new pixel if its value is less than or equal to the value of the current pixel.
-		LessEquals,
+		LessEqual,
 		//Accept the new pixel if its value is greater than the value of the current pixel. 
 		Greater,
 		//Accept the new pixel if its value does not equal the value of the current pixel.
@@ -292,17 +288,30 @@ namespace Xna {
 
 	enum class SpriteEffects
 	{
-		None = 0,
-		FlipHorizontally = 1,
-		FlipVertically = 2,
+		None = 1 << 0,
+		FlipHorizontally = 1 << 1,
+		FlipVertically = 1 << 2,
+		Both = (int)FlipHorizontally | (int)FlipVertically,
 	};
 
+	//Defines sprite sort-rendering options.
 	enum class SpriteSortMode
 	{
+		//Sprites are not drawn until End is called. End will apply graphics device settings and draw all the sprites in one batch, in the same order calls to Draw were received.
+		//This mode allows Draw calls to two or more instances of SpriteBatch without introducing conflicting graphics device settings.
+		//SpriteBatch defaults to Deferred mode.
 		Deferred,
+		//Begin will apply new graphics device settings, and sprites will be drawn within each Draw call.
+		//In Immediate mode there can only be one active SpriteBatch instance without introducing conflicting device settings.
 		Immediate,
+		//Same as Deferred mode, except sprites are sorted by texture prior to drawing.
+		//This can improve performance when drawing non-overlapping sprites of uniform depth.
 		Texture,
+		//Same as Deferred mode, except sprites are sorted by depth in back-to-front order prior to drawing. 
+		//This procedure is recommended when drawing transparent sprites of varying depths.
 		BackToFront,
+		//Same as Deferred mode, except sprites are sorted by depth in front-to-back order prior to drawing.
+		//This procedure is recommended when drawing opaque sprites of varying depths.
 		FrontToBack,
 	};
 
@@ -346,9 +355,6 @@ namespace Xna {
 		Clamp,
 		//Texture coordinates outside the range [0.0, 1.0] are set to the border color specified.
 		Border,
-		//Similar to Mirror and Clamp.
-		//Takes the absolute value of the texture coordinate (thus, mirroring around 0), and then clamps to the maximum value.
-		MirrorOnce
 	};
 
 	//Defines filtering types during texture sampling. 
@@ -432,8 +438,6 @@ namespace Xna {
 		//Single, positive floating-point value. (TessellateFactor with UsageIndex = 0) specifies a tessellation factor used in the tessellation unit to control the rate of tessellation.
 		TessellateFactor,
 	};
-	
-	using CompareFunction = ComparisonFunction;
 
 	inline static const int SURFACE_FORMAT_COUNT = 19;
 	inline static const int DEFAULT_BACKBUFFER_WIDTH = 800;

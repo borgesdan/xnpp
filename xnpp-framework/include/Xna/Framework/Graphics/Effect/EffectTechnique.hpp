@@ -13,7 +13,6 @@ namespace Xna {
 		std::optional<EffectPassCollection> passes;
 		std::optional<EffectAnnotationCollection> annotations;
 		std::string name;
-		PlatformImpl::EffectTechniqueImpl platformImpl;
 	};
 
 	inline std::string EffectTechnique::Name() const {

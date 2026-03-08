@@ -21,7 +21,7 @@ namespace Xna {
 		if (state != MediaState::Playing)
 			return;
 
-		Platform::MediaPlayer_Pause();
+		PlatformNS::IMediaPlayer::GetInstance().Pause();
 		state = MediaState::Paused;
 	}
 
@@ -29,7 +29,7 @@ namespace Xna {
 		if (state == MediaState::Playing)
 			return;
 
-		Platform::MediaPlayer_Resume();
+		PlatformNS::IMediaPlayer::GetInstance().Resume();
 		state = MediaState::Playing;
 	}
 
@@ -37,7 +37,7 @@ namespace Xna {
 		if (state == MediaState::Stopped)
 			return;
 
-		Platform::MediaPlayer_Stop();
+		PlatformNS::IMediaPlayer::GetInstance().Stop();
 		state = MediaState::Stopped;
 	}
 
@@ -51,22 +51,22 @@ namespace Xna {
 		state = MediaState::Playing;
 	}
 
-	void MediaPlayer::Volume(float value) {
-		Platform::MediaPlayer_SetVolume(value);
+	void MediaPlayer::Volume(float value) {		
+		PlatformNS::IMediaPlayer::GetInstance().SetVolume(value);
 	}
 
 	void MediaPlayer::IsMuted(bool value) {
 		if (isMuted == value)
 			return;
-
-		Platform::MediaPlayer_SetMuted(value);
+		
+		PlatformNS::IMediaPlayer::GetInstance().SetMuted(value);
 	}
 
 	void MediaPlayer::IsRepeating(bool value) {
 		if (isRepeating == value)
 			return;
 
-		Platform::MediaPlayer_SetIsRepeating(value);
+		PlatformNS::IMediaPlayer::GetInstance().SetIsRepeating(value);
 	}
 
 	void MediaPlayer::OnActiveSongChanged(CSharp::EventArgs const& args) {

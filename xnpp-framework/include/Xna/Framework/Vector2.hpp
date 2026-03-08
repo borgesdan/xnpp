@@ -3,6 +3,7 @@
 
 #include <optional>
 #include <vector>
+#include "Point.hpp"
 #include "MathHelper.hpp"
 #include "Xna/Internal/Export.hpp"
 
@@ -24,7 +25,11 @@ namespace Xna {
 		//Initializes a new instance of Vector2.
 		constexpr Vector2(float X, float Y)
 			: X(X), Y(Y) {
-		}		
+		}
+		//Initializes a new instance of Vector2.
+		constexpr Vector2(Point const& p)
+			: X(static_cast<float>(p.X)), Y(static_cast<float>(p.Y)) {
+		}
 
 		//Returns a Vector2 with all of its components set to zero.
 		static constexpr Vector2 Zero() { return {}; }

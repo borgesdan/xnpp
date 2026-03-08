@@ -9,22 +9,26 @@ namespace Xna {
 		impl->width = width;
 		impl->height = height;
 		impl->format = format;
-		Platform::Texture2D_Init(*this, device, width, height, mipMap, format);
+		impl->backend = PlatformNS::ITexture2D::Create();		
+
+		impl->backend->Initialize(width, height, mipMap, format);
 	}
 
 	Texture2D Texture2D::FromStream(GraphicsDevice const& device, CSharp::Stream& stream, size_t width, size_t height, bool zoom) {
-		return Platform::Texture2D_FromStream(device, stream, width, height, zoom);
+		//TODO: não implementado
+		return nullptr;
 	}
 
 	void Texture2D::SaveAsPng(CSharp::Stream& stream, size_t width, size_t height) {
-		Platform::Texture2D_SaveFile(*this, stream, width, height, Platform::Texture2D_SaveFileType::Png);
+		//TODO: não implementado
 	}
 
 	void Texture2D::SaveAsJpeg(CSharp::Stream& stream, size_t width, size_t height) {
-		Platform::Texture2D_SaveFile(*this, stream, width, height, Platform::Texture2D_SaveFileType::Jpeg);
+		//TODO: não implementado
 	}
 	
 	int32_t Texture2D::LevelCount() const {
-		return Platform::Texture2D_LevelCount(*this);
+		//TODO: não implementado
+		return -1;
 	}
 }

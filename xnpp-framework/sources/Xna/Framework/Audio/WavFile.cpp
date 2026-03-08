@@ -1,7 +1,7 @@
 #include "Xna/Framework/Audio/WavFile.hpp"
 #include "Xna/CSharp/Exception.hpp"
 #include "Xna/CSharp/IO/MemoryStream.hpp"
-#include "Xna/Framework/Audio/AudioHelper.hpp"
+#include "AudioHelper.hpp"
 
 namespace Xna {
     WavFile::WavFile(std::shared_ptr<CSharp::Stream> const &source) {

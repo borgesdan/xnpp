@@ -15,6 +15,7 @@ namespace Xna {
 		Wav,
 		Mp3,
 		Wma,
+		Ogg,
 	};
 
 	//Low(96 kbps) Medium(128 kbps) Best(192 kbps)

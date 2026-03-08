@@ -1,4 +1,4 @@
-#include "Xna/Framework/Audio/AudioHelper.hpp"
+#include "AudioHelper.hpp"
 #include "Xna/CSharp/IO/MemoryStream.hpp"
 #include "Xna/CSharp/IO/BinaryWriter.hpp"
 #include "Xna/CSharp/IO/BinaryReader.hpp"

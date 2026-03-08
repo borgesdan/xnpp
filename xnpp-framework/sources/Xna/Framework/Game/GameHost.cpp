@@ -54,12 +54,7 @@ namespace Xna {
 			this->OnDeactivated();
 			});
 
-		impl->gameWindow.Create();
-
-		auto graphicsDevice = impl->game->GraphicsDevice();
-		//Uma inicialização tardia pois a janela foi criada neste momento
-		//e o dispositivo gráfico foi criado sem o swapChain.
-		Platform::GraphicsDevice_LazyInitialization(graphicsDevice, impl->gameWindow.Handle());
+		impl->gameWindow.Create();		
 
 		Platform::GameHost_Tick(*this);
 

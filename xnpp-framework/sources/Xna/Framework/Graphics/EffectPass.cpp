@@ -2,6 +2,6 @@
 
 namespace Xna {
 	void EffectPass::Apply() {
-		Platform::Effect_EffectPass_Apply(*this);
+		/*Platform::Effect_EffectPass_Apply(*this);*/
 	}
 }

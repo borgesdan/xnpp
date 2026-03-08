@@ -39,7 +39,7 @@ namespace Xna {
 		}
 		
 		//Creates a new SoundEffectInstance for this SoundEffect.
-		XNPP_API std::shared_ptr<SoundEffectInstance> CreateInstance();
+		XNPP_API SoundEffectInstance CreateInstance();
 		
 		//Plays a sound.
 		inline bool Play() { return Play(1.0f, 0, 0); }
@@ -67,22 +67,22 @@ namespace Xna {
 		inline CSharp::TimeSpan Duration() { return impl->duration; }
 
 		//Gets or sets the master volume that affects all SoundEffectInstance sounds.
-		inline static float MasterVolume() { Implementation::currentVolume; }
+		inline static float MasterVolume() { currentVolume; }
 		//Gets or sets the master volume that affects all SoundEffectInstance sounds.
 		XNPP_API static void MasterVolume(float value);
 
 		//Returns the speed of sound: 343.5 meters per second.
-		inline static float SpeedOfSound() { return Implementation::speedOfSound; }
+		inline static float SpeedOfSound() { return speedOfSound; }
 		//Returns the speed of sound: 343.5 meters per second.
 		XNPP_API static void SpeedOfSound(float value);
 
 		//Gets or sets a value that adjusts the effect of doppler calculations on the sound (emitter).
-		inline static float DopplerScale() { return Implementation::dopplerScale; }
+		inline static float DopplerScale() { return dopplerScale; }
 		//Gets or sets a value that adjusts the effect of doppler calculations on the sound (emitter).
 		XNPP_API static void DopplerScale(float value);
 
 		//Gets or sets a value that adjusts the effect of distance calculations on the sound (emitter).
-		inline static float DistanceScale() { return Implementation::distanceScale; }
+		inline static float DistanceScale() { return distanceScale; }
 		//Gets or sets a value that adjusts the effect of distance calculations on the sound (emitter).
 		XNPP_API static void DistanceScale(float value);
 
@@ -132,33 +132,33 @@ namespace Xna {
 		inline LoopRegion Loop() const { return impl->loopInfo; }
 
 		static inline float MaxVelocityComponent() {
-			return Implementation::maxVelocityComponent;
+			return maxVelocityComponent;
 		}
 
 	private:
 		struct Implementation {
-			LoopRegion loopInfo;
+			LoopRegion loopInfo{};
 			CSharp::TimeSpan duration;
 			std::string effectName;
 			std::vector<std::weak_ptr<SoundEffectInstance>> children;
-			std::stack<std::shared_ptr<SoundEffectInstance>> instancePool;
-			
-			static inline float currentVolume = 1.0f;
-			static inline float speedOfSound = 343.5f;
-			static inline float dopplerScale = 1.0f;
-			static inline float distanceScale = 1.0f;
-			static inline float maxVelocityComponent = 343.499f;
-
-			static inline std::unordered_map<std::shared_ptr<SoundEffectInstance>, bool> fireAndForgetInstances =
-				std::unordered_map<std::shared_ptr<SoundEffectInstance>, bool>();
-			static inline std::vector<std::shared_ptr<SoundEffectInstance>> instancesToDispose = 
-				std::vector<std::shared_ptr<SoundEffectInstance>>();
-
-			PlatformImpl::SoundEffectImpl platformImpl;
+			std::stack<std::shared_ptr<SoundEffectInstance>> instancePool;	
+			std::unique_ptr<PlatformNS::ISoundEffect> platform;
 		};
-		std::shared_ptr<Implementation> impl = nullptr;
+		
+		std::shared_ptr<Implementation> impl = nullptr;		
 
-		friend struct Platform;
+		static inline std::unordered_map<std::shared_ptr<SoundEffectInstance>, bool> fireAndForgetInstances =
+			std::unordered_map<std::shared_ptr<SoundEffectInstance>, bool>();
+		static inline std::vector<std::shared_ptr<SoundEffectInstance>> instancesToDispose =
+			std::vector<std::shared_ptr<SoundEffectInstance>>();
+
+		static inline float currentVolume = 1.0f;
+		static inline float speedOfSound = 343.5f;
+		static inline float dopplerScale = 1.0f;
+		static inline float distanceScale = 1.0f;
+		static inline float maxVelocityComponent = 343.499f;
+
+		friend class SoundEffectInstance;
 		friend struct FrameworkDispatcher;
 		friend class SoundEffectReader;
 	};

@@ -3,6 +3,7 @@
 #include "Xna/ContentPipeline/Importers/FontDescriptionImporter.hpp"
 #include "Xna/ContentPipeline/Importers/WavImporter.hpp"
 #include "Xna/ContentPipeline/Importers/WmaImporter.hpp"
+#include "Xna/ContentPipeline/Importers/OggImporter.hpp"
 
 #include "Xna/ContentPipeline/Processors/TextureProcessor.hpp"
 #include "Xna/ContentPipeline/Processors/FontDescriptionProcessor.hpp"
@@ -28,6 +29,7 @@ namespace Xna {
 		App::GetImporterRegistry().Add(FontDescriptionImporter(), { "FontDescriptionImporter" });
 		App::GetImporterRegistry().Add(WavImporter(), { "WavImporter" });
 		App::GetImporterRegistry().Add(WmaImporter(), { "WmaImporter" });
+		App::GetImporterRegistry().Add(OggImporter(), { "OggImporter" });
 	}
 	void App::RegisterProcessors() {
 		App::GetProcessorRegistry().Add(TextureProcessor(), { "TextureProcessor" });

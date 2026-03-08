@@ -1,7 +1,6 @@
 #include "Xna/ContentPipeline/Serialization/Intermediate/ContentTypeSerializer.hpp"
 #include "Xna/ContentPipeline/Serialization/Intermediate/XmlListItemSerializer.hpp"
 #include "Xna/ContentPipeline/Serialization/Compiler/ContentWriter.hpp"
-#include <sol/sol.hpp>
 #include "Xna/ContentPipeline/NamedValueDictionary.hpp"
 #include "Xna/ContentPipeline/OpaqueDataDictionary.hpp"
 #include "Xna/ContentPipeline/Serialization/Compiler/Writers/PrimitivesWriter.hpp"

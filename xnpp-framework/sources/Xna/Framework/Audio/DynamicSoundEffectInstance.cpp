@@ -18,7 +18,8 @@ namespace Xna {
 	}
 
 	void DynamicSoundEffectInstance::AllocateVoice() {
-		Platform::SoundEffect_CreateInstance(*this);
+		//TODO: implementar
+		throw CSharp::NotSupportedException();
 	}
 
 	void DynamicSoundEffectInstance::SubmitBuffer(std::vector<uint8_t> const& buffer, size_t offset, size_t count) {
@@ -43,7 +44,8 @@ namespace Xna {
 	}
 
 	void DynamicSoundEffectInstance::AllocateData(std::vector<uint8_t> const& buffer, size_t offset, size_t count) {
-		Platform::SoundEffect_SubmitBuffer(*this, buffer, offset, count);
+		//TODO: implementar
+		throw CSharp::NotSupportedException();
 	}
 
 	CSharp::TimeSpan DynamicSoundEffectInstance::GetSampleDuration(size_t sizeInBytes) {
@@ -66,10 +68,13 @@ namespace Xna {
 	}
 
 	int32_t DynamicSoundEffectInstance::GetPendingBufferCount() const {
-		return Platform::SoundEffect_GetPendingBufferCount(*this);
+		//TODO: implementar
+		throw CSharp::NotSupportedException();
+		return 0;
 	}
 
 	void DynamicSoundEffectInstance::Play() {
-		Platform::SoundEffect_SetState(*this, Platform::SoundEffect_State::Play);
+		//TODO: implementar
+		throw CSharp::NotSupportedException();
 	}
 }

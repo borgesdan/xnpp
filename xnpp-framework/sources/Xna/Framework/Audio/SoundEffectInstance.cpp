@@ -3,40 +3,41 @@
 namespace Xna {
 	SoundEffectInstance::SoundEffectInstance(Xna::SoundEffect const& parentEffect, bool fireAndForget) {
 		impl = std::make_shared<Implementation>();
+		impl->platform = PlatformNS::ISoundEffectInstance::Create();
 		SoundEffect(parentEffect);
 		AllocateVoice();
 		Volume(1);
 		Pitch(0);
 		Pan(0);
-		impl->isFireAndForget = fireAndForget;
+		impl->isFireAndForget = fireAndForget;		
 	}
 
 	void SoundEffectInstance::Play() {
-		Platform::SoundEffect_SetState(*this, Platform::SoundEffect_State::Play);
+		impl->platform->Play();
 	}
 
 	void SoundEffectInstance::Stop(bool immediate) {
-		Platform::SoundEffect_SetState(*this, Platform::SoundEffect_State::Stop, immediate);
+		impl->platform->Stop();
 	}
 	void SoundEffectInstance::Pause() {
-		Platform::SoundEffect_SetState(*this, Platform::SoundEffect_State::Pause);
+		impl->platform->Pause();
 	}
 	void SoundEffectInstance::Resume() {
 		if (State() != SoundState::Paused && State() != SoundState::Stopped)
 			return;
 
-		Platform::SoundEffect_SetState(*this, Platform::SoundEffect_State::Resume);
+		impl->platform->Play();
 	}
 	
 	void SoundEffectInstance::Apply3D(std::vector<AudioListener> const& listener, AudioEmitter emitter) {
-		Platform::SoundEffect_Apply3D(*this, listener, emitter);
+		throw CSharp::NotSupportedException();
 	}
 	
 	void SoundEffectInstance::Volume(float value) {
 		if (value < 0 || value > 1)
 			throw CSharp::ArgumentOutOfRangeException("value");
-
-		Platform::SoundEffect_SetAttributes(*this, value, std::nullopt, std::nullopt);
+		
+		impl->platform->SetVolume(value);
 		impl->currentVolume = value;
 	}
 
@@ -44,7 +45,7 @@ namespace Xna {
 		if (value < -1 || value > 1)
 			throw CSharp::ArgumentOutOfRangeException("value");
 
-		Platform::SoundEffect_SetAttributes(*this, std::nullopt, std::nullopt, value);
+		impl->platform->SetPitch(value);
 		impl->currentPitch = value;
 	}
 
@@ -52,19 +53,37 @@ namespace Xna {
 		if (value < -1 || value > 1)
 			throw CSharp::ArgumentOutOfRangeException("value");
 
-		Platform::SoundEffect_SetAttributes(*this, std::nullopt, value, std::nullopt);
+		impl->platform->SetPan(value);
 		impl->currentPan = value;
 	}
 	
-	void SoundEffectInstance::AllocateVoice() {
-		Platform::SoundEffect_CreateInstance(*this);
+	void SoundEffectInstance::AllocateVoice() {		
+		auto& seImpl = impl->effect->impl->platform;
+		impl->platform->Load(
+			seImpl.get()
+		);
 	}
 
 	void SoundEffectInstance::DeallocateVoice() {
-		Platform::SoundEffect_DeleteInstance(*this);
+		impl->platform = nullptr;
 	}
 
 	SoundState SoundEffectInstance::State() const {
-		return Platform::SoundEffect_GetState(*this);
+		const auto state = impl->platform->GetState();
+
+		switch (state)
+		{
+		case PlatformNS::MediaState::Playing:
+			return SoundState::Playing;
+		case PlatformNS::MediaState::Paused:
+			return SoundState::Paused;
+		default:
+			return SoundState::Stopped;
+		}
+	}
+
+	void SoundEffectInstance::IsLooped(bool value) {
+		impl->looped = value;
+		impl->platform->IsLooped(value);
 	}
 }

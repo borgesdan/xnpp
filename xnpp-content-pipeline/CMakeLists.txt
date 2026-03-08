@@ -28,13 +28,22 @@ add_executable(XnppContentPipeline "source.cpp"
         "source/Xna/ContentPipeline/Processors/TextureProcessor.cpp"
         "source/Xna/ContentPipeline/Importers/FontDescriptionImporter.cpp" 
         "source/Xna/ContentPipeline/Graphics/FontDescription.cpp"
-        "source/Xna/ContentPipeline/Processors/FontDescriptionProcessor.cpp" "source/Xna/ContentPipeline/Audio/AudioFormat.cpp" "source/Xna/ContentPipeline/Importers/WavImporter.cpp" "source/Xna/ContentPipeline/Processors/SoundEffectProcessor.cpp" "source/Xna/ContentPipeline/Serialization/Compiler/SoundEffectWriter.cpp" "source/Xna/ContentPipeline/Audio/AudioHelper.cpp" "source/Xna/ContentPipeline/Importers/WmaImporter.cpp" "source/Xna/ContentPipeline/Processors/SongProcessor.cpp" "source/Xna/ContentPipeline/Serialization/Compiler/SongWriter.cpp" "source/Xna/ContentPipeline/Serialization/Compiler/ContentTypeWriter.cpp")
+        "source/Xna/ContentPipeline/Processors/FontDescriptionProcessor.cpp" 
+        "source/Xna/ContentPipeline/Audio/AudioFormat.cpp" 
+        "source/Xna/ContentPipeline/Importers/WavImporter.cpp" 
+        "source/Xna/ContentPipeline/Processors/SoundEffectProcessor.cpp" 
+        "source/Xna/ContentPipeline/Serialization/Compiler/SoundEffectWriter.cpp" 
+        "source/Xna/ContentPipeline/Audio/AudioHelper.cpp" 
+        "source/Xna/ContentPipeline/Importers/WmaImporter.cpp" 
+        "source/Xna/ContentPipeline/Processors/SongProcessor.cpp" 
+        "source/Xna/ContentPipeline/Serialization/Compiler/SongWriter.cpp" 
+        "source/Xna/ContentPipeline/Serialization/Compiler/ContentTypeWriter.cpp" 
+        "source/Xna/ContentPipeline/Importers/OggImporter.cpp")
 
 target_compile_features(XnppContentPipeline PUBLIC cxx_std_20)
 
 #Add tests and install targets
 
-find_package(lua CONFIG REQUIRED)
 find_package(nlohmann_json CONFIG REQUIRED)
 find_package(pugixml CONFIG REQUIRED)
 find_package(Freetype REQUIRED)
@@ -50,26 +59,10 @@ target_include_directories(XnppContentPipeline
 target_link_libraries(XnppContentPipeline
         PRIVATE
         xnpp
-        lua
         nlohmann_json::nlohmann_json   
         pugixml::pugixml
         Freetype::Freetype
         ${FFMPEG_LIBRARIES}
-)
-
-
-
-target_compile_definitions(XnppContentPipeline
-    PRIVATE
-        #Ativa todas as verificações de segurança opcionais do sol2.
-        #Checagem de: tipos Lua ↔ C++, número de argumentos, validade de referências (userdata)
-        #chamadas a funções nulas, Validação adicional em: sol::function, sol::protected_function, sol::object
-        SOL_ALL_SAFETIES_ON=1 
-        #Garante que exceções C++ lançadas dentro de funções expostas ao Lua:
-        #não atravessem a stack do Lua diretamente
-        #sejam capturadas e convertidas em erro Lua (lua_error)
-        SOL_EXCEPTIONS_SAFE_PROPAGATION=1 
-        
 )
 
 target_include_directories(XnppContentPipeline

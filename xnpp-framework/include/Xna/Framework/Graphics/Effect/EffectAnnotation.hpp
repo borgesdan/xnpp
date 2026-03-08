@@ -13,7 +13,6 @@ namespace Xna {
         EffectParameterClass paramClass;
         EffectParameterType paramType;
         EffectParameterTypeVariant variant;
-        PlatformImpl::EffectAnnotationImpl platformImpl;
 	};
 
 	inline std::string EffectAnnotation::Name() const { return impl->name; }

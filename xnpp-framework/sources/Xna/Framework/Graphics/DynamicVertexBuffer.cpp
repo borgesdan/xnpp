@@ -11,6 +11,6 @@ namespace Xna {
 		VertexBuffer::size(vertexDeclaration.VertexStride() * vertexCount);
 		Bind(graphicsDevice);
 
-		Platform::VertexBuffer_Create(*this);
+		/*Platform::VertexBuffer_Create(*this);*/
 	}
 }

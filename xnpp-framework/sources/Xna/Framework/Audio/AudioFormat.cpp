@@ -1,7 +1,7 @@
 #include "Xna/Framework/Audio/AudioFormat.hpp"
 #include "Xna/CSharp/IO/BinaryReader.hpp"
 #include "Xna/CSharp/IO/MemoryStream.hpp"
-#include "Xna/Framework/Audio/AudioHelper.hpp"
+#include "AudioHelper.hpp"
 
 namespace Xna {
     AudioFormat AudioFormat::Create(int32_t sampleRate, AudioChannels channels, int16_t bitDepth) {

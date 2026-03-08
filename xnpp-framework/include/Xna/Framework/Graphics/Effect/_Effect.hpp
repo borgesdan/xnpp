@@ -29,6 +29,8 @@ namespace Xna {
 		inline bool operator==(std::nullptr_t) const noexcept { return impl == nullptr; }
 		inline explicit operator bool() const noexcept { return impl != nullptr; }
 
+
+
 	protected:		
 		virtual void OnApply(){}
 

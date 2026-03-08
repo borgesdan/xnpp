@@ -125,8 +125,6 @@ namespace Xna {
 			float fogStart{ 0 };
 			float fogEnd{ 1.0f };
 			EffectDirtyFlags dirtyFlags{ EffectDirtyFlags::All };
-
-			PlatformImpl::BasicEffectImpl platformImpl;
 		};
 
 		std::shared_ptr<Implementation> impl;

@@ -11,7 +11,10 @@ namespace Xna {
 		
 		AudioFileType fileType;
 		if (!audioHelper.IsSupportedAudioFile(fileType))
-			throw std::runtime_error("The file is not a supported audio file.");
+			throw std::runtime_error("The file is not a supported audio file.");		
+
+		if(fileType != AudioFileType::Wma)
+			throw std::runtime_error("The file is not a valid WMA file.");
 
 		auto duration = audioHelper.GetDuration();
 
@@ -21,6 +24,7 @@ namespace Xna {
 		AudioContent content;
 		content.ContentItem.Identity.SourceFileName = filename;
 		content.Duration = CSharp::TimeSpan::FromMilliseconds(duration);
+		content.FileType = fileType;
 
 		return content;
 	}

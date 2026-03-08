@@ -46,7 +46,7 @@ namespace Xna {
 			if (offsetInBytes + dataSize > impl->size)
 				throw CSharp::ArgumentOutOfRangeException("SetData out of bounds");
 
-			Platform::VertexBuffer_SetData(*this, offsetInBytes, data.data(), sizeof(T), startIndex, elementCount, vertexStride);
+			//Platform::VertexBuffer_SetData(*this, offsetInBytes, data.data(), sizeof(T), startIndex, elementCount, vertexStride);
 		}
 
 		//Returns a copy of the vertex buffer data.
@@ -74,7 +74,7 @@ namespace Xna {
 			if (offsetInBytes + dataSize > impl->size)
 				throw CSharp::ArgumentOutOfRangeException("SetData out of bounds");
 
-			Platform::VertexBuffer_GetData(*this, offsetInBytes, data.data(), sizeof(T), startIndex, elementCount, vertexStride);
+			//Platform::VertexBuffer_GetData(*this, offsetInBytes, data.data(), sizeof(T), startIndex, elementCount, vertexStride);
 		}
 
 		//Gets the state of the related BufferUsage enumeration.
@@ -100,7 +100,6 @@ namespace Xna {
 			size_t size;
 			size_t vertexCount;
 			Xna::VertexDeclaration vertexDeclaration;
-			PlatformImpl::VertexBufferImpl platformImpl;
 		};
 
 		std::shared_ptr<Implementation> impl;
