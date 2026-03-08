@@ -6,7 +6,12 @@
 
 #ifdef PLATFORM_WINDOWS
 #define NOMINMAX
-#include "Windows.h"
+#include <windows.h>
+#elif PLATFORM_LINUX
+#include <unistd.h>
+#include <limits.h>
+#elif PLATFORM_MACOS
+#include <mach-o/dyld.h>
 #endif
 
 namespace Xna {
@@ -258,8 +263,18 @@ namespace Xna {
 
 		if (length > 0)
 			path = std::filesystem::path(buffer, buffer + length);
-#elif
-		SDL_Log(exception.c_str());
+#elif PLATFORM_MACOS
+		char buffer[PATH_MAX];
+		uint32_t size = sizeof(buffer);
+		if (_NSGetExecutablePath(buffer, &size) == 0) {
+			path = std::filesystem::path(buffer);
+		}
+#elif PLATFORM_LINUX
+		char buffer[PATH_MAX];
+		ssize_t count = readlink("/proc/self/exe", buffer, PATH_MAX);
+		if (count != -1) {
+			path = std::filesystem::path(buffer, buffer + count);
+		}		
 #endif
 	}
 
