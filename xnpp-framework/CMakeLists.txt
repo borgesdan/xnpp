@@ -99,11 +99,10 @@ add_library(xnpp
 
 target_compile_features(xnpp PUBLIC cxx_std_20)
 
-target_compile_definitions(xnpp PRIVATE USING_XINPUT)
 target_compile_definitions(xnpp PRIVATE XNPP_EXPORT_DLL)
 target_compile_definitions(xnpp PRIVATE XNPP_DONT_USE_XNA_KEYS)
 
-find_package(directxtk CONFIG REQUIRED)
+#SDL3
 find_package(SDL3 CONFIG REQUIRED)
 #libvorbis
 find_package(Ogg CONFIG REQUIRED)

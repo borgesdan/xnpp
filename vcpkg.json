@@ -1,9 +1,5 @@
 {
-  "dependencies": [
-    {
-      "name": "directxtk",
-      "features": [ "xaudio2-9" ]
-    },
+  "dependencies": [    
     "nlohmann-json",
     "stb",
     "pugixml",
