@@ -2,53 +2,57 @@
 #include "Xna/Platform/Platform.hpp"
 
 namespace Xna {
-	std::optional<GraphicsAdapter>  GraphicsAdapter::_DefaultAdapter = std::nullopt;
+
+	static GraphicsAdapter _DefaultAdapter = nullptr;
 
 	std::vector<std::optional<GraphicsAdapter>> GraphicsAdapter::Adapters() {
+		static std::vector<std::optional<GraphicsAdapter>> all;
+
+		if (!all.empty())
+			return all;
+
 		auto backend = PlatformNS::IGraphicsAdapter::Create();
 		auto adapters = backend->GetAll();
 
 		if (adapters.empty())
-			return {};
+			return {};			
 
-		std::vector<std::optional<GraphicsAdapter>> all(adapters.size());
+		all.resize(adapters.size());
+
 		for (size_t i = 0; i < adapters.size(); ++i) {
-			auto adp = GraphicsAdapter();
-			adp.impl->description = adapters[i].description;
-			adp.impl->deviceName = adapters[i].deviceName;
-			adp.impl->monitorHandle = adapters[i].monitorHandle;
-			adp.impl->deviceId = adapters[i].deviceId;
-			adp.impl->revision = adapters[i].revision;
-			adp.impl->subSystemId = adapters[i].subSystemId;
-			adp.impl->vendorId = adapters[i].vendorId;
+			auto adp = GraphicsAdapter(nullptr);
+			adp.backend = std::move(adapters[i]);
+
+			if (adapters.size() == 1 || adapters[i]->GetDesc().isDefaultAdapter)
+				_DefaultAdapter = adp;
 
 			all[i] = adp;
 		}
+
 		
-		_DefaultAdapter = all[0].value();
 
 		return all;
 	}
 
 	GraphicsAdapter GraphicsAdapter::DefaultAdapter() {
-		if (!_DefaultAdapter.has_value()) {
+		if (!_DefaultAdapter) {
 			auto all = Adapters();
 
 			if (!all.empty())
-				_DefaultAdapter = all[0].value();			
+				_DefaultAdapter = all[0].value();
 		}			
 
-		return _DefaultAdapter.value_or(nullptr);
+		return _DefaultAdapter;
 	}
 	
 	DisplayModeCollection GraphicsAdapter::SupportedDisplayModes() const {
-		auto modes = impl->backend->SupportedDisplayModes();
+		auto modes = backend->SupportedDisplayModes();
 		auto collection = DisplayModeCollection(modes);
 		return collection;
 	}
 
 	DisplayMode GraphicsAdapter::CurrentDisplayMode() const {
-		return impl->backend->CurrentDisplayMode();
+		return backend->CurrentDisplayMode();
 	}	
 
 	bool GraphicsAdapter::QueryRenderTargetFormat(GraphicsProfile graphicsProfile,
@@ -58,7 +62,7 @@ namespace Xna {
 		SurfaceFormat& selectedFormat,
 		DepthFormat& selectedDepthFormat,
 		int32_t& selectedMultiSampleCount) const {
-		return impl->backend->QueryRenderTargetFormat(*this, graphicsProfile, format, depthFormat, multiSampleCount, selectedFormat, selectedDepthFormat, selectedMultiSampleCount);
+		return backend->QueryRenderTargetFormat(graphicsProfile, format, depthFormat, multiSampleCount, selectedFormat, selectedDepthFormat, selectedMultiSampleCount);
 	}
 
 	bool GraphicsAdapter::QueryBackBufferFormat(GraphicsProfile graphicsProfile,
@@ -68,10 +72,10 @@ namespace Xna {
 		SurfaceFormat& selectedFormat,
 		DepthFormat& selectedDepthFormat,
 		int32_t& selectedMultiSampleCount) const {
-		return impl->backend->QueryBackBufferFormat(*this, graphicsProfile, format, depthFormat, multiSampleCount, selectedFormat, selectedDepthFormat, selectedMultiSampleCount);
+		return backend->QueryBackBufferFormat(graphicsProfile, format, depthFormat, multiSampleCount, selectedFormat, selectedDepthFormat, selectedMultiSampleCount);
 	}
 
 	bool GraphicsAdapter::IsProfileSupported(GraphicsProfile graphicsProfile) {
-		impl->backend->IsProfileSupported(*this, graphicsProfile);
+		return backend->IsProfileSupported(graphicsProfile);
 	}
 }

@@ -20,29 +20,29 @@ namespace Xna {
 		//Gets the default adapter. 
 		XNPP_API static GraphicsAdapter DefaultAdapter();
 		//Retrieves a string used for presentation to the user.
-		inline std::string Description() const { return impl->description; }
+		inline std::string Description() const { return backend->GetDesc().description; }
 		//Retrieves a value that is used to help identify a particular chip set. 
-		inline uint32_t DeviceId() const { return impl->deviceId; }
+		inline uint32_t DeviceId() const { return backend->GetDesc().deviceId; }
 		//Retrieves a string that contains the device name.
-		inline std::string DeviceName() const { return impl->deviceName; }
+		inline std::string DeviceName() const { return backend->GetDesc().deviceName; }
 		//Determines if this instance of GraphicsAdapter is the default adapter.
 		inline bool IsDefaultAdapter() const {
-			return impl->isDefaultAdapter;
+			return backend->GetDesc().isDefaultAdapter;
 		}
 		//Determines if the graphics adapter is in widescreen mode.
 		inline bool IsWideScreen() const {
 			return CurrentDisplayMode().AspectRatio() > 1.6000000238418579;
 		}
 		//Retrieves the handle of the monitor
-		inline intptr_t MonitorHandle() const { return impl->monitorHandle; }
+		inline intptr_t MonitorHandle() const { return backend->GetDesc().monitorHandle; }
 		//Retrieves a value used to help identify the revision level of a particular chip set.
-		inline uint32_t Revision() const { return impl->revision; }
+		inline uint32_t Revision() const { return backend->GetDesc().revision; }
 		//Retrieves a value used to identify the subsystem.
-		inline uint32_t SubSystemId() const { return impl->subSystemId; }
+		inline uint32_t SubSystemId() const { return backend->GetDesc().subSystemId; }
 		//Returns a collection of supported display modes for the current adapter.
 		XNPP_API DisplayModeCollection SupportedDisplayModes() const;
 		//Retrieves a value used to identify the manufacturer.
-		inline uint32_t VendorId() const { return impl->vendorId; }
+		inline uint32_t VendorId() const { return backend->GetDesc().vendorId; }
 
 		//Gets or sets a NULL device. 
 		static constexpr bool UseNullDevice() {
@@ -85,32 +85,17 @@ namespace Xna {
 			DepthFormat& selectedDepthFormat,
 			int32_t& selectedMultiSampleCount) const;
 
-		XNPP_DECLARE_IMPL_WRAPPER(GraphicsAdapter, impl);
+		XNPP_DECLARE_IMPL_WRAPPER(GraphicsAdapter, backend);
 
 	private:
 		inline static bool _UseNullDevice = false;
 		inline static bool _UseReferenceDevice = false;
-		static std::optional<GraphicsAdapter> _DefaultAdapter;
 
-		struct Implementation {
-			std::string description;
-			std::string deviceName;
-			intptr_t monitorHandle{ 0 };
-			uint32_t deviceId{ 0 };
-			uint32_t revision{ 0 };
-			uint32_t subSystemId{ 0 };
-			uint32_t vendorId{ 0 };
-			bool isDefaultAdapter{ false };			
-			std::unique_ptr<PlatformNS::IGraphicsAdapter> backend;
-		};
+		std::shared_ptr<PlatformNS::IGraphicsAdapter> backend;
 
-		inline GraphicsAdapter() {
-			impl = std::make_shared<Implementation>();
-			impl->backend = PlatformNS::IGraphicsAdapter::Create();
+		inline GraphicsAdapter() {			
+			backend = PlatformNS::IGraphicsAdapter::Create();
 		}
-		std::shared_ptr<Implementation> impl;
-
-		friend struct Platform;
 	};
 }
 
