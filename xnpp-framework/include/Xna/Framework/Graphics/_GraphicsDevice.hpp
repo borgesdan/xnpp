@@ -11,6 +11,7 @@
 #include "Xna/CSharp/Event.hpp"
 #include "PresentationParameters.hpp"
 #include "Xna/Internal/Export.hpp"
+#include "Xna/Platform/Platform.hpp"
 
 namespace Xna {
 	struct Color;
@@ -173,17 +174,19 @@ namespace Xna {
 		inline CSharp::Event<CSharp::EventArgs> DeviceLost();
 		inline CSharp::Event<CSharp::EventArgs> Disposing();
 
-		inline GraphicsDevice(std::nullptr_t) { implGraphicsDevice = nullptr; }
-		inline bool operator==(GraphicsDevice const& other) const noexcept { return implGraphicsDevice == other.implGraphicsDevice; }
-		inline bool operator==(std::nullptr_t) const noexcept { return implGraphicsDevice == nullptr; }
-		inline explicit operator bool() const noexcept { return implGraphicsDevice != nullptr; }
+		inline GraphicsDevice(std::nullptr_t) { impl = nullptr; }
+		inline bool operator==(GraphicsDevice const& other) const noexcept { return impl == other.impl; }
+		inline bool operator==(std::nullptr_t) const noexcept { return impl == nullptr; }
+		inline explicit operator bool() const noexcept { return impl != nullptr; }
+
+		inline PlatformNS::IGraphicsDevice& GetBackend();
 
 	private:
 		void CreateDevice(GraphicsAdapter const& adapter, Xna::PresentationParameters const& presentationParameters);
 		inline RenderTarget2D CreateBackBufferRenderTarget() const;
 	
 		struct Implementation;
-		std::shared_ptr<Implementation> implGraphicsDevice;	
+		std::shared_ptr<Implementation> impl;	
 
 		friend struct Platform;
 	};

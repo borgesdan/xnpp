@@ -7,8 +7,72 @@ endif ()
 # Includes directory
 set(PROJECT_INCLUDES_DIR "${CMAKE_CURRENT_SOURCE_DIR}/include")
 
-set(MINIAUDIO_VORBIS_SRC 
-    "sources/Xna/Platform/Cross/third-party/miniaudio/miniaudio_libvorbis.c"
+set(XNPP_FRAMEWORK_SRC 
+    "sources/Xna/CSharp/IO/MemoryStream.cpp"
+    "sources/Xna/CSharp/IO/Stream.cpp"
+    "sources/Xna/CSharp/IO/FileStream.cpp"
+    "sources/Xna/CSharp/IO/BinaryReader.cpp"
+    "sources/Xna/CSharp/Windows/Forms/SystemInformation.cpp"
+    "sources/Xna/CSharp/Windows/Forms/Screen.cpp"
+    "sources/Xna/CSharp/Event.cpp"
+    "sources/Xna/CSharp/IO/BinaryWriter.cpp"
+    "sources/Xna/CSharp/BitConverter.cpp"        
+    "sources/Xna/Framework/FrameworkDispatcher.cpp"       
+    "sources/xna/Framework/PackUtils.cpp"
+    "sources/Xna/Framework/TitleContainer.cpp"
+    "sources/Xna/Framework/Vector2.cpp"
+    "sources/Xna/Framework/Vector3.cpp"
+    "sources/Xna/Framework/Vector4.cpp"
+    "sources/xna/Framework/Game/GameWindow.cpp"
+    "sources/Xna/Framework/Game/Game.cpp"
+    "sources/Xna/Framework/Game/GameHost.cpp"
+    "sources/Xna/Framework/Game/GameClock.cpp"
+    "sources/Xna/Framework/Game/GraphicsDeviceManager.cpp"
+    "sources/Xna/Framework/Game/GameComponentCollection.cpp"
+    "sources/Xna/Framework/Graphics/GraphicsResource.cpp"
+    "sources/Xna/Framework/Graphics/Texture3D.cpp"
+    "sources/Xna/Framework/Graphics/Texture2D.cpp"        
+    "sources/Xna/Framework/Graphics/GraphicsDevice.cpp"
+    "sources/Xna/Framework/Graphics/RenderTarget2D.cpp"
+    "sources/Xna/Framework/Graphics/IndexBuffer.cpp"
+    "sources/Xna/Framework/Graphics/DynamicIndexBuffer.cpp"
+    "sources/Xna/Framework/Graphics/DisplayModeCollection.cpp"
+    "sources/Xna/Framework/Graphics/GraphicsAdapter.cpp"
+    "sources/Xna/Framework/Graphics/SpriteBatch.cpp"
+    "sources/Xna/Framework/Graphics/SpriteFont.cpp"
+    "sources/Xna/Framework/Graphics/GraphicsContentHelper.cpp"
+    "sources/Xna/Framework/Graphics/ModelBoneCollection.cpp" 
+    "sources/Xna/Framework/Graphics/ModelBone.cpp"
+    "sources/Xna/Framework/Graphics/ModelMesh.cpp" 
+    "sources/Xna/Framework/Graphics/EffectPass.cpp"
+    "sources/Xna/Framework/Graphics/EffectAnnotation.cpp"
+    "sources/Xna/Framework/Graphics/EffectParameter.cpp"
+    "sources/Xna/Framework/Graphics/Effect.cpp"
+    "sources/Xna/Framework/Graphics/BasicEffect.cpp"
+    "sources/Xna/Framework/Graphics/EffectHelpers.cpp" 
+    "sources/Xna/Framework/Graphics/EffectTechnique.cpp" 
+    "sources/Xna/Framework/Graphics/EffectTechniqueCollection.cpp"
+    "sources/Xna/Framework/Graphics/EffectAnnotationCollection.cpp"
+    "sources/Xna/Framework/Graphics/DynamicVertexBuffer.cpp"
+    "sources/Xna/Framework/Graphics/VertexDeclaration.cpp"
+    "sources/Xna/Framework/Graphics/VertexBufferBinding.cpp"
+    "sources/Xna/Framework/Graphics/VertexBuffer.cpp"
+    "sources/Xna/Framework/Input/Input.cpp"
+    "sources/Xna/Framework/Content/ContentManager.cpp"
+    "sources/Xna/Framework/Content/ContentReader.cpp"
+    "sources/Xna/Framework/Content/ContentTypeReaderManager.cpp"    
+    "sources/Xna/App.cpp"
+    "sources/Xna/Framework/Audio/AudioFormat.cpp"
+    "sources/Xna/Framework/Audio/AudioHelper.cpp"
+    "sources/Xna/Framework/Audio/WavFile.cpp"
+    "sources/Xna/Framework/Audio/SoundEffect.cpp"
+    "sources/Xna/Framework/Audio/SoundEffectInstance.cpp"
+    "sources/Xna/Framework/Audio/DynamicSoundEffectInstance.cpp" 
+    "sources/Xna/Framework/Media/Song.cpp" 
+    "sources/Xna/Framework/Media/MediaPlayer.cpp"
+    "sources/Xna/Framework/Media/MediaQueue.cpp"
+    "sources/Xna/CSharp/Type.cpp"
+    "sources/Xna/Framework/Content/Readers/BasicReaders.cpp"
 )
 
 set(XNPP_PLATFORM_SRC
@@ -17,99 +81,28 @@ set(XNPP_PLATFORM_SRC
     "sources/Xna/Platform/Cross/GameHost.cpp"
     "sources/Xna/Platform/Cross/Input.cpp" 
     "sources/Xna/Platform/Cross/Audio.cpp"
+    "sources/Xna/Platform/Cross/Graphics/Device.cpp"
+    "sources/Xna/Platform/Cross/Graphics/Texture.cpp"
+    "sources/Xna/Platform/Cross/Graphics/SpriteBatch.cpp"
+    "sources/Xna/Platform/Cross/Graphics/Adapter.cpp"
 )
 
-# Add source to this project's executable.
+set(MINIAUDIO_VORBIS_SRC 
+    "sources/Xna/Platform/Cross/third-party/miniaudio/miniaudio_libvorbis.c"
+)
+
 add_library(xnpp
-        "sources/Xna/CSharp/IO/MemoryStream.cpp"
-        "sources/Xna/CSharp/IO/Stream.cpp"
-        "sources/Xna/CSharp/IO/FileStream.cpp"
-        "sources/Xna/CSharp/IO/BinaryReader.cpp"
-        "sources/Xna/CSharp/Windows/Forms/SystemInformation.cpp"
-        "sources/Xna/CSharp/Windows/Forms/Screen.cpp"
-        "sources/Xna/CSharp/Event.cpp"
-        "sources/Xna/CSharp/IO/BinaryWriter.cpp"
-        "sources/Xna/CSharp/BitConverter.cpp"        
-        "sources/Xna/Framework/FrameworkDispatcher.cpp"       
-        "sources/xna/Framework/PackUtils.cpp"
-        "sources/Xna/Framework/TitleContainer.cpp"
-        "sources/Xna/Framework/Vector2.cpp"
-        "sources/Xna/Framework/Vector3.cpp"
-        "sources/Xna/Framework/Vector4.cpp"
-        "sources/xna/Framework/Game/GameWindow.cpp"
-        "sources/Xna/Framework/Game/Game.cpp"
-        "sources/Xna/Framework/Game/GameHost.cpp"
-        "sources/Xna/Framework/Game/GameClock.cpp"
-        "sources/Xna/Framework/Game/GraphicsDeviceManager.cpp"
-        "sources/Xna/Framework/Game/GameComponentCollection.cpp"
-        "sources/Xna/Framework/Graphics/GraphicsResource.cpp"
-        "sources/Xna/Framework/Graphics/BlendState.cpp"
-        "sources/Xna/Framework/Graphics/DepthStencilState.cpp"
-        "sources/Xna/Framework/Graphics/RasterizerState.cpp"
-        "sources/Xna/Framework/Graphics/SamplerState.cpp"
-        "sources/Xna/Framework/Graphics/Texture3D.cpp"
-        "sources/Xna/Framework/Graphics/Texture2D.cpp"        
-        "sources/Xna/Framework/Graphics/GraphicsDevice.cpp"
-        "sources/Xna/Framework/Graphics/RenderTarget2D.cpp"
-        "sources/Xna/Framework/Graphics/IndexBuffer.cpp"
-        "sources/Xna/Framework/Graphics/DynamicIndexBuffer.cpp"
-        "sources/Xna/Framework/Graphics/DisplayModeCollection.cpp"
-        "sources/Xna/Framework/Graphics/GraphicsAdapter.cpp"
-        "sources/Xna/Framework/Graphics/SpriteBatch.cpp"
-        "sources/Xna/Framework/Graphics/SpriteFont.cpp"
-        "sources/Xna/Framework/Graphics/GraphicsContentHelper.cpp"
-        "sources/Xna/Framework/Graphics/ModelBoneCollection.cpp" 
-        "sources/Xna/Framework/Graphics/ModelBone.cpp"
-        "sources/Xna/Framework/Graphics/ModelMesh.cpp" 
-        "sources/Xna/Framework/Graphics/EffectPass.cpp"
-        "sources/Xna/Framework/Graphics/EffectAnnotation.cpp"
-        "sources/Xna/Framework/Graphics/EffectParameter.cpp"
-        "sources/Xna/Framework/Graphics/Effect.cpp"
-        "sources/Xna/Framework/Graphics/BasicEffect.cpp"
-        "sources/Xna/Framework/Graphics/EffectHelpers.cpp" 
-        "sources/Xna/Framework/Graphics/EffectTechnique.cpp" 
-        "sources/Xna/Framework/Graphics/EffectTechniqueCollection.cpp"
-        "sources/Xna/Framework/Graphics/EffectAnnotationCollection.cpp"
-        "sources/Xna/Framework/Graphics/DynamicVertexBuffer.cpp"
-        "sources/Xna/Framework/Graphics/VertexDeclaration.cpp"
-        "sources/Xna/Framework/Graphics/VertexBufferBinding.cpp"
-        "sources/Xna/Framework/Graphics/VertexBuffer.cpp"
-        "sources/Xna/Framework/Input/Input.cpp"
-        "sources/Xna/Framework/Content/ContentManager.cpp"
-        "sources/Xna/Framework/Content/ContentReader.cpp"
-        "sources/Xna/Framework/Content/ContentTypeReaderManager.cpp"
-        "sources/Xna/Platform/Windows/WindowsPlatform.cpp"
-        "sources/Xna/Platform/Windows/WindowsGraphicsDevice.cpp"
-        "sources/Xna/Platform/Windows/WindowsStates.cpp"
-        "sources/Xna/Platform/Windows/WindowsSpriteBatch.cpp"
-        "sources/Xna/Platform/Windows/WindowsTextures.cpp"
-        "sources/Xna/Platform/Windows/WindowsAdapter.cpp"
-        "sources/Xna/Platform/Windows/WindowsBuffer.cpp"
-        "sources/Xna/App.cpp"
-        "sources/Xna/Framework/Audio/AudioFormat.cpp"
-        "sources/Xna/Framework/Audio/AudioHelper.cpp"
-        "sources/Xna/Framework/Audio/WavFile.cpp"
-        "sources/Xna/Framework/Audio/SoundEffect.cpp"
-        "sources/Xna/Framework/Audio/SoundEffectInstance.cpp"
-        "sources/Xna/Framework/Audio/DynamicSoundEffectInstance.cpp" 
-        "sources/Xna/Framework/Media/Song.cpp" 
-        "sources/Xna/Framework/Media/MediaPlayer.cpp"
-        "sources/Xna/Framework/Media/MediaQueue.cpp"
-        "sources/Xna/CSharp/Type.cpp"
-        "sources/Xna/Framework/Content/Readers/BasicReaders.cpp"
-
+        ${XNPP_FRAMEWORK_SRC}
         ${XNPP_PLATFORM_SRC}
-        ${MINIAUDIO_VORBIS_SRC}        
+        ${MINIAUDIO_VORBIS_SRC} 
 )
-#set_source_files_properties(${MINIAUDIO_VORBIS_SRC} PROPERTIES LANGUAGE C)
 
 target_compile_features(xnpp PUBLIC cxx_std_20)
 
-target_compile_definitions(xnpp PRIVATE USING_XINPUT)
 target_compile_definitions(xnpp PRIVATE XNPP_EXPORT_DLL)
 target_compile_definitions(xnpp PRIVATE XNPP_DONT_USE_XNA_KEYS)
 
-find_package(directxtk CONFIG REQUIRED)
+#SDL3
 find_package(SDL3 CONFIG REQUIRED)
 #libvorbis
 find_package(Ogg CONFIG REQUIRED)
@@ -117,29 +110,23 @@ find_package(Vorbis CONFIG REQUIRED)
 #bgfx
 find_package(bgfx CONFIG REQUIRED)
 
-target_link_libraries(xnpp
-        PUBLIC
-            Microsoft::DirectXTK 
+target_link_libraries(xnpp       
+    PRIVATE 
+        SDL3::SDL3
+        Ogg::ogg
+        Vorbis::vorbis
+        Vorbis::vorbisfile
+        bgfx::bgfx
+        bgfx::bx
+        bgfx::bimg        
+)
+
+if(WIN32)
+    target_link_libraries(xnpp
         PRIVATE
             dxgi.lib
-            dxguid.lib
-            D3d11.lib 
-            windowscodecs.lib
-            Shlwapi.lib 
-            runtimeobject.lib
-            xaudio2.lib
-            Mfplat.lib
-            Oleaut32.lib
-            Ole32.lib
-            Propsys.lib
-            SDL3::SDL3
-            Ogg::ogg
-            Vorbis::vorbis
-            Vorbis::vorbisfile
-             bgfx::bgfx
-             bgfx::bx
-             bgfx::bimg
-)
+    )
+endif()
 
 target_include_directories(xnpp
     PUBLIC

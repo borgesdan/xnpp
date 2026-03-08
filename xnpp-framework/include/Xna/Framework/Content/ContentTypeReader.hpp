@@ -47,8 +47,9 @@ namespace Xna {
 		ContentTypeReaderT() : ContentTypeReader(CSharp::typeof<T>()){}
 
 		virtual std::any Read(ContentReader& input, std::any& existingInstance) override {
-			if (!existingInstance.has_value())
-				return T();
+			if (!existingInstance.has_value()) {
+				Xna::Misc::ReturnDefaultOrNull<T>();
+			}				
 			else if (existingInstance.type() != typeid(T)) {
 				throw CSharp::InvalidOperationException("BadXnbWrongType");
 			}

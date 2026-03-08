@@ -17,6 +17,7 @@ namespace Xna {
 		impl->multiSampleCount = preferredMultiSampleCount;
 		impl->usage = usage;
 		impl->texture2D = Xna::Texture2D(graphicsDevice, width, height, mipMap, preferredFormat);
-		Platform::RenderTarget2D_Init(*this, graphicsDevice, preferredDepthFormat, preferredMultiSampleCount, usage);
+		//Platform::RenderTarget2D_Init(*this, graphicsDevice, preferredDepthFormat, preferredMultiSampleCount, usage);
+		//TODO: implementar
 	}	
 }

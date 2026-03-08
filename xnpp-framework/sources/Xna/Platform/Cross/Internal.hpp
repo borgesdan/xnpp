@@ -13,6 +13,7 @@ namespace Xna::Cross {
 	private:
 		static void InitAudio();
 		static void DisposeAudio();
+		static void DisposeVideo();
 	};
 
 	struct GamepadPlayer {

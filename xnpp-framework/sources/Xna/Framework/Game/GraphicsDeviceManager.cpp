@@ -255,8 +255,8 @@ namespace Xna {
 		if (!EnsureDevice())
 			return false;
 
-		impl->beginDrawOk = true;
-		Platform::GraphicsDevice_SetRenderTargets(impl->device.value());
+		impl->beginDrawOk = true;		
+		//TODO:: aqui tinha uma chamada de código a Platform::GraphicsDevice_SetRenderTargets
 
 		return true;
 	}
@@ -301,13 +301,13 @@ namespace Xna {
 	}
 
 	void GraphicsDeviceManager::AddDevices(bool anySuitableDevice, std::vector<GraphicsDeviceInformation>& foundDevices) {
-		auto handle = reinterpret_cast<HWND>(impl->game->Window()->Handle());
+		auto handle = impl->game->Window()->Handle();
 		auto adapters = GraphicsAdapter::Adapters();
 
 		for (auto& adapter : adapters) {
 			if (!anySuitableDevice)
 			{
-				if (!IsWindowOnAdapter(reinterpret_cast<intptr_t>(handle), *adapter))
+				if (!IsWindowOnAdapter(handle, *adapter))
 					continue;
 			}
 
@@ -316,7 +316,7 @@ namespace Xna {
 				auto baseDeviceInfo = GraphicsDeviceInformation();
 				baseDeviceInfo.Adapter(*adapter);
 				baseDeviceInfo.GraphicsProfile(impl->graphicsProfile);
-				baseDeviceInfo.PresentationParameters().DeviceWindowHandle = reinterpret_cast<intptr_t>(handle);
+				baseDeviceInfo.PresentationParameters().DeviceWindowHandle = handle;
 				baseDeviceInfo.PresentationParameters().MultiSampleCount = 0;
 				baseDeviceInfo.PresentationParameters().IsFullScreen = IsFullScreen();
 				baseDeviceInfo.PresentationParameters().PresentationInterval = SynchronizeWithVerticalRetrace() ? PresentInterval::One : PresentInterval::Immediate;
@@ -328,8 +328,8 @@ namespace Xna {
 					auto modes = adapter->SupportedDisplayModes();
 					for (auto& supportedDisplayMode : modes)
 					{
-						if (supportedDisplayMode->Width() >= 640 && supportedDisplayMode->Height() >= 480)
-							AddDevices(*adapter, *supportedDisplayMode, baseDeviceInfo, foundDevices);
+						if (supportedDisplayMode.Width() >= 640 && supportedDisplayMode.Height() >= 480)
+							AddDevices(*adapter, supportedDisplayMode, baseDeviceInfo, foundDevices);
 					}
 				}
 			}
@@ -425,7 +425,7 @@ namespace Xna {
 			auto displayModes = adapter.SupportedDisplayModes()[presentationParameters.BackBufferFormat];
 
 			for (auto& displayMode : displayModes) {
-				if (displayMode->Width() == presentationParameters.BackBufferWidth && displayMode->Height() == presentationParameters.BackBufferHeight)
+				if (displayMode.Width() == presentationParameters.BackBufferWidth && displayMode.Height() == presentationParameters.BackBufferHeight)
 				{
 					flag = true;
 					break;

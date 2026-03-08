@@ -1,4 +1,4 @@
-#include "Xna/Platform/_Platform.hpp"
+#include "Xna/Platform/Platform.hpp"
 #include "Xna/Framework/Game/GameWindow.hpp"
 #include "Xna/CSharp/Exception.hpp"
 #include "Internal.hpp"

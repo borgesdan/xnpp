@@ -9,6 +9,6 @@ namespace Xna {
 		impl->format = format;
 		impl->hasMipMap = mipMap;
 
-		Platform::Texture3D_Init(*this, graphicsDevice, width, height, depth, mipMap, format);
+		//Platform::Texture3D_Init(*this, graphicsDevice, width, height, depth, mipMap, format);
 	}
 }

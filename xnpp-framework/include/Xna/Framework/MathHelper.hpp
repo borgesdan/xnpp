@@ -115,6 +115,22 @@ namespace Xna {
 					return internalCos(x);
 				else
 					return std::cos(x);
+			}			
+
+			static constexpr float Tan(float x)
+			{
+				if (std::is_constant_evaluated())
+					return internalTan(x);
+				else
+					return std::tan(x);
+			}
+
+			static constexpr double Tan(double x)
+			{
+				if (std::is_constant_evaluated())
+					return internalTan(x);
+				else
+					return std::tan(x);
 			}
 
 		private:
@@ -189,6 +205,63 @@ namespace Xna {
 				}
 
 				return sum;
+			}			
+
+			template<typename T>
+			static constexpr void internalSinCos(T x, T& sinOut, T& cosOut)
+			{
+				// contrato forte
+				if (x != x)
+				{
+					sinOut = T(0);
+					cosOut = T(1);
+					return;
+				}
+
+				const T pi = static_cast<T>(PI);
+
+				// redução de argumento
+				while (x > pi)  x -= pi * 2;
+				while (x < -pi) x += pi * 2;
+
+				T x2 = x * x;
+
+				// primeiros termos
+				T sinTerm = x;
+				T cosTerm = T(1);
+
+				T sinSum = x;
+				T cosSum = T(1);
+
+				for (size_t i = 1; i <= 10; ++i)
+				{
+					// sin: -(x²)/((2i)(2i+1))
+					sinTerm *= -x2 / ((2 * i) * (2 * i + 1));
+					sinSum += sinTerm;
+
+					// cos: -(x²)/((2i-1)(2i))
+					cosTerm *= -x2 / ((2 * i - 1) * (2 * i));
+					cosSum += cosTerm;
+				}
+
+				sinOut = sinSum;
+				cosOut = cosSum;
+			}
+
+			template <typename T>
+			static constexpr T internalTan(T x)
+			{
+				T s, c;
+				internalSinCos(x, s, c);
+
+				constexpr T epsilon = T(1e-12);
+
+				if (c > -epsilon && c < epsilon)
+					return (s >= 0)
+					? std::numeric_limits<T>::infinity()
+					: -std::numeric_limits<T>::infinity();
+
+				return s / c;
 			}
 		};
 	};

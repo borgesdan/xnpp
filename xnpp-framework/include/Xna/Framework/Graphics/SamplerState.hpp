@@ -2,129 +2,104 @@
 #define XNA_FRAMEWORK_GRAPHICS_SAMPLERSTATE_HPP
 
 #include "Shared.hpp"
-#include "GraphicsResource.hpp"
 #include <cstdint>
 #include <memory>
 #include <vector>
 #include <optional>
-#include "Xna/Platform/Platform.hpp"
-#include "Xna/Internal/Export.hpp"
 
 namespace Xna {
-	enum class SamplerStateApplyType {
-		Pixel,
-		Vertex,
-	};
-
 	//Contains sampler state, which determines how to sample texture data. 
-	class SamplerState final : public GraphicsResource {
-	public:		
-		inline SamplerState() { impl = std::make_shared<Implementation>(); }
-
-		~SamplerState() override = default;
+	struct SamplerState {
+	public:
+		constexpr SamplerState() = default;
 
 		//Gets or sets the maximum anisotropy. The default value is 0.
-		inline void MaxAnisotropy(uint32_t value) { impl->maxAnisotropy = value; }
-		//Gets or sets the maximum anisotropy. The default value is 0.
-		inline uint32_t MaxAnisotropy() const { return impl->maxAnisotropy; }
+		uint32_t MaxAnisotropy{ 0 };
 		//Gets or sets the type of filtering during sampling.
-		inline void Filter(TextureFilter value) { impl->filter = value; }
-		//Gets or sets the type of filtering during sampling.
-		inline TextureFilter Filter() const { return impl->filter; }
-		////Gets or sets the texture-address mode for the u-coordinate.		
+		TextureFilter Filter{ TextureFilter::Linear };
 		//Gets or sets the texture-address mode for the u-coordinate.
-		inline TextureAddressMode AddressU() const { return impl->addressU; }
+		TextureAddressMode AddressU{ TextureAddressMode::Wrap };
 		//Gets or sets the texture-address mode for the v-coordinate.
-		inline TextureAddressMode AddressV() const { return impl->addressV; }
+		TextureAddressMode AddressV{ TextureAddressMode::Wrap };
 		//Gets or sets the texture-address mode for the w-coordinate.
-		inline TextureAddressMode AddressW() const { return impl->addressW; }
-		////Gets or sets the texture-address mode for the u-coordinate.
-		inline void AddressU(TextureAddressMode value) { impl->addressU = value; }
-		//Gets or sets the texture-address mode for the v-coordinate.
-		inline void AddressV(TextureAddressMode value) { impl->addressV = value; }
-		////Gets or sets the texture-address mode for the w-coordinate.
-		inline void AddressW(TextureAddressMode value) { impl->addressW = value; }		
-
+		TextureAddressMode AddressW{ TextureAddressMode::Wrap };
 		//Gets or sets the mipmap LOD bias. The default value is 0. 
-		inline void MipMapLevelOfDetailBias(float value) { impl->mipMapLevelOfDetailBias = value; }
-		//Gets or sets the mipmap LOD bias. The default value is 0. 
-		inline float MipMapLevelOfDetailBias() const { return impl->mipMapLevelOfDetailBias; }
-
+		float MipMapLevelOfDetailBias{ 0 };
 		//Gets or sets the level of detail (LOD) index of the largest map to use. 
-		inline float MaxMipLevel() const { return impl->maxMipLevel; }
-		//Gets or sets the level of detail (LOD) index of the largest map to use. 
-		inline void MaxMipLevel(float value) { impl->maxMipLevel = value; }
-
+		float MaxMipLevel{ 0 };
 		//Gets or sets the level of detail (LOD) index of the smaller map to use. 
-		inline void MinMipLevel(float value) { impl->minMipLevel = value; }
-		//Gets or sets the level of detail (LOD) index of the smaller map to use. 
-		inline float MinMipLevel() const {	return impl->minMipLevel; }
+		float MinMipLevel{ 0 };
 
 		//Contains default state for point filtering and texture coordinate wrapping.
-		XNPP_API static SamplerState PoinWrap();
+		static constexpr const SamplerState& PointWrap();
 		//Contains default state for point filtering and texture coordinate clamping.
-		XNPP_API static SamplerState PointClamp();
+		static constexpr const SamplerState& PointClamp();
 		//Contains default state for linear filtering and texture coordinate wrapping.
-		XNPP_API static SamplerState LinearWrap();
+		static constexpr const SamplerState& LinearWrap();
 		//Contains default state for linear filtering and texture coordinate clamping.
-		XNPP_API static SamplerState LinearClamp();
+		static constexpr const SamplerState& LinearClamp();
 		//Contains default state for anisotropic filtering and texture coordinate wrapping.
-		XNPP_API static SamplerState AnisotropicWrap();
+		static constexpr const SamplerState& AnisotropicWrap();
 		//Contains default state for anisotropic filtering and texture coordinate clamping.
-		XNPP_API static SamplerState AnisotropicClamp();
+		static constexpr const SamplerState& AnisotropicClamp();
 
-		inline SamplerState(std::nullptr_t) { impl = nullptr; }
-		inline bool operator==(SamplerState const& other) const noexcept { return impl == other.impl; }
-		inline bool operator==(std::nullptr_t) const noexcept { return impl == nullptr; }
-		inline explicit operator bool() const noexcept { return impl != nullptr; }
+		constexpr operator std::optional<SamplerState>() const noexcept { return std::make_optional<SamplerState>(*this); }
+		constexpr operator std::optional<std::reference_wrapper<const SamplerState>>() const noexcept { return std::cref(*this); }
 
 	private:
-		struct Implementation {
-			int32_t maxAnisotropy{};
-			TextureFilter filter{};
-			TextureAddressMode addressU{};
-			TextureAddressMode addressV{};
-			TextureAddressMode addressW{};
-			float mipMapLevelOfDetailBias{};
-			float maxMipLevel{};
-			float minMipLevel{};
-
-			PlatformImpl::SamplerStateImpl platformImpl{};
-		};		
-	
-		inline void Apply(GraphicsDevice& device, size_t samplerIndex, SamplerStateApplyType type) { Platform::SamplerState_Apply(*this, device, samplerIndex, type); };
-		std::shared_ptr<Implementation> impl;
+		constexpr SamplerState(TextureFilter filter, TextureAddressMode uvw )
+			:Filter(filter), AddressU(uvw), AddressV(uvw), AddressW(uvw){ }
 
 		friend class SamplerStateCollection;
-		friend struct Platform;
+		friend struct _SamplerState;
 	};
+
+	struct _SamplerState {		
+		static constexpr SamplerState PointWrap = SamplerState(TextureFilter::Point, TextureAddressMode::Wrap);
+		static constexpr SamplerState PointClamp = SamplerState(TextureFilter::Point, TextureAddressMode::Clamp);
+		static constexpr SamplerState LinearWrap = SamplerState(TextureFilter::Linear, TextureAddressMode::Wrap);
+		static constexpr SamplerState LinearClamp = SamplerState(TextureFilter::Linear, TextureAddressMode::Clamp);
+		static constexpr SamplerState AnisotropicWrap = SamplerState(TextureFilter::Anisotropic, TextureAddressMode::Wrap);
+		static constexpr SamplerState AnisotropicClamp = SamplerState(TextureFilter::Anisotropic, TextureAddressMode::Clamp);
+	};
+		
+	constexpr const SamplerState& SamplerState::PointWrap() { return _SamplerState::PointWrap; }
+	constexpr const SamplerState& SamplerState::PointClamp() { return _SamplerState::PointClamp; }
+	constexpr const SamplerState& SamplerState::LinearWrap() { return _SamplerState::LinearWrap; }
+	constexpr const SamplerState& SamplerState::LinearClamp() { return _SamplerState::LinearClamp; }
+	constexpr const SamplerState& SamplerState::AnisotropicWrap() { return _SamplerState::AnisotropicWrap; }
+	constexpr const SamplerState& SamplerState::AnisotropicClamp() { return _SamplerState::AnisotropicClamp; }
 
 	//Collection of SamplerState objects. 
 	class SamplerStateCollection {
 	public:
 		//Gets a SamplerState object in the collection at the specified index value.
-		SamplerState& operator[](size_t index);
-		inline size_t Count() const { return samplers->size(); }
+		std::optional<SamplerState>& operator[](size_t index) {	return impl->samplers.at(index); }
+		size_t Count() const { return impl->samplers.size(); }
+		auto begin() { return impl->samplers.begin(); }
+		auto end() { return impl->samplers.end(); }
+		auto begin() const { return impl->samplers.begin(); }
+		auto end() const { return impl->samplers.end(); }
 
-		inline auto begin() { return samplers->begin(); }
-		inline auto end() { return samplers->end(); }
-		inline auto begin() const { return samplers->begin(); }
-		inline auto end() const { return samplers->end(); }
+		inline SamplerStateCollection(std::nullptr_t) { impl = nullptr; }
+		inline bool operator==(SamplerStateCollection const& other) const noexcept { return impl == other.impl; }
+		inline bool operator==(std::nullptr_t) const noexcept { return impl == nullptr; }
+		inline explicit operator bool() const noexcept { return impl != nullptr; }
 
 	private:
-		friend class GraphicsDevice;
-
 		SamplerStateCollection() = default;
-		inline SamplerStateCollection(GraphicsDevice parent, size_t samplerOffset, size_t maxSamplers) : parentDevice(parent), samplerOffset(samplerOffset) {
-			samplers = std::make_shared<std::vector<SamplerState>>(maxSamplers); //TODO revisar			
+		SamplerStateCollection(size_t samplerOffset, size_t maxSamplers) {
+			impl = std::make_shared<Implementation>();
+			impl->samplerOffset = samplerOffset;
+			impl->samplers.resize(maxSamplers);
 		}
-		void ClearState(size_t index);
 
-		void InitializeDeviceState(SamplerStateApplyType type);
+		struct Implementation {
+			size_t samplerOffset{ 0 };
+			std::vector<std::optional<SamplerState>> samplers;
+		};
 
-		std::optional<GraphicsDevice> parentDevice;
-		size_t samplerOffset{0};
-		std::shared_ptr<std::vector<SamplerState>> samplers;
+		std::shared_ptr<Implementation> impl;
 
 		friend class GraphicsDevice;
 	};

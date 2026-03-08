@@ -38,7 +38,8 @@ namespace Xna {
 		//Gets a copy of the texture data, specifying the level and dimensions of the volume texture to copy.
 		template <class T> void GetData(size_t level, size_t left, size_t top, size_t right, size_t bottom, size_t front, size_t back,
 			std::vector<T>& data, size_t startIndex, size_t elementCount) {
-			Platform::Texture3D_GetData(*this, level, left, top, right, bottom, front, back, reinterpret_cast<void*>(data.data()), startIndex, elementCount, sizeof(T));
+			//Platform::Texture3D_GetData(*this, level, left, top, right, bottom, front, back, reinterpret_cast<void*>(data.data()), startIndex, elementCount, sizeof(T));
+			//TODO: não implementado
 		}
 
 		//Gets a copy of the texture data.
@@ -49,7 +50,8 @@ namespace Xna {
 		}
 		//Gets a copy of the texture data, specifying the level and dimensions of the volume texture to copy.
 		template <class T> void SetData(size_t level, size_t left, size_t top, size_t right, size_t bottom, size_t front, size_t back, std::vector<T>& data, size_t startIndex, size_t elementCount) {
-			Platform::Texture3D_SetData(*this, level, left, top, right, bottom, front, back, reinterpret_cast<void*>(data.data()), startIndex, elementCount);
+			//Platform::Texture3D_SetData(*this, level, left, top, right, bottom, front, back, reinterpret_cast<void*>(data.data()), startIndex, elementCount);
+			//TODO: não implementado
 		}
 
 		inline Texture3D(std::nullptr_t) { impl = nullptr; }
@@ -65,7 +67,6 @@ namespace Xna {
 			size_t mipLevels{ 1 };
 			SurfaceFormat format{};
 			bool hasMipMap{ false };
-			PlatformImpl::Texture3DImpl platformImpl;
 		};
 
 		std::shared_ptr<Implementation> impl;	

@@ -1,4 +1,4 @@
-#include "Xna/Platform/_Platform.hpp"
+#include "Xna/Platform/Platform.hpp"
 #include "Xna/Framework/Game/GameHost.hpp"
 #include "Internal.hpp"
 #include <SDL3/SDL.h>

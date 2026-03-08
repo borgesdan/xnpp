@@ -30,30 +30,24 @@ namespace Xna {
 		//Returns the title safe area of the display.
 		constexpr Rectangle TitleSafeArea() const { return { 0,0,width, height }; }
 
-		constexpr bool operator==(const DisplayMode& other) const {
+		constexpr bool operator==(const DisplayMode& other) const noexcept {
 			return width == other.width
 				&& height == other.height
 				&& format == other.format;
 		}
 
-		constexpr operator std::optional<DisplayMode>() const {
+		constexpr operator std::optional<DisplayMode>() const noexcept {
 			return std::make_optional<DisplayMode>(*this);
 		}
 
-	private:
 		constexpr DisplayMode() = default;
 		constexpr DisplayMode(int32_t width, int32_t height, SurfaceFormat format) : width(width), height(height), format(format) {}
 
+	private:
 		int32_t width{ 0 };
 		int32_t height{ 0 };
-		SurfaceFormat format{ SurfaceFormat::Unknown };	
-
-		friend class DisplayModeCollection;
-		friend class GraphicsAdapter;
-		friend struct Platform;
-	};
-
-	
+		SurfaceFormat format{ SurfaceFormat::Unknown };
+	};	
 }
 
 #endif

@@ -11,19 +11,19 @@ namespace Xna {
 	//Manipulates a collection of DisplayMode structures. 
 	struct DisplayModeCollection {	
 		XNPP_API DisplayMode& operator[](size_t index);
-		XNPP_API std::vector<std::optional<DisplayMode>> operator[](SurfaceFormat surfaceFormat);
+		XNPP_API std::vector<DisplayMode> operator[](SurfaceFormat surfaceFormat);
 
 		constexpr auto begin() { return displayModes.begin(); }
 		constexpr auto end() { return displayModes.end(); }
 		constexpr auto begin() const { return displayModes.begin(); }
 		constexpr auto end() const { return displayModes.end(); }
 
-	private:
-		constexpr DisplayModeCollection() = default;
-		inline DisplayModeCollection(size_t count) : displayModes(count) {}
-		inline DisplayModeCollection(std::vector<std::optional<DisplayMode>> const& displayModes) : displayModes(displayModes) {}
+		constexpr DisplayModeCollection() = default;		
+		inline DisplayModeCollection(std::vector<DisplayMode> const& displayModes) : displayModes(displayModes) {}
+		inline DisplayModeCollection(std::vector<DisplayMode>& displayModes) : displayModes(std::move(displayModes)) {}
 
-		std::vector<std::optional<DisplayMode>> displayModes;
+	private:
+		std::vector<DisplayMode> displayModes;
 
 		constexpr size_t Count() const noexcept { return displayModes.size(); }
 

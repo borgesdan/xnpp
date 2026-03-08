@@ -1,0 +1,57 @@
+:: 1. Clone o repositório bgfx.cmake
+git clone https://github.com/bkaradzic/bgfx.cmake.git
+cd bgfx.cmake
+
+:: 2. Inicialize e atualize os submódulos (bgfx, bx, bimg)
+git submodule update --init --recursive
+
+:: 3. Crie e entre no diretório de build
+mkdir build
+cd build
+
+:: 4. Configure com CMake (use o gerador de sua preferência)
+:: Para Ninja (recomendado para velocidade):
+cmake -GNinja -DCMAKE_BUILD_TYPE=Release ..
+
+:: Para Visual Studio 2022:
+:: cmake -G"Visual Studio 17 2022" -A x64 ..
+
+:: 5. Compile
+cmake --build . --config Release
+
+---------------------------------------------------------------
+.\shaderc.exe -f "C:/Users/Borges/source/repos/xnpp/xnpp-framework/shaders/sprite.vs.sc" -o "C:/Users/Borges/source/repos/xnpp/xnpp-framework/shaders/sprite.vs.bin" --platform windows --profile s_5_0 --type vertex --varyingdef "C:/Users/Borges/source/repos/xnpp/xnpp-framework/shaders/varying.def.sc" --verbose
+
+.\shaderc.exe -f "C:/Users/Borges/source/repos/xnpp/xnpp-framework/shaders/sprite.fs.sc" -o "C:/Users/Borges/source/repos/xnpp/xnpp-framework/shaders/sprite.fs.bin" --platform windows --profile s_5_0 --type fragment --varyingdef "C:/Users/Borges/source/repos/xnpp/xnpp-framework/shaders/varying.def.sc" --verbose
+---------------------------------------------------------------
+
+:: Clone o shaderc da Google
+git clone https://github.com/google/shaderc
+cd shaderc
+
+:: Baixe as dependências manualmente
+git clone https://github.com/google/googletest.git third_party/googletest
+git clone https://github.com/KhronosGroup/glslang.git third_party/glslang
+git clone https://github.com/KhronosGroup/SPIRV-Headers.git third_party/spirv-headers
+git clone https://github.com/KhronosGroup/SPIRV-Tools.git third_party/spirv-tools
+
+:: Configure as dependências do SPIRV-Tools
+cd third_party\spirv-tools
+git clone https://github.com/KhronosGroup/SPIRV-Headers.git external/spirv-headers
+cd ..\..
+
+:: Crie diretório de build
+mkdir build
+cd build
+
+:: Configure com CMake
+cmake -GNinja -DCMAKE_BUILD_TYPE=Release ^
+    -DSHADERC_SKIP_TESTS=ON ^
+    -DSPIRV_SKIP_TESTS=ON ^
+    -DSPIRV_SKIP_EXECUTABLES=OFF ^
+    ..
+
+:: Compile
+ninja
+
+:: O executável estará em build\glslc\glslc.exe
