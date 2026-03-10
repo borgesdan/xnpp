@@ -44,14 +44,8 @@ set(XNPP_FRAMEWORK_SRC
     "sources/Xna/Framework/Graphics/ModelBoneCollection.cpp" 
     "sources/Xna/Framework/Graphics/ModelBone.cpp"
     "sources/Xna/Framework/Graphics/ModelMesh.cpp" 
-    "sources/Xna/Framework/Graphics/EffectPass.cpp"
-    "sources/Xna/Framework/Graphics/EffectAnnotation.cpp"
-    "sources/Xna/Framework/Graphics/EffectParameter.cpp"
-    "sources/Xna/Framework/Graphics/Effect.cpp"
-    "sources/Xna/Framework/Graphics/BasicEffect.cpp"
-    "sources/Xna/Framework/Graphics/EffectHelpers.cpp"     
-    "sources/Xna/Framework/Graphics/EffectTechniqueCollection.cpp"
-    "sources/Xna/Framework/Graphics/EffectAnnotationCollection.cpp"
+         
+        
     "sources/Xna/Framework/Graphics/DynamicVertexBuffer.cpp"
     "sources/Xna/Framework/Graphics/VertexDeclaration.cpp"
     "sources/Xna/Framework/Graphics/VertexBufferBinding.cpp"
@@ -71,8 +65,7 @@ set(XNPP_FRAMEWORK_SRC
     "sources/Xna/Framework/Media/MediaPlayer.cpp"
     "sources/Xna/Framework/Media/MediaQueue.cpp"
     "sources/Xna/CSharp/Type.cpp"
-    "sources/Xna/Framework/Content/Readers/BasicReaders.cpp"
- #"sources/Xna/Framework/Graphics/_Effects.cpp"
+    "sources/Xna/Framework/Content/Readers/BasicReaders.cpp" 
 )
 
 set(XNPP_PLATFORM_SRC

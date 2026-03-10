@@ -7,7 +7,7 @@
 #include "RasterizerState.hpp"
 #include "DepthStencilState.hpp"
 #include "Texture2D.hpp"
-#include "Effect/Effect.hpp"
+#include "Effects/Effect.hpp"
 #include "Xna/Framework/Matrix.hpp"
 #include "Xna/Framework/Color.hpp"
 #include "Xna/Framework/Vector2.hpp"
