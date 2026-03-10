@@ -8,7 +8,6 @@
 #include <numeric>
 #include <cmath>
 
-
 #include "Xna/Framework/Graphics/SpriteBatch.hpp"
 #include "Xna/Framework/Rectangle.hpp"
 #include "Xna/Framework/Vector2.hpp"
@@ -88,7 +87,13 @@ namespace Xna {
 			m_textureUniform = bgfx::createUniform("s_texture", bgfx::UniformType::Sampler);
 
 			// Criar shaders (você precisará compilar seus próprios shaders)
-			m_program = loadShaderProgram("C:/Users/Borges/source/repos/xnpp/xnpp-framework/shaders/sprite.vs.bin", "C:/Users/Borges/source/repos/xnpp/xnpp-framework/shaders/sprite.fs.bin");
+			std::filesystem::path currentPath;
+			Platform::System_GetExecutablePath(currentPath);
+			currentPath.remove_filename();
+			currentPath /= "shaders/bgfx/";
+			currentPath = currentPath.lexically_normal();
+
+			m_program = loadShaderProgram(currentPath / "sprite.vs.bin", currentPath / "sprite.fs.bin");
 		}
 
 		void Begin(SpriteSortMode sortMode, const BlendState* blendState, const SamplerState* samplerState, 
@@ -356,7 +361,7 @@ namespace Xna {
 			target[3].u = u1; target[3].v = v2;
 		}
 
-		bgfx::ProgramHandle loadShaderProgram(const char* vsPath, const char* fsPath) {
+		bgfx::ProgramHandle loadShaderProgram(std::filesystem::path const& vsPath, std::filesystem::path const& fsPath) {
 			// Função auxiliar para carregar shader
 			auto loadShader = [](const char* filePath) -> bgfx::ShaderHandle {
 				FILE* file = fopen(filePath, "rb");
@@ -380,8 +385,8 @@ namespace Xna {
 				return handle;
 				};
 
-			bgfx::ShaderHandle vsh = loadShader(vsPath);
-			bgfx::ShaderHandle fsh = loadShader(fsPath);
+			bgfx::ShaderHandle vsh = loadShader(vsPath.string().c_str());
+			bgfx::ShaderHandle fsh = loadShader(fsPath.string().c_str());
 
 			if (!bgfx::isValid(vsh) || !bgfx::isValid(fsh)) {
 				return BGFX_INVALID_HANDLE;
