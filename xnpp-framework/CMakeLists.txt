@@ -49,8 +49,7 @@ set(XNPP_FRAMEWORK_SRC
     "sources/Xna/Framework/Graphics/EffectParameter.cpp"
     "sources/Xna/Framework/Graphics/Effect.cpp"
     "sources/Xna/Framework/Graphics/BasicEffect.cpp"
-    "sources/Xna/Framework/Graphics/EffectHelpers.cpp" 
-    "sources/Xna/Framework/Graphics/EffectTechnique.cpp" 
+    "sources/Xna/Framework/Graphics/EffectHelpers.cpp"     
     "sources/Xna/Framework/Graphics/EffectTechniqueCollection.cpp"
     "sources/Xna/Framework/Graphics/EffectAnnotationCollection.cpp"
     "sources/Xna/Framework/Graphics/DynamicVertexBuffer.cpp"
@@ -73,6 +72,7 @@ set(XNPP_FRAMEWORK_SRC
     "sources/Xna/Framework/Media/MediaQueue.cpp"
     "sources/Xna/CSharp/Type.cpp"
     "sources/Xna/Framework/Content/Readers/BasicReaders.cpp"
+ #"sources/Xna/Framework/Graphics/_Effects.cpp"
 )
 
 set(XNPP_PLATFORM_SRC
@@ -179,4 +179,24 @@ install(
         "${CMAKE_CURRENT_BINARY_DIR}/xnppConfig.cmake"
         "${CMAKE_CURRENT_BINARY_DIR}/xnppConfigVersion.cmake"
     DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/xnpp
+)
+
+# Post build commands
+if(WIN32)
+    set(SHADER_OS_DIR "windows")
+elseif(APPLE)
+    set(SHADER_OS_DIR "mac")
+elseif(UNIX)
+    set(SHADER_OS_DIR "linux")
+endif()
+
+add_custom_command(TARGET xnpp POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+        "${CMAKE_CURRENT_SOURCE_DIR}/shaders/bgfx/${SHADER_OS_DIR}"
+        "$<TARGET_FILE_DIR:xnpp>/shaders/bgfx"
+    COMMENT "Copying the shaders folder to the output directory..."
+)
+
+set_target_properties(xnpp PROPERTIES
+    ADDITIONAL_CLEAN_FILES "$<TARGET_FILE_DIR:xnpp>/shaders"
 )
