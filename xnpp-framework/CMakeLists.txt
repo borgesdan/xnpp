@@ -41,9 +41,9 @@ set(XNPP_FRAMEWORK_SRC
     "sources/Xna/Framework/Graphics/SpriteBatch.cpp"
     "sources/Xna/Framework/Graphics/SpriteFont.cpp"
     "sources/Xna/Framework/Graphics/GraphicsContentHelper.cpp"
-    "sources/Xna/Framework/Graphics/ModelBoneCollection.cpp" 
-    "sources/Xna/Framework/Graphics/ModelBone.cpp"
-    "sources/Xna/Framework/Graphics/ModelMesh.cpp" 
+     
+    
+     
          
         
     "sources/Xna/Framework/Graphics/DynamicVertexBuffer.cpp"
@@ -66,7 +66,7 @@ set(XNPP_FRAMEWORK_SRC
     "sources/Xna/Framework/Media/MediaQueue.cpp"
     "sources/Xna/CSharp/Type.cpp"
     "sources/Xna/Framework/Content/Readers/BasicReaders.cpp" 
-)
+ "sources/Xna/Framework/Graphics/Model.cpp")
 
 set(XNPP_PLATFORM_SRC
     "sources/Xna/Platform/Cross/System.cpp" 

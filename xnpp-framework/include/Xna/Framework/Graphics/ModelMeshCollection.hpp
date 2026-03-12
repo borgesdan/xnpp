@@ -1,8 +1,0 @@
-#ifndef XNA_FRAMEWORK_GRAPHICS_MODELMESHCOLLECTION_HPP
-#define XNA_FRAMEWORK_GRAPHICS_MODELMESHCOLLECTION_HPP
-
-namespace Xna {
-	class ModelMeshCollection {};
-}
-
-#endif

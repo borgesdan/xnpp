@@ -14,6 +14,8 @@ namespace Xna {
 	struct EffectAnnotationCollection{};
 
 	struct Effect {
+		virtual ~Effect() = default;
+
 		inline EffectTechnique& CurrentTechnique() { return currentTechnique; }
 		inline EffectTechniqueCollection& Techniques() { return techniqueCollection; }
 		inline EffectParameterCollection& Parameters() { return paramCollection; }
