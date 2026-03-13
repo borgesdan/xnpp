@@ -95,13 +95,13 @@ namespace Xna {
         impl->doneFirstUpdate = true;
     }
 
-	void Game::RunGame(bool useBlockingRun) {
-		impl->graphicsDeviceManager = impl->gameServices.GetService<IGraphicsDeviceManager>();
+	void Game::RunGame(bool useBlockingRun) {		        
+        impl->graphicsDeviceManager = impl->gameServices.GetService<IGraphicsDeviceManager>();
 
-		if (impl->graphicsDeviceManager != nullptr)
-			impl->graphicsDeviceManager->CreateDevice();
+        if (RunMode == GameRunMode::Classic) {           
+            if (impl->graphicsDeviceManager != nullptr)
+                impl->graphicsDeviceManager->CreateDevice();
 
-        if (RunMode == GameRunMode::Classic) {
             InternalRunGame();
         }	
 
@@ -401,17 +401,9 @@ namespace Xna {
         if (impl->isActive)
             return;
 
-        if (RunMode == GameRunMode::Bgfx) {
-            auto graphicsDevice = GraphicsDevice();
-
-            //[!] -- Sobre a inicialização tardia -- [!]
-            //Uma inicialização tardia pois a janela foi criada neste momento
-            //e o dispositivo gráfico foi criado sem o swapChain.		
-            //No XNA, que usava DirectX 9, aparentemente, poderia criar o dispositivo gráfico antes
-            //e depois vincular a janela.
-            //No DX11 precisa do SwapChain e este precisa do handle da janela.
-            auto& backend = graphicsDevice.GetBackend();
-            backend.Initialize(impl->host->Window().Handle());
+        if (RunMode == GameRunMode::HostFirst) {
+            if (impl->graphicsDeviceManager != nullptr)
+                impl->graphicsDeviceManager->CreateDevice();
 
             InternalRunGame();
         }

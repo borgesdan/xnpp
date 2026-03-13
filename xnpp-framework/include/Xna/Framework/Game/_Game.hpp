@@ -19,22 +19,22 @@ namespace Xna {
 	//Define o modo de execução do jogo dentro da classe Game.
 	enum class GameRunMode {
 		//Modo de execução do XNA, 
-		//por exemplo, ocorre a execução do Initialize(), LoadContent() e Update()
+		//Executa a criação do dispositivo gráfico e uma execução do Initialize(), LoadContent(), Update() e Draw(),
 		//antes da criação da janela.
 		Classic,
 
-		//Modo de execução específica para o Bgfx.
+		//A janela de jogo é criada primeiramente para depois ocorrer a execução do dispositivo gráfico.
 		//O backend Bgfx necessita que a janela seja criada antes de sua inicialização.
 		//No modo classic LoadContent() é chamado antes da criação da janela e o Bgfx
 		//pode não estar preparado para carregar recursos gráficos.
-		Bgfx
+		HostFirst
 	};
 
 	//Provides basic graphics device initialization, game logic, and rendering code.
 	class Game {
 	public:
 		//Initializes a new instance of this class, which provides basic graphics device initialization, game logic, rendering code, and a game loop.
-		XNPP_API Game(GameRunMode runMode = GameRunMode::Bgfx);
+		XNPP_API Game(GameRunMode runMode = GameRunMode::HostFirst);
 
 		//Gets the collection of GameComponents owned by the game.
 		inline GameComponentCollection Components() const;

@@ -4,6 +4,7 @@
 #include <bx/debug.h>
 #include <cstdint>
 #include <stdexcept>
+#include <cstdint>
 #include "SDL3/SDL.h"
 #include "Xna/Platform/Platform.hpp"
 #include "../Internal.hpp"
@@ -37,10 +38,76 @@ namespace Xna {
 
 		GraphicsDeviceCache cache;
 
-		void CreateDevice(GraphicsAdapter const& adapter, Xna::PresentationParameters const& presentationParameters) override {
-			//Nada a fazer
-			//Diferente do DirectX11, não necessitamos criar o dispositivo gráfico aqui
-			//A criação será feita no Initialize onde receberemos a janela de jogo
+		void CreateDevice(GraphicsAdapter const& adapter, Xna::PresentationParameters const& pp) override {
+			auto window = reinterpret_cast<SDL_Window*>(pp.DeviceWindowHandle);
+
+			assert(window != nullptr && "Invalid window handle.");
+			assert(pp.BackBufferFormat == SurfaceFormat::Unknown && "SurfaceFormated not suported.");
+
+			bgfx::PlatformData pd{};
+
+#ifdef PLATFORM_WINDOWS
+			pd.nwh = SDL_GetPointerProperty(SDL_GetWindowProperties(window), SDL_PROP_WINDOW_WIN32_HWND_POINTER, NULL);
+#elif PLATFORM_LINUX
+			const auto props = SDL_GetWindowProperties(window);
+			const auto driver = SDL_GetCurrentVideoDriver();
+			std::string driver_name = driver;
+
+			if (driver_name == "wayland") {
+				pd.ndt = SDL_GetPointerProperty(props, SDL_PROP_WINDOW_WAYLAND_DISPLAY_POINTER, NULL);
+				pd.nwh = SDL_GetPointerProperty(props, SDL_PROP_WINDOW_WAYLAND_SURFACE_POINTER, NULL);
+			}
+			else {
+				pd.nwh = SDL_GetPointerProperty(SDL_GetWindowProperties(window), SDL_PROP_WINDOW_X11_WINDOW_NUMBER, NULL);
+				pd.ndt = SDL_GetPointerProperty(SDL_GetWindowProperties(window), SDL_PROP_WINDOW_X11_DISPLAY_POINTER, NULL);
+			}
+#elif PLATFORM_MACOS
+			pd.nwh = (void*)SDL_GetPointerProperty(SDL_GetWindowProperties(window), SDL_PROP_WINDOW_COCOA_WINDOW_POINTER, NULL);
+#endif	
+
+			int w, h;
+			if (!SDL_GetWindowSize(window, &w, &h))
+				throw std::runtime_error("Invalid game window.");
+
+			uint32_t flags = 0;
+
+			if (pp.IsFullScreen) {
+				SDL_SetWindowFullscreen(window, true);
+				flags = BGFX_RESET_FULLSCREEN;
+			}
+
+			if (pp.MultiSampleCount > 0) {
+				switch (pp.MultiSampleCount) {
+				case 2:  flags |= BGFX_RESET_MSAA_X2;  break;
+				case 4:  flags |= BGFX_RESET_MSAA_X4;  break;
+				case 8:  flags |= BGFX_RESET_MSAA_X8;  break;
+				case 16: flags |= BGFX_RESET_MSAA_X16; break;
+				default: assert(false && "Invalid MultiSampleCount");
+				}
+			}
+
+			if (pp.PresentationInterval != PresentInterval::Immediate)
+				flags |= BGFX_RESET_VSYNC;
+
+			bgfx::Init init{};
+			init.type = bgfx::RendererType::Count;
+			init.resolution.width = static_cast<uint32_t>(w);
+			init.resolution.height = static_cast<uint32_t>(h);
+			init.resolution.format = SwapXnaSurfaceFormat(pp.BackBufferFormat);			
+			init.resolution.reset = flags;
+			
+			init.platformData = pd;
+
+			if (!bgfx::init(init))
+				throw std::runtime_error("bgfx init failed");
+
+			float ortho[16];
+			bx::mtxOrtho(ortho, 0.0f, w, h, 0.0f, 0.0f, 1.0f, 0.0f, bgfx::getCaps()->homogeneousDepth);
+			bgfx::setViewTransform(0, NULL, ortho);
+			bgfx::setViewRect(0, 0, 0, w, h);
+
+			const auto clearColor = SwapXnaColor(Colors::CornflowerBlue);
+			bgfx::setViewClear(0, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, clearColor, 1.0f, 0);
 		}
 
 		void Present(std::optional<Rectangle> const& rec, std::optional<Rectangle> const& destination, intptr_t overrideWindowHandle) override {
@@ -53,10 +120,8 @@ namespace Xna {
 		void SetViewport(Viewport const& viewport) override {
 
 		}
-
-		void MakeWindowAssociation(PresentationParameters const& pp) override {}
-		void Reset(Xna::PresentationParameters const& presentationParameters, GraphicsAdapter const& graphicsAdapter) {}
-		void Initialize(intptr_t windowHandle) override;
+		
+		void Reset(Xna::PresentationParameters const& presentationParameters, GraphicsAdapter const& graphicsAdapter) {}		
 		void ApplyBlendState(BlendState const& blend) override;
 		void ApplyDepthStencilState(DepthStencilState const& depth) override;
 		void ApplyRasterizerState(RasterizerState const& rasterizer) override;
@@ -81,59 +146,8 @@ namespace Xna {
 		const Color GetBlendFactor() const override { return cache.blendFactor; }
 
 
-
 		~BgfxGraphicsDevice() override = default;
-	};
-
-	//Com DirectX11 inicializamos o Swapchain após a criação da janela no GameHost.
-	//O dispositivo gráfico é criado antes, após o GameHost criar a janela e depois o Swapchain é criado.
-	//Com o bgfx precisamos da informação da janela para inicializá-lo.
-	void BgfxGraphicsDevice::Initialize(intptr_t windowHandle) {
-		auto window = reinterpret_cast<SDL_Window*>(windowHandle);
-
-		bgfx::PlatformData pd{};
-
-#ifdef PLATFORM_WINDOWS
-		pd.nwh = SDL_GetPointerProperty(SDL_GetWindowProperties(window), SDL_PROP_WINDOW_WIN32_HWND_POINTER, NULL);
-#elif PLATFORM_LINUX
-		const auto props = SDL_GetWindowProperties(window);
-		const auto driver = SDL_GetCurrentVideoDriver();
-		std::string driver_name = driver;
-
-		if (driver_name == "wayland") {
-			pd.ndt = SDL_GetPointerProperty(props, SDL_PROP_WINDOW_WAYLAND_DISPLAY_POINTER, NULL);
-			pd.nwh = SDL_GetPointerProperty(props, SDL_PROP_WINDOW_WAYLAND_SURFACE_POINTER, NULL);
-		}
-		else {
-			pd.nwh = SDL_GetPointerProperty(SDL_GetWindowProperties(window), SDL_PROP_WINDOW_X11_WINDOW_NUMBER, NULL);
-			pd.ndt = SDL_GetPointerProperty(SDL_GetWindowProperties(window), SDL_PROP_WINDOW_X11_DISPLAY_POINTER, NULL);
-		}
-#elif PLATFORM_MACOS
-		pd.nwh = (void*)SDL_GetPointerProperty(SDL_GetWindowProperties(window), SDL_PROP_WINDOW_COCOA_WINDOW_POINTER, NULL);
-#endif	
-
-		int w, h;
-		if (!SDL_GetWindowSize(window, &w, &h))
-			throw std::runtime_error("Invalid game window.");
-
-		bgfx::Init init{};
-		init.type = bgfx::RendererType::Count;
-		init.resolution.width = static_cast<uint32_t>(w);
-		init.resolution.height = static_cast<uint32_t>(h);
-		init.resolution.reset = BGFX_RESET_VSYNC;
-		init.platformData = pd;
-
-		if (!bgfx::init(init))
-			throw std::runtime_error("bgfx init failed");
-
-		float ortho[16];
-		bx::mtxOrtho(ortho, 0.0f, w, h, 0.0f, 0.0f, 1.0f, 0.0f, bgfx::getCaps()->homogeneousDepth);
-		bgfx::setViewTransform(0, NULL, ortho);
-		bgfx::setViewRect(0, 0, 0, w, h);
-
-		const auto clearColor = SwapXnaColor(Colors::CornflowerBlue);
-		bgfx::setViewClear(0, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, clearColor, 1.0f, 0);
-	}
+	};	
 
 	void BgfxGraphicsDevice::ApplyBlendState(BlendState const& blend) {
 		currentBlendState = blend;

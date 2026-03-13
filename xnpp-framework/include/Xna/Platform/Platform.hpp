@@ -381,10 +381,8 @@ namespace Xna {
 
 			XNPP_API virtual void CreateDevice(GraphicsAdapter const& adapter, Xna::PresentationParameters const& presentationParameters) = 0;
 			XNPP_API virtual void Present(std::optional<Rectangle> const& rec, std::optional<Rectangle> const& destination, intptr_t overrideWindowHandle) = 0;
-			XNPP_API virtual void SetViewport(Viewport const& viewport) = 0;
-			XNPP_API virtual void MakeWindowAssociation(PresentationParameters const& pp) = 0;
-			XNPP_API virtual void Reset(Xna::PresentationParameters const& presentationParameters, GraphicsAdapter const& graphicsAdapter) = 0;
-			XNPP_API virtual void Initialize(intptr_t windowHandle) = 0;
+			XNPP_API virtual void SetViewport(Viewport const& viewport) = 0;			
+			XNPP_API virtual void Reset(Xna::PresentationParameters const& presentationParameters, GraphicsAdapter const& graphicsAdapter) = 0;			
 			
 			XNPP_API virtual const BlendState& GetBlendState() const = 0;
 			XNPP_API virtual const DepthStencilState& GetDepthStencilState() const = 0;
