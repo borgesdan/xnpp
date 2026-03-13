@@ -411,7 +411,7 @@ namespace Xna {
             //e depois vincular a janela.
             //No DX11 precisa do SwapChain e este precisa do handle da janela.
             auto& backend = graphicsDevice.GetBackend();
-            backend.LazyInitialization(impl->host->Window().Handle());
+            backend.Initialize(impl->host->Window().Handle());
 
             InternalRunGame();
         }

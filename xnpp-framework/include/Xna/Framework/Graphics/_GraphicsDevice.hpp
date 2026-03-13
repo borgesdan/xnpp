@@ -44,10 +44,6 @@ namespace Xna {
 	//Performs primitive-based rendering, creates resources, handles system-level variables, and creates shaders.
 	class GraphicsDevice {
 	public:
-		//
-		//Constructors
-		//
-
 		//Creates an instance of this object.
 		XNPP_API GraphicsDevice(GraphicsAdapter const& adapter, GraphicsProfile const& graphicsProfile, PresentationParameters const& presentationParameters);
 
@@ -58,7 +54,7 @@ namespace Xna {
 		//Gets the graphics adapter.
 		inline GraphicsAdapter Adapter() const;
 		//Gets or sets a system-defined instance of a blend state object initialized for alpha blending. The default value is BlendState.Opaque. 
-		inline Xna::BlendState BlendState() const;
+		inline const Xna::BlendState& BlendState() const;
 		//Gets or sets a system-defined instance of a blend state object initialized for alpha blending. The default value is BlendState.Opaque. 
 		XNPP_API void BlendState(Xna::BlendState const& value);
 		//Gets or sets the color used for a constant-blend factor during alpha blending. The default value is White.
@@ -66,7 +62,7 @@ namespace Xna {
 		//Gets or sets the color used for a constant-blend factor during alpha blending. The default value is White.
 		XNPP_API void BlendFactor(Color const& color);
 		//Gets or sets a system-defined instance of a depth-stencil state object. The default value is DepthStencilState.Default.
-		inline Xna::DepthStencilState DepthStencilState() const;
+		inline const Xna::DepthStencilState& DepthStencilState() const;
 		//Gets or sets a system-defined instance of a depth-stencil state object. The default value is DepthStencilState.Default.
 		XNPP_API void DepthStencilState(Xna::DepthStencilState const& value);
 		//Gets or sets a bitmask controlling modification of the samples in a multisample render target. The default value is -1 (0xffffffff).
@@ -76,7 +72,7 @@ namespace Xna {
 		//Gets the presentation parameters associated with this graphics device.
 		inline Xna::PresentationParameters& PresentationParameters();
 		//Gets or sets rasterizer state. The default value is RasterizerState.CullCounterClockwise.
-		inline Xna::RasterizerState RasterizerState() const;
+		inline const Xna::RasterizerState& RasterizerState() const;
 		//Gets or sets rasterizer state. The default value is RasterizerState.CullCounterClockwise.
 		XNPP_API void RasterizerState(Xna::RasterizerState const& value);
 		//Gets or sets a reference value for stencil testing. The default value is zero.
@@ -181,8 +177,7 @@ namespace Xna {
 
 		inline PlatformNS::IGraphicsDevice& GetBackend();
 
-	private:
-		void CreateDevice(GraphicsAdapter const& adapter, Xna::PresentationParameters const& presentationParameters);
+	private:		
 		inline RenderTarget2D CreateBackBufferRenderTarget() const;
 	
 		struct Implementation;

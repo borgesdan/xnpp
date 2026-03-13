@@ -17,41 +17,36 @@
 #include <bx/math.h>
 
 namespace Xna {
+	struct GraphicsDeviceCache {
+		BlendState blendState;
+		DepthStencilState depthStencilState;
+		RasterizerState rasterizerState;
+		Color blendFactor;
+	};
+
 	// Bgfx: Stateless por design
 	// Ao contrário do XNA o bgfx limpa o estado configurado após cada bgfx::submit().
 	// Necessário chamar bgfx::setState (funções set/apply) em cada frame para cada objeto de desenho.
 	struct BgfxGraphicsDevice final : public PlatformNS::IGraphicsDevice {
-		//O program é o handle de um par de shaders compilados e vinculados: o Vertex Shader e o Fragment Shader.
-		//usa a função bgfx::createProgram.
-		bgfx::ProgramHandle program{};
-
-		//state = cacheBlendState | cacheDepthBuffer | cachedRasterizerState
+		//state = currentBlendState | currentDepthBuffer | currentRasterizerState
 		//bgfx::setState(state, blendFactor);
-		uint64_t cachedBlendState{ 0 };
-		uint64_t cachedBlendFactor{ 0 };
-		uint64_t cachedDepthBuffer{ 0 };
-		uint64_t cachedRasterizerState{ 0 };
+		BgfxBlendState currentBlendState{ BlendState::Opaque() };
+		BgfxDepthStencilState currentDepthStencilState{ DepthStencilState::Default() };
+		BgfxRasterizerState currentRasterizerState{ RasterizerState::CullCounterClockwise() };
+		uint64_t blendFactor{ SwapXnaColor(Color::White()) };
 
-		//fStencil = Front Face
-		//bStencil = Back Face (CounterClockWise)
-		//bgfx::setStencil(fStencil, bStencil);
-		uint32_t cachedFrontFaceStencil{ 0 };
-		uint32_t cachedBackFaceStencil{ 0 };
-
-		// Para habilitar (equivalente a ScissorTestEnable = true)
-		//bgfx::setScissor(x, y, width, height);
-		// Para desabilitar (equivalente a ScissorTestEnable = false)
-		//bgfx::setScissor(); // Chama sem argumentos ou com zeros
-		bool cachedScissorTestEnable{ false };		
+		GraphicsDeviceCache cache;
 
 		void CreateDevice(GraphicsAdapter const& adapter, Xna::PresentationParameters const& presentationParameters) override {
 			//Nada a fazer
 			//Diferente do DirectX11, não necessitamos criar o dispositivo gráfico aqui
-			//A criação será feita no LazyInitialization onde receberemos a janela de jogo
+			//A criação será feita no Initialize onde receberemos a janela de jogo
 		}
 
 		void Present(std::optional<Rectangle> const& rec, std::optional<Rectangle> const& destination, intptr_t overrideWindowHandle) override {
-			// 2. Avança o frame e renderiza o que foi enviado
+			const uint64_t state = currentBlendState | currentDepthStencilState | currentRasterizerState;
+			bgfx::setState(state, currentBlendState.blendFactor);
+
 			bgfx::frame();
 		}
 
@@ -61,10 +56,16 @@ namespace Xna {
 
 		void MakeWindowAssociation(PresentationParameters const& pp) override {}
 		void Reset(Xna::PresentationParameters const& presentationParameters, GraphicsAdapter const& graphicsAdapter) {}
-		void LazyInitialization(intptr_t windowHandle) override;
+		void Initialize(intptr_t windowHandle) override;
 		void ApplyBlendState(BlendState const& blend) override;
 		void ApplyDepthStencilState(DepthStencilState const& depth) override;
 		void ApplyRasterizerState(RasterizerState const& rasterizer) override;
+		
+		void ApplyBlendFactor(Color const& color) override {
+			blendFactor = SwapXnaColor(color);
+			cache.blendFactor = color;
+		}
+
 		void Clear(ClearOptions options, Color const& color, float depth, int32_t stencil) override {
 			// 1. Garante que o View 0 seja processado (mesmo sem draw calls)
 			//bgfx::touch(0);		
@@ -74,13 +75,20 @@ namespace Xna {
 			bgfx::touch(0);
 		}
 
+		const BlendState& GetBlendState() const override { return cache.blendState; }
+		const DepthStencilState& GetDepthStencilState() const override { return cache.depthStencilState; }
+		const RasterizerState& GetRasterizerState() const override { return cache.rasterizerState; }
+		const Color GetBlendFactor() const override { return cache.blendFactor; }
+
+
+
 		~BgfxGraphicsDevice() override = default;
 	};
 
 	//Com DirectX11 inicializamos o Swapchain após a criação da janela no GameHost.
 	//O dispositivo gráfico é criado antes, após o GameHost criar a janela e depois o Swapchain é criado.
 	//Com o bgfx precisamos da informação da janela para inicializá-lo.
-	void BgfxGraphicsDevice::LazyInitialization(intptr_t windowHandle) {
+	void BgfxGraphicsDevice::Initialize(intptr_t windowHandle) {
 		auto window = reinterpret_cast<SDL_Window*>(windowHandle);
 
 		bgfx::PlatformData pd{};
@@ -116,36 +124,33 @@ namespace Xna {
 		init.platformData = pd;
 
 		if (!bgfx::init(init))
-			throw std::runtime_error("bgfx init failed");				
+			throw std::runtime_error("bgfx init failed");
 
 		float ortho[16];
 		bx::mtxOrtho(ortho, 0.0f, w, h, 0.0f, 0.0f, 1.0f, 0.0f, bgfx::getCaps()->homogeneousDepth);
 		bgfx::setViewTransform(0, NULL, ortho);
 		bgfx::setViewRect(0, 0, 0, w, h);
-		
+
 		const auto clearColor = SwapXnaColor(Colors::CornflowerBlue);
 		bgfx::setViewClear(0, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, clearColor, 1.0f, 0);
 	}
 
-	void BgfxGraphicsDevice::ApplyBlendState(BlendState const& blend) {		
-		const BgfxBlendState b = blend;
-
-		cachedBlendState = b.state;
-		cachedBlendFactor = b.blendFactor;
-	}	
+	void BgfxGraphicsDevice::ApplyBlendState(BlendState const& blend) {
+		currentBlendState = blend;
+		blendFactor = SwapXnaColor(blend.BlendFactor);
+		
+		cache.blendState = blend;
+		cache.blendFactor = blend.BlendFactor;
+	}
 
 	void BgfxGraphicsDevice::ApplyDepthStencilState(DepthStencilState const& depth) {
-		const BgfxDepthStencilState state = depth;
-		cachedDepthBuffer = state.depthBuffer;
-		cachedFrontFaceStencil = state.frontStencil;
-		cachedBackFaceStencil = state.backStencil;		
+		currentDepthStencilState = depth;
+		cache.depthStencilState = depth;
 	}
 
 	void BgfxGraphicsDevice::ApplyRasterizerState(RasterizerState const& rasterizer) {
-		const BgfxRasterizerState state = rasterizer;
-
-		cachedRasterizerState = state;
-		cachedScissorTestEnable = rasterizer.ScissorTestEnable;
+		currentRasterizerState = rasterizer;
+		cache.rasterizerState = rasterizer;
 	}
 
 	std::unique_ptr<PlatformNS::IGraphicsDevice> PlatformNS::IGraphicsDevice::Create() {

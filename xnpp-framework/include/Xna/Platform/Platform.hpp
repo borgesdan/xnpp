@@ -384,10 +384,18 @@ namespace Xna {
 			XNPP_API virtual void SetViewport(Viewport const& viewport) = 0;
 			XNPP_API virtual void MakeWindowAssociation(PresentationParameters const& pp) = 0;
 			XNPP_API virtual void Reset(Xna::PresentationParameters const& presentationParameters, GraphicsAdapter const& graphicsAdapter) = 0;
-			XNPP_API virtual void LazyInitialization(intptr_t windowHandle) = 0;
+			XNPP_API virtual void Initialize(intptr_t windowHandle) = 0;
+			
+			XNPP_API virtual const BlendState& GetBlendState() const = 0;
+			XNPP_API virtual const DepthStencilState& GetDepthStencilState() const = 0;
+			XNPP_API virtual const RasterizerState& GetRasterizerState() const = 0;
+			XNPP_API virtual const Color GetBlendFactor() const = 0;
+
 			XNPP_API virtual void ApplyBlendState(BlendState const& blend) = 0;
 			XNPP_API virtual void ApplyDepthStencilState(DepthStencilState const& depth) = 0;
 			XNPP_API virtual void ApplyRasterizerState(RasterizerState const& rasterizer) = 0;
+			XNPP_API virtual void ApplyBlendFactor(Color const& color) = 0;
+			
 			XNPP_API virtual void Clear(ClearOptions options, Color const& color, float depth, int32_t stencil) = 0;
 
 			XNPP_API static std::unique_ptr<IGraphicsDevice> Create();

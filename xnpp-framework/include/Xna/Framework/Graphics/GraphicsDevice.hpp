@@ -31,10 +31,6 @@ namespace Xna {
 
 		std::vector<RenderTarget2D> current2DRenderTargets{ 1 };		
 
-		Xna::BlendState blendState{};
-		Xna::DepthStencilState depthStencilState{};
-		Xna::RasterizerState rasterizerState{};
-
 		SamplerStateCollection samplerState;
 		SamplerStateCollection vertexSamplerState;
 
@@ -47,12 +43,12 @@ namespace Xna {
 	};	
 
 	inline GraphicsAdapter GraphicsDevice::Adapter() const { return impl->adapter.value(); }
-	inline Xna::BlendState GraphicsDevice::BlendState() const { return impl->blendState; }
-	inline Color GraphicsDevice::BlendFactor() const { return impl->blendState.BlendFactor; }
-	inline Xna::DepthStencilState GraphicsDevice::DepthStencilState() const { return impl->depthStencilState; }
+	inline const Xna::BlendState& GraphicsDevice::BlendState() const { return impl->backend->GetBlendState(); }
+	inline Color GraphicsDevice::BlendFactor() const { return impl->backend->GetBlendFactor(); }
+	inline const Xna::DepthStencilState& GraphicsDevice::DepthStencilState() const { return impl->backend->GetDepthStencilState(); }
 	inline int32_t GraphicsDevice::MultiSampleMask() const { return impl->multiSampleMask; }
 	inline Xna::PresentationParameters& GraphicsDevice::PresentationParameters() { return impl->presentationParameters; }
-	inline Xna::RasterizerState GraphicsDevice::RasterizerState() const { return impl->rasterizerState; }
+	inline const Xna::RasterizerState& GraphicsDevice::RasterizerState() const { return impl->backend->GetRasterizerState(); }
 	inline int32_t GraphicsDevice::ReferenceStencil() const { return impl->referenceStencil; }
 	inline SamplerStateCollection GraphicsDevice::SamplerStates() const { return impl->samplerState; }
 	inline Xna::Viewport GraphicsDevice::Viewport() const { return impl->viewports[0]; }

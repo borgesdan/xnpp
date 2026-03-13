@@ -449,6 +449,9 @@ namespace Xna {
 		constexpr BgfxDepthStencilState() = default;
 		constexpr operator uint64_t() const noexcept { return depthBuffer; }
 		
+		//fStencil = Front Face
+		//bStencil = Back Face (CounterClockWise)
+		//bgfx::setStencil(fStencil, bStencil);
 		uint64_t depthBuffer{ 0 };
 		uint32_t frontStencil{ BGFX_STENCIL_NONE };
 		uint32_t backStencil{ BGFX_STENCIL_NONE };
@@ -475,13 +478,18 @@ namespace Xna {
 
 			scissorTestEnable = rasterizer.ScissorTestEnable;
 			depthBias = rasterizer.DepthBias;
-			slopeScaleDepthBias = rasterizer.SlopeScaleDepthBias;
+			slopeScaleDepthBias = rasterizer.SlopeScaleDepthBias;			
 		}
 
 		constexpr BgfxRasterizerState() = default;
 		constexpr operator uint64_t() const noexcept { return state; }
 
 		uint64_t state{ 0 };
+
+		// Para habilitar (equivalente a ScissorTestEnable = true)
+		//bgfx::setScissor(x, y, width, height);
+		// Para desabilitar (equivalente a ScissorTestEnable = false)
+		//bgfx::setScissor(); // Chama sem argumentos ou com zeros
 		bool scissorTestEnable{ false };
 
 		//Não existe uma função no bgfx para aplicar o bias
