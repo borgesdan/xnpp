@@ -1,16 +1,129 @@
-#ifndef XNA_FRAMEWORK_GRAPHICS_VERTEXBUFFER_HPP
-#define XNA_FRAMEWORK_GRAPHICS_VERTEXBUFFER_HPP
+#ifndef XNA_FRAMEWORK_GRAPHICS_BUFFER_HPP
+#define XNA_FRAMEWORK_GRAPHICS_BUFFER_HPP
 
-#include "VertexDeclaration.hpp"
-#include "Xna/CSharp/Type.hpp"
-#include "Xna/CSharp/Exception.hpp"
-#include "Xna/Framework/Graphics/GraphicsResource.hpp"
-#include "Xna/Platform/Platform.hpp"
 #include <memory>
 #include <vector>
+#include "GraphicsDevice.hpp"
+#include "Shared.hpp"
 #include "Xna/Internal/Macros.hpp"
+#include "Xna/Platform/Platform.hpp"
 
 namespace Xna {
+	//Describes the rendering order of the vertices in a vertex buffer.
+	class IndexBuffer {
+	public:
+		//Initializes a new instance of this class.
+		inline IndexBuffer(GraphicsDevice& device, size_t sizeOfIndexType, size_t indexCount, Xna::BufferUsage usage) {
+			backend = PlatformNS::IIndexBuffer::Create();
+			backend->Init(device, sizeOfIndexType, indexCount, usage);
+		}
+
+		//Initializes a new instance of this class.
+		inline IndexBuffer(GraphicsDevice& device, Xna::IndexElementSize indexElementSize, size_t indexCount, Xna::BufferUsage usage) {
+			backend = PlatformNS::IIndexBuffer::Create();
+			backend->Init(device, indexElementSize == Xna::IndexElementSize::SixteenBits ? 2 : 4, indexCount, usage);
+		}
+
+		virtual ~IndexBuffer() = default;
+
+		//Gets the state of the related BufferUsage enumeration.		
+		inline Xna::BufferUsage BufferUsage() const {
+			return backend->GetStats().Usage;
+		}
+
+		//Gets a value indicating the size of this index element.		
+		inline Xna::IndexElementSize IndexElementSize() const {
+			return backend->GetStats().IndexElementSize == 2 ? Xna::IndexElementSize::SixteenBits : Xna::IndexElementSize::ThirtyTwoBits;
+		}
+
+		//Gets the number of indices in this buffer.		
+		inline size_t IndexCount() const { 
+			return backend->GetStats().IndexCount; 
+		}
+
+		//Copies array data to the index buffer.		
+		template<typename T> void SetData(std::vector<T> const& data) {
+			const auto length = data.size();
+			SetData(0, data, 0, length);
+		}
+
+		//Copies array data to the index buffer.		
+		template<typename T> void SetData(std::vector<T> const& data, size_t startIndex, size_t elementCount) {			
+			SetData(0, data, startIndex, elementCount);
+		}
+
+		//Copies array data to the index buffer.		
+		template<typename T> void SetData(size_t offsetInBytes, std::vector<T> const& data, size_t startIndex, size_t elementCount) {
+			static_assert(std::is_integral<T>::value, "IndexBuffer aceita apenas tipos inteiros");
+			backend->SetData(offsetInBytes, data.data(), startIndex, elementCount, sizeof(T));
+		}
+
+		//Gets the index buffer into an array.		
+		template<typename T> void GetData(std::vector<T>& data) {			
+			GetData(0, data, 0, data.size());
+		}
+		//Gets the index buffer into an array.		
+		template<typename T> void GetData(std::vector<T>& data, size_t startIndex, size_t elementCount) {			
+			GetData(0, data, startIndex, elementCount);
+		}
+		
+		//Gets the index buffer into an array.		
+		template<typename T> void GetData(size_t offsetInBytes, std::vector<T> const& data, size_t startIndex, size_t elementCount) {
+			static_assert(std::is_integral<T>::value, "IndexBuffer aceita apenas tipos inteiros");
+			backend->GetData(offsetInBytes, data.data(), 0, elementCount, sizeof(T));
+		}
+
+		XNPP_DECLARE_IMPL_WRAPPER(IndexBuffer, backend);
+	private:
+		std::shared_ptr<PlatformNS::IIndexBuffer> backend;
+
+	protected:
+		IndexBuffer();
+	};
+
+	//Describes the rendering order of the vertices in a vertex buffer. 
+	//Use DynamicIndexBuffer for storing indices for dynamic vertices and IndexBuffer for indices of non-dynamic arrays.
+	class DynamicIndexBuffer final : public IndexBuffer {
+	public:
+		//Initializes a new instance of DynamicIndexBuffer.
+		//TODO: [!] not implemented.
+		DynamicIndexBuffer(GraphicsDevice& graphicsDevice, size_t sizeOfIndexType,
+			size_t indexCount, Xna::BufferUsage usage) {
+		}
+
+		//Initializes a new instance of DynamicIndexBuffer.
+		//TODO: [!] not implemented.
+		DynamicIndexBuffer(GraphicsDevice& graphicsDevice, Xna::IndexElementSize indexElementSize,
+			size_t indexCount, Xna::BufferUsage usage) {
+		}
+
+		~DynamicIndexBuffer() override = default;
+
+		//Overloaded. Copies array data to the index buffer.
+		//TODO: [!] not implemented.
+		template <typename T>
+		void SetData(std::vector<T> const& data, size_t startIndex, size_t elementCOunt,
+			SetDataOptions options) {
+		}
+
+		//Overloaded. Copies array data to the index buffer.
+		//TODO: [!] not implemented.
+		template <typename T>
+		void SetData(size_t offsetInBytes, std::vector<T> const& data, size_t startIndex,
+			size_t elementCount, SetDataOptions options) {
+		}
+
+		//Determines if the index buffer data has been lost due to a lost device event.
+		//TODO: [!] not implemented.
+		bool IsContentLost() { return false; }
+
+		XNPP_DECLARE_IMPL_WRAPPER(DynamicIndexBuffer, impl);
+
+	private:
+		struct Implementation;
+		std::shared_ptr<Implementation> impl;
+	};
+
 	//Represents a list of 3D vertices to be streamed to the graphics device.
 	class VertexBuffer {
 	public:
@@ -19,7 +132,7 @@ namespace Xna {
 			Xna::GraphicsDevice const& graphicsDevice,
 			Xna::VertexDeclaration const& vertexDeclaration,
 			size_t vertexCount,
-			Xna::BufferUsage usage);		
+			Xna::BufferUsage usage);
 
 		inline const Xna::GraphicsDevice& GraphicsDevice() const;
 
@@ -34,7 +147,7 @@ namespace Xna {
 		void SetData(std::vector<T> const& data, size_t startIndex, size_t elementCount) {
 			SetData(0, data, startIndex, elementCount, impl->vertexDeclaration.VertexStride());
 		}
-		
+
 		//Sets the vertex buffer data.
 		template <typename T>
 		void SetData(size_t offsetInBytes, std::vector<T> const& data, size_t startIndex, size_t elementCount, size_t vertexStride) {
@@ -80,7 +193,7 @@ namespace Xna {
 		//Gets the state of the related BufferUsage enumeration.
 		inline Xna::BufferUsage BufferUsage() const { return impl->usage; }
 		//Gets the number of vertices.
-		inline size_t VertexCount() const { return impl->vertexCount; }		
+		inline size_t VertexCount() const { return impl->vertexCount; }
 		// 	Defines per-vertex data in a buffer.
 		inline Xna::VertexDeclaration VertexDeclaration() const { return impl->vertexDeclaration; }
 
