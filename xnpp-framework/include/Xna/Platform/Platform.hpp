@@ -446,11 +446,12 @@ namespace Xna {
 			XNPP_API virtual ~IIndexBuffer() = default;
 
 			XNPP_API virtual void Init(GraphicsDevice& device, size_t sizeOfIndexType, size_t indexCount, Xna::BufferUsage usage) = 0;
-			XNPP_API virtual void SetData(size_t offsetInBytes, const void* data, size_t startIndex, size_t elementCount, size_t elementSize) = 0;
+			XNPP_API virtual void SetData(size_t offsetInBytes, const void* data, size_t startIndex, size_t elementCount, size_t elementSize, SetDataOptions setDataOptions) = 0;
 			XNPP_API virtual void GetData(size_t offsetInBytes, void* data, size_t startIndex, size_t elementCount, size_t elementSize) = 0;
 			XNPP_API virtual BufferStats GetStats() = 0;
 
 			XNPP_API static std::unique_ptr<IIndexBuffer> Create();
+			XNPP_API static std::unique_ptr<IIndexBuffer> CreateDynamic();
 		};
 	}
 }
