@@ -453,6 +453,14 @@ namespace Xna {
 			XNPP_API static std::unique_ptr<IIndexBuffer> Create();
 			XNPP_API static std::unique_ptr<IIndexBuffer> CreateDynamic();
 		};
+
+		struct IVertexBuffer {
+			XNPP_API virtual ~IVertexBuffer() = default;
+			
+
+			XNPP_API static std::unique_ptr<IVertexBuffer> Create();
+			XNPP_API static std::unique_ptr<IVertexBuffer> CreateDynamic();
+		};
 	}
 }
 

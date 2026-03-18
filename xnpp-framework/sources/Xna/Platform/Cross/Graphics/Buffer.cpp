@@ -62,7 +62,7 @@ namespace Xna {
 			const size_t copySize = elementSize * elementCount;
 
 			assert(offsetInBytes + copySize <= m_shadowData.size() && "GetData: overflow.");
-			assert(startIndex + elementCount <= data.size() && "startIndex + elementCount > data.size()");
+			assert(startIndex + elementCount <= elementCount && "startIndex + elementCount > data.size()");
 
 			// Lê do shadow buffer (bgfx não permite leitura direta da GPU)
 			auto data1 = reinterpret_cast<uint8_t*>(data);
@@ -122,16 +122,19 @@ namespace Xna {
 		}
 
 		void SetData(size_t offsetInBytes, const void* data, size_t startIndex, size_t elementCount, size_t elementSize, SetDataOptions setDataOptions) override {
-			const size_t elementSize = sizeof(T);
+			assert(data != nullptr && "data is null.");
+
 			const size_t copySize = elementSize * elementCount;
 
 			assert(offsetInBytes + copySize <= m_sizeOfIndexType * m_indexCount && "offsetInBytes + copySize > m_sizeOfIndexType * m_indexCount");
+
+			const auto data1 = reinterpret_cast<const uint8_t*>(data);
 
 			// Atualiza shadow (se existir)
 			if (m_enableShadow) {
 				std::memcpy(
 					m_shadowData.data() + offsetInBytes,
-					data.data() + startIndex,
+					data1 + startIndex,
 					copySize
 				);
 			}
@@ -147,7 +150,7 @@ namespace Xna {
 			}
 
 			const bgfx::Memory* mem = bgfx::copy(
-				data.data() + startIndex,
+				data1 + startIndex,
 				static_cast<uint32_t>(copySize)
 			);
 
@@ -161,14 +164,15 @@ namespace Xna {
 		void GetData(size_t offsetInBytes, void* data, size_t startIndex, size_t elementCount, size_t elementSize) override {
 			assert(m_enableShadow && "GetData requer shadow buffer");
 
-			const size_t elementSize = sizeof(T);
 			const size_t copySize = elementSize * elementCount;
 
 			assert(offsetInBytes + copySize <= m_shadowData.size() && "offsetInBytes + copySize > m_shadowData.size()");
-			assert(startIndex + elementCount <= data.size() && "startIndex + elementCount > data.size()");
+			assert(startIndex + elementCount <= elementCount && "startIndex + elementCount > data.size()");
+
+			auto data1 = reinterpret_cast<uint8_t*>(data);
 
 			std::memcpy(
-				data.data() + startIndex,
+				data1 + startIndex,
 				m_shadowData.data() + offsetInBytes,
 				copySize
 			);
@@ -176,7 +180,7 @@ namespace Xna {
 
 		PlatformNS::BufferStats GetStats() override {
 			PlatformNS::BufferStats stats{};
-			stats.Usage = (flags & static_cast<int>(BGFX_BUFFER_INDEX32)) == static_cast<int>(BGFX_BUFFER_INDEX32) ? BufferUsage::WriteOnly : BufferUsage::None;
+			stats.Usage = (m_flags & static_cast<int>(BGFX_BUFFER_INDEX32)) == static_cast<int>(BGFX_BUFFER_INDEX32) ? BufferUsage::WriteOnly : BufferUsage::None;
 			stats.IndexCount = m_indexCount;
 			stats.IndexElementSize = m_sizeOfIndexType;
 
@@ -184,6 +188,14 @@ namespace Xna {
 		}
 
 		~BgfxDynamicIndexBuffer() override {
+			if (bgfx::isValid(m_handle)) bgfx::destroy(m_handle);
+		}
+	};
+
+	struct BgfxVertexBuffer final : public PlatformNS::IIndexBuffer {
+		bgfx::VertexBufferHandle m_handle{ BGFX_INVALID_HANDLE };
+
+		~BgfxVertexBuffer() override {
 			if (bgfx::isValid(m_handle)) bgfx::destroy(m_handle);
 		}
 	};

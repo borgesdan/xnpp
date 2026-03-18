@@ -41,11 +41,6 @@ set(XNPP_FRAMEWORK_SRC
     "sources/Xna/Framework/Graphics/SpriteBatch.cpp"
     "sources/Xna/Framework/Graphics/SpriteFont.cpp"
     "sources/Xna/Framework/Graphics/GraphicsContentHelper.cpp"
-     
-    
-     
-         
-        
     "sources/Xna/Framework/Graphics/DynamicVertexBuffer.cpp"
     "sources/Xna/Framework/Graphics/VertexDeclaration.cpp"
     "sources/Xna/Framework/Graphics/VertexBufferBinding.cpp"
@@ -78,6 +73,7 @@ set(XNPP_PLATFORM_SRC
     "sources/Xna/Platform/Cross/Graphics/Texture.cpp"
     "sources/Xna/Platform/Cross/Graphics/SpriteBatch.cpp"
     "sources/Xna/Platform/Cross/Graphics/Adapter.cpp"
+    "sources/Xna/Platform/Cross/Graphics/Buffer.cpp"
 )
 
 set(MINIAUDIO_VORBIS_SRC 
