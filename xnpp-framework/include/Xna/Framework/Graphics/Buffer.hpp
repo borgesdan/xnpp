@@ -7,6 +7,8 @@
 #include "Shared.hpp"
 #include "Xna/Internal/Macros.hpp"
 #include "Xna/Platform/Platform.hpp"
+#include <Xna/Framework/Graphics/VertexElement.hpp>
+#include <Xna/Framework/Graphics/VertexDeclaration.hpp>
 
 namespace Xna {
 	//Describes the rendering order of the vertices in a vertex buffer.
@@ -184,43 +186,8 @@ namespace Xna {
 		//Gets the number of vertices.
 		inline size_t VertexCount() const { return impl->vertexCount; }
 		// 	Defines per-vertex data in a buffer.
-		inline Xna::VertexDeclaration VertexDeclaration() const { return impl->vertexDeclaration; }
+		inline Xna::VertexDeclaration VertexDeclaration() const { return impl->vertexDeclaration; }		
 
-		inline VertexBuffer(std::nullptr_t) { impl = nullptr; }
-		inline bool operator==(VertexBuffer const& other) const noexcept { return impl == other.impl; }
-		inline bool operator==(std::nullptr_t) const noexcept { return impl == nullptr; }
-		inline explicit operator bool() const noexcept { return impl != nullptr; }
-
-	protected:
-		inline VertexBuffer() {
-			impl = std::make_shared<Implementation>();
-		}
-
-	private:
-		struct Implementation {
-			Xna::BufferUsage usage;
-			size_t size;
-			size_t vertexCount;
-			Xna::VertexDeclaration vertexDeclaration;
-			Xna::GraphicsDevice device;
-		};
-
-		std::shared_ptr<Implementation> impl;
-
-		friend struct VertexBufferBinding;
-		friend struct Platform;
-
-	protected:
-		inline Xna::BufferUsage usage() { return impl->usage; }
-		inline void usage(Xna::BufferUsage value) { impl->usage = value; }
-		inline size_t size() { return impl->size; }
-		inline void size(size_t value) { impl->size = value; }
-		inline size_t vertexCount() { return impl->vertexCount; }
-		inline void vertexCount(size_t value) { impl->vertexCount = value; }
-		inline Xna::VertexDeclaration vertexDeclaration() { return impl->vertexDeclaration; }
-		inline void vertexDeclaration(Xna::VertexDeclaration const& value) { impl->vertexDeclaration = value; }
-
-		const std::shared_ptr<Implementation>& GetImpl() const { return impl; }
 	};
 
 	//Represents a list of 3D vertices to be streamed to the graphics device. 

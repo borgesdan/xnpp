@@ -158,6 +158,7 @@ namespace Xna {
 	struct MouseState;
 	struct GamePadState;
 	struct GamePadCapabilities;
+	struct VertexDeclaration;
 
 	enum class DepthFormat;
 	enum class GraphicsProfile;
@@ -171,6 +172,7 @@ namespace Xna {
 	enum class SoundState;
 	enum class SetDataOptions;
 	enum class ClearOptions;
+	enum class BufferUsage;
 
 	struct PlatformImpl {
 		struct BlendStateImpl;
@@ -457,6 +459,9 @@ namespace Xna {
 		struct IVertexBuffer {
 			XNPP_API virtual ~IVertexBuffer() = default;
 			
+			XNPP_API virtual void Init(Xna::GraphicsDevice const& graphicsDevice, Xna::VertexDeclaration const& vertexDeclaration, size_t vertexCount, Xna::BufferUsage usage) = 0;
+			XNPP_API virtual void SetData(size_t offsetInBytes, const void* data, size_t startIndex, size_t elementCount, size_t vertexStride, size_t elementSize) = 0;
+			XNPP_API virtual void GetData(size_t offsetInBytes, void* data, size_t startIndex, size_t elementCount, size_t vertexStride, size_t elementSize) = 0;
 
 			XNPP_API static std::unique_ptr<IVertexBuffer> Create();
 			XNPP_API static std::unique_ptr<IVertexBuffer> CreateDynamic();

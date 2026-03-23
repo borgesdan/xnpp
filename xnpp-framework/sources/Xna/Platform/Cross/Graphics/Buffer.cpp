@@ -1,6 +1,9 @@
-#include "Xna/Platform/Platform.hpp"
+﻿#include "Xna/Platform/Platform.hpp"
 #include "Xna/Framework/Graphics/GraphicsDevice.hpp"
+#include "Xna/Framework/Graphics/Buffer.hpp"
 #include <bgfx/bgfx.h>
+#include <algorithm>
+
 
 namespace Xna {
 	struct BgfxIndexBuffer final : public PlatformNS::IIndexBuffer {
@@ -15,7 +18,7 @@ namespace Xna {
 
 			const uint32_t totalSize = static_cast<uint32_t>(sizeOfIndexType * indexCount);
 
-			// Shadow copy (necess�rio para GetData)
+			// Shadow copy (necessário para GetData)
 			m_shadowData.resize(totalSize);
 
 			const bgfx::Memory* mem = bgfx::copy(m_shadowData.data(), totalSize);
@@ -64,7 +67,7 @@ namespace Xna {
 			assert(offsetInBytes + copySize <= m_shadowData.size() && "GetData: overflow.");
 			assert(startIndex + elementCount <= elementCount && "startIndex + elementCount > data.size()");
 
-			// L� do shadow buffer (bgfx n�o permite leitura direta da GPU)
+			// Lê do shadow buffer (bgfx não permite leitura direta da GPU)
 			auto data1 = reinterpret_cast<uint8_t*>(data);
 
 			std::memcpy(
@@ -192,8 +195,199 @@ namespace Xna {
 		}
 	};
 
-	struct BgfxVertexBuffer final : public PlatformNS::IIndexBuffer {
+	static constexpr bgfx::Attrib::Enum ConvertVertexElementUsage(VertexElementUsage usage, uint32_t usageIndex = 0) {
+			assert((usage != VertexElementUsage::Depth
+				&& usage != VertexElementUsage::Fog
+				&& usage != VertexElementUsage::PointSize
+				&& usage != VertexElementUsage::Sample
+				&& usage != VertexElementUsage::TessellateFactor)
+				&& "VertexElementUsage not supported.");
+
+		if(usage == VertexElementUsage::Color)
+			assert(usageIndex <= 3 && "Invalid color usageIndex");
+
+		if (usage == VertexElementUsage::TextureCoordinate)
+			assert(usageIndex <= 7 && "Invalid TexCoord usageIndex");
+
+		using namespace bgfx;
+
+		switch (usage)
+		{
+		case VertexElementUsage::Position:
+			return Attrib::Position;
+
+		case VertexElementUsage::Normal:
+			return Attrib::Normal;
+
+		case VertexElementUsage::Tangent:
+			return Attrib::Tangent;
+
+		case VertexElementUsage::Binormal:
+			return Attrib::Bitangent;
+
+		case VertexElementUsage::Color:
+			switch (usageIndex)
+			{
+			case 0: return Attrib::Color0;
+			case 1: return Attrib::Color1;
+			case 2: return Attrib::Color2;
+			case 3: return Attrib::Color3;
+			default: return Attrib::Color0;
+			}
+
+		case VertexElementUsage::TextureCoordinate:
+			switch (usageIndex)
+			{
+			case 0: return Attrib::TexCoord0;
+			case 1: return Attrib::TexCoord1;
+			case 2: return Attrib::TexCoord2;
+			case 3: return Attrib::TexCoord3;
+			case 4: return Attrib::TexCoord4;
+			case 5: return Attrib::TexCoord5;
+			case 6: return Attrib::TexCoord6;
+			case 7: return Attrib::TexCoord7;
+			default: return Attrib::TexCoord0;
+			}
+
+		case VertexElementUsage::BlendIndices:
+			return Attrib::Indices;
+
+		case VertexElementUsage::BlendWeight:
+			return Attrib::Weight;
+		default:
+			return Attrib::Position;
+		}
+	}
+
+	struct AttribTypeInfo
+	{
+		bgfx::AttribType::Enum type;
+		uint8_t numComponents;
+		bool normalized;
+	};
+
+	static constexpr AttribTypeInfo ConvertVertexElementFormat(VertexElementFormat format)
+	{
+		using namespace bgfx;
+
+		switch (format)
+		{
+		case VertexElementFormat::Single:
+			return { AttribType::Float, 1, false };
+
+		case VertexElementFormat::Vector2:
+			return { AttribType::Float, 2, false };
+
+		case VertexElementFormat::Vector3:
+			return { AttribType::Float, 3, false };
+
+		case VertexElementFormat::Vector4:
+			return { AttribType::Float, 4, false };
+
+		case VertexElementFormat::Color:
+			// Uint8 normalizado (0–255 → 0–1)
+			return { AttribType::Uint8, 4, true };
+
+		case VertexElementFormat::Byte4:
+			return { AttribType::Uint8, 4, false };
+
+		case VertexElementFormat::Short2:
+			return { AttribType::Int16, 2, false };
+
+		case VertexElementFormat::Short4:
+			return { AttribType::Int16, 4, false };
+
+		case VertexElementFormat::NormalizedShort2:
+			return { AttribType::Int16, 2, true };
+
+		case VertexElementFormat::NormalizedShort4:
+			return { AttribType::Int16, 4, true };
+
+		case VertexElementFormat::HalfVector2:
+			return { AttribType::Half, 2, false };
+
+		case VertexElementFormat::HalfVector4:
+			return { AttribType::Half, 4, false };
+
+		default:
+			return { AttribType::Float, 1, false };
+		}
+	}
+
+	//XNA usa Offset manual, bgfx assume layout sequencial
+	//A ordem dos elementos precisa estar correta
+	//Não há suporte direto para gaps (padding manual)
+	struct BgfxVertexBuffer final : public PlatformNS::IVertexBuffer {
 		bgfx::VertexBufferHandle m_handle{ BGFX_INVALID_HANDLE };
+		bgfx::VertexLayout m_layout{};
+
+		void Init(Xna::GraphicsDevice const& graphicsDevice, Xna::VertexDeclaration const& vertexDeclaration, size_t vertexCount, Xna::BufferUsage usage) override {
+			//Copiar e ordenar elementos por Offset
+			auto elements = vertexDeclaration.GetVertexElements();
+			std::sort(elements.begin(), elements.end(),
+				[](const Xna::VertexElement& a, const Xna::VertexElement& b)
+				{
+					return a.Offset < b.Offset;
+				});
+
+			//Construir VertexLayout
+			m_layout.begin();
+
+			uint32_t currentOffset = 0;
+
+			for (const auto& element : elements)
+			{
+				//Validar alinhamento
+				assert(!(element.Offset < currentOffset) && "Invalid offset");
+
+				//Converter usage → attrib
+				bgfx::Attrib::Enum attrib =
+					ConvertVertexElementUsage(
+						element.VertexElementUsage,
+						static_cast<uint8_t>(element.UsageIndex));
+
+				//Converter format → tipo bgfx
+				AttribTypeInfo info =
+					ConvertVertexElementFormat(element.VertexElementFormat);
+
+				//Adicionar ao layout
+				m_layout.add(
+					attrib,
+					info.numComponents,
+					info.type,
+					info.normalized
+				);
+
+				//Atualizar offset lógico
+				currentOffset = element.Offset; // bgfx não usa offset explícito
+			}
+
+			m_layout.end();			
+		}
+
+		void SetData(size_t offsetInBytes, const void* data, size_t startIndex, size_t elementCount, size_t vertexStride, size_t elementSize) override {
+			assert(data == nullptr && "data is null.");
+			assert(!(startIndex + elementCount > elementCount) && "Data out of bounds.");			
+
+			const uint8_t* srcPtr =
+				reinterpret_cast<const uint8_t*>(data) +
+				(startIndex * elementSize);
+
+			const size_t sizeInBytes = elementCount * elementSize;
+
+			const bgfx::Memory* mem = bgfx::copy(srcPtr, sizeInBytes);
+
+			if(bgfx::isValid(m_handle))
+				bgfx::destroy(m_handle);
+
+			m_handle = bgfx::createVertexBuffer(mem, m_layout);
+
+			assert(bgfx::isValid(m_handle) && "bgfx::createVertexBuffer failed.");
+		}
+
+		void GetData(size_t offsetInBytes, void* data, size_t startIndex, size_t elementCount, size_t vertexStride, size_t elementSize) override {
+			throw std::runtime_error("not supported");
+		}
 
 		~BgfxVertexBuffer() override {
 			if (bgfx::isValid(m_handle)) bgfx::destroy(m_handle);
@@ -206,5 +400,13 @@ namespace Xna {
 
 	std::unique_ptr<PlatformNS::IIndexBuffer>PlatformNS::IIndexBuffer::CreateDynamic() {
 		return std::make_unique<BgfxDynamicIndexBuffer>();
+	}
+
+	std::unique_ptr<PlatformNS::IVertexBuffer> PlatformNS::IVertexBuffer::Create() {
+		return std::make_unique<BgfxVertexBuffer>();
+	}
+
+	std::unique_ptr<PlatformNS::IVertexBuffer> PlatformNS::IVertexBuffer::CreateDynamic() {
+		return nullptr;
 	}
 }
