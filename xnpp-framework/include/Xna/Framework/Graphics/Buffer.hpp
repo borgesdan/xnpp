@@ -56,7 +56,7 @@ namespace Xna {
 
 		//Copies array data to the index buffer.		
 		template<typename T> void SetData(size_t offsetInBytes, std::vector<T> const& data, size_t startIndex, size_t elementCount) {
-			static_assert(std::is_integral<T>::value, "IndexBuffer aceita apenas tipos inteiros");
+			static_assert(std::is_integral<T>::value, "Only integral type.");
 			m_backend->SetData(offsetInBytes, data.data(), startIndex, elementCount, sizeof(T), SetDataOptions::None);
 		}
 
@@ -71,11 +71,11 @@ namespace Xna {
 		
 		//Gets the index buffer into an array.		
 		template<typename T> void GetData(size_t offsetInBytes, std::vector<T> const& data, size_t startIndex, size_t elementCount) {
-			static_assert(std::is_integral<T>::value, "IndexBuffer aceita apenas tipos inteiros");
+			static_assert(std::is_integral<T>::value, "Only integral type.");
 			m_backend->GetData(offsetInBytes, data.data(), 0, elementCount, sizeof(T));
 		}
 
-		XNPP_DECLARE_IMPL_WRAPPER(IndexBuffer, m_backend);
+		XNPP_DECLARE_NULL_IMPL_WRAPPER(IndexBuffer, m_backend);
 	protected:
 		std::shared_ptr<PlatformNS::IIndexBuffer> m_backend;	
 	};
@@ -87,13 +87,13 @@ namespace Xna {
 		//Initializes a new instance of DynamicIndexBuffer.		
 		inline DynamicIndexBuffer(GraphicsDevice& graphicsDevice, size_t sizeOfIndexType, size_t indexCount, Xna::BufferUsage usage) : IndexBuffer(nullptr)  {
 			m_backend = PlatformNS::IIndexBuffer::CreateDynamic();
-			m_backend->Init(device, sizeOfIndexType, indexCount, usage);
+			m_backend->Init(graphicsDevice, sizeOfIndexType, indexCount, usage);
 		}
 
 		//Initializes a new instance of DynamicIndexBuffer.		
 		inline DynamicIndexBuffer(GraphicsDevice& graphicsDevice, Xna::IndexElementSize indexElementSize,	size_t indexCount, Xna::BufferUsage usage) : IndexBuffer(nullptr) {
 			m_backend = PlatformNS::IIndexBuffer::CreateDynamic();
-			m_backend->Init(device, indexElementSize == Xna::IndexElementSize::SixteenBits ? 2 : 4, indexCount, usage);
+			m_backend->Init(graphicsDevice, indexElementSize == Xna::IndexElementSize::SixteenBits ? 2 : 4, indexCount, usage);
 		}
 
 		~DynamicIndexBuffer() override = default;
@@ -112,26 +112,23 @@ namespace Xna {
 		//Determines if the index buffer data has been lost due to a lost device event.		
 		bool IsContentLost() { return false; }
 
-		XNPP_DECLARE_IMPL_WRAPPER(DynamicIndexBuffer, m_backend);	
+		XNPP_DECLARE_NULL_IMPL_BASE_WRAPPER(DynamicIndexBuffer, IndexBuffer, m_backend);
 	};
 
 	//Represents a list of 3D vertices to be streamed to the graphics device.
 	class VertexBuffer {
 	public:
 		//Initializes a new instance of the VertexBuffer class.
-		XNPP_API VertexBuffer(
-			Xna::GraphicsDevice const& graphicsDevice,
-			Xna::VertexDeclaration const& vertexDeclaration,
-			size_t vertexCount,
-			Xna::BufferUsage usage);
+		inline VertexBuffer(Xna::GraphicsDevice const& graphicsDevice, Xna::VertexDeclaration const& vertexDeclaration,	size_t vertexCount,	Xna::BufferUsage usage) {
+			m_backend = PlatformNS::IVertexBuffer::Create();
+			m_backend->Init(graphicsDevice, vertexDeclaration, vertexCount, usage);
+		}		
 
-		inline const Xna::GraphicsDevice& GraphicsDevice() const;
+		virtual ~VertexBuffer() = default;
 
 		//Sets the vertex buffer data.
 		template <typename T>
-		void SetData(std::vector<T> const& data) {
-			SetData(data, 0, data.size());
-		}
+		void SetData(std::vector<T> const& data) { SetData(data, 0, data.size()); }
 
 		//Sets the vertex buffer data.
 		template <typename T>
@@ -141,16 +138,12 @@ namespace Xna {
 
 		//Sets the vertex buffer data.
 		template <typename T>
-		void SetData(size_t offsetInBytes, std::vector<T> const& data, size_t startIndex, size_t elementCount, size_t vertexStride) {
-			if (vertexStride != impl->vertexDeclaration.VertexStride())
-				throw CSharp::InvalidOperationException("Vertex stride mismatch");
+		void SetData(size_t offsetInBytes, std::vector<T> const& data, size_t startIndex, size_t elementCount, size_t vertexStride) {			
+			assert(vertexStride == impl->vertexDeclaration.VertexStride() && "Vertex stride mismatch");
 
-			const auto dataSize = elementCount * sizeof(T);
-
-			if (offsetInBytes + dataSize > impl->size)
-				throw CSharp::ArgumentOutOfRangeException("SetData out of bounds");
-
-			//Platform::VertexBuffer_SetData(*this, offsetInBytes, data.data(), sizeof(T), startIndex, elementCount, vertexStride);
+			const auto dataSize = elementCount * sizeof(T);		
+			
+			m_backend->SetData(offsetInBytes, data.data(), 0, elementCount, sizeof(T), SetDataOptions::None);
 		}
 
 		//Returns a copy of the vertex buffer data.
@@ -167,27 +160,22 @@ namespace Xna {
 
 		//Returns a copy of the vertex buffer data.
 		template <typename T>
-		void GetData(size_t offsetInBytes, std::vector<T>& data, size_t startIndex,
-			size_t elementCount, size_t vertexStride) {
-
-			if (vertexStride != impl->vertexDeclaration.VertexStride())
-				throw CSharp::InvalidOperationException("Vertex stride mismatch");
-
-			const auto dataSize = elementCount * sizeof(T);
-
-			if (offsetInBytes + dataSize > impl->size)
-				throw CSharp::ArgumentOutOfRangeException("SetData out of bounds");
-
-			//Platform::VertexBuffer_GetData(*this, offsetInBytes, data.data(), sizeof(T), startIndex, elementCount, vertexStride);
+		void GetData(size_t offsetInBytes, std::vector<T>& data, size_t startIndex, size_t elementCount, size_t vertexStride) {
+			assert(vertexStride == impl->vertexDeclaration.VertexStride() && "Vertex stride mismatch");						
+			m_backend->GetData(offsetInBytes, data.data(), startIndex, elementCount, vertexStride);
 		}
 
 		//Gets the state of the related BufferUsage enumeration.
-		inline Xna::BufferUsage BufferUsage() const { return impl->usage; }
+		inline Xna::BufferUsage BufferUsage() const { return m_backend->GetStats().Usage; }
 		//Gets the number of vertices.
-		inline size_t VertexCount() const { return impl->vertexCount; }
+		inline size_t VertexCount() const { return m_backend->GetStats().VertexCount; }
 		// 	Defines per-vertex data in a buffer.
-		inline Xna::VertexDeclaration VertexDeclaration() const { return impl->vertexDeclaration; }		
+		inline Xna::VertexDeclaration VertexDeclaration() const { return m_backend->GetStats().VertexDeclaration; }
 
+		XNPP_DECLARE_NULL_IMPL_WRAPPER(VertexBuffer, m_backend);
+
+	protected:
+		std::shared_ptr<PlatformNS::IVertexBuffer> m_backend;
 	};
 
 	//Represents a list of 3D vertices to be streamed to the graphics device. 
@@ -195,9 +183,12 @@ namespace Xna {
 	class DynamicVertexBuffer final : public VertexBuffer {
 	public:
 		//Initializes a new instance of DynamicVertexBuffer with the specified parameters.		
-		XNPP_API DynamicVertexBuffer(GraphicsDevice const& graphicsDevice, Xna::VertexDeclaration const& vertexDeclaration, size_t vertexCount, Xna::BufferUsage usage);
+		XNPP_API DynamicVertexBuffer(GraphicsDevice const& graphicsDevice, Xna::VertexDeclaration const& vertexDeclaration, size_t vertexCount, Xna::BufferUsage usage) : VertexBuffer(nullptr) {
+			m_backend = PlatformNS::IVertexBuffer::CreateDynamic();
+			m_backend->Init(graphicsDevice, vertexDeclaration, vertexCount, usage);
+		}
 
-		~DynamicVertexBuffer() override {}
+		virtual ~DynamicVertexBuffer() override {}
 
 		//Determines if the index buffer data has been lost due to a lost device event.		
 		inline bool IsContentLost() { return false; }
@@ -210,13 +201,10 @@ namespace Xna {
 		//Copies array data to the vertex buffer.
 		template <typename T>
 		void SetData(size_t offsetInBytes, std::vector<T>const& data, size_t startIndex, size_t elementCount, size_t vertexStride, SetDataOptions options) {
-			Platform::DynamicVertexBuffer_SetData(*this, offsetInBytes, data.data(), sizeof(T), startIndex, elementCount, vertexStride, options);
+			m_backend->SetData(offsetInBytes, data, startIndex, elementCount, vertexStride, options);
 		}
 
-		inline DynamicVertexBuffer(std::nullptr_t) : VertexBuffer(nullptr) {}
-		inline bool operator==(DynamicVertexBuffer const& other) const noexcept { return GetImpl() == other.GetImpl(); }
-		inline bool operator==(std::nullptr_t) const noexcept { return GetImpl() == nullptr; }
-		inline explicit operator bool() const noexcept { return GetImpl() != nullptr; }
+		XNPP_DECLARE_NULL_IMPL_BASE_WRAPPER(DynamicVertexBuffer, VertexBuffer, m_backend);
 	};
 }
 

@@ -438,7 +438,7 @@ namespace Xna {
 			XNPP_API static std::unique_ptr<ISpriteBatch> Create(GraphicsDevice const& device);
 		};
 
-		struct BufferStats {
+		struct IndexBufferStats {
 			Xna::BufferUsage Usage{Xna::BufferUsage::None };
 			int IndexElementSize{ 0 };
 			size_t IndexCount{0};
@@ -450,18 +450,25 @@ namespace Xna {
 			XNPP_API virtual void Init(GraphicsDevice& device, size_t sizeOfIndexType, size_t indexCount, Xna::BufferUsage usage) = 0;
 			XNPP_API virtual void SetData(size_t offsetInBytes, const void* data, size_t startIndex, size_t elementCount, size_t elementSize, SetDataOptions setDataOptions) = 0;
 			XNPP_API virtual void GetData(size_t offsetInBytes, void* data, size_t startIndex, size_t elementCount, size_t elementSize) = 0;
-			XNPP_API virtual BufferStats GetStats() = 0;
+			XNPP_API virtual IndexBufferStats GetStats() = 0;
 
 			XNPP_API static std::unique_ptr<IIndexBuffer> Create();
 			XNPP_API static std::unique_ptr<IIndexBuffer> CreateDynamic();
+		};
+
+		struct VertexBufferStats {
+			Xna::BufferUsage Usage{ Xna::BufferUsage::None };
+			uint32_t VertexCount{ 0 };
+			Xna::VertexDeclaration VertexDeclaration{};
 		};
 
 		struct IVertexBuffer {
 			XNPP_API virtual ~IVertexBuffer() = default;
 			
 			XNPP_API virtual void Init(Xna::GraphicsDevice const& graphicsDevice, Xna::VertexDeclaration const& vertexDeclaration, size_t vertexCount, Xna::BufferUsage usage) = 0;
-			XNPP_API virtual void SetData(size_t offsetInBytes, const void* data, size_t startIndex, size_t elementCount, size_t vertexStride, size_t elementSize) = 0;
+			XNPP_API virtual void SetData(size_t offsetInBytes, const void* data, size_t startIndex, size_t elementCount, size_t vertexStride, size_t elementSize, SetDataOptions options) = 0;
 			XNPP_API virtual void GetData(size_t offsetInBytes, void* data, size_t startIndex, size_t elementCount, size_t vertexStride, size_t elementSize) = 0;
+			XNPP_API virtual VertexBufferStats GetStats() = 0;
 
 			XNPP_API static std::unique_ptr<IVertexBuffer> Create();
 			XNPP_API static std::unique_ptr<IVertexBuffer> CreateDynamic();

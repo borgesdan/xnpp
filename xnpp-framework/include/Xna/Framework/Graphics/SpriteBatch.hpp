@@ -99,7 +99,7 @@ namespace Xna {
 		//Flushes the sprite batch and restores the device state to how it was before Begin was called.
 		XNPP_API void End();
 
-		XNPP_DECLARE_IMPL_WRAPPER(SpriteBatch, backend);
+		XNPP_DECLARE_NULL_IMPL_WRAPPER(SpriteBatch, backend);
 	private:
 		std::shared_ptr<PlatformNS::ISpriteBatch> backend;
 	};

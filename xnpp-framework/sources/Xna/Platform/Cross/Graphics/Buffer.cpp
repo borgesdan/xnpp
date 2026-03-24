@@ -10,18 +10,13 @@ namespace Xna {
 		bgfx::IndexBufferHandle m_handle{ BGFX_INVALID_HANDLE };
 		size_t m_sizeOfIndexType;
 		size_t m_indexCount;
-		std::vector<uint8_t> m_shadowData; // ESSENCIAL para GetData
 		uint16_t flags{ BGFX_BUFFER_NONE };
+		uint32_t totalSize{ 0 };
 
 		void Init(GraphicsDevice& device, size_t sizeOfIndexType, size_t indexCount, Xna::BufferUsage usage) override {
 			assert((sizeOfIndexType == 2 || sizeOfIndexType == 4) && "Invalid size of type.");
 
-			const uint32_t totalSize = static_cast<uint32_t>(sizeOfIndexType * indexCount);
-
-			// Shadow copy (necessário para GetData)
-			m_shadowData.resize(totalSize);
-
-			const bgfx::Memory* mem = bgfx::copy(m_shadowData.data(), totalSize);
+			uint32_t totalSize = static_cast<uint32_t>(sizeOfIndexType * indexCount);						
 
 			if (usage == Xna::BufferUsage::WriteOnly)
 				flags |= BGFX_BUFFER_COMPUTE_WRITE;
@@ -38,22 +33,15 @@ namespace Xna {
 			assert(data != nullptr && "Data is null.");
 
 			const size_t copySize = elementSize * elementCount;
-			assert(offsetInBytes + copySize <= m_shadowData.size() && "SetData: overflow");
+			assert(offsetInBytes + copySize <= totalSize && "SetData: overflow");			
 
-			const auto data1 = reinterpret_cast<const uint8_t*>(data);
+			const uint8_t* srcPtr =
+				reinterpret_cast<const uint8_t*>(data) +
+				(startIndex * elementSize);
 
-			// Copia para shadow buffer
-			std::memcpy(
-				m_shadowData.data() + offsetInBytes,
-				data1 + startIndex,
-				copySize
-			);
+			const size_t sizeInBytes = elementCount * elementSize;
 
-			// Atualiza GPU
-			const bgfx::Memory* mem = bgfx::copy(
-				m_shadowData.data() + offsetInBytes,
-				static_cast<uint32_t>(copySize)
-			);
+			const bgfx::Memory* mem = bgfx::copy(srcPtr, sizeInBytes);
 
 			if (isValid(m_handle))
 				bgfx::destroy(m_handle);
@@ -62,23 +50,11 @@ namespace Xna {
 		}
 
 		void GetData(size_t offsetInBytes, void* data, size_t startIndex, size_t elementCount, size_t elementSize) override {
-			const size_t copySize = elementSize * elementCount;
-
-			assert(offsetInBytes + copySize <= m_shadowData.size() && "GetData: overflow.");
-			assert(startIndex + elementCount <= elementCount && "startIndex + elementCount > data.size()");
-
-			// Lê do shadow buffer (bgfx não permite leitura direta da GPU)
-			auto data1 = reinterpret_cast<uint8_t*>(data);
-
-			std::memcpy(
-				data1 + startIndex,
-				m_shadowData.data() + offsetInBytes,
-				copySize
-			);
+			assert(false && "not supported");
 		}
 
-		PlatformNS::BufferStats GetStats() override {
-			PlatformNS::BufferStats stats{};
+		PlatformNS::IndexBufferStats GetStats() override {
+			PlatformNS::IndexBufferStats stats{};
 			stats.Usage = (flags & static_cast<int>(BGFX_BUFFER_INDEX32)) == static_cast<int>(BGFX_BUFFER_INDEX32) ? BufferUsage::WriteOnly : BufferUsage::None;
 			stats.IndexCount = m_indexCount;
 			stats.IndexElementSize = m_sizeOfIndexType;
@@ -97,9 +73,7 @@ namespace Xna {
 		size_t m_sizeOfIndexType{ 0 };
 		size_t m_indexCount{ 0 };
 		Xna::BufferUsage m_usage{ BufferUsage::None };
-
-		bool m_enableShadow{ false };
-		std::vector<uint8_t> m_shadowData;
+		
 		uint16_t m_flags{ BGFX_BUFFER_NONE };
 
 		void Init(GraphicsDevice& device, size_t sizeOfIndexType, size_t indexCount, Xna::BufferUsage usage) override {
@@ -114,10 +88,7 @@ namespace Xna {
 			m_handle = bgfx::createDynamicIndexBuffer(
 				static_cast<uint32_t>(indexCount),
 				m_flags
-			);
-
-			if (m_enableShadow)
-				m_shadowData.resize(sizeOfIndexType * indexCount);
+			);			
 
 			m_sizeOfIndexType = sizeOfIndexType;
 			m_indexCount = indexCount;
@@ -131,16 +102,7 @@ namespace Xna {
 
 			assert(offsetInBytes + copySize <= m_sizeOfIndexType * m_indexCount && "offsetInBytes + copySize > m_sizeOfIndexType * m_indexCount");
 
-			const auto data1 = reinterpret_cast<const uint8_t*>(data);
-
-			// Atualiza shadow (se existir)
-			if (m_enableShadow) {
-				std::memcpy(
-					m_shadowData.data() + offsetInBytes,
-					data1 + startIndex,
-					copySize
-				);
-			}
+			const auto data1 = reinterpret_cast<const uint8_t*>(data);			
 
 			// DISCARD = recria buffer (evita stall)
 			if (setDataOptions == SetDataOptions::Discard) {
@@ -165,20 +127,7 @@ namespace Xna {
 		}
 
 		void GetData(size_t offsetInBytes, void* data, size_t startIndex, size_t elementCount, size_t elementSize) override {
-			assert(m_enableShadow && "GetData requer shadow buffer");
-
-			const size_t copySize = elementSize * elementCount;
-
-			assert(offsetInBytes + copySize <= m_shadowData.size() && "offsetInBytes + copySize > m_shadowData.size()");
-			assert(startIndex + elementCount <= elementCount && "startIndex + elementCount > data.size()");
-
-			auto data1 = reinterpret_cast<uint8_t*>(data);
-
-			std::memcpy(
-				data1 + startIndex,
-				m_shadowData.data() + offsetInBytes,
-				copySize
-			);
+			assert(false && "not supported");
 		}
 
 		PlatformNS::BufferStats GetStats() override {
@@ -317,9 +266,14 @@ namespace Xna {
 	//XNA usa Offset manual, bgfx assume layout sequencial
 	//A ordem dos elementos precisa estar correta
 	//Não há suporte direto para gaps (padding manual)
+
 	struct BgfxVertexBuffer final : public PlatformNS::IVertexBuffer {
 		bgfx::VertexBufferHandle m_handle{ BGFX_INVALID_HANDLE };
 		bgfx::VertexLayout m_layout{};
+		uint32_t m_flags{ 0 };
+		uint32_t m_vertexCount{ 0 };
+		Xna::VertexDeclaration m_vertexDeclaration{};
+		Xna::BufferUsage m_usage;
 
 		void Init(Xna::GraphicsDevice const& graphicsDevice, Xna::VertexDeclaration const& vertexDeclaration, size_t vertexCount, Xna::BufferUsage usage) override {
 			//Copiar e ordenar elementos por Offset
@@ -338,7 +292,7 @@ namespace Xna {
 			for (const auto& element : elements)
 			{
 				//Validar alinhamento
-				assert(!(element.Offset < currentOffset) && "Invalid offset");
+				assert(element.Offset >= currentOffset && "Invalid offset");
 
 				//Converter usage → attrib
 				bgfx::Attrib::Enum attrib =
@@ -363,11 +317,15 @@ namespace Xna {
 			}
 
 			m_layout.end();			
+
+			m_usage = usage;
+			m_vertexCount = vertexCount;
+			m_vertexDeclaration = vertexDeclaration;
 		}
 
-		void SetData(size_t offsetInBytes, const void* data, size_t startIndex, size_t elementCount, size_t vertexStride, size_t elementSize) override {
-			assert(data == nullptr && "data is null.");
-			assert(!(startIndex + elementCount > elementCount) && "Data out of bounds.");			
+		void SetData(size_t offsetInBytes, const void* data, size_t startIndex, size_t elementCount, size_t vertexStride, size_t elementSize, SetDataOptions options) override {
+			assert(data != nullptr && "data is null.");
+			assert(elementCount > 0 && "elementCount must be > 0");
 
 			const uint8_t* srcPtr =
 				reinterpret_cast<const uint8_t*>(data) +
@@ -377,20 +335,141 @@ namespace Xna {
 
 			const bgfx::Memory* mem = bgfx::copy(srcPtr, sizeInBytes);
 
-			if(bgfx::isValid(m_handle))
+			if (bgfx::isValid(m_handle))
 				bgfx::destroy(m_handle);
 
-			m_handle = bgfx::createVertexBuffer(mem, m_layout);
+			m_handle = bgfx::createVertexBuffer(mem, m_layout, m_flags);
 
 			assert(bgfx::isValid(m_handle) && "bgfx::createVertexBuffer failed.");
 		}
 
 		void GetData(size_t offsetInBytes, void* data, size_t startIndex, size_t elementCount, size_t vertexStride, size_t elementSize) override {
-			throw std::runtime_error("not supported");
+			assert(false && "not supported");
+		}
+
+		PlatformNS::VertexBufferStats GetStats() override {
+			PlatformNS::VertexBufferStats stats{};
+			stats.Usage = m_usage;
+			stats.VertexCount = m_vertexCount;
+			stats.VertexDeclaration = m_vertexDeclaration;
+			return stats;
 		}
 
 		~BgfxVertexBuffer() override {
 			if (bgfx::isValid(m_handle)) bgfx::destroy(m_handle);
+		}
+	};
+
+	struct BgfxDynamicVertexBuffer final : public PlatformNS::IVertexBuffer {
+		bgfx::DynamicVertexBufferHandle m_dynamicHandle{ BGFX_INVALID_HANDLE };
+		bgfx::VertexLayout m_layout{};
+		uint32_t m_flags{ 0 };
+
+		uint32_t m_vertexCount{ 0 };
+		Xna::VertexDeclaration m_vertexDeclaration{};
+		Xna::BufferUsage m_usage;
+
+		void Init(Xna::GraphicsDevice const& graphicsDevice, Xna::VertexDeclaration const& vertexDeclaration, size_t vertexCount, Xna::BufferUsage usage) override {
+			//Copiar e ordenar elementos por Offset
+			auto elements = vertexDeclaration.GetVertexElements();
+			std::sort(elements.begin(), elements.end(),
+				[](const Xna::VertexElement& a, const Xna::VertexElement& b)
+				{
+					return a.Offset < b.Offset;
+				});
+
+			//Construir VertexLayout
+			m_layout.begin();
+
+			uint32_t currentOffset = 0;
+
+			for (const auto& element : elements)
+			{
+				//Validar alinhamento
+				assert(element.Offset >= currentOffset && "Invalid offset");
+
+				//Converter usage → attrib
+				bgfx::Attrib::Enum attrib =
+					ConvertVertexElementUsage(
+						element.VertexElementUsage,
+						static_cast<uint8_t>(element.UsageIndex));
+
+				//Converter format → tipo bgfx
+				AttribTypeInfo info =
+					ConvertVertexElementFormat(element.VertexElementFormat);
+
+				//Adicionar ao layout
+				m_layout.add(
+					attrib,
+					info.numComponents,
+					info.type,
+					info.normalized
+				);
+
+				//Atualizar offset lógico
+				currentOffset = element.Offset; // bgfx não usa offset explícito
+			}
+
+			m_layout.end();	
+
+			m_usage = usage;
+			m_vertexCount = vertexCount;
+			m_vertexDeclaration = vertexDeclaration;
+		}
+
+		void SetData(size_t offsetInBytes, const void* data, size_t startIndex, size_t elementCount, size_t vertexStride, size_t elementSize, SetDataOptions options) override
+		{
+			assert(data != nullptr && "data is null.");
+
+			const uint8_t* srcPtr =
+				reinterpret_cast<const uint8_t*>(data) +
+				(startIndex * elementSize);
+
+			const size_t sizeInBytes = elementCount * elementSize;
+
+			const bgfx::Memory* mem = bgfx::copy(srcPtr, sizeInBytes);
+
+			const bool isValid = bgfx::isValid(m_dynamicHandle);
+
+			// Converter offset → vértices
+			const uint32_t vertexOffset =
+				static_cast<uint32_t>(offsetInBytes / vertexStride);
+
+			if (options == SetDataOptions::Discard || !isValid)
+			{
+				if (isValid)
+					bgfx::destroy(m_dynamicHandle);
+
+				// cria buffer com tamanho total (em vértices)
+				const uint32_t totalVertices =
+					static_cast<uint32_t>(sizeInBytes / vertexStride);
+
+				m_dynamicHandle = bgfx::createDynamicVertexBuffer(
+					totalVertices,
+					m_layout,
+					m_flags
+				);
+			}
+
+			bgfx::update(m_dynamicHandle, vertexOffset, mem);
+
+			assert(bgfx::isValid(m_dynamicHandle) && "createDynamicVertexBuffer failed.");
+		}
+
+		void GetData(size_t offsetInBytes, void* data, size_t startIndex, size_t elementCount, size_t vertexStride, size_t elementSize) override {
+			assert(false && "not supported");
+		}
+
+		PlatformNS::VertexBufferStats GetStats() override {
+			PlatformNS::VertexBufferStats stats{};
+			stats.Usage = m_usage;
+			stats.VertexCount = m_vertexCount;
+			stats.VertexDeclaration = m_vertexDeclaration;
+			return stats;
+		}
+
+		~BgfxDynamicVertexBuffer() override {
+			if (bgfx::isValid(m_dynamicHandle)) bgfx::destroy(m_dynamicHandle);
 		}
 	};
 
@@ -407,6 +486,6 @@ namespace Xna {
 	}
 
 	std::unique_ptr<PlatformNS::IVertexBuffer> PlatformNS::IVertexBuffer::CreateDynamic() {
-		return nullptr;
+		return std::make_unique<BgfxDynamicVertexBuffer>();
 	}
 }

@@ -39,7 +39,7 @@ namespace Xna {
 		ModelBone(std::string const& name, Matrix const& transform, size_t index);
 		void SetParentAndChildren(ModelBone const& newParent, std::vector<ModelBone> const& newChildren);
 
-		XNPP_DECLARE_IMPL_WRAPPER(ModelBone, impl);	
+		XNPP_DECLARE_NULL_IMPL_WRAPPER(ModelBone, impl);	
 	private:
 		struct Implementation;
 		std::shared_ptr<Implementation> impl;
@@ -57,7 +57,7 @@ namespace Xna {
 		ModelBoneCollection(std::vector<ModelBone> const& bones)
 			: CSharp::Collection<ModelBone>(bones) {}
 
-		XNPP_DECLARE_IMPL_WRAPPER(ModelBoneCollection, m_items);
+		XNPP_DECLARE_NULL_IMPL_WRAPPER(ModelBoneCollection, m_items);
 	};
 
 	struct ModelBone::Implementation {
@@ -84,7 +84,7 @@ namespace Xna {
 
 		void Draw();
 
-		XNPP_DECLARE_IMPL_WRAPPER(ModelMesh, impl);
+		XNPP_DECLARE_NULL_IMPL_WRAPPER(ModelMesh, impl);
 	private:
 		struct Implementation;
 		std::shared_ptr<Implementation> impl;
@@ -112,7 +112,7 @@ namespace Xna {
 		inline Xna::VertexBuffer& VertexBuffer() { return *impl->vertexBuffer; }
 		inline Xna::Effect Effect();
 
-		XNPP_DECLARE_IMPL_WRAPPER(ModelMeshPart, impl);
+		XNPP_DECLARE_NULL_IMPL_WRAPPER(ModelMeshPart, impl);
 	private:
 		void Draw();
 
@@ -141,7 +141,7 @@ namespace Xna {
 		ModelMeshPartCollection(std::vector<ModelMeshPart>& parts)
 			: CSharp::Collection<ModelMeshPart>(parts) {}
 
-		XNPP_DECLARE_IMPL_WRAPPER(ModelMeshPartCollection, m_items);
+		XNPP_DECLARE_NULL_IMPL_WRAPPER(ModelMeshPartCollection, m_items);
 	};
 
 	class ModelEffectCollection final : public CSharp::Collection<std::shared_ptr<Xna::Effect>> {
@@ -153,7 +153,7 @@ namespace Xna {
 		ModelEffectCollection(std::vector<std::shared_ptr<Xna::Effect>> const& parts)
 			: CSharp::Collection<std::shared_ptr<Xna::Effect>>(parts) {}
 
-		XNPP_DECLARE_IMPL_WRAPPER(ModelEffectCollection, m_items);
+		XNPP_DECLARE_NULL_IMPL_WRAPPER(ModelEffectCollection, m_items);
 	};
 
 	struct ModelMesh::Implementation {
@@ -174,7 +174,7 @@ namespace Xna {
 		ModelMeshCollection(std::vector<ModelMesh>& parts)
 			: CSharp::Collection<ModelMesh>(parts) {}
 
-		XNPP_DECLARE_IMPL_WRAPPER(ModelMeshCollection, m_items);
+		XNPP_DECLARE_NULL_IMPL_WRAPPER(ModelMeshCollection, m_items);
 	};
 
 	inline const ModelBoneCollection& ModelBone::Children() const { return impl->children; }
@@ -193,7 +193,7 @@ namespace Xna {
 		inline const ModelBoneCollection& Bones() const { return impl->bones; }
 		inline const ModelMeshCollection& Meshes() const { return impl->meshes; }
 
-		XNPP_DECLARE_IMPL_WRAPPER(Model, impl);
+		XNPP_DECLARE_NULL_IMPL_WRAPPER(Model, impl);
 	private:
 		static Model Read(ContentReader& input);
 		void ReadBones(ContentReader& input);
