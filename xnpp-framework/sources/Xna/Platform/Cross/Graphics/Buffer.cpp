@@ -1,6 +1,6 @@
 ﻿#include "Xna/Platform/Platform.hpp"
 #include "Xna/Framework/Graphics/GraphicsDevice.hpp"
-#include "Xna/Framework/Graphics/Buffer.hpp"
+#include "Xna/Framework/Graphics/Buffers.hpp"
 #include <bgfx/bgfx.h>
 #include <algorithm>
 

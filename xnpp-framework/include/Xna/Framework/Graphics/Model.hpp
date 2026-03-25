@@ -5,8 +5,7 @@
 #include "Xna/Internal/Macros.hpp"
 #include "Xna/CSharp/Collection.hpp"
 #include "Xna/Framework/BoundingSphere.hpp"
-#include "IndexBuffer.hpp"
-#include "VertexBuffer.hpp"
+#include "Buffers.hpp"
 #include "Effects/Effect.hpp"
 #include <string>
 #include <vector>

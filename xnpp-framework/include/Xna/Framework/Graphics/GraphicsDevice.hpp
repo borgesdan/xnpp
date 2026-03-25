@@ -11,8 +11,8 @@
 #include "SamplerState.hpp"
 #include "RenderTarget2D.hpp"
 #include "RenderTargetBinding.hpp"
-#include "VertexBufferBinding.hpp"
 #include "TextureCollection.hpp"
+#include "Buffers.hpp"
 
 #include <optional>
 

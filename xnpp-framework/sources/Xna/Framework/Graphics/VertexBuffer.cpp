@@ -1,4 +1,4 @@
-#include "Xna/Framework/Graphics/VertexBuffer.hpp"
+#include "Xna/Framework/Graphics/VertexBuffers.hpp"
 #include "Xna/Framework/Graphics/GraphicsDevice.hpp"
 
 namespace Xna {

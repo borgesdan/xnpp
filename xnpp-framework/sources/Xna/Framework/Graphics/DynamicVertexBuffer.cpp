@@ -1,4 +1,4 @@
-#include "Xna/Framework/Graphics/DynamicVertexBuffer.hpp"
+#include "Xna/Framework/Graphics/DynamicVertexBuffers.hpp"
 #include "Xna/Framework/Graphics/GraphicsDevice.hpp"
 
 namespace Xna {

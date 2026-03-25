@@ -1,1 +1,1 @@
-#include "Xna/Framework/Graphics/Buffer.hpp"
+#include "Xna/Framework/Graphics/Buffers.hpp"

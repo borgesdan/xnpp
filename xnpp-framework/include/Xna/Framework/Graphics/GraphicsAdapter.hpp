@@ -5,7 +5,6 @@
 #include <string>
 #include <memory>
 #include "DisplayMode.hpp"
-#include "DisplayModeCollection.hpp"
 #include "Xna/Platform/Platform.hpp"
 #include "Xna/Internal/Macros.hpp"
 

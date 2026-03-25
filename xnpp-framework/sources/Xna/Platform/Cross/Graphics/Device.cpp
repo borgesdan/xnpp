@@ -120,6 +120,10 @@ namespace Xna {
 		void SetViewport(Viewport const& viewport) override {
 
 		}
+
+		void SetVertexBuffer(VertexBuffer const& vertexBuffer, uint32_t vertexOffset) override {
+
+		}
 		
 		void Reset(Xna::PresentationParameters const& presentationParameters, GraphicsAdapter const& graphicsAdapter) {}		
 		void ApplyBlendState(BlendState const& blend) override;

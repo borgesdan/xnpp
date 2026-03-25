@@ -10,7 +10,7 @@
 using Xna::CSharp::TimeSpan;
 
 namespace Xna {
-    GameRunMode Game::RunMode = GameRunMode::Bgfx;
+    GameRunMode Game::RunMode = GameRunMode::HostFirst;
 
     GameRunMode Game::CurrentRunMode() { return RunMode; }
 

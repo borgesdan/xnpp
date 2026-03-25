@@ -4,6 +4,8 @@
 #include "Xna/Platform/Platform.hpp"
 
 namespace Xna {
+    static GraphicsDevice CurrentGraphicsDevice = nullptr;
+
     GraphicsDevice::GraphicsDevice(GraphicsAdapter const& adapter, Xna::GraphicsProfile const& graphicsProfile, Xna::PresentationParameters const& presentationParameters) {
         assert(adapter != nullptr && "GraphicsAdapter is null.");
 
@@ -15,6 +17,8 @@ namespace Xna {
         impl->presentationParameters = presentationParameters;       
 
         impl->backend->CreateDevice(adapter, presentationParameters);
+
+        CurrentGraphicsDevice = *this;
     }    
 
     void GraphicsDevice::MultiSampleMask(int32_t value) {
@@ -80,5 +84,17 @@ namespace Xna {
             return;
 
         impl->backend->ApplyRasterizerState(value); 
+    }
+
+    void GraphicsDevice::SetCurrentDevice(GraphicsDevice const& device) {
+        CurrentGraphicsDevice = device;
+    }
+
+    GraphicsDevice GraphicsDevice::GetCurrent() {
+        return CurrentGraphicsDevice;
+    }
+
+    void GraphicsDevice::SetVertexBuffer(VertexBuffer const& vertexBuffer, uint32_t vertexOffset = 0) {
+        impl->backend->SetVertexBuffer(vertexBuffer, vertexOffset);
     }
 }

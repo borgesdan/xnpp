@@ -67,7 +67,7 @@ namespace Xna {
 		if (impl->numVertices == 0)
 			return;
 
-		auto graphicsDevice = impl->vertexBuffer->GraphicsDevice();
+		auto graphicsDevice = GraphicsDevice::GetCurrent();
 		graphicsDevice.SetVertexBuffer(*impl->vertexBuffer, impl->vertexOffset);
 		graphicsDevice.Indices(impl->indexBuffer);
 		graphicsDevice.DrawIndexedPrimitives(PrimitiveType::TriangleList, 0, 0, impl->numVertices, impl->startIndex, impl->primitiveCount);

@@ -1,5 +1,5 @@
-#ifndef XNA_FRAMEWORK_GRAPHICS_BUFFER_HPP
-#define XNA_FRAMEWORK_GRAPHICS_BUFFER_HPP
+#ifndef XNA_FRAMEWORK_GRAPHICS_BUFFERS_HPP
+#define XNA_FRAMEWORK_GRAPHICS_BUFFERS_HPP
 
 #include <memory>
 #include <vector>
@@ -133,13 +133,13 @@ namespace Xna {
 		//Sets the vertex buffer data.
 		template <typename T>
 		void SetData(std::vector<T> const& data, size_t startIndex, size_t elementCount) {
-			SetData(0, data, startIndex, elementCount, impl->vertexDeclaration.VertexStride());
+			SetData(0, data, startIndex, elementCount, m_backend->vertexDeclaration.VertexStride());
 		}
 
 		//Sets the vertex buffer data.
 		template <typename T>
 		void SetData(size_t offsetInBytes, std::vector<T> const& data, size_t startIndex, size_t elementCount, size_t vertexStride) {			
-			assert(vertexStride == impl->vertexDeclaration.VertexStride() && "Vertex stride mismatch");
+			assert(vertexStride == m_backend->vertexDeclaration.VertexStride() && "Vertex stride mismatch");
 
 			const auto dataSize = elementCount * sizeof(T);		
 			
@@ -155,13 +155,13 @@ namespace Xna {
 		//Returns a copy of the vertex buffer data.
 		template <typename T>
 		void GetData(std::vector<T>& data, size_t startIndex, size_t elementCount) {
-			GetData(0, data, startIndex, elementCount, impl->vertexDeclaration.VertexStride());
+			GetData(0, data, startIndex, elementCount, m_backend->vertexDeclaration.VertexStride());
 		}
 
 		//Returns a copy of the vertex buffer data.
 		template <typename T>
 		void GetData(size_t offsetInBytes, std::vector<T>& data, size_t startIndex, size_t elementCount, size_t vertexStride) {
-			assert(vertexStride == impl->vertexDeclaration.VertexStride() && "Vertex stride mismatch");						
+			assert(vertexStride == m_backend->vertexDeclaration.VertexStride() && "Vertex stride mismatch");						
 			m_backend->GetData(offsetInBytes, data.data(), startIndex, elementCount, vertexStride);
 		}
 
@@ -196,7 +196,7 @@ namespace Xna {
 		//Copies array data to the vertex buffer.
 		template <typename T>
 		void SetData(std::vector<T> const& data, size_t startIndex, size_t elementCount, SetDataOptions options) {
-			SetData(0, data, startIndex, elementCount, impl->vertexDeclaration.VertexStride(), options);
+			SetData(0, data, startIndex, elementCount, m_backend->vertexDeclaration.VertexStride(), options);
 		}
 		//Copies array data to the vertex buffer.
 		template <typename T>
@@ -205,6 +205,32 @@ namespace Xna {
 		}
 
 		XNPP_DECLARE_NULL_IMPL_BASE_WRAPPER(DynamicVertexBuffer, VertexBuffer, m_backend);
+	};
+
+	//Binding structure that specifies a vertex buffer and other per-vertex parameters (such as offset and instancing) for a graphics device.
+	struct VertexBufferBinding {
+		//Creates an instance of this object.
+		constexpr VertexBufferBinding() = default;
+		//Creates an instance of this object.
+		XNPP_API VertexBufferBinding(Xna::VertexBuffer const& vertexBuffer, size_t vertexOffset, size_t instanceFrequency);
+		//Creates an instance of this object.
+		XNPP_API VertexBufferBinding(Xna::VertexBuffer const& vertexBuffer, size_t vertexOffset);
+		//Creates an instance of this object.
+		inline VertexBufferBinding(Xna::VertexBuffer const& vertexBuffer)
+			: vertexBuffer(vertexBuffer) {
+		}
+
+		//Gets the offset between the beginning of the buffer and the vertex data to use.
+		inline Xna::VertexBuffer VertexBuffer() const noexcept { return vertexBuffer; }
+		//Gets a vertex buffer.
+		inline size_t VertexOffset() const noexcept { return vertexOffset; }
+		//Gets the instancing frequency.
+		inline size_t InstanceFrequency() const noexcept { return instanceFrequency; }
+
+	private:
+		Xna::VertexBuffer vertexBuffer{ nullptr };
+		size_t vertexOffset{ 0 };
+		size_t instanceFrequency{ 0 };
 	};
 }
 

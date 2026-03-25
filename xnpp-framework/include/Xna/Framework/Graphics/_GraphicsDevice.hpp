@@ -152,9 +152,7 @@ namespace Xna {
 			//TODO
 		}
 		//Sets or binds a vertex buffer to the device.
-		void SetVertexBuffer(VertexBuffer const& vertexBuffer, int32_t vertexOffset = 0) {
-			//TODO
-		}
+		void SetVertexBuffer(VertexBuffer const& vertexBuffer, uint32_t vertexOffset = 0);
 		//Sets or binds a vertex buffer to the device.
 		void SetVertexBuffers(std::vector<VertexBufferBinding> const& vertexBuffers) {
 			//TODO
@@ -176,9 +174,12 @@ namespace Xna {
 		inline explicit operator bool() const noexcept { return impl != nullptr; }
 
 		inline PlatformNS::IGraphicsDevice& GetBackend();
+		static GraphicsDevice GetCurrent();
 
 	private:		
 		inline RenderTarget2D CreateBackBufferRenderTarget() const;
+
+		static void SetCurrentDevice(GraphicsDevice const& device);
 	
 		struct Implementation;
 		std::shared_ptr<Implementation> impl;	
