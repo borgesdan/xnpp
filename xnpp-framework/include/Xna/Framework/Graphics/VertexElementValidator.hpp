@@ -4,6 +4,7 @@
 #include "Shared.hpp"
 #include "VertexElement.hpp"
 #include <memory>
+#include <cassert>
 
 namespace Xna {
 
@@ -47,6 +48,21 @@ namespace Xna {
                     vertexStride = num;
             }
             return vertexStride;
+        }
+
+        constexpr static void Validate(uint32_t vertexStride, std::vector<VertexElement> const& elements) {
+            assert(!(vertexStride <= 0) && "vertexString <= 0");
+            assert(!((vertexStride & 3) != 0) && "(vertexStride & 3) != 0");
+
+            for (const auto& element : elements) {
+                assert(!((int)element.VertexElementUsage < (int)VertexElementUsage::Position || (int)element.VertexElementUsage > (int)VertexElementUsage::TessellateFactor) && " FrameworkResources.VertexElementBadUsage");
+
+                const auto offset = element.Offset;
+                const auto typeSize = GetTypeSize(element.VertexElementFormat);
+
+                assert(!(offset < 0 || offset + typeSize > vertexStride) && "FrameworkResources.VertexElementOutsideStride");
+                assert(!((offset & 3) != 0) && "FrameworkResources.VertexElementOffsetNotMultipleFour");
+            }
         }
 
 		VertexElementValidator() = delete;

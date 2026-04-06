@@ -72,7 +72,7 @@ namespace Xna {
 			std::vector<Vector3> const& kerning,
 			std::optional<char32_t> const& defaultCharacter);
 
-		XNPP_DECLARE_IMPL_WRAPPER(SpriteFont, impl);
+		XNPP_DECLARE_NULL_IMPL_WRAPPER(SpriteFont, impl);
 	private:
 		struct Implementation {
 			Xna::Texture2D textureValue{ nullptr };
