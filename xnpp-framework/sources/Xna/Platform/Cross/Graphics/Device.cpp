@@ -42,7 +42,7 @@ namespace Xna {
 			auto window = reinterpret_cast<SDL_Window*>(pp.DeviceWindowHandle);
 
 			assert(window != nullptr && "Invalid window handle.");
-			assert(pp.BackBufferFormat == SurfaceFormat::Unknown && "SurfaceFormated not suported.");
+			assert(pp.BackBufferFormat != SurfaceFormat::Unknown && "SurfaceFormated not suported.");
 
 			bgfx::PlatformData pd{};
 

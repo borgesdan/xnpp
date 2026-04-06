@@ -11,7 +11,7 @@
 class Game1 : public Xna::Game {
 	using base = Xna::Game;
 public:
-	Game1() : Xna::Game(Xna::GameRunMode::Bgfx) {
+	Game1() : Xna::Game(Xna::GameRunMode::HostFirst) {
 		graphics = Xna::GraphicsDeviceManager(*this);
 		Content().RootDirectory("Content");
 	}

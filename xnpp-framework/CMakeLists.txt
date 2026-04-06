@@ -35,16 +35,14 @@ set(XNPP_FRAMEWORK_SRC
     "sources/Xna/Framework/Graphics/GraphicsDevice.cpp"
     "sources/Xna/Framework/Graphics/RenderTarget2D.cpp"
     "sources/Xna/Framework/Graphics/IndexBuffer.cpp"
-    "sources/Xna/Framework/Graphics/DynamicIndexBuffer.cpp"
+    
     "sources/Xna/Framework/Graphics/DisplayModeCollection.cpp"
     "sources/Xna/Framework/Graphics/GraphicsAdapter.cpp"
     "sources/Xna/Framework/Graphics/SpriteBatch.cpp"
     "sources/Xna/Framework/Graphics/SpriteFont.cpp"
     "sources/Xna/Framework/Graphics/GraphicsContentHelper.cpp"
-    "sources/Xna/Framework/Graphics/DynamicVertexBuffer.cpp"
-    "sources/Xna/Framework/Graphics/VertexDeclaration.cpp"
-    "sources/Xna/Framework/Graphics/VertexBufferBinding.cpp"
-    "sources/Xna/Framework/Graphics/VertexBuffer.cpp"
+            
+    
     "sources/Xna/Framework/Input/Input.cpp"
     "sources/Xna/Framework/Content/ContentManager.cpp"
     "sources/Xna/Framework/Content/ContentReader.cpp"

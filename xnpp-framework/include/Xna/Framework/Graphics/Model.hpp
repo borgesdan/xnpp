@@ -23,22 +23,22 @@ namespace Xna {
 	class ModelBone final {
 	public:
 		//Gets the name of this bone.
-		inline const std::string& Name() const { return impl->name; }
+		inline const std::string& Name() const;
 		//Gets the index of this bone in the Bones collection.
-		inline size_t Index() const { return impl->index; }
+		inline size_t Index() const;
 		//Gets or sets the matrix used to transform this bone relative to its parent bone.
-		inline const Matrix& Transformation() const { return impl->transform; }
+		inline const Matrix& Transformation() const;
 		//Gets or sets the matrix used to transform this bone relative to its parent bone.
-		inline void Transformation(Matrix const& value) { impl->transform = value; }
+		inline void Transformation(Matrix const& value);
 		//Gets the parent of this bone.
-		inline const ModelBone& Parent() const { return impl->parent; }
+		inline const ModelBone& Parent() const;
 		//Gets a collection of bones that are children of this bone.
 		inline const ModelBoneCollection& Children() const;
 
 		ModelBone(std::string const& name, Matrix const& transform, size_t index);
 		void SetParentAndChildren(ModelBone const& newParent, std::vector<ModelBone> const& newChildren);
 
-		XNPP_DECLARE_NULL_IMPL_WRAPPER(ModelBone, impl);	
+		XNPP_DECLARE_NULL_IMPL_WRAPPER(ModelBone, impl);
 	private:
 		struct Implementation;
 		std::shared_ptr<Implementation> impl;
@@ -59,14 +59,6 @@ namespace Xna {
 		XNPP_DECLARE_NULL_IMPL_WRAPPER(ModelBoneCollection, m_items);
 	};
 
-	struct ModelBone::Implementation {
-		std::string name;
-		Matrix transform{ Matrix::Identity() };
-		size_t index{ 0 };
-		ModelBone parent;
-		ModelBoneCollection children;
-	};
-
 	//Represents a mesh that is part of a Model.
 	class ModelMesh final {
 	public:
@@ -75,9 +67,9 @@ namespace Xna {
 			Xna::BoundingSphere const& boundingSphere,
 			std::vector<ModelMeshPart>& meshParts);
 
-		inline const std::string& Name() const { return impl->name; }
-		inline const ModelBone& ParentBone() const { return impl->parentBone; }
-		inline const Xna::BoundingSphere& BoundingSphere() const { return impl->boundingSphere;  }
+		inline const std::string& Name() const;
+		inline const ModelBone& ParentBone() const;
+		inline const Xna::BoundingSphere& BoundingSphere() const;
 		inline const ModelMeshPartCollection& MeshParts() const;
 		inline const ModelEffectCollection& Effects() const;
 
@@ -101,7 +93,7 @@ namespace Xna {
 			impl->numVertices = numVertices;
 			impl->startIndex = startIndex;
 			impl->primitiveCount = primitiveCount;
-		}	
+		}
 
 		inline size_t StartIndex() const { return impl->startIndex; }
 		inline size_t PrimitiveCount() const { return impl->primitiveCount; }
@@ -123,12 +115,12 @@ namespace Xna {
 			size_t vertexOffset;
 			size_t numVertices;
 			std::shared_ptr<Xna::Effect> effect;
-			ModelMesh parent;
+			ModelMesh parent{nullptr};
 		};
 		std::shared_ptr<Implementation> impl;
 
 		friend class ModelMesh;
-	};	
+	};
 
 	class ModelMeshPartCollection final : public CSharp::Collection<ModelMeshPart> {
 	public:
@@ -147,21 +139,13 @@ namespace Xna {
 	public:
 		~ModelEffectCollection() override = default;
 
-		ModelEffectCollection() : CSharp::Collection<std::shared_ptr<Xna::Effect>>(){}
+		ModelEffectCollection() : CSharp::Collection<std::shared_ptr<Xna::Effect>>() {}
 
 		ModelEffectCollection(std::vector<std::shared_ptr<Xna::Effect>> const& parts)
 			: CSharp::Collection<std::shared_ptr<Xna::Effect>>(parts) {}
 
 		XNPP_DECLARE_NULL_IMPL_WRAPPER(ModelEffectCollection, m_items);
 	};
-
-	struct ModelMesh::Implementation {
-		std::string name;
-		ModelBone parentBone = nullptr;
-		Xna::BoundingSphere boundingSphere{};
-		ModelMeshPartCollection meshParts = nullptr;
-		ModelEffectCollection effects = nullptr;
-	};	
 
 	class ModelMeshCollection final : public CSharp::Collection<ModelMesh> {
 	public:
@@ -175,10 +159,6 @@ namespace Xna {
 
 		XNPP_DECLARE_NULL_IMPL_WRAPPER(ModelMeshCollection, m_items);
 	};
-
-	inline const ModelBoneCollection& ModelBone::Children() const { return impl->children; }
-	inline const ModelMeshPartCollection& ModelMesh::MeshParts() const { return impl->meshParts; }
-	inline const ModelEffectCollection& ModelMesh::Effects() const { return impl->effects; }
 
 	class Model {
 	public:
@@ -204,13 +184,42 @@ namespace Xna {
 		struct Implementation {
 			ModelBone root = nullptr;
 			ModelBoneCollection bones = nullptr;
-			ModelMeshCollection meshes = nullptr;			
+			ModelMeshCollection meshes = nullptr;
 		};
 
 		std::shared_ptr<Implementation> impl;
 
 		static inline std::vector<Matrix> sharedDrawBoneMatrices = std::vector<Matrix>();
 	};
+
+	struct ModelBone::Implementation {
+		std::string name;
+		Matrix transform{ Matrix::Identity() };
+		size_t index{ 0 };
+		ModelBone parent{ nullptr };
+		ModelBoneCollection children{ nullptr };
+	};
+
+	struct ModelMesh::Implementation {
+		std::string name;
+		ModelBone parentBone = nullptr;
+		Xna::BoundingSphere boundingSphere{};
+		ModelMeshPartCollection meshParts = nullptr;
+		ModelEffectCollection effects = nullptr;
+	};
+
+	inline const std::string& ModelBone::Name() const { return impl->name; }
+	inline size_t ModelBone::Index() const { return impl->index; }
+	inline const Matrix& ModelBone::Transformation() const { return impl->transform; }
+	inline void ModelBone::Transformation(Matrix const& value) { impl->transform = value; }
+	inline const ModelBone& ModelBone::Parent() const { return impl->parent; }
+	inline const ModelBoneCollection& ModelBone::Children() const { return impl->children; }
+	inline const ModelMeshPartCollection& ModelMesh::MeshParts() const { return impl->meshParts; }
+	inline const ModelEffectCollection& ModelMesh::Effects() const { return impl->effects; }
+
+	inline const std::string& ModelMesh::Name() const { return impl->name; }
+	inline const ModelBone& ModelMesh::ParentBone() const { return impl->parentBone; }
+	inline const Xna::BoundingSphere& ModelMesh::BoundingSphere() const { return impl->boundingSphere; }
 }
 
 #endif

@@ -94,7 +94,7 @@ namespace Xna {
         return CurrentGraphicsDevice;
     }
 
-    void GraphicsDevice::SetVertexBuffer(VertexBuffer const& vertexBuffer, uint32_t vertexOffset = 0) {
+    void GraphicsDevice::SetVertexBuffer(VertexBuffer const& vertexBuffer, uint32_t vertexOffset) {
         impl->backend->SetVertexBuffer(vertexBuffer, vertexOffset);
     }
 }

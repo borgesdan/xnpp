@@ -130,8 +130,8 @@ namespace Xna {
 			assert(false && "not supported");
 		}
 
-		PlatformNS::BufferStats GetStats() override {
-			PlatformNS::BufferStats stats{};
+		PlatformNS::IndexBufferStats GetStats() override {
+			PlatformNS::IndexBufferStats stats{};
 			stats.Usage = (m_flags & static_cast<int>(BGFX_BUFFER_INDEX32)) == static_cast<int>(BGFX_BUFFER_INDEX32) ? BufferUsage::WriteOnly : BufferUsage::None;
 			stats.IndexCount = m_indexCount;
 			stats.IndexElementSize = m_sizeOfIndexType;
