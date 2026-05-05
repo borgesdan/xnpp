@@ -34,15 +34,12 @@ set(XNPP_FRAMEWORK_SRC
     "sources/Xna/Framework/Graphics/Texture2D.cpp"        
     "sources/Xna/Framework/Graphics/GraphicsDevice.cpp"
     "sources/Xna/Framework/Graphics/RenderTarget2D.cpp"
-    "sources/Xna/Framework/Graphics/IndexBuffer.cpp"
-    
+    "sources/Xna/Framework/Graphics/IndexBuffer.cpp"    
     "sources/Xna/Framework/Graphics/DisplayModeCollection.cpp"
     "sources/Xna/Framework/Graphics/GraphicsAdapter.cpp"
     "sources/Xna/Framework/Graphics/SpriteBatch.cpp"
     "sources/Xna/Framework/Graphics/SpriteFont.cpp"
-    "sources/Xna/Framework/Graphics/GraphicsContentHelper.cpp"
-            
-    
+    "sources/Xna/Framework/Graphics/GraphicsContentHelper.cpp"   
     "sources/Xna/Framework/Input/Input.cpp"
     "sources/Xna/Framework/Content/ContentManager.cpp"
     "sources/Xna/Framework/Content/ContentReader.cpp"
@@ -59,7 +56,8 @@ set(XNPP_FRAMEWORK_SRC
     "sources/Xna/Framework/Media/MediaQueue.cpp"
     "sources/Xna/CSharp/Type.cpp"
     "sources/Xna/Framework/Content/Readers/BasicReaders.cpp" 
- "sources/Xna/Framework/Graphics/Model.cpp")
+    "sources/Xna/Framework/Graphics/Model.cpp"
+)
 
 set(XNPP_PLATFORM_SRC
     "sources/Xna/Platform/Cross/System.cpp" 
@@ -87,7 +85,6 @@ add_library(xnpp
 target_compile_features(xnpp PUBLIC cxx_std_20)
 
 target_compile_definitions(xnpp PRIVATE XNPP_EXPORT_DLL)
-target_compile_definitions(xnpp PRIVATE XNPP_DONT_USE_XNA_KEYS)
 
 #SDL3
 find_package(SDL3 CONFIG REQUIRED)

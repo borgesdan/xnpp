@@ -3,7 +3,7 @@
 project("XnppFramework" VERSION 0.1.0 LANGUAGES C CXX)
 
 option(XNPP_BUILD_LIB "Build Xnpp library" ON)
-option(XNPP_BUILD_CONTENTPIPELINE "Build Xnpp ContentPipeline" OFF)
+option(XNPP_BUILD_CONTENTPIPELINE "Build Xnpp ContentPipeline" ON)
 option(XNPP_BUILD_GAME_TEST "Build Xnpp Game Test" ON)
 
 if (XNPP_BUILD_LIB)
