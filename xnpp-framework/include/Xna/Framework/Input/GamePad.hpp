@@ -3,6 +3,7 @@
 
 #include "Shared.hpp"
 #include "Xna/Framework/Vector2.hpp"
+#include "Xna/Internal/Macros.hpp"
 
 namespace Xna {
 	//Specifies the game controller associated with a player.
@@ -372,14 +373,14 @@ namespace Xna {
 	struct GamePad final {
 	public:		
 		//Gets the current state of a game pad controller. As an option, it specifies a dead zone processing method for the analog sticks.
-		static GamePadState GetState(PlayerIndex index, GamePadDeadZone deadZone = GamePadDeadZone::IndependentAxes);
+		XNPP_API static GamePadState GetState(PlayerIndex index, GamePadDeadZone deadZone = GamePadDeadZone::IndependentAxes);
 
 		//Retrieves the capabilities of an Xbox Controller.
-		static GamePadCapabilities GetCapabilities(PlayerIndex index);
+		XNPP_API static GamePadCapabilities GetCapabilities(PlayerIndex index);
 		//Sets the vibration motor speeds on an Xbox Controller.
 		//leftMotor: The speed of the left motor, between 0.0 and 1.0.This motor is a low - frequency motor.
 		//rightMotor: The speed of the right motor, between 0.0 and 1.0. This motor is a high-frequency motor.
-		static bool SetVibration(PlayerIndex index, float leftMotor, float rightMotor, float leftTrigger = 0, float rightTrigger = 0);
+		XNPP_API static bool SetVibration(PlayerIndex index, float leftMotor, float rightMotor, float leftTrigger = 0, float rightTrigger = 0);
 	
 		GamePad() = delete;
 		GamePad(GamePad&) = delete;
