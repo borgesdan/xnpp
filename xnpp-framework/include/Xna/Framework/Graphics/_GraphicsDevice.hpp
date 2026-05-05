@@ -10,7 +10,7 @@
 #include "Xna/CSharp/Exception.hpp"
 #include "Xna/CSharp/Event.hpp"
 #include "PresentationParameters.hpp"
-#include "Xna/Internal/Export.hpp"
+#include "Xna/Internal/Macros.hpp"
 #include "Xna/Platform/Platform.hpp"
 
 namespace Xna {

@@ -6,7 +6,7 @@
 #include <mutex>
 #include <memory>
 #include <algorithm>
-#include "Xna/Internal/Export.hpp"
+#include "Xna/Internal/Macros.hpp"
 
 namespace Xna::CSharp {
     // ---- Base EventArgs ----

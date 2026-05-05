@@ -7,7 +7,7 @@
 #include <limits>
 #include <fstream>
 #include <string>
-#include "Xna/Internal/Export.hpp"
+#include "Xna/Internal/Macros.hpp"
 
 namespace Xna::CSharp {
 	// Provides seek reference points.  To seek to the end of a stream,

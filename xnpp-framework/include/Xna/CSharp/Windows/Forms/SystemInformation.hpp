@@ -3,7 +3,7 @@
 
 #include "../../Drawing/Rectangle.hpp"
 #include <cstdint>
-#include "Xna/Internal/Export.hpp"
+#include "Xna/Internal/Macros.hpp"
 
 namespace Xna::CSharp {
 	struct XNPP_API SystemInformation {

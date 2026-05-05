@@ -2,7 +2,7 @@
 #define CSHARP_IO_MEMORYSTREAM_HPP
 
 #include "Stream.hpp"
-#include "Xna/Internal/Export.hpp"
+#include "Xna/Internal/Macros.hpp"
 
 namespace Xna::CSharp {
 	class MemoryStream : public Stream {

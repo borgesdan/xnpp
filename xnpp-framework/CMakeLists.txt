@@ -82,6 +82,18 @@ add_library(xnpp
         ${MINIAUDIO_VORBIS_SRC} 
 )
 
+# Lógica mágica de exportação/importação:
+if(BUILD_SHARED_LIBS)
+    # Se for DLL, dizemos APENAS para o xnpp exportar os símbolos.
+    # Os consumidores não recebem essa macro e caem no 'dllimport'.
+    target_compile_definitions(xnpp PRIVATE XNPP_EXPORT_DLL)
+else()
+    # Se for ESTÁTICO, nós desligamos o import/export.
+    # Usamos PUBLIC para que qualquer target que faça link com xnpp 
+    # (como seus .exe) também herde a macro XNPP_STATIC automaticamente!
+    target_compile_definitions(xnpp PUBLIC XNPP_STATIC)
+endif()
+
 target_compile_features(xnpp PUBLIC cxx_std_20)
 
 target_compile_definitions(xnpp PRIVATE XNPP_EXPORT_DLL)

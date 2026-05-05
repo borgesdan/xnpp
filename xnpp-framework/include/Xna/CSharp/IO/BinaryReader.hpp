@@ -5,7 +5,7 @@
 #include "Xna/CSharp/Exception.hpp"
 #include <optional>
 #include <cstdint>
-#include "Xna/Internal/Export.hpp"
+#include "Xna/Internal/Macros.hpp"
 
 namespace Xna::CSharp {
 	class BinaryReader {

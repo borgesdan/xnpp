@@ -4,7 +4,7 @@
 #include "SoundEffectInstance.hpp"
 #include "AudioFormat.hpp"
 #include "Xna/Platform/Platform.hpp"
-#include "Xna/Internal/Export.hpp"
+#include "Xna/Internal/Macros.hpp"
 
 namespace Xna {
 	class DynamicSoundEffectInstance final : public SoundEffectInstance {

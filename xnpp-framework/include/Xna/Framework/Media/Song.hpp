@@ -6,7 +6,7 @@
 #include "Genre.hpp"
 #include "Xna/CSharp/Collection.hpp"
 #include "Xna/CSharp/TimeSpan.hpp"
-#include "Xna/Internal/Export.hpp"
+#include "Xna/Internal/Macros.hpp"
 #include "Xna/Platform/Platform.hpp"
 #include <cstdint>
 #include <filesystem>

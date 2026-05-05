@@ -6,7 +6,7 @@
 #include <optional>
 #include "_Game.hpp"
 #include "Xna/CSharp/Event.hpp"
-#include "Xna/Internal/Export.hpp"
+#include "Xna/Internal/Macros.hpp"
 
 namespace Xna {
 	class GameHost {

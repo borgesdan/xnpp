@@ -4,7 +4,7 @@
 #include "Stream.hpp"
 #include <fstream>
 #include <filesystem>
-#include "Xna/Internal/Export.hpp"
+#include "Xna/Internal/Macros.hpp"
 
 namespace Xna::CSharp {
 	// Contains constants for specifying how the OS should open a file.

@@ -10,7 +10,7 @@
 #include "Xna/Framework/Graphics/IGraphicsDeviceService.hpp"
 #include "Xna/Framework/Graphics/Shared.hpp"
 #include "Xna/Framework/Shared.hpp"
-#include "Xna/Internal/Export.hpp"
+#include "Xna/Internal/Macros.hpp"
 #include <cstdint>
 #include <memory>
 #include <optional>

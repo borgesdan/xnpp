@@ -9,7 +9,7 @@
 #include <string>
 #include <optional>
 #include <functional>
-#include "Xna/Internal/Export.hpp"
+#include "Xna/Internal/Macros.hpp"
 #include "Xna/Internal/Misc.hpp"
 
 namespace Xna::CSharp {

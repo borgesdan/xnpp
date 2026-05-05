@@ -4,7 +4,7 @@
 #include <memory>
 #include "Xna/CSharp/TimeSpan.hpp"
 #include "Xna/CSharp/Event.hpp"
-#include "Xna/Internal/Export.hpp"
+#include "Xna/Internal/Macros.hpp"
 
 namespace Xna {
 	struct GameComponentCollectionEventArgs;

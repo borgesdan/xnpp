@@ -7,7 +7,7 @@
 #include <optional>
 #include "Shared.hpp"
 #include "../Rectangle.hpp"
-#include "Xna/Internal/Export.hpp"
+#include "Xna/Internal/Macros.hpp"
 
 namespace Xna {
 	//Describes the display mode. 

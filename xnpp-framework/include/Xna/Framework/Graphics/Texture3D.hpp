@@ -5,7 +5,7 @@
 #include <vector>
 #include "Texture.hpp"
 #include "Xna/Platform/Platform.hpp"
-#include "Xna/Internal/Export.hpp"
+#include "Xna/Internal/Macros.hpp"
 
 namespace Xna {
 	//Represents a 3D volume of texels.
