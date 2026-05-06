@@ -1,0 +1,28 @@
+cmake_minimum_required(VERSION 3.20)
+
+add_executable(xnpp-content-cli
+    source/main.cpp
+)
+
+target_compile_features(xnpp-content-cli PRIVATE cxx_std_20)
+
+target_link_libraries(xnpp-content-cli
+    PRIVATE
+        xnpp-content-pipeline
+)
+
+# Para Windows: copiar DLLs runtime se xnpp virar shared futuramente
+if(WIN32)
+    add_custom_command(TARGET xnpp-content-cli POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different
+            $<TARGET_RUNTIME_DLLS:xnpp-content-cli>
+            $<TARGET_FILE_DIR:xnpp-content-cli>
+        COMMAND_EXPAND_LISTS
+    )
+endif()
+
+# instalação
+install(
+    TARGETS xnpp-content-cli
+    RUNTIME DESTINATION tools
+)

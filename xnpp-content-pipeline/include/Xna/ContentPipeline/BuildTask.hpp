@@ -3,7 +3,6 @@
 
 #include <optional>
 #include <filesystem>
-#include <nlohmann/json.hpp>
 #include "ContentBuildLogger.hpp"
 #include "BuildContent.hpp"
 
