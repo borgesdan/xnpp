@@ -15,11 +15,12 @@
 #include <memory>
 #include <tuple>
 #include <vector>
+#include <Xna/Internal/Macros.hpp>
 
 namespace Xna {
 	class BuildCoordinator final {
 	public:
-		BuildCoordinator(
+		XNPP_API BuildCoordinator(
 			ContentBuildLogger& buildLogger,
 			BuildCoordinatorSettings& settings,
 			TimestampCache timestampCache);
@@ -28,34 +29,34 @@ namespace Xna {
 			return impl->settings;
 		}
 
-		Xna::ImporterManager ImporterManager();
-		Xna::ProcessorManager ProcessorManager();
-		Xna::ContentCompiler ContentCompiler();		
+		XNPP_API Xna::ImporterManager ImporterManager();
+		XNPP_API ProcessorManager ProcessorManager();
+		XNPP_API Xna::ContentCompiler ContentCompiler();
 
-		void Dispose();
+		XNPP_API void Dispose();
 
-		void RequestBuild(
+		XNPP_API void RequestBuild(
 			std::filesystem::path const& sourceFilename,
 			std::filesystem::path const& assetName,
 			std::string const& importerName,
 			std::string const& processorName,
 			OpaqueDataDictionary const& processorParameters);
 
-		BuildItem RequestBuild(BuildRequest& request);
-		std::any BuildAndLoadAsset(BuildItem& item, BuildItem& requestingItem);
+		XNPP_API BuildItem RequestBuild(BuildRequest& request);
+		XNPP_API std::any BuildAndLoadAsset(BuildItem& item, BuildItem& requestingItem);
 
-		void RunTheBuild();
-		std::vector<std::filesystem::path> GetOutputFiles() const; //TODO: [!] deixar as funções const
-		std::vector<std::filesystem::path> GetRebuiltFiles() const;
-		std::vector<std::filesystem::path> GetIntermediateFiles() const;
-		std::unordered_map<std::filesystem::path, TimePoint> GetDependencyTimestamps() const;
+		XNPP_API void RunTheBuild();
+		XNPP_API std::vector<std::filesystem::path> GetOutputFiles() const; //TODO: [!] deixar as funções const
+		XNPP_API std::vector<std::filesystem::path> GetRebuiltFiles() const;
+		XNPP_API std::vector<std::filesystem::path> GetIntermediateFiles() const;
+		XNPP_API std::unordered_map<std::filesystem::path, TimePoint> GetDependencyTimestamps() const;
 		//tuple é um KeyValuePair<string, string>
-		std::vector<std::pair<std::filesystem::path, std::string>> GetWarnings() const;
-		void AddDependency(BuildItem& item, std::filesystem::path const& filename);
-		void AddExtraOutput(BuildItem& item, std::filesystem::path const& filename);
+		XNPP_API std::vector<std::pair<std::filesystem::path, std::string>> GetWarnings() const;
+		XNPP_API void AddDependency(BuildItem& item, std::filesystem::path const& filename);
+		XNPP_API void AddExtraOutput(BuildItem& item, std::filesystem::path const& filename);
 
-		std::filesystem::path GetRelativePath(std::filesystem::path const& path) const;
-		std::filesystem::path GetAbsolutePath(std::filesystem::path const& path) const;
+		XNPP_API std::filesystem::path GetRelativePath(std::filesystem::path const& path) const;
+		XNPP_API std::filesystem::path GetAbsolutePath(std::filesystem::path const& path) const;
 
 		inline BuildCoordinator(std::nullptr_t) { impl = nullptr; }
 		inline bool operator==(BuildCoordinator const& other) const noexcept { return impl == other.impl; }
@@ -63,22 +64,22 @@ namespace Xna {
 		inline explicit operator bool() const noexcept { return impl != nullptr; }
 
 	private:		
-		std::filesystem::path ChooseOutputFilename(BuildRequest& request);
+		XNPP_API std::filesystem::path ChooseOutputFilename(BuildRequest& request);
 
-		static std::filesystem::path GetAssetNameStub(std::filesystem::path sourceFilename);
-		static std::filesystem::path RemoveNonAnsiCharacters(std::filesystem::path const& value);
-		void RemoveBuildItem(BuildItem& item);
-		std::any BuildAsset(BuildItem& item);
-		std::any BuildAssetWorker(BuildItem& item);
-		bool NeedIncrementalBuild(BuildItem& item, std::string& rebuildReason);
-		bool TimestampsHaveChanged(BuildItem& item, std::string& rebuildReason);
+		XNPP_API static std::filesystem::path GetAssetNameStub(std::filesystem::path sourceFilename);
+		XNPP_API static std::filesystem::path RemoveNonAnsiCharacters(std::filesystem::path const& value);
+		XNPP_API void RemoveBuildItem(BuildItem& item);
+		XNPP_API std::any BuildAsset(BuildItem& item);
+		XNPP_API std::any BuildAssetWorker(BuildItem& item);
+		XNPP_API bool NeedIncrementalBuild(BuildItem& item, std::string& rebuildReason);
+		XNPP_API bool TimestampsHaveChanged(BuildItem& item, std::string& rebuildReason);
 		
-		std::any ImportAsset(BuildItem& item);
-		std::any ImportAssetDirectly(BuildItem& item, std::string const& importerName);
-		std::any ImportAssetViaCache(BuildItem& item, std::string const& importerName);
-		void SerializeAsset(BuildItem& item, std::any const& assetData);
-		void SerializeIntermediateAsset(BuildItem& item, std::any const& assetData, std::filesystem::path const& outputFilename);
-		void SerializeOutputAsset(BuildItem& item, std::any const& assetData, std::filesystem::path const& outputFilename);
+		XNPP_API std::any ImportAsset(BuildItem& item);
+		XNPP_API std::any ImportAssetDirectly(BuildItem& item, std::string const& importerName);
+		XNPP_API std::any ImportAssetViaCache(BuildItem& item, std::string const& importerName);
+		XNPP_API void SerializeAsset(BuildItem& item, std::any const& assetData);
+		XNPP_API void SerializeIntermediateAsset(BuildItem& item, std::any const& assetData, std::filesystem::path const& outputFilename);
+		XNPP_API void SerializeOutputAsset(BuildItem& item, std::any const& assetData, std::filesystem::path const& outputFilename);
 
 	private:
 		struct Implementation {

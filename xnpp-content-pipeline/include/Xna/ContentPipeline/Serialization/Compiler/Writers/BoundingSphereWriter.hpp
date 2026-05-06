@@ -10,7 +10,7 @@ namespace Xna {
 			return "BoundingSphereReader";
 		}
 	protected:
-		void WriteT(ContentWriter& output, const BoundingSphere* value) override {
+		inline void WriteT(ContentWriter& output, const BoundingSphere* value) override {
 			output.Write(value->Center);
 			
 			CSharp::BinaryWriter& output1 = output;

@@ -17,7 +17,7 @@ namespace Xna {
 		}
 
 	private:
-		static bool FixTexture2D(CompileItem const& item, std::string& importer, std::string& processor) {
+		inline static bool FixTexture2D(CompileItem const& item, std::string& importer, std::string& processor) {
 			auto extension = item.Include.extension();
 			bool ok{ false };
 			for (const auto& ex : TEXTURE2D_EXTENSIONS) {

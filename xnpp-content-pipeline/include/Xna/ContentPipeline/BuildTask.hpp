@@ -5,10 +5,11 @@
 #include <filesystem>
 #include "ContentBuildLogger.hpp"
 #include "BuildContent.hpp"
+#include <Xna/Internal/Macros.hpp>
 
 namespace Xna {
 	struct BuildTask {
-		static bool OpenProject(std::filesystem::path const& filename);
+		XNPP_API static bool OpenProject(std::filesystem::path const& filename);
 
 	private:
 		//static inline nlohmann::json data = {};

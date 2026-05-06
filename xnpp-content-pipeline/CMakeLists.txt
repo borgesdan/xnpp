@@ -1,18 +1,7 @@
-﻿# Enable Hot Reload for MSVC compilers if supported
-if (POLICY CMP0141)
-    cmake_policy(SET CMP0141 NEW)
-    set(
-        CMAKE_MSVC_DEBUG_INFORMATION_FORMAT
-        "$<IF:$<AND:$<C_COMPILER_ID:MSVC>,$<CXX_COMPILER_ID:MSVC>>,
-        $<$<CONFIG:Debug,RelWithDebInfo>:EditAndContinue>,
-        $<$<CONFIG:Debug,RelWithDebInfo>:ProgramDatabase>>"
-    )
-endif()
-
-# =========================
+﻿# =========================
 # Content Pipeline Library
 # =========================
-add_library(xnpp-content-pipeline STATIC
+add_library(xnpp-content-pipeline
     source/Xna/ContentPipeline/Serialization/Compiler/ContentWriter.cpp
     source/Xna/ContentPipeline/PathUtils.cpp
     source/Xna/ContentPipeline/Serialization/Compiler/ContentCompiler.cpp
@@ -53,9 +42,25 @@ add_library(xnpp-content-pipeline STATIC
     source/Xna/ContentPipeline/Serialization/Compiler/SoundEffectWriter.cpp
     source/Xna/ContentPipeline/Serialization/Compiler/SongWriter.cpp
     source/Xna/ContentPipeline/Serialization/Compiler/ContentTypeWriter.cpp
-)
+ )
 
 target_compile_features(xnpp-content-pipeline PRIVATE cxx_std_20)
+
+# =========================
+# EXPORT
+# =========================
+
+# Lógica mágica de exportação/importação:
+if(BUILD_SHARED_LIBS)
+    # Se for DLL, dizemos APENAS para o xnpp exportar os símbolos.
+    # Os consumidores não recebem essa macro e caem no 'dllimport'.
+    target_compile_definitions(xnpp PRIVATE XNPP_EXPORT_DLL)
+else()
+    # Se for ESTÁTICO, nós desligamos o import/export.
+    # Usamos PUBLIC para que qualquer target que faça link com xnpp 
+    # (como seus .exe) também herde a macro XNPP_STATIC automaticamente!
+    target_compile_definitions(xnpp PUBLIC XNPP_STATIC)
+endif()
 
 # =========================
 # Dependencies
@@ -63,7 +68,7 @@ target_compile_features(xnpp-content-pipeline PRIVATE cxx_std_20)
 find_package(nlohmann_json CONFIG REQUIRED)
 find_package(pugixml CONFIG REQUIRED)
 find_package(Freetype REQUIRED)
-find_package(FFMPEG CONFIG)
+find_package(FFMPEG REQUIRED)
 
 find_path(STB_INCLUDE_DIR stb_image.h REQUIRED)
 

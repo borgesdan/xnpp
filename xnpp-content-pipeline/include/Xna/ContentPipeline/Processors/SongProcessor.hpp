@@ -5,10 +5,11 @@
 #include "Xna/ContentPipeline/Audio/AudioContent.hpp"
 #include "Xna/ContentPipeline/Audio/SongContent.hpp"
 #include "Xna/ContentPipeline/Audio/Shared.hpp"
+#include <Xna/Internal/Macros.hpp>
 
 namespace Xna {
     struct SongProcessor : public ContentProcessor<AudioContent, SongContent> {
-        SongContent ProcessT(AudioContent& input, ContentProcessorContext& context) override;
+        XNPP_API SongContent ProcessT(AudioContent& input, ContentProcessorContext& context) override;
 
         ConversionQuality Quality{ ConversionQuality::Best };
     };

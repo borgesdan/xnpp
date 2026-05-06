@@ -10,17 +10,18 @@
 #include "ContentImporterContext.hpp"
 #include "ContentImporter.hpp"
 #include <Xna/CSharp/Type.hpp>
+#include <Xna/Internal/Macros.hpp>
 
 namespace Xna {
 	
 
 	class ImporterManager {
 	public:
-		ImporterManager();
+		XNPP_API ImporterManager();
 
-		std::string GuessFromFilename(std::filesystem::path const& filename);
-		ContentImporterAttribute GetImporterAttribute(std::string& importerName);
-		std::shared_ptr<IContentImporter> GetInstance(std::string const& importerName);
+		XNPP_API std::string GuessFromFilename(std::filesystem::path const& filename);
+		XNPP_API ContentImporterAttribute GetImporterAttribute(std::string& importerName);
+		XNPP_API std::shared_ptr<IContentImporter> GetInstance(std::string const& importerName);
 
 		inline ImporterManager(std::nullptr_t) { impl = nullptr; }
 		inline bool operator==(ImporterManager const& other) const noexcept { return impl == other.impl; }

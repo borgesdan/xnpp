@@ -6,6 +6,7 @@
 #include <optional>
 #include <functional>
 #include "NamedValueDictionary.hpp"
+#include <Xna/Internal/Macros.hpp>
 
 namespace Xna {
 	class OpaqueDataDictionary : public NamedValueDictionary<std::any> {
@@ -32,10 +33,10 @@ namespace Xna {
 		inline explicit operator bool() const noexcept { return impl != nullptr; }
 
 	protected:
-		void AddItem(std::string const& key, std::any const& value) override;
-		void ClearItems() override;
-		bool RemoveItem(std::string const& key) override;
-		void SetItem(std::string const& key, std::any const& value) override;
+		XNPP_API void AddItem(std::string const& key, std::any const& value) override;
+		XNPP_API void ClearItems() override;
+		XNPP_API bool RemoveItem(std::string const& key) override;
+		XNPP_API void SetItem(std::string const& key, std::any const& value) override;
 		inline CSharp::Type DefaultSerializerType() const override {
 			return CSharp::typeof<std::string>();
 		}

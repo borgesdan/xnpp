@@ -10,7 +10,7 @@ namespace Xna {
 			return "BoundingFrustumReader";
 		}
 	protected:
-		void WriteT(ContentWriter& output, const BoundingFrustum* value) override {
+		inline void WriteT(ContentWriter& output, const BoundingFrustum* value) override {
 			output.Write(value->Matrix());
 		}
 	};
