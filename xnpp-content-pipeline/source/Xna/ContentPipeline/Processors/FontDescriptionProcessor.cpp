@@ -4,6 +4,7 @@
 #include "Xna/ContentPipeline/Graphics/DxtBitmapContent.hpp"
 #include <algorithm>
 #include <limits>
+#include <cstdlib> // Para std::getenv
 #include <ft2build.h>
 #include FT_FREETYPE_H
 
@@ -12,15 +13,90 @@ namespace Xna {
     static void CropGlyphs(const std::vector<PixelBitmapContent<Color>>& bitmaps, std::vector<Rectangle>& cropping, const std::vector<int>& yValues, const std::vector<int>& heights, int lineSpacing);
     static PixelBitmapContent<Color> ArrangeGlyphs(const std::vector<PixelBitmapContent<Color>>& bitmaps, std::vector<Rectangle>& glyphRects);
     static std::unique_ptr<Dxt3BitmapContent> CompressFontTexture(PixelBitmapContent<Color> const& source);
-    static void CompressFontTextureBlock(PixelBitmapContent<Color> const& source, int32_t blockX, int32_t blockY, std::vector<uint8_t>& outputData, int32_t outputPosition);
-    
+    static void CompressFontTextureBlock(PixelBitmapContent<Color> const& source, int32_t blockX, int32_t blockY, std::vector<uint8_t>& outputData, int32_t outputPosition);   
+
+
+    static std::filesystem::path CheckFontPath(FontDescription const& input) {
+        // 1. Prepara o nome do arquivo da fonte com a extensão correta
+        std::filesystem::path requestedFont = input.FontName;        
+
+        // 2. Se for um caminho absoluto, apenas verifica se existe e retorna
+        if (requestedFont.is_absolute()) {
+            return requestedFont.lexically_normal();
+        }
+
+        // 3. Define a lista de diretórios de busca baseados no Sistema Operacional
+        std::vector<std::filesystem::path> searchPaths;
+
+#if defined(_WIN32) || defined(_WIN64)
+        // Windows: Tenta pegar a pasta do sistema da variável de ambiente, com fallback seguro
+        if (const char* windir = std::getenv("windir")) {
+            searchPaths.push_back(std::filesystem::path(windir) / "Fonts");
+        }
+        else {
+            searchPaths.push_back("C:/Windows/Fonts");
+        }
+        // Windows: Fontes instaladas apenas para o usuário local (Windows 10+)
+        if (const char* localappdata = std::getenv("LOCALAPPDATA")) {
+            searchPaths.push_back(std::filesystem::path(localappdata) / "Microsoft" / "Windows" / "Fonts");
+        }
+
+#elif defined(__APPLE__) && defined(__MACH__)
+        // macOS: Fontes do sistema e fontes globais
+        searchPaths.push_back("/System/Library/Fonts");
+        searchPaths.push_back("/Library/Fonts");
+        // macOS: Fontes do usuário local
+        if (const char* home = std::getenv("HOME")) {
+            searchPaths.push_back(std::filesystem::path(home) / "Library" / "Fonts");
+        }
+
+#elif defined(__linux__)
+        // Linux: Fontes do sistema
+        searchPaths.push_back("/usr/share/fonts");
+        searchPaths.push_back("/usr/local/share/fonts");
+        // Linux: Fontes do usuário local
+        if (const char* home = std::getenv("HOME")) {
+            searchPaths.push_back(std::filesystem::path(home) / ".local" / "share" / "fonts");
+            searchPaths.push_back(std::filesystem::path(home) / ".fonts"); // Diretório antigo, mas ainda comum
+        }
+#else
+        // Fallback para sistemas desconhecidos
+        searchPaths.push_back("./fonts");
+#endif
+
+        // 4. Itera sobre os diretórios para encontrar a fonte
+        for (const auto& basePath : searchPaths) {
+            std::filesystem::path fullPath1 = basePath / requestedFont;
+            std::filesystem::path fullPath2 = basePath / requestedFont;
+
+            if (!fullPath1.has_extension()) {
+                fullPath1 = fullPath1.replace_extension(".ttf");
+                fullPath2 = fullPath2.replace_extension(".otf");
+            }
+
+            // Verifica se o arquivo realmente existe neste diretório
+            if (std::filesystem::exists(fullPath1)) {
+                return fullPath1.lexically_normal();
+            }else if (std::filesystem::exists(fullPath2))
+                return fullPath2.lexically_normal();
+        }
+
+        // 5. Fallback: Se a fonte não for encontrada em lugar nenhum,
+        // retorna o caminho combinando o primeiro diretório da lista.
+        // O sistema que chamar essa função terá que lidar com a ausência do arquivo.
+        std::filesystem::path fallbackPath = searchPaths.empty() ? std::filesystem::path(".") : searchPaths.front();
+        fallbackPath /= requestedFont;
+
+        return fallbackPath.lexically_normal();
+    }
+
     static void ReleaseFontLibrary(FT_Library ft, FT_Face face) {
         if(face)
             FT_Done_Face(face);
 
         if(ft)
             FT_Done_FreeType(ft);
-    }
+    }    
 
 	SpriteFontContent FontDescriptionProcessor::ProcessT(FontDescription& input, ContentProcessorContext& context) {
         auto charList = input.Characters.CharList();
@@ -33,19 +109,11 @@ namespace Xna {
 
         FT_Library ft;
         FT_Face face;        
-
+        
         if (FT_Init_FreeType(&ft))
-            throw std::runtime_error("FT_Init_FreeType failed");
-
-        std::filesystem::path fontPath = "C:/Windows/Fonts";
-
-        if (input.FontName.is_absolute())
-            fontPath = input.FontName / ".ttf";
-        else
-            fontPath /= input.FontName;        
-
-        fontPath.replace_extension(".ttf");
-        fontPath = fontPath.lexically_normal();
+            throw std::runtime_error("FT_Init_FreeType failed");        
+        
+        std::filesystem::path fontPath = CheckFontPath(input);
 
         if (FT_New_Face(ft, fontPath.string().c_str(), 0, &face)) {
             ReleaseFontLibrary(ft, nullptr);
