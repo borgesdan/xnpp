@@ -80,13 +80,13 @@ namespace Xna::CSharp {
 		virtual void WriteByte(uint8_t value) = 0;	
 
 	protected:
-		void ValidateBuffer(uint8_t const* buffer, int32_t bufferLength);
+		XNPP_API void ValidateBuffer(uint8_t const* buffer, int32_t bufferLength);
 
 	private:
-		int32_t ReadAtLeastCore(uint8_t* buffer, int32_t bufferLength, int32_t minimumBytes, bool throwOnEndOfStream);
+		XNPP_API int32_t ReadAtLeastCore(uint8_t* buffer, int32_t bufferLength, int32_t minimumBytes, bool throwOnEndOfStream);
 
 	private:
-		int32_t GetCopybufferLength() const;
+		XNPP_API int32_t GetCopybufferLength() const;
 	};
 }
 

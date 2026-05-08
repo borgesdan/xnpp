@@ -64,10 +64,10 @@ namespace Xna::CSharp {
 		inline explicit operator bool() const noexcept { return impl != nullptr; }
 
 	private:
-		void EnsureNotClosed() const;
-		void EnsureWriteable() const;
-		bool EnsureCapacity(int32_t value);
-		int64_t SeekCore(int64_t offset, int32_t loc);
+		XNPP_API void EnsureNotClosed() const;
+		XNPP_API void EnsureWriteable() const;
+		XNPP_API bool EnsureCapacity(int32_t value);
+		XNPP_API int64_t SeekCore(int64_t offset, int32_t loc);
 
 		inline static constexpr int32_t MemStreamMaxLength = std::numeric_limits<int32_t>::max();
 
