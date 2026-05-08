@@ -9,17 +9,13 @@ cmake_minimum_required(VERSION 3.12)
 project("XnppFramework" VERSION 0.1.0 LANGUAGES C CXX)
 
 option(XNPP_BUILD_LIB "Build Xnpp library" ON)
-option(XNPP_BUILD_CSHARP "Build CSharp library" ON)
 option(XNPP_BUILD_CONTENT_PIPELINE "Build Xnpp Content Pipeline" ON)
 option(XNPP_BUILD_CONTENT_CLI "Build Xnpp Content Pipeline CLI" ON)
 option(XNPP_BUILD_GAME_TEST "Build Xnpp Game Test" ON)
 
 if (XNPP_BUILD_LIB)
-	add_subdirectory("xnpp-framework")
-endif()
-
-if (XNPP_BUILD_CSHARP)
 	add_subdirectory("xnpp-csharp")
+	add_subdirectory("xnpp-framework")
 endif()
 
 if (XNPP_BUILD_CONTENT_PIPELINE)
