@@ -9,9 +9,8 @@
 #include "Macros.hpp"
 
 namespace Xna::CSharp {
-    // ---- Base EventArgs ----
     struct XNPP_API EventArgs {
-        XNPP_API static EventArgs Empty;
+        static const EventArgs& Empty();
     };
 
     // ---- EventHandler<TEventArgs> ----

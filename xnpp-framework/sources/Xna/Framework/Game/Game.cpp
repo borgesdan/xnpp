@@ -382,7 +382,7 @@ namespace Xna {
     }
 
     void Game::HostExiting(void* sender, CSharp::EventArgs const& e) {
-        OnExiting(sender, CSharp::EventArgs::Empty);
+        OnExiting(sender, CSharp::EventArgs::Empty());
     }
 
     void Game::HostIdle(void* sender, CSharp::EventArgs const& e) {
@@ -394,7 +394,7 @@ namespace Xna {
             return;
 
         impl->isActive = false;
-        OnDeactivated(this, CSharp::EventArgs::Empty);
+        OnDeactivated(this, CSharp::EventArgs::Empty());
     }
 
     void Game::HostActivated(void* sender, CSharp::EventArgs const& e) {
@@ -409,7 +409,7 @@ namespace Xna {
         }
 
         impl->isActive = true;
-        OnActivated(this, CSharp::EventArgs::Empty);
+        OnActivated(this, CSharp::EventArgs::Empty());
     }
 
     void Game::HookDeviceEvents() {

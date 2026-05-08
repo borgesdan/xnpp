@@ -23,11 +23,11 @@ namespace Xna {
 
 	void GameWindow::Create() {
 		Platform::GameWindow_Create(*this);
-		Activated().Invoke(this, CSharp::EventArgs::Empty);
+		Activated().Invoke(this, CSharp::EventArgs::Empty());
 	}	
 
 	void GameWindow::Close() {
-		Deactivated().Invoke(this, CSharp::EventArgs::Empty);
+		Deactivated().Invoke(this, CSharp::EventArgs::Empty());
 		Platform::GameWindow_Close(*this);
 	}		
 
