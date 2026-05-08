@@ -24,5 +24,5 @@ endif()
 # instalação
 install(
     TARGETS xnpp-content-cli
-    RUNTIME DESTINATION tools
+    RUNTIME DESTINATION bin
 )
