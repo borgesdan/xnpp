@@ -1,6 +1,6 @@
 #include "Xna/Framework/Graphics/SpriteBatch.hpp"
 #include "Xna/Framework/Graphics/SpriteFont.hpp"
-#include "Xna/CSharp/Exception.hpp"
+#include <Xna/CSharp/Exception.hpp>
 
 namespace Xna {
 	SpriteBatch::SpriteBatch(GraphicsDevice const& device) {

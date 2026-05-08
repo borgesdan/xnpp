@@ -3,7 +3,7 @@
 
 #include "_ContentManager.hpp"
 #include "ContentTypeReader.hpp"
-#include "Xna/CSharp/IO/BinaryReader.hpp"
+#include <Xna/CSharp/IO/BinaryReader.hpp>
 #include <memory>
 #include <vector>
 #include <string>

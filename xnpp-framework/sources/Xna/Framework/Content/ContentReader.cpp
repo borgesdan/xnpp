@@ -1,8 +1,8 @@
 #include "Xna/Framework/Content/ContentReader.hpp"
-#include "Xna/CSharp/Exception.hpp"
+#include <Xna/CSharp/Exception.hpp>
 #include "Xna/Framework/Content/ContentTypeReaderManager.hpp"
 #include "Xna/Framework/Content/ContentManager.hpp"
-#include "Xna/CSharp/Path.hpp"
+#include <Xna/CSharp/Path.hpp>
 #include "../TitleLocation.hpp"
 #include "Xna/Framework/TitleContainer.hpp"
 

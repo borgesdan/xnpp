@@ -1,5 +1,5 @@
 #include "Xna/Framework/Content/ContentTypeReaderManager.hpp"
-#include "Xna/CSharp/Exception.hpp"
+#include <Xna/CSharp/Exception.hpp>
 #include "Xna/Framework/Content/ContentTypeReader.hpp"
 #include "Xna/Internal/App.hpp"
 

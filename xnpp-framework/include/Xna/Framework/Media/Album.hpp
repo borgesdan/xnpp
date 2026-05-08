@@ -3,9 +3,9 @@
 
 #include "Artist.hpp"
 #include "Genre.hpp"
-#include "Xna/CSharp/TimeSpan.hpp"
-#include "Xna/CSharp/Collection.hpp"
-#include "Xna/CSharp/IO/Stream.hpp"
+#include <Xna/CSharp/TimeSpan.hpp>
+#include <Xna/CSharp/Collection.hpp>
+#include <Xna/CSharp/IO/Stream.hpp>
 #include <memory>
 
 

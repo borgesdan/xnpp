@@ -2,7 +2,7 @@
 #include "Xna/Framework/Game/Game.hpp"
 #include "Xna/Platform/Platform.hpp"
 #include <algorithm>
-#include "Xna/CSharp/Thread.hpp"
+#include <Xna/CSharp/Thread.hpp>
 #include <cmath>
 
 //Helpers

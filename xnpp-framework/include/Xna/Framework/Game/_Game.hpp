@@ -2,8 +2,8 @@
 #define XNA_FRAMEWORK_GAME__GAME_HPP
 
 #include <memory>
-#include "Xna/CSharp/TimeSpan.hpp"
-#include "Xna/CSharp/Event.hpp"
+#include <Xna/CSharp/TimeSpan.hpp>
+#include <Xna/CSharp/Event.hpp>
 #include "Xna/Internal/Macros.hpp"
 
 namespace Xna {

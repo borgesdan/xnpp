@@ -1,5 +1,5 @@
 #include "Xna/Framework/Graphics/DisplayMode.hpp"
-#include "Xna/CSharp/Exception.hpp"
+#include <Xna/CSharp/Exception.hpp>
 #include <cassert>
 
 using Xna::CSharp::InvalidOperationException;

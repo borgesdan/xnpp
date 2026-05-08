@@ -85,6 +85,7 @@ target_include_directories(xnpp-content-pipeline
 target_link_libraries(xnpp-content-pipeline
     PUBLIC
         xnpp
+        xnpp-csharp
 
     PRIVATE
         nlohmann_json::nlohmann_json

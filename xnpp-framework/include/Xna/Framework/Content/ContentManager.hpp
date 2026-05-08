@@ -6,7 +6,7 @@
 #include <vector>
 #include <cstdint>
 #include <filesystem>
-#include "Xna/CSharp/Exception.hpp"
+#include <Xna/CSharp/Exception.hpp>
 #include "ContentReader.hpp"
 #include "_ContentManager.hpp"
 

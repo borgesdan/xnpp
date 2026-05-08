@@ -2,8 +2,8 @@
 #include "Xna/Framework/Input/GamePad.hpp"
 #include "Xna/Framework/Input/Mouse.hpp"
 #include "Xna/Framework/Input/Keyboard.hpp"
-#include "Xna/CSharp/Windows/Forms/SystemInformation.hpp"
-#include "Xna/CSharp/Exception.hpp"
+#include <Xna/CSharp/Windows/Forms/SystemInformation.hpp>
+#include <Xna/CSharp/Exception.hpp>
 #include "Xna/Platform/Platform.hpp"
 #include <optional>
 

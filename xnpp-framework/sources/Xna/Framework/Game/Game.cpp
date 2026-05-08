@@ -1,5 +1,5 @@
 #include "Xna/Framework/Game/Game.hpp"
-#include "Xna/CSharp/Thread.hpp"
+#include <Xna/CSharp/Thread.hpp>
 #include <cmath>
 #include <limits>
 #include <exception>

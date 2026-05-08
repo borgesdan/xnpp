@@ -7,8 +7,8 @@
 #include <unordered_map>
 #include "Shared.hpp"
 #include "LoopRegion.hpp"
-#include "Xna/CSharp/TimeSpan.hpp"
-#include "Xna/CSharp/IO/Stream.hpp"
+#include <Xna/CSharp/TimeSpan.hpp>
+#include <Xna/CSharp/IO/Stream.hpp>
 #include "Xna/Platform/Platform.hpp"
 #include "Xna/Internal/Macros.hpp"
 

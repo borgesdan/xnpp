@@ -2,7 +2,7 @@
 #define XNA_FRAMEWORK_CONTENT__CONTENTMANAGER_HPP
 
 #include <memory>
-#include "Xna/CSharp/IO/FileStream.hpp"
+#include <Xna/CSharp/IO/FileStream.hpp>
 #include "Xna/Framework/Game/GameServiceContainer.hpp"
 #include "Xna/Internal/Macros.hpp"
 

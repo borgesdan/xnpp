@@ -1,5 +1,5 @@
 #include "Xna/Framework/Vector3.hpp"
-#include "Xna/CSharp/Exception.hpp"
+#include <Xna/CSharp/Exception.hpp>
 #include "Xna/Framework/Matrix.hpp"
 
 namespace Xna {

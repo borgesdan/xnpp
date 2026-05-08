@@ -1,9 +1,9 @@
 #ifndef XNA_FRAMEWORK_CONTENT_CONTENTTYPEREADER_HPP
 #define XNA_FRAMEWORK_CONTENT_CONTENTTYPEREADER_HPP
 
-#include "Xna/CSharp/Type.hpp"
+#include <Xna/CSharp/Type.hpp>
 #include <any>
-#include "Xna/CSharp/Exception.hpp"
+#include <Xna/CSharp/Exception.hpp>
 
 namespace Xna {
 	class ContentTypeReaderManager;

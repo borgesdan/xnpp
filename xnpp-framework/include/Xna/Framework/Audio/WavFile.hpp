@@ -5,10 +5,10 @@
 #include <memory>
 #include <optional>
 #include <vector>
-#include "Xna/CSharp/BitConverter.hpp"
-#include "Xna/CSharp/IO/Stream.hpp"
+#include <Xna/CSharp/BitConverter.hpp>
+#include <Xna/CSharp/IO/Stream.hpp>
 #include "AudioFormat.hpp"
-#include "Xna/CSharp/IO/BinaryReader.hpp"
+#include <Xna/CSharp/IO/BinaryReader.hpp>
 #include "LoopRegion.hpp"
 #include "Xna/Internal/Macros.hpp"
 

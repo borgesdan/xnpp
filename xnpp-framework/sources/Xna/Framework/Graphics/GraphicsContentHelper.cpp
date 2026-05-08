@@ -3,7 +3,7 @@
 #include "Xna/Framework/Graphics/IGraphicsDeviceService.hpp"
 #include "Xna/Framework/Content/ContentReader.hpp"
 
-#include "Xna/CSharp/Exception.hpp"
+#include <Xna/CSharp/Exception.hpp>
 
 namespace Xna {
 	GraphicsDevice GraphicsContentHelper::GraphicsDeviceFromContentReader(ContentReader& contentReader) {
