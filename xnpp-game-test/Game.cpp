@@ -6,6 +6,7 @@
 #include <Xna/Media.hpp>
 #include <Xna/Audio.hpp>
 #include <Xna/Input.hpp>
+#include <Xna/CSharp/TimeSpan.hpp>
 #include <Windows.h>
 
 class Game1 : public Xna::Game {
@@ -31,6 +32,8 @@ public:
 
 		auto adp = Xna::GraphicsAdapter::DefaultAdapter();
 		auto display = adp.CurrentDisplayMode(); 
+
+		auto timeSpan = Xna::CSharp::TimeSpan(1, 00, 0);
 	}
 
 	void Update(Xna::GameTime& gameTime) override {
