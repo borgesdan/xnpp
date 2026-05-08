@@ -11,7 +11,7 @@
 namespace Xna::CSharp {
     // ---- Base EventArgs ----
     struct XNPP_API EventArgs {
-         static EventArgs Empty;
+        XNPP_API static EventArgs Empty;
     };
 
     // ---- EventHandler<TEventArgs> ----
