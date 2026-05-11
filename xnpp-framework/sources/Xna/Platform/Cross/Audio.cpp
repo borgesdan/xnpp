@@ -153,6 +153,8 @@ namespace Xna {
 			ma_audio_buffer_config bufferConfig{};
 			MediaState state{ MediaState::Stoped };
 
+			bool isLoaded = false;
+
 			void Load(ISoundEffect* baseSE) override {
 				auto se = reinterpret_cast<MiniAudioSoundEffect*>(baseSE);
 
@@ -178,6 +180,16 @@ namespace Xna {
 				);
 
 				SetVolume(MiniAudioSoundEffect::MasterVolume);
+
+				isLoaded = true;
+			}
+
+			void Unload() override {
+				if (!isLoaded)
+					return;
+
+				ma_sound_uninit(&sound);
+				isLoaded = false;
 			}
 
 			void SetVolume(float value) override {
@@ -228,7 +240,7 @@ namespace Xna {
 			}			
 
 			~MiniAudioSoundEffectInstance() override {
-				ma_sound_uninit(&sound);
+				Unload();
 			}
 		};
 
