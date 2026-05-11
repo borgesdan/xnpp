@@ -2,6 +2,10 @@
 
 > Xnpp is an implementation of Microsoft XNA 4.0 in modern C++, with SDL3 and bgfx library.
 
+### Project examples
+
+[https://github.com/borgesdan/XnppProjects](https://github.com/borgesdan/XnppProjects)
+
 ### Adjustments and improvements
 
 The project is still under development and the next updates will focus on the following tasks:
