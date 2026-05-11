@@ -7,8 +7,8 @@
 #include <vector>
 #include "Shared.hpp"
 #include "../Rectangle.hpp"
-#include "Xna/CSharp/Exception.hpp"
-#include "Xna/CSharp/Event.hpp"
+#include <Xna/CSharp/Exception.hpp>
+#include <Xna/CSharp/Event.hpp>
 #include "PresentationParameters.hpp"
 #include "Xna/Internal/Macros.hpp"
 #include "Xna/Platform/Platform.hpp"

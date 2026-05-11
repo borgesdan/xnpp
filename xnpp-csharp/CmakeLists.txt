@@ -1,0 +1,54 @@
+cmake_minimum_required(VERSION 3.20)
+
+set(PROJECT_NAME xnpp-csharp)
+
+add_library(${PROJECT_NAME}
+    source/IO/BinaryReader.cpp
+    source/IO/BinaryWriter.cpp
+    source/IO/FileStream.cpp
+    source/IO/MemoryStream.cpp
+    source/IO/Stream.cpp
+    source/Windows/Forms/Screen.cpp
+    source/Windows/Forms/SystemInformation.cpp
+    source/BitConverter.cpp
+    source/Event.cpp
+    source/Type.cpp
+    source/Platform.cpp
+)
+
+find_package(SDL3 CONFIG REQUIRED)
+
+target_link_libraries(${PROJECT_NAME}
+    PRIVATE
+        SDL3::SDL3
+)
+
+target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_20)
+
+target_include_directories(${PROJECT_NAME}
+    PUBLIC
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+        $<INSTALL_INTERFACE:include>
+)
+
+if(BUILD_SHARED_LIBS)
+    target_compile_definitions(${PROJECT_NAME} PRIVATE XNPP_EXPORT_DLL)
+else()
+    target_compile_definitions(${PROJECT_NAME} PUBLIC XNPP_STATIC)
+endif()
+
+# -----------------------------
+# INSTALL
+# -----------------------------
+install(
+    TARGETS ${PROJECT_NAME}
+    EXPORT xnppTargets
+    ARCHIVE DESTINATION lib
+    LIBRARY DESTINATION lib
+    RUNTIME DESTINATION bin
+)
+
+install(
+    DIRECTORY include/
+    DESTINATION include
+)

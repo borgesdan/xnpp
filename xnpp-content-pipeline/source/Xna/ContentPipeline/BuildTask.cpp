@@ -1,6 +1,7 @@
 #include "Xna/ContentPipeline/BuildTask.hpp"
 #include "Xna/ContentPipeline/CompileItem.hpp"
 #include <fstream>
+#include <nlohmann/json.hpp>
 
 using json = nlohmann::json;
 namespace fs = std::filesystem;

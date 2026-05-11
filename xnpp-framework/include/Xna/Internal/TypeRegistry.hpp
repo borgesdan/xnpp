@@ -1,7 +1,7 @@
 #ifndef XNA_INTERNAL_TYPEREGISTRY_HPP
 #define XNA_INTERNAL_TYPEREGISTRY_HPP
 
-#include "Xna/CSharp/Type.hpp"
+#include <Xna/CSharp/Type.hpp>
 #include <memory>
 #include <optional>
 #include <vector>

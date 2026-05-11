@@ -1,7 +1,7 @@
 #include "Xna/Framework/Vector2.hpp"
 #include "Xna/Framework/Matrix.hpp"
 #include "Xna/Framework/Quaternion.hpp"
-#include "Xna/CSharp/Exception.hpp"
+#include <Xna/CSharp/Exception.hpp>
 
 namespace Xna {
     void Vector2::Transform(Vector2 const* sourceArray, size_t sourceArrayLength, Matrix const& matrix, Vector2* destinationArray, size_t destinationArrayLength) {

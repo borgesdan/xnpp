@@ -7,6 +7,7 @@
 #include <cstdint>
 #include <exception>
 
+
 namespace Xna{
 	struct DxtBitmapContent : public BitmapContent {
 		using Base = BitmapContent;
@@ -21,7 +22,7 @@ namespace Xna{
 			pixelData.assign(sourceData, sourceData + length);
 		}		
 
-		std::vector<uint8_t> GetPixelData() const override {
+		inline std::vector<uint8_t> GetPixelData() const override {
 			return pixelData;
 		}
 
@@ -34,7 +35,7 @@ namespace Xna{
 		}	
 
 	private:
-		static size_t PixelDataSize(size_t blockSize, size_t width, size_t height) {
+		static constexpr size_t PixelDataSize(size_t blockSize, size_t width, size_t height) {
 			width = width + 3 >> 2;
 			height = height + 3 >> 2;
 			return width * height * blockSize;
@@ -45,14 +46,14 @@ namespace Xna{
 	};
 
 	struct Dxt3BitmapContent : public DxtBitmapContent {
-		using Base = DxtBitmapContent;
+		using base = DxtBitmapContent;
 		~Dxt3BitmapContent() override = default;
 
 		inline Dxt3BitmapContent() 
-			: Base(BlockSize){}
+			: base(BlockSize){}
 
 		inline Dxt3BitmapContent(size_t width, size_t height) 
-			: Base(BlockSize, width, height){}
+			: base(BlockSize, width, height){}
 		
 		inline bool TryGetFormat(SurfaceFormat& format) override {
 			format = GpuFormat;

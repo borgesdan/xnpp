@@ -1,9 +1,9 @@
 #ifndef XNA_BASICREADERS_HPP
 #define XNA_BASICREADERS_HPP
 
-#include "Xna/CSharp/Exception.hpp"
-#include "Xna/CSharp/IO/BinaryReader.hpp"
-#include "Xna/CSharp/TimeSpan.hpp"
+#include <Xna/CSharp/Exception.hpp>
+#include <Xna/CSharp/IO/BinaryReader.hpp>
+#include <Xna/CSharp/TimeSpan.hpp>
 #include "Xna/Framework/Audio/SoundEffect.hpp"
 #include "Xna/Framework/BoundingBox.hpp"
 #include "Xna/Framework/BoundingSphere.hpp"

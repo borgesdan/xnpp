@@ -2,13 +2,12 @@
 #define XNA_WRITERS_BASETEXTUREWRITER_HPP
 
 #include "../BuiltinTypeWriter.hpp"
-#include "Xna/ContentPipeline/Serialization/Compiler/ContentWriter.hpp"
 #include "Xna/ContentPipeline/Graphics/BitmapContent.hpp"
 #include "Xna/ContentPipeline/Serialization/Compiler/ContentWriter.hpp"
-#include <Xna/Framework/Graphics/Shared.hpp>
-#include <Xna/CSharp/Exception.hpp>
-#include <vector>
 #include <cstdint>
+#include <vector>
+#include <Xna/CSharp/Exception.hpp>
+#include <Xna/Framework/Graphics/Shared.hpp>
 
 namespace Xna {
 	template <typename T, typename TRuntime>

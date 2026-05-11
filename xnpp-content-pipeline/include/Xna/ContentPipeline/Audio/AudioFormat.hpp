@@ -6,6 +6,7 @@
 #include <span>
 #include <Xna/Framework/Audio/AudioFormat.hpp>
 #include "WaveFormatEx.hpp"
+#include <Xna/Internal/Macros.hpp>
 
 namespace Xna {
 	struct InternalAudioFormat {
@@ -13,8 +14,8 @@ namespace Xna {
 			Convert(audioFormat);
 		}
 
-		InternalAudioFormat(std::vector<uint8_t> const& waveFormatEx);
-		InternalAudioFormat(WaveFormatEx const& waveFormatEx);
+		XNPP_API InternalAudioFormat(std::vector<uint8_t> const& waveFormatEx);
+		XNPP_API InternalAudioFormat(WaveFormatEx const& waveFormatEx);
 
 		int32_t Format() const noexcept { return formatTag; }
 		int32_t ChannelCount() const noexcept { return channels; }
@@ -27,7 +28,7 @@ namespace Xna {
 			return rawFormatBuffer;
 		}
 
-		void Convert(AudioFormat const& audioFormat);
+		XNPP_API void Convert(AudioFormat const& audioFormat);
 	private:
 
 		std::vector<uint8_t> rawFormatBuffer;

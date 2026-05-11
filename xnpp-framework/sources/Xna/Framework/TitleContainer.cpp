@@ -1,6 +1,6 @@
 #include "TitleLocation.hpp"
-#include "Xna/CSharp/IO/FileStream.hpp"
-#include "Xna/CSharp/Path.hpp"
+#include <Xna/CSharp/IO/FileStream.hpp>
+#include <Xna/CSharp/Path.hpp>
 #include "Xna/Framework/TitleContainer.hpp"
 
 namespace Xna {

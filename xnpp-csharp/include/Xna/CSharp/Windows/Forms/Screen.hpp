@@ -7,7 +7,7 @@
 #include <memory>
 #include <optional>
 #include "../../Drawing/Rectangle.hpp"
-#include "Xna/Internal/Macros.hpp"
+#include "../../Macros.hpp"
 
 namespace Xna::CSharp {
 	class Screen {

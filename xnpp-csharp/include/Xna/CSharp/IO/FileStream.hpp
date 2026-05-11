@@ -4,7 +4,7 @@
 #include "Stream.hpp"
 #include <fstream>
 #include <filesystem>
-#include "Xna/Internal/Macros.hpp"
+#include "../Macros.hpp"
 
 namespace Xna::CSharp {
 	// Contains constants for specifying how the OS should open a file.
@@ -151,9 +151,9 @@ namespace Xna::CSharp {
 		inline explicit operator bool() const noexcept { return impl != nullptr; }
 
 	private:
-		void SetStreamLength();
-		void EnsureNotClosed() const;
-		void EnsureWriteable() const;
+		XNPP_API void SetStreamLength();
+		XNPP_API void EnsureNotClosed() const;
+		XNPP_API void EnsureWriteable() const;
 
 	public:
 		struct Implementation {

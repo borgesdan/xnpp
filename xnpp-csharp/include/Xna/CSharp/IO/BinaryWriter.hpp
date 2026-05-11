@@ -4,7 +4,7 @@
 #include <memory>
 #include <cstdint>
 #include "Stream.hpp"
-#include "Xna/Internal/Macros.hpp"
+#include "../Macros.hpp"
 
 namespace Xna::CSharp {
     class BinaryWriter {

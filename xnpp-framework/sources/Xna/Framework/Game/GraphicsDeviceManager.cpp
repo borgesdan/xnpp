@@ -2,7 +2,7 @@
 #include "Xna/Framework/Game/Game.hpp"
 #include "Xna/Platform/Platform.hpp"
 #include <algorithm>
-#include "Xna/CSharp/Thread.hpp"
+#include <Xna/CSharp/Thread.hpp>
 #include <cmath>
 
 //Helpers
@@ -113,7 +113,7 @@ namespace Xna {
 			});
 
 		ConfigureTouchInput(newInfo.PresentationParameters());
-		OnDeviceCreated(this, CSharp::EventArgs::Empty);
+		OnDeviceCreated(this, CSharp::EventArgs::Empty());
 	}
 
 	void GraphicsDeviceManager::ChangeDevice(bool forceCreate) {
@@ -219,16 +219,16 @@ namespace Xna {
 	}
 
 	void GraphicsDeviceManager::HandleDisposing(void* sender, CSharp::EventArgs  const& e) {
-		OnDeviceDisposing(this, CSharp::EventArgs::Empty);
+		OnDeviceDisposing(this, CSharp::EventArgs::Empty());
 	}
 
 	void GraphicsDeviceManager::HandleDeviceLost(void* sender, CSharp::EventArgs const& e) {}
 
 	void GraphicsDeviceManager::HandleDeviceReset(void* sender, CSharp::EventArgs const& e) {
-		OnDeviceReset(this, CSharp::EventArgs::Empty);
+		OnDeviceReset(this, CSharp::EventArgs::Empty());
 	}
 	void GraphicsDeviceManager::HandleDeviceResetting(void* sender, CSharp::EventArgs const& e) {
-		OnDeviceResetting(this, CSharp::EventArgs::Empty);
+		OnDeviceResetting(this, CSharp::EventArgs::Empty());
 	}
 
 	void GraphicsDeviceManager::OnDeviceCreated(void* sender, CSharp::EventArgs const& e) {

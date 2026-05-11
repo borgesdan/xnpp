@@ -9,10 +9,41 @@
 #include <string>
 #include <optional>
 #include <functional>
-#include "Xna/Internal/Macros.hpp"
-#include "Xna/Internal/Misc.hpp"
+#include "Macros.hpp"
 
 namespace Xna::CSharp {
+    template <typename TENUM>
+    static constexpr void SetFlag(int& current, TENUM flag) {
+        current |= static_cast<int>(flag);
+    }
+
+    template <typename TENUM>
+    static constexpr void SetFlag(int& current, TENUM flag1, TENUM flag2) {
+        current |= static_cast<int>(flag1) | static_cast<int>(flag2);
+    }
+
+    template <typename TENUM>
+    static constexpr bool HasFlag(int const& current, TENUM flag) {
+        return (current & static_cast<int>(flag)) == static_cast<int>(flag);
+    }
+
+    //
+    // Smart Pointer Comparator
+    //
+
+    template<typename T> struct is_shared_ptr : std::false_type {};
+    template<typename T> struct is_shared_ptr<std::shared_ptr<T>> : std::true_type {};
+    template<typename T> struct is_weak_ptr : std::false_type {};
+    template<typename T> struct is_weak_ptr<std::weak_ptr<T>> : std::true_type {};
+    template<typename T> struct is_unique_ptr : std::false_type {};
+    template<typename T> struct is_unique_ptr<std::unique_ptr<T>> : std::true_type {};
+
+    //Returns true if the type is a smart pointer
+    template <typename T>
+    static constexpr bool IsSmartPointer() {
+        return is_shared_ptr<T>::value || is_unique_ptr<T>::value || is_weak_ptr<T>::value;
+    }
+
     enum class TypeFlags {
         None = 1 << 0,   
         Array = 1 << 1,//2
@@ -34,7 +65,7 @@ namespace Xna::CSharp {
         
         XNPP_API static Type* GetType(std::string const& typeName);
 
-        inline bool IsValueType() const { return Xna::Misc::HasFlag(flags, TypeFlags::ValueType); }
+        inline bool IsValueType() const { return HasFlag(flags, TypeFlags::ValueType); }
 
         inline const std::type_info& info() const { return *info_; }
         inline std::string Name() const { return info_->name(); }
@@ -66,33 +97,33 @@ namespace Xna::CSharp {
         int flags{ 0 };
         
         if constexpr (std::is_arithmetic<T>::value) {
-            Xna::Misc::SetFlag(flags, TypeFlags::Primitive, TypeFlags::ValueType);
+            SetFlag(flags, TypeFlags::Primitive, TypeFlags::ValueType);
         }
         else if constexpr (std::is_class<T>::value) {
-            Xna::Misc::SetFlag(flags, TypeFlags::Class);
+            SetFlag(flags, TypeFlags::Class);
 
             if constexpr (std::is_constructible_v<T, std::nullptr_t>) {
-                Xna::Misc::SetFlag(flags, TypeFlags::ReferenceType);
+                SetFlag(flags, TypeFlags::ReferenceType);
             }
             else {
-                Xna::Misc::SetFlag(flags, TypeFlags::ValueType);
+                SetFlag(flags, TypeFlags::ValueType);
             }
 
             if constexpr (std::is_abstract<T>::value) {
-                Xna::Misc::SetFlag(flags, TypeFlags::Interface);
+                SetFlag(flags, TypeFlags::Interface);
             }
         }
         else if constexpr (std::is_enum<T>::value) {
-            Xna::Misc::SetFlag(flags, TypeFlags::Enum, TypeFlags::ValueType);
+            SetFlag(flags, TypeFlags::Enum, TypeFlags::ValueType);
         }       
-        else if constexpr (std::is_pointer<T>::value || Xna::Misc::IsSmartPointer<T>()) {
-            Xna::Misc::SetFlag(flags, TypeFlags::Pointer);
+        else if constexpr (std::is_pointer<T>::value || IsSmartPointer<T>()) {
+            SetFlag(flags, TypeFlags::Pointer);
 
-            if constexpr (Xna::Misc::IsSmartPointer<T>())
-                Xna::Misc::SetFlag(flags, TypeFlags::SmartPointer);
+            if constexpr (IsSmartPointer<T>())
+                SetFlag(flags, TypeFlags::SmartPointer);
         }                
         else if constexpr (std::is_array<T>::value) {
-            Xna::Misc::SetFlag(flags, TypeFlags::Array);
+            SetFlag(flags, TypeFlags::Array);
         }
 
         CSharp::Type type = typeid(T);

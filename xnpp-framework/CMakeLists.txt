@@ -1,22 +1,7 @@
-﻿# Enable Hot Reload for MSVC compilers if supported.
-if (POLICY CMP0141)
-    cmake_policy(SET CMP0141 NEW)
-    set(CMAKE_MSVC_DEBUG_INFORMATION_FORMAT "$<IF:$<AND:$<C_COMPILER_ID:MSVC>,$<CXX_COMPILER_ID:MSVC>>,$<$<CONFIG:Debug,RelWithDebInfo>:EditAndContinue>,$<$<CONFIG:Debug,RelWithDebInfo>:ProgramDatabase>>")
-endif ()
-
-# Includes directory
+﻿# Includes directory
 set(PROJECT_INCLUDES_DIR "${CMAKE_CURRENT_SOURCE_DIR}/include")
 
-set(XNPP_FRAMEWORK_SRC 
-    "sources/Xna/CSharp/IO/MemoryStream.cpp"
-    "sources/Xna/CSharp/IO/Stream.cpp"
-    "sources/Xna/CSharp/IO/FileStream.cpp"
-    "sources/Xna/CSharp/IO/BinaryReader.cpp"
-    "sources/Xna/CSharp/Windows/Forms/SystemInformation.cpp"
-    "sources/Xna/CSharp/Windows/Forms/Screen.cpp"
-    "sources/Xna/CSharp/Event.cpp"
-    "sources/Xna/CSharp/IO/BinaryWriter.cpp"
-    "sources/Xna/CSharp/BitConverter.cpp"        
+set(XNPP_FRAMEWORK_SRC    
     "sources/Xna/Framework/FrameworkDispatcher.cpp"       
     "sources/xna/Framework/PackUtils.cpp"
     "sources/Xna/Framework/TitleContainer.cpp"
@@ -54,7 +39,6 @@ set(XNPP_FRAMEWORK_SRC
     "sources/Xna/Framework/Media/Song.cpp" 
     "sources/Xna/Framework/Media/MediaPlayer.cpp"
     "sources/Xna/Framework/Media/MediaQueue.cpp"
-    "sources/Xna/CSharp/Type.cpp"
     "sources/Xna/Framework/Content/Readers/BasicReaders.cpp" 
     "sources/Xna/Framework/Graphics/Model.cpp"
 )
@@ -107,6 +91,8 @@ find_package(Vorbis CONFIG REQUIRED)
 find_package(bgfx CONFIG REQUIRED)
 
 target_link_libraries(xnpp       
+    PUBLIC
+        xnpp-csharp
     PRIVATE 
         SDL3::SDL3
         Ogg::ogg

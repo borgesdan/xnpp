@@ -1,6 +1,6 @@
 #include "Xna/Framework/Graphics/GraphicsDevice.hpp"
 #include "Xna/Framework/Graphics/GraphicsAdapter.hpp"
-#include "Xna/CSharp/Exception.hpp"
+#include <Xna/CSharp/Exception.hpp>
 #include "Xna/Platform/Platform.hpp"
 
 namespace Xna {

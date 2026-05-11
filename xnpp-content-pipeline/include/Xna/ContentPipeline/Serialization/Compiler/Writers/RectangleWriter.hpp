@@ -7,12 +7,12 @@
 namespace Xna {
 	struct RectangleWriter final : public BuiltinTypeWriter<Rectangle> {
 	public:
-		std::string GetRuntimeReader(TargetPlatform targetPlatform) override {
+		inline std::string GetRuntimeReader(TargetPlatform targetPlatform) override {
 			return "RectangleReader";
 		}
 
 	protected:
-		void WriteT(ContentWriter& output, const Rectangle* value) override {
+		inline void WriteT(ContentWriter& output, const Rectangle* value) override {
 			ContentWriter::Base& output1 = output;
 
 			output1.Write(value->X);

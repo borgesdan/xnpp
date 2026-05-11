@@ -9,11 +9,12 @@
 #include <limits>
 #include <Xna/CSharp/Exception.hpp>
 #include <Xna/Framework/Color.hpp>
+#include <Xna/Internal/Macros.hpp>
 
 namespace Xna {
     struct TextureProcessorUtils final {
-        static void ColorKey(TextureContent& texture, Color const& colorKey);
-        static void PremultiplyAlpha(TextureContent& texture);
+        XNPP_API static void ColorKey(TextureContent& texture, Color const& colorKey);
+        XNPP_API static void PremultiplyAlpha(TextureContent& texture);
     };
 }
 
@@ -63,7 +64,7 @@ namespace Xna {
 	struct TextureProcessor : public TextureProcessorBase<TextureContent, TextureContent> {
         ~TextureProcessor() override = default;       
 
-        TextureContent ProcessT(TextureContent& input, ContentProcessorContext& context) override;
+        XNPP_API TextureContent ProcessT(TextureContent& input, ContentProcessorContext& context) override;
 	};
 
     struct Texture2DProcessor : public TextureProcessorBase<Texture2DContent, Texture2DContent> {
@@ -71,7 +72,7 @@ namespace Xna {
         
         ~Texture2DProcessor() override = default;        
 
-        Texture2DContent ProcessT(Texture2DContent& input, ContentProcessorContext& context) override;
+        XNPP_API Texture2DContent ProcessT(Texture2DContent& input, ContentProcessorContext& context) override;
     };
 }
 

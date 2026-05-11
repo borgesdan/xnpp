@@ -1,6 +1,6 @@
 #include "Xna/CSharp/Windows/Forms/Screen.hpp"
 #include "Xna/CSharp/Windows/Forms/SystemInformation.hpp"
-#include "Xna/Platform/Platform.hpp"
+#include "Xna/CSharp/Platform.hpp"
 
 namespace Xna::CSharp {
 	Screen::Screen(intptr_t monitor, intptr_t hdc) {
@@ -11,7 +11,7 @@ namespace Xna::CSharp {
 		}
 		else {
 			auto info = Platform::System_MonitorArea(monitor);
-			_bounds = Rectangle::FromLTRB(info.Left, info.Top, info.Right, info.Bottom);
+			_bounds = Rectangle::FromLTRB(info.Left(), info.Top(), info.Right(), info.Bottom());
 			_primary = Platform::System_MonitorIsPrimary(monitor);			
 		}
 
@@ -67,8 +67,7 @@ namespace Xna::CSharp {
 				_workingArea = SystemInformation::WorkingArea();
 			}
 			else {
-				auto monitor = Platform::System_MonitorWorkingArea(_hmonitor);
-				_workingArea = Rectangle::FromLTRB(monitor.Left, monitor.Top, monitor.Right, monitor.Bottom);
+				_workingArea = Platform::System_MonitorWorkingArea(_hmonitor);
 			}
 		}
 

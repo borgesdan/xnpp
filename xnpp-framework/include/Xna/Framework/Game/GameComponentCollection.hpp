@@ -4,8 +4,8 @@
 #include <vector>
 #include <memory>
 #include "IGameComponent.hpp"
-#include "Xna/CSharp/Event.hpp"
-#include "Xna/CSharp/Collection.hpp"
+#include <Xna/CSharp/Event.hpp>
+#include <Xna/CSharp/Collection.hpp>
 #include "Xna/Internal/Macros.hpp"
 
 namespace Xna {

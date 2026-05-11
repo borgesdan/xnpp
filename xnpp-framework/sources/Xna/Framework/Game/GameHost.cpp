@@ -17,27 +17,27 @@ namespace Xna {
 	CSharp::Event<CSharp::EventArgs> GameHost::Exiting() const { return impl->Exiting; }
 
 	void GameHost::OnSuspend() {
-		impl->Suspend.Invoke(this, CSharp::EventArgs::Empty);
+		impl->Suspend.Invoke(this, CSharp::EventArgs::Empty());
 	}
 
 	void GameHost::OnResume() {
-		impl->Resume.Invoke(this, CSharp::EventArgs::Empty);
+		impl->Resume.Invoke(this, CSharp::EventArgs::Empty());
 	}
 
 	void GameHost::OnActivated() {
-		impl->Activated.Invoke(this, CSharp::EventArgs::Empty);
+		impl->Activated.Invoke(this, CSharp::EventArgs::Empty());
 	}
 
 	void GameHost::OnDeactivated() {
-		impl->Deactivated.Invoke(this, CSharp::EventArgs::Empty);
+		impl->Deactivated.Invoke(this, CSharp::EventArgs::Empty());
 	}
 
 	void GameHost::OnIdle() {
-		impl->Idle.Invoke(this, CSharp::EventArgs::Empty);
+		impl->Idle.Invoke(this, CSharp::EventArgs::Empty());
 	}
 
 	void GameHost::OnExiting() {
-		impl->Exiting.Invoke(this, CSharp::EventArgs::Empty);
+		impl->Exiting.Invoke(this, CSharp::EventArgs::Empty());
 	}
 
 	GameWindow GameHost::Window() const { return impl->gameWindow; }

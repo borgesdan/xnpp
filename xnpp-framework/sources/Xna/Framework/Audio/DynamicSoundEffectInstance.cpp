@@ -1,5 +1,5 @@
 #include "Xna/Framework/Audio/DynamicSoundEffectInstance.hpp"
-#include "Xna/CSharp/Exception.hpp"
+#include <Xna/CSharp/Exception.hpp>
 #include "Xna/Internal/Misc.hpp"
 
 namespace Xna {

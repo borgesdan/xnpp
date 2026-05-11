@@ -16,7 +16,7 @@
 
 namespace Xna {
 	struct BuildContent {
-		BuildContent(		
+		XNPP_API BuildContent(
 			ContentBuildLogger logger,
 			TargetPlatform targetPlatform,
 			GraphicsProfile targetProfile,
@@ -31,10 +31,10 @@ namespace Xna {
 			std::vector<NoneItem> const& copyAssets
 		);
 
-		bool Execute();
+		XNPP_API bool Execute();
 
 	private:
-		bool RunTheBuild(BuildCoordinatorSettings& settings,
+		XNPP_API bool RunTheBuild(BuildCoordinatorSettings& settings,
 			TimestampCache timestampCache,
 			std::vector<CompileItem> const& sourceAssets,
 			std::vector<std::filesystem::path>& outputContent,
@@ -43,8 +43,8 @@ namespace Xna {
 			std::unordered_map<std::filesystem::path, TimePoint>& dependencyTimestamps,
 			std::vector<std::pair<std::filesystem::path, std::string>>& warnings);		
 
-		void RequestBuild(BuildCoordinator& coordinator, CompileItem const& item);
-		void CopyItems(BuildCoordinatorSettings settings);
+		XNPP_API void RequestBuild(BuildCoordinator& coordinator, CompileItem const& item);
+		XNPP_API void CopyItems(BuildCoordinatorSettings settings);
 
 	private:
 		ContentBuildLogger logger{nullptr};

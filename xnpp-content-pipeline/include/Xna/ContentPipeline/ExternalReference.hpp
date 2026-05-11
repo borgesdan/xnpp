@@ -13,7 +13,7 @@ namespace Xna {
 		virtual ~ExternalReferenceBase() = default;
 		inline std::filesystem::path Filename() const { return filename; }
 
-		void Replace(std::filesystem::path const& filename, std::optional<ContentIdentity> const& relativeToContent) {
+		inline void Replace(std::filesystem::path const& filename, std::optional<ContentIdentity> const& relativeToContent) {
 			if (relativeToContent)
 				this->filename = PathUtils::GetFullPath(relativeToContent->SourceFileName / filename);
 			else

@@ -1,11 +1,11 @@
 #ifndef CSHARP_IO_BINARYREADER_HPP
 #define CSHARP_IO_BINARYREADER_HPP
 
+#include "../Exception.hpp"
+#include "../Macros.hpp"
 #include "Stream.hpp"
-#include "Xna/CSharp/Exception.hpp"
-#include <optional>
 #include <cstdint>
-#include "Xna/Internal/Macros.hpp"
+#include <optional>
 
 namespace Xna::CSharp {
 	class BinaryReader {
@@ -60,9 +60,9 @@ namespace Xna::CSharp {
 		inline explicit operator bool() const noexcept { return impl != nullptr; }
 
 	private:
-		uint8_t InternalReadByte();
-		void InternalRead(std::vector<uint8_t>& buffer);
-		int32_t InternalReadChars(char* buffer, int32_t bufferLength);		
+		XNPP_API uint8_t InternalReadByte();
+		XNPP_API void InternalRead(std::vector<uint8_t>& buffer);
+		XNPP_API int32_t InternalReadChars(char* buffer, int32_t bufferLength);
 
 	public:
 		struct Implementation {

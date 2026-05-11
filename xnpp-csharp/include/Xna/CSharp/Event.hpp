@@ -6,12 +6,11 @@
 #include <mutex>
 #include <memory>
 #include <algorithm>
-#include "Xna/Internal/Macros.hpp"
+#include "Macros.hpp"
 
 namespace Xna::CSharp {
-    // ---- Base EventArgs ----
     struct XNPP_API EventArgs {
-         static EventArgs Empty;
+        static const EventArgs& Empty();
     };
 
     // ---- EventHandler<TEventArgs> ----

@@ -29,9 +29,9 @@ namespace Xna {
 		}
 
 	protected:
-		ContentTypeWriter(CSharp::Type const& targetType) : targetType(targetType){}
+		inline ContentTypeWriter(CSharp::Type const& targetType) : targetType(targetType){}
 
-		ContentTypeWriter(
+		inline ContentTypeWriter(
 			CSharp::Type const& targetType,
 			bool isGenericType,
 			std::vector<CSharp::Type> genericTypes)

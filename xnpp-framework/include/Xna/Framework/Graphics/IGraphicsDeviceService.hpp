@@ -1,7 +1,7 @@
 #ifndef XNA_FRAMEWORK_GRAPHICS_IGRAPHICSDEVICESERVICE_HPP
 #define XNA_FRAMEWORK_GRAPHICS_IGRAPHICSDEVICESERVICE_HPP
 
-#include "Xna/CSharp/Event.hpp"
+#include <Xna/CSharp/Event.hpp>
 #include <optional>
 
 namespace Xna {
