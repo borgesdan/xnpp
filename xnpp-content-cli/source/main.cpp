@@ -28,7 +28,7 @@ int main(int argc, char* argv[]) {
 
     // 4 - Se existe, passar o arquivo do arquivo para BuildTask::OpenProject
     // 5 - BuildTask::OpenProject(caminhoArquivo);
-    BuildTask::OpenProject(filePath.string());
+    BuildTask::OpenProject(filePath.string());    
 
     // 6 - Finalizar o programa
     return 0;
