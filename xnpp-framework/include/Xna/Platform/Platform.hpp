@@ -318,6 +318,7 @@ namespace Xna {
 		struct ISoundEffectInstance {
 			virtual ~ISoundEffectInstance() = default;
 			XNPP_API virtual void Load(ISoundEffect* baseSE) = 0;
+			XNPP_API virtual void Unload() = 0;
 			XNPP_API virtual void SetVolume(float value) = 0;
 			XNPP_API virtual void SetPan(float value) = 0;
 			XNPP_API virtual void SetPitch(float value) = 0;

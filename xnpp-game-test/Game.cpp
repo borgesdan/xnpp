@@ -29,6 +29,7 @@ public:
 		texture2 = Content().Load<Xna::Texture2D>("Sprites/Player/Idle");
 		texture3 = Content().Load<Xna::Texture2D>("Overlays/you_died");
 		font = Content().Load<Xna::SpriteFont>("Fonts/Hud");
+		sound = Content().Load<Xna::SoundEffect>("Sounds/PlayerKilled");
 
 		auto adp = Xna::GraphicsAdapter::DefaultAdapter();
 		auto display = adp.CurrentDisplayMode(); 
@@ -44,8 +45,8 @@ public:
 
 		if (curKState.IsKeyDown(Xna::Keys::Right) && oldKState.IsKeyUp(Xna::Keys::Right)) {
 			backColor = Xna::Color::Red();
-			/*auto soundEffectInstance1 = soundEffect.CreateInstance();
-			soundEffectInstance1.Play();		*/
+			//auto soundEffectInstance1 = soundEffect.CreateInstance();
+					
 			one = true;
 		}
 
@@ -68,7 +69,7 @@ public:
 
 		if (curKState.IsKeyDown(Xna::Keys::Space) && oldKState.IsKeyUp(Xna::Keys::Space)) {
 			backColor = Xna::Color::Azure();
-
+			sound.Play();
 			four = true;
 		}
 
@@ -180,6 +181,7 @@ private:
 	Xna::Texture2D texture3 = nullptr;
 	Xna::Vector2 texPos{};
 	Xna::SpriteFont font = nullptr;
+	Xna::SoundEffect sound = nullptr;
 	float rotation = 0;
 
 	bool one = false;
