@@ -150,7 +150,6 @@ namespace Xna {
 		struct MiniAudioSoundEffectInstance final : public ISoundEffectInstance {
 			ma_sound sound{};
 			ma_audio_buffer buffer{};
-			ma_audio_buffer_config bufferConfig{};
 			MediaState state{ MediaState::Stoped };
 
 			bool isLoaded = false;
@@ -158,7 +157,7 @@ namespace Xna {
 			void Load(ISoundEffect* baseSE) override {
 				auto se = reinterpret_cast<MiniAudioSoundEffect*>(baseSE);
 
-				bufferConfig = ma_audio_buffer_config_init(
+				auto bufferConfig = ma_audio_buffer_config_init(
 					se->bufferConfig.format,
 					se->bufferConfig.channels,
 					se->loopEndFrames - se->loopStartFrames,
