@@ -1,7 +1,7 @@
 ﻿# Includes directory
 set(PROJECT_INCLUDES_DIR "${CMAKE_CURRENT_SOURCE_DIR}/include")
 
-set(XNPP_FRAMEWORK_SRC    
+set(XNPP_FRAMEWORK_SRC  
     "sources/Xna/Framework/FrameworkDispatcher.cpp"       
     "sources/xna/Framework/PackUtils.cpp"
     "sources/Xna/Framework/TitleContainer.cpp"
@@ -80,8 +80,6 @@ endif()
 
 target_compile_features(xnpp PUBLIC cxx_std_20)
 
-target_compile_definitions(xnpp PRIVATE XNPP_EXPORT_DLL)
-
 #SDL3
 find_package(SDL3 CONFIG REQUIRED)
 #libvorbis
@@ -144,6 +142,9 @@ install(
 
 include(CMakePackageConfigHelpers)
 
+# Define onde os shaders serão instalados no sistema do usuário / vcpkg (ex: share/xnpp/shaders)
+set(SHADERS_INSTALL_DIR "${CMAKE_INSTALL_DATADIR}/xnpp/shaders")
+
 write_basic_package_version_file(
     "${CMAKE_CURRENT_BINARY_DIR}/xnppConfigVersion.cmake"
     VERSION ${PROJECT_VERSION}
@@ -154,6 +155,7 @@ configure_package_config_file(
     "${CMAKE_CURRENT_SOURCE_DIR}/cmake/xnppConfig.cmake.in"
     "${CMAKE_CURRENT_BINARY_DIR}/xnppConfig.cmake"
     INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/xnpp
+    PATH_VARS SHADERS_INSTALL_DIR # Expondo o diretório para o arquivo .cmake.in
 )
 
 install(
@@ -163,7 +165,8 @@ install(
     DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/xnpp
 )
 
-# Post build commands
+# Cópia da pasta shaders
+# Descobre a plataforma alvo
 if(WIN32)
     set(SHADER_OS_DIR "windows")
 elseif(APPLE)
@@ -172,13 +175,25 @@ elseif(UNIX)
     set(SHADER_OS_DIR "linux")
 endif()
 
+# ---------------------------------------------------------
+# 1. PARA O BUILD LOCAL (Testes internos da XNPP)
+# ---------------------------------------------------------
 add_custom_command(TARGET xnpp POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_directory
-        "${CMAKE_CURRENT_SOURCE_DIR}/shaders/bgfx/${SHADER_OS_DIR}"
-        "$<TARGET_FILE_DIR:xnpp>/shaders/bgfx"
-    COMMENT "Copying the shaders folder to the output directory..."
+        "${CMAKE_CURRENT_SOURCE_DIR}/shaders/binary/${SHADER_OS_DIR}"
+        "$<TARGET_FILE_DIR:xnpp>/shaders"
+    COMMENT "Copying the shaders folder to the local output directory..."
 )
 
 set_target_properties(xnpp PROPERTIES
     ADDITIONAL_CLEAN_FILES "$<TARGET_FILE_DIR:xnpp>/shaders"
+)
+
+# ---------------------------------------------------------
+# 2. PARA O EMPACOTAMENTO (vcpkg / install)
+# ---------------------------------------------------------
+# Instala os shaders da plataforma correspondente usando a variável dinâmica
+install(
+    DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/shaders/binary/${SHADER_OS_DIR}/"
+    DESTINATION "${SHADERS_INSTALL_DIR}"
 )

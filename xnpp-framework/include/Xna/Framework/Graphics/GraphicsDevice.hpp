@@ -50,8 +50,7 @@ namespace Xna {
 	inline Xna::PresentationParameters& GraphicsDevice::PresentationParameters() { return impl->presentationParameters; }
 	inline const Xna::RasterizerState& GraphicsDevice::RasterizerState() const { return impl->backend->GetRasterizerState(); }
 	inline int32_t GraphicsDevice::ReferenceStencil() const { return impl->referenceStencil; }
-	inline SamplerStateCollection GraphicsDevice::SamplerStates() const { return impl->samplerState; }
-	inline Xna::Viewport GraphicsDevice::Viewport() const { return impl->viewports[0]; }
+	inline SamplerStateCollection GraphicsDevice::SamplerStates() const { return impl->samplerState; }	
 	inline Rectangle GraphicsDevice::ScissorRectangle() const { return impl->scissorRectangles[0]; }
 	
 	inline RenderTarget2D GraphicsDevice::CreateBackBufferRenderTarget() const { 

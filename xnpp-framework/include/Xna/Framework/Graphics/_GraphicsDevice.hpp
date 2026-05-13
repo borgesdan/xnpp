@@ -88,7 +88,7 @@ namespace Xna {
 		//Gets the collection of textures that have been assigned to the texture stages of the device.
 		inline TextureCollection Textures() const;
 		//Gets or sets a viewport identifying the portion of the render target to receive draw calls. 
-		inline Xna::Viewport Viewport() const;
+		XNPP_API Xna::Viewport Viewport() const;
 		//Gets or sets a viewport identifying the portion of the render target to receive draw calls. 
 		XNPP_API void Viewport(Xna::Viewport const& viewport);
 
