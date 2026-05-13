@@ -19,3 +19,84 @@ function(xnpp_deploy_shaders TARGET_NAME)
         COMMENT "Copiando shaders do bgfx/XNPP para o output de ${TARGET_NAME}..."
     )
 endfunction()
+
+# Função utilitária para compilar o Content Pipeline
+# Uso padrão: xnpp_build_content(MeuJogo)
+# Uso customizado: xnpp_build_content(MeuJogo "Caminho/Para/Meu/content.json")
+function(xnpp_build_content TARGET_NAME)
+    # 1. Resolução dos caminhos
+    # Permite que o desenvolvedor passe o caminho do json como um segundo parâmetro opcional.
+    # Se não passar, assumimos o padrão: "Content/content.json" na pasta raiz de onde a função foi chamada.
+    if(ARGC GREATER 1)
+        set(PIPELINE_CONFIG_FILE "${ARGV1}")
+        get_filename_component(CONTENT_DIR "${PIPELINE_CONFIG_FILE}" DIRECTORY)
+    else()
+        set(CONTENT_DIR "${CMAKE_CURRENT_SOURCE_DIR}/Content")
+        set(PIPELINE_CONFIG_FILE "${CONTENT_DIR}/content.json")
+    endif()
+
+    if(NOT EXISTS "${CONTENT_DIR}" OR NOT EXISTS "${PIPELINE_CONFIG_FILE}")
+        message(STATUS "XNPP: Pasta Content ou content.json não encontrados. Pulando o build do content pipeline para o target '${TARGET_NAME}'.")
+        return()
+    endif()
+
+    # 2. Localiza a ferramenta CLI instalada
+    find_program(
+        XNPP_CONTENT_CLI
+        NAMES xnpp-content-cli
+        REQUIRED
+        MESSAGE "XNPP: xnpp-content-cli não foi encontrado. O pacote xnpp foi compilado com a feature 'content-pipeline'?"
+    )
+
+    # 3. Resolve a plataforma para mapear a pasta de saída (bin/Windows, bin/Linux, etc.)
+    if(WIN32)
+        set(CONTENT_PLATFORM "Windows")
+    elseif(APPLE)
+        set(CONTENT_PLATFORM "Mac")
+    elseif(UNIX AND NOT APPLE)
+        set(CONTENT_PLATFORM "Linux")
+    else()
+        set(CONTENT_PLATFORM "Unknown")
+    endif()
+
+    # 4. Define os diretórios de origem e destino
+    set(SOURCE_CONTENT_DIR "${CONTENT_DIR}/bin/${CONTENT_PLATFORM}")
+    # Envia os assets compilados exatamente para junto do executável do jogo
+    set(DEST_CONTENT_DIR "$<TARGET_FILE_DIR:${TARGET_NAME}>/Content")
+    
+    # Arquivo de controle único para este target para evitar builds redundantes
+    set(STAMP_FILE "${CMAKE_CURRENT_BINARY_DIR}/${TARGET_NAME}_content.stamp")
+
+    # 5. Cria a regra de build customizada
+    add_custom_command(
+        OUTPUT "${STAMP_FILE}"
+        
+        # Garante que a pasta final exista antes de copiar
+        COMMAND ${CMAKE_COMMAND} -E make_directory "${DEST_CONTENT_DIR}"
+        
+        # Executa a CLI do XNPP passando o JSON
+        COMMAND ${XNPP_CONTENT_CLI} "${PIPELINE_CONFIG_FILE}"
+        
+        # Copia da pasta bin/[Plataforma]/ gerada pela CLI para a pasta de build do jogo
+        COMMAND ${CMAKE_COMMAND} -E copy_directory "${SOURCE_CONTENT_DIR}" "${DEST_CONTENT_DIR}"
+        
+        # Atualiza o arquivo de controle (stamp)
+        COMMAND ${CMAKE_COMMAND} -E touch "${STAMP_FILE}"
+        
+        # O rebuild do content pipeline será acionado se o content.json for alterado
+        DEPENDS "${PIPELINE_CONFIG_FILE}"
+        
+        COMMENT "XNPP: Compilando Content Pipeline para ${TARGET_NAME}..."
+        VERBATIM
+    )
+
+    # 6. Cria um target exclusivo e amarra ao target principal do jogo
+    set(CUSTOM_TARGET_NAME "${TARGET_NAME}_BuildContent")
+    
+    add_custom_target(${CUSTOM_TARGET_NAME} ALL
+        DEPENDS "${STAMP_FILE}"
+    )
+
+    add_dependencies(${TARGET_NAME} ${CUSTOM_TARGET_NAME})
+
+endfunction()
