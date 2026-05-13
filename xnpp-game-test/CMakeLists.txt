@@ -24,3 +24,9 @@ add_custom_command(TARGET GameTest POST_BUILD
         $<TARGET_FILE:xnpp>
         $<TARGET_FILE_DIR:GameTest>
 )
+
+add_custom_command(TARGET GameTest POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+        "$<TARGET_FILE_DIR:xnpp>/shaders"
+        "$<TARGET_FILE_DIR:GameTest>/shaders"
+)

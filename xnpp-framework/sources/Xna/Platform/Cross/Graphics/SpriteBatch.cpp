@@ -90,7 +90,7 @@ namespace Xna {
 			std::filesystem::path currentPath;
 			Platform::System_GetExecutablePath(currentPath);
 			currentPath.remove_filename();
-			currentPath /= "shaders/bgfx/";
+			currentPath /= "shaders/";
 			currentPath = currentPath.lexically_normal();
 
 			m_program = loadShaderProgram(currentPath / "sprite.vs.bin", currentPath / "sprite.fs.bin");
