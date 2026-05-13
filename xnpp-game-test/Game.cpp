@@ -133,6 +133,8 @@ public:
 
 	void Draw(Xna::GameTime& gameTime) override {
 		graphics.GraphicsDevice()->Clear(backColor);
+
+		auto viewport = graphics.GraphicsDevice()->Viewport();
 		
 		spriteBatch.Begin(Xna::SpriteSortMode::Deferred, nullptr, nullptr, nullptr, nullptr, nullptr, Xna::Matrix::Identity());
 

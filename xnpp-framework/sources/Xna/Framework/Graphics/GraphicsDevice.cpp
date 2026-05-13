@@ -31,6 +31,10 @@ namespace Xna {
         //TODO: ReferenceStencil não é aplicado no backend
     }
 
+    Viewport GraphicsDevice::Viewport() const {
+        return impl->backend->GetViewport();
+    }
+
     void GraphicsDevice::Viewport(Xna::Viewport const& viewport) {
         impl->viewports[0] = viewport;
         impl->backend->SetViewport(viewport);

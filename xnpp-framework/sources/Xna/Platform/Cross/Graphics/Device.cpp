@@ -37,6 +37,7 @@ namespace Xna {
 		uint64_t blendFactor{ SwapXnaColor(Color::White()) };
 
 		GraphicsDeviceCache cache;
+		Xna::Viewport viewport{};
 
 		void CreateDevice(GraphicsAdapter const& adapter, Xna::PresentationParameters const& pp) override {
 			auto window = reinterpret_cast<SDL_Window*>(pp.DeviceWindowHandle);
@@ -108,6 +109,10 @@ namespace Xna {
 
 			const auto clearColor = SwapXnaColor(Colors::CornflowerBlue);
 			bgfx::setViewClear(0, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, clearColor, 1.0f, 0);
+
+			viewport.Width = w;
+			viewport.Height = h;
+			viewport.MaxDepth = 1.0f;
 		}
 
 		void Present(std::optional<Rectangle> const& rec, std::optional<Rectangle> const& destination, intptr_t overrideWindowHandle) override {
@@ -117,8 +122,12 @@ namespace Xna {
 			bgfx::frame();
 		}
 
-		void SetViewport(Viewport const& viewport) override {
+		Viewport GetViewport() override {
+			return viewport;
+		}
 
+		void SetViewport(Viewport const& viewport) override {
+			
 		}
 
 		void SetVertexBuffer(VertexBuffer const& vertexBuffer, uint32_t vertexOffset) override {
