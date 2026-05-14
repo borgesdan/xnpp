@@ -160,7 +160,8 @@ public:
 		////if (four)
 		//	spriteBatch.Draw(texture, Xna::Vector2(300, 100), Xna::Color::White());
 
-		spriteBatch.DrawString(font, U"Teste", Xna::Vector2(500, 400), Xna::Color::Red());
+		spriteBatch.DrawString(font, "Alfafa para D. Florinda", Xna::Vector2(200, 100), Xna::Color::Red());
+		spriteBatch.DrawString(font, U"Uma torta para Jaiminho.", Xna::Vector2(200, 200), Xna::Color::BlueViolet());
 
 
 
