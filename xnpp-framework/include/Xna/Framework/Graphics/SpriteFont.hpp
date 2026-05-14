@@ -185,7 +185,7 @@ namespace Xna {
 					auto& vector3 = impl->kerning[indexForCharacter];
 
 					if (flag)
-						vector3.X = std::max(vector3.X, 0.0f);
+						vector3.X = (std::max)(vector3.X, 0.0f);
 					else
 						vector2.X += impl->spacing * scale.X * num1;
 

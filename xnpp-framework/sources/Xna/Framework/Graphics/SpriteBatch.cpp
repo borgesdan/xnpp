@@ -3,6 +3,13 @@
 #include <Xna/CSharp/Exception.hpp>
 
 namespace Xna {
+	static void normalizeLayerDepth(float& layerDepth) {
+		if (layerDepth < 0)
+			layerDepth = 0;
+		else if (layerDepth > 1)
+			layerDepth = 1;
+	}
+
 	SpriteBatch::SpriteBatch(GraphicsDevice const& device) {
 		backend = PlatformNS::ISpriteBatch::Create(device);
 	}
@@ -32,9 +39,7 @@ namespace Xna {
 		std::optional<std::reference_wrapper<const RasterizerState>> const& rasterizerState,
 		std::optional<std::reference_wrapper<const Effect>> const& effect,
 		std::optional<std::reference_wrapper<const Matrix>> transformMatrix) {
-
-		//Aqui teria uma exceção ("Invalid attempt to call the Begin method twice.") caso o  campo 'beginCalled' fosse true.
-		//A validação ficou a cargo do backend, mas um assert ou um 'return' caso true é mais do que necessário.
+		
 		backend->Begin(
 			sortMode,
 			blendState ? &blendState.value().get() : nullptr,
@@ -52,12 +57,15 @@ namespace Xna {
 		float rotation, Vector2 origin, SpriteEffects effects, float layerDepth) {
 
 		assert(texture != nullptr && "texture is null.");
-		assert((layerDepth >= 0.0f && layerDepth <= 1.0f) && "layerDepth out of bounds.");
-		assert((destRect.Width > 0 && destRect.Height > 0) && "destRect is empty.");
-		assert(((!sourceRectangle.has_value() || (sourceRectangle->Width > 0 && sourceRectangle->Height > 0))) && "sourceRectangle is empty.");
 
-		//Aqui teria uma exceção ("The Begin method was not called before the Draw method.") caso o  campo 'beginCalled' fosse false.
-		//A validação ficou a cargo do backend, mas um assert ou um 'return' caso false é mais do que necessário.
+		//Se o retângulo de destino está vázio então não há nada a desenhar
+		if (destRect.IsEmpty())	return;
+
+		if (sourceRectangle && sourceRectangle->IsEmpty())
+			sourceRectangle = std::nullopt;
+
+		normalizeLayerDepth(layerDepth);
+		
 		const auto& texBackend = texture.GetBackend();
 
 		backend->Draw(
@@ -78,8 +86,11 @@ namespace Xna {
 		float rotation, Vector2 origin, Vector2 scale, SpriteEffects effects, float layerDepth) {
 
 		assert(texture != nullptr && "texture is null.");
-		assert((layerDepth >= 0.0f && layerDepth <= 1.0f) && "layerDepth out of bounds.");
-		assert(((!sourceRectangle.has_value() || (sourceRectangle->Width > 0 && sourceRectangle->Height > 0))) && "sourceRectangle is empty.");			
+
+		if (sourceRectangle && sourceRectangle->IsEmpty()) 
+			sourceRectangle = std::nullopt;
+
+		normalizeLayerDepth(layerDepth);
 
 		const auto& texBackend = texture.GetBackend();
 		backend->Draw(
@@ -98,10 +109,10 @@ namespace Xna {
 		Vector2 scale, SpriteEffects effects, float layerDepth) {
 
 		assert(spriteFont != nullptr && "spriteFont is null.");
-		assert((layerDepth >= 0.0f && layerDepth <= 1.0f) && "layerDepth out of bounds.");		
 
-		if (text.empty())
-			return;
+		if (text.empty()) return;			
+
+		normalizeLayerDepth(layerDepth);
 
 		spriteFont.InternalDraw(
 			text,
@@ -119,10 +130,10 @@ namespace Xna {
 		Vector2 scale, SpriteEffects effects, float layerDepth) {
 
 		assert(spriteFont != nullptr && "spriteFont is null.");
-		assert((layerDepth >= 0.0f && layerDepth <= 1.0f) && "layerDepth out of bounds.");
 
-		if (text.empty())
-			return;
+		if (text.empty()) return;				
+
+		normalizeLayerDepth(layerDepth);
 
 		spriteFont.InternalDraw(
 			text,
