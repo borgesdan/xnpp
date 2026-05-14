@@ -32,7 +32,7 @@ public:
 		sound = Content().Load<Xna::SoundEffect>("Sounds/PlayerKilled");
 
 		auto adp = Xna::GraphicsAdapter::DefaultAdapter();
-		auto display = adp.CurrentDisplayMode(); 
+		auto display = adp.CurrentDisplayMode();
 
 		auto timeSpan = Xna::CSharp::TimeSpan(1, 00, 0);
 	}
@@ -46,7 +46,7 @@ public:
 		if (curKState.IsKeyDown(Xna::Keys::Right) && oldKState.IsKeyUp(Xna::Keys::Right)) {
 			backColor = Xna::Color::Red();
 			//auto soundEffectInstance1 = soundEffect.CreateInstance();
-					
+
 			one = true;
 		}
 
@@ -135,7 +135,7 @@ public:
 		graphics.GraphicsDevice()->Clear(backColor);
 
 		auto viewport = graphics.GraphicsDevice()->Viewport();
-		
+
 		spriteBatch.Begin(Xna::SpriteSortMode::Deferred, nullptr, nullptr, nullptr, nullptr, nullptr, Xna::Matrix::Identity());
 
 		//if (one)
@@ -152,15 +152,17 @@ public:
 			0);
 
 		//if (two)
-			spriteBatch.Draw(texture2, Xna::Vector2(100, 100), Xna::Color::White());
+		spriteBatch.Draw(texture2, Xna::Vector2(100, 100), Xna::Color::White());
 
 		//if (three)
-			spriteBatch.Draw(texture, texPos, Xna::Color::Black());
+		spriteBatch.Draw(texture, texPos, Xna::Color::Black());
 
 		////if (four)
 		//	spriteBatch.Draw(texture, Xna::Vector2(300, 100), Xna::Color::White());
 
-			spriteBatch.DrawString(font, U"Teste", Xna::Vector2(500, 400), Xna::Color::Red());
+		spriteBatch.DrawString(font, U"Teste", Xna::Vector2(500, 400), Xna::Color::Red());
+
+
 
 		spriteBatch.End();
 

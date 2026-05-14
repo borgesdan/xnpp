@@ -16,7 +16,11 @@ namespace Xna {
 		impl->lineSpacing = lineSpacing;
 		impl->spacing = spacing;
 		impl->kerning = kerning;
-		impl->defaultCharacter = defaultCharacter;
+		impl->defaultCharacter = defaultCharacter;    
+
+        //TODO: rever defaultCharacter
+        if (!impl->defaultCharacter)
+            impl->defaultCharacter = '*';
 	}	
 
     size_t SpriteFont::GetIndexForCharacter(char32_t character) const {
@@ -36,7 +40,7 @@ namespace Xna {
                 num2 = index - 1;
         }
 
-        assert(!impl->defaultCharacter && "Default character is empty.");
+        assert(impl->defaultCharacter && "Default character is empty.");
         
         const auto character2 = *impl->defaultCharacter;
 
