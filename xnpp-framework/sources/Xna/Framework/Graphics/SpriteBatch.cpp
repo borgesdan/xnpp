@@ -59,10 +59,7 @@ namespace Xna {
 		assert(texture != nullptr && "texture is null.");
 
 		//Se o retângulo de destino está vázio então não há nada a desenhar
-		if (destRect.IsEmpty())	return;
-
-		if (sourceRectangle && sourceRectangle->IsEmpty())
-			sourceRectangle = std::nullopt;
+		if (destRect.IsEmpty())	return;		
 
 		normalizeLayerDepth(layerDepth);
 		
@@ -86,10 +83,7 @@ namespace Xna {
 		float rotation, Vector2 origin, Vector2 scale, SpriteEffects effects, float layerDepth) {
 
 		assert(texture != nullptr && "texture is null.");
-
-		if (sourceRectangle && sourceRectangle->IsEmpty()) 
-			sourceRectangle = std::nullopt;
-
+		
 		normalizeLayerDepth(layerDepth);
 
 		const auto& texBackend = texture.GetBackend();
