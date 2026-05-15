@@ -3,7 +3,9 @@
 
 #include "Vector2.hpp"
 #include <cmath>
-#include "Xna/Internal/Macros.hpp"
+#include <cassert>
+#include <span>
+#include <cstddef>
 
 namespace Xna {
 	//Defines a vector with three components. 
@@ -204,22 +206,45 @@ namespace Xna {
 		static constexpr Vector3 TransformNormal(Vector3 const& normal, Matrix const& matrix);
 		//Transforms a Vector3 by a specified Quaternion rotation.
 		static constexpr Vector3 Transform(Vector3 const& value, Quaternion const& rotation);
-		//Transforms a source array of Vector3s by a specified Matrix and writes the results to an existing destination array.
-		XNPP_API static void Transform(Vector3 const* sourceArray, size_t sourceArrayLength, Matrix const& matrix, Vector3* destinationArray, size_t destinationLength);
-		//Transforms a source array of Vector3s by a specified Matrix and writes the results to an existing destination array.
-		XNPP_API static void Transform(std::vector<Vector3> const& sourceArray, Matrix const& matrix, std::vector<Vector3>& destinationArray);
-		//Applies a specified transform Matrix to a specified range of an array of Vector3s and writes the results into a specified range of a destination array.
-		XNPP_API static void Transform(Vector3 const* sourceArray, size_t sourceArrayLength, size_t sourceIndex, Matrix const& matrix, Vector3* destinationArray, size_t destinationLength, size_t destinationIndex, size_t length);
-		//Applies a specified transform Matrix to a specified range of an array of Vector3s and writes the results into a specified range of a destination array.
-		XNPP_API static void Transform(std::vector<Vector3> const& sourceArray, size_t sourceIndex, Matrix const& matrix, std::vector<Vector3>& destinationArray, size_t destinationIndex, size_t length);
-		//ransforms an array of 3D vector normals by a specified Matrix.
-		XNPP_API static void TransformNormal(Vector3 const* sourceArray, size_t sourceArrayLength, Matrix const& matrix, Vector3* destinationArray, size_t destionationArrayLength);
-		//ransforms an array of 3D vector normals by a specified Matrix.
-		XNPP_API static void TransformNormal(std::vector<Vector3> const& sourceArray, Matrix const& matrix, std::vector<Vector3>& destinationArray);
-		//Transforms a specified range in an array of 3D vector normals by a specified Matrix and writes the results to a specified range in a destination array.
-		XNPP_API static void TransformNormal(Vector3 const* sourceArray, size_t sourceArrayLength, size_t sourceIndex, Matrix const& matrix, Vector3* destinationArray, size_t destinationLength, size_t destinationIndex, size_t length);
-		//Transforms a specified range in an array of 3D vector normals by a specified Matrix and writes the results to a specified range in a destination array.
-		XNPP_API static void TransformNormal(std::vector<Vector3> const& sourceArray, size_t sourceIndex, Matrix const& matrix, std::vector<Vector3>& destinationArray, size_t destinationIndex, size_t length);
+		
+		static constexpr void Transform(
+			std::span<const Vector3> sourceArray,
+			const Matrix& matrix,
+			std::span<Vector3> destinationArray);
+
+		static constexpr void Transform(
+			std::span<const Vector3> sourceArray,
+			std::size_t sourceIndex,
+			const Matrix& matrix,
+			std::span<Vector3> destinationArray,
+			std::size_t destinationIndex,
+			std::size_t length);
+
+		static constexpr void TransformNormal(
+			std::span<const Vector3> sourceArray,
+			const Matrix& matrix,
+			std::span<Vector3> destinationArray);
+
+		static constexpr void TransformNormal(
+			std::span<const Vector3> sourceArray,
+			std::size_t sourceIndex,
+			const Matrix& matrix,
+			std::span<Vector3> destinationArray,
+			std::size_t destinationIndex,
+			std::size_t length);
+
+		static constexpr void Transform(
+			std::span<const Vector3> sourceArray,
+			const Quaternion& rotation,
+			std::span<Vector3> destinationArray);
+
+		static constexpr void Transform(
+			std::span<const Vector3> sourceArray,
+			std::size_t sourceIndex,
+			const Quaternion& rotation,
+			std::span<Vector3> destinationArray,
+			std::size_t destinationIndex,
+			std::size_t length);
 		
 		//Returns a vector pointing in the opposite direction.
 		static constexpr Vector3 Negate(Vector3 const& value)

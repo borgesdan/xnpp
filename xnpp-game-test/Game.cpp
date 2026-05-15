@@ -9,6 +9,8 @@
 #include <Xna/CSharp/TimeSpan.hpp>
 #include <Windows.h>
 
+using namespace Xna;
+
 class Game1 : public Xna::Game {
 	using base = Xna::Game;
 public:

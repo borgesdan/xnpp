@@ -515,6 +515,300 @@ namespace Xna {
 		const auto result2 = Matrix::CreateFromQuaternion(result1);
 		return result2;
 	}
+
+	constexpr void Vector2::Transform(
+		std::span<const Vector2> sourceArray,
+		const Quaternion& rotation,
+		std::span<Vector2> destinationArray)
+	{
+		assert(sourceArray.data() != nullptr && "sourceArray cannot be null");
+		assert(destinationArray.data() != nullptr && "destinationArray cannot be null");
+		assert(destinationArray.size() >= sourceArray.size() && "Not enough target size");
+
+		// Pré-cálculo da matriz de rotação a partir do Quaternion
+		float num1 = rotation.X + rotation.X;
+		float num2 = rotation.Y + rotation.Y;
+		float num3 = rotation.Z + rotation.Z;
+		float num4 = rotation.W * num3;
+		float num5 = rotation.X * num1;
+		float num6 = rotation.X * num2;
+		float num7 = rotation.Y * num2;
+		float num8 = rotation.Z * num3;
+
+		// Componentes equivalentes aos elementos da matriz de rotação 2D
+		float num9 = 1.0f - num7 - num8;
+		float num10 = num6 - num4;
+		float num11 = num6 + num4;
+		float num12 = 1.0f - num5 - num8;
+
+		for (std::size_t index = 0; index < sourceArray.size(); ++index)
+		{
+			float x = sourceArray[index].X;
+			float y = sourceArray[index].Y;
+
+			// Aplicação da rotação nos eixos X e Y calculada diretamente em float
+			destinationArray[index].X = (x * num9) + (y * num10);
+			destinationArray[index].Y = (x * num11) + (y * num12);
+		}
+	}
+
+	constexpr void Vector2::Transform(
+		std::span<const Vector2> sourceArray,
+		std::size_t sourceIndex,
+		const Quaternion& rotation,
+		std::span<Vector2> destinationArray,
+		std::size_t destinationIndex,
+		std::size_t length)
+	{
+		assert(sourceArray.data() != nullptr && "sourceArray cannot be null");
+		assert(destinationArray.data() != nullptr && "destinationArray cannot be null");
+		assert(sourceArray.size() >= sourceIndex + length && "Not enough source size");
+		assert(destinationArray.size() >= destinationIndex + length && "Not enough target size");
+
+		// Pré-cálculo da matriz de rotação a partir do Quaternion
+		float num1 = rotation.X + rotation.X;
+		float num2 = rotation.Y + rotation.Y;
+		float num3 = rotation.Z + rotation.Z;
+		float num4 = rotation.W * num3;
+		float num5 = rotation.X * num1;
+		float num6 = rotation.X * num2;
+		float num7 = rotation.Y * num2;
+		float num8 = rotation.Z * num3;
+
+		// Componentes equivalentes aos elementos da matriz de rotação 2D
+		float num9 = 1.0f - num7 - num8;
+		float num10 = num6 - num4;
+		float num11 = num6 + num4;
+		float num12 = 1.0f - num5 - num8;
+
+		// Processa apenas o segmento ('length') especificado
+		for (; length > 0; --length)
+		{
+			float x = sourceArray[sourceIndex].X;
+			float y = sourceArray[sourceIndex].Y;
+
+			// Aplicação da rotação calculada diretamente em float
+			destinationArray[destinationIndex].X = (x * num9) + (y * num10);
+			destinationArray[destinationIndex].Y = (x * num11) + (y * num12);
+
+			++sourceIndex;
+			++destinationIndex;
+		}
+	}
+
+	constexpr void Vector3::Transform(
+		std::span<const Vector3> sourceArray,
+		const Quaternion& rotation,
+		std::span<Vector3> destinationArray)
+	{
+		// Validações de segurança com assert
+		assert(sourceArray.data() != nullptr && "sourceArray cannot be null");
+		assert(destinationArray.data() != nullptr && "destinationArray cannot be null");
+		assert(destinationArray.size() >= sourceArray.size() && "Not enough target size");
+
+		// Pré-cálculo da matriz de rotação 3x3 a partir do Quaternion
+		float num1 = rotation.X + rotation.X;
+		float num2 = rotation.Y + rotation.Y;
+		float num3 = rotation.Z + rotation.Z;
+		float num4 = rotation.W * num1;
+		float num5 = rotation.W * num2;
+		float num6 = rotation.W * num3;
+		float num7 = rotation.X * num1;
+		float num8 = rotation.X * num2;
+		float num9 = rotation.X * num3;
+		float num10 = rotation.Y * num2;
+		float num11 = rotation.Y * num3;
+		float num12 = rotation.Z * num3;
+
+		// Componentes finais equivalentes aos elementos da matriz de rotação 3D
+		float num13 = 1.0f - num10 - num12;
+		float num14 = num8 - num6;
+		float num15 = num9 + num5;
+		float num16 = num8 + num6;
+		float num17 = 1.0f - num7 - num12;
+		float num18 = num11 - num4;
+		float num19 = num9 - num5;
+		float num20 = num11 + num4;
+		float num21 = 1.0f - num7 - num10;
+
+		for (std::size_t index = 0; index < sourceArray.size(); ++index)
+		{
+			float x = sourceArray[index].X;
+			float y = sourceArray[index].Y;
+			float z = sourceArray[index].Z;
+
+			// Aplicação da rotação nos três eixos calculada diretamente em float
+			destinationArray[index].X = (x * num13) + (y * num14) + (z * num15);
+			destinationArray[index].Y = (x * num16) + (y * num17) + (z * num18);
+			destinationArray[index].Z = (x * num19) + (y * num20) + (z * num21);
+		}
+	}
+
+	constexpr void Vector3::Transform(
+		std::span<const Vector3> sourceArray,
+		std::size_t sourceIndex,
+		const Quaternion& rotation,
+		std::span<Vector3> destinationArray,
+		std::size_t destinationIndex,
+		std::size_t length)
+	{
+		assert(sourceArray.data() != nullptr && "sourceArray cannot be null");
+		assert(destinationArray.data() != nullptr && "destinationArray cannot be null");
+		assert(sourceArray.size() >= sourceIndex + length && "Not enough source size");
+		assert(destinationArray.size() >= destinationIndex + length && "Not enough target size");
+
+		// Pré-cálculo da matriz de rotação 3x3 a partir do Quaternion
+		float num1 = rotation.X + rotation.X;
+		float num2 = rotation.Y + rotation.Y;
+		float num3 = rotation.Z + rotation.Z;
+		float num4 = rotation.W * num1;
+		float num5 = rotation.W * num2;
+		float num6 = rotation.W * num3;
+		float num7 = rotation.X * num1;
+		float num8 = rotation.X * num2;
+		float num9 = rotation.X * num3;
+		float num10 = rotation.Y * num2;
+		float num11 = rotation.Y * num3;
+		float num12 = rotation.Z * num3;
+
+		// Componentes finais equivalentes aos elementos da matriz de rotação 3D
+		float num13 = 1.0f - num10 - num12;
+		float num14 = num8 - num6;
+		float num15 = num9 + num5;
+		float num16 = num8 + num6;
+		float num17 = 1.0f - num7 - num12;
+		float num18 = num11 - num4;
+		float num19 = num9 - num5;
+		float num20 = num11 + num4;
+		float num21 = 1.0f - num7 - num10;
+
+		// Processa apenas o segmento ('length') especificado
+		for (; length > 0; --length)
+		{
+			float x = sourceArray[sourceIndex].X;
+			float y = sourceArray[sourceIndex].Y;
+			float z = sourceArray[sourceIndex].Z;
+
+			// Aplicação da rotação calculada diretamente em float puro
+			destinationArray[destinationIndex].X = (x * num13) + (y * num14) + (z * num15);
+			destinationArray[destinationIndex].Y = (x * num16) + (y * num17) + (z * num18);
+			destinationArray[destinationIndex].Z = (x * num19) + (y * num20) + (z * num21);
+
+			++sourceIndex;
+			++destinationIndex;
+		}
+	}
+
+	constexpr void Vector4::Transform(
+		std::span<const Vector4> sourceArray,
+		const Quaternion& rotation,
+		std::span<Vector4> destinationArray)
+	{
+		// Validações de limites e nulidade usando assert
+		assert(sourceArray.data() != nullptr && "sourceArray cannot be null");
+		assert(destinationArray.data() != nullptr && "destinationArray cannot be null");
+		assert(destinationArray.size() >= sourceArray.size() && "Not enough target size");
+
+		// Pré-cálculo da matriz de rotação 3x3 a partir do Quaternion
+		float num1 = rotation.X + rotation.X;
+		float num2 = rotation.Y + rotation.Y;
+		float num3 = rotation.Z + rotation.Z;
+		float num4 = rotation.W * num1;
+		float num5 = rotation.W * num2;
+		float num6 = rotation.W * num3;
+		float num7 = rotation.X * num1;
+		float num8 = rotation.X * num2;
+		float num9 = rotation.X * num3;
+		float num10 = rotation.Y * num2;
+		float num11 = rotation.Y * num3;
+		float num12 = rotation.Z * num3;
+
+		// Componentes finais equivalentes aos elementos da matriz de rotação 3D
+		float num13 = 1.0f - num10 - num12;
+		float num14 = num8 - num6;
+		float num15 = num9 + num5;
+		float num16 = num8 + num6;
+		float num17 = 1.0f - num7 - num12;
+		float num18 = num11 - num4;
+		float num19 = num9 - num5;
+		float num20 = num11 + num4;
+		float num21 = 1.0f - num7 - num10;
+
+		for (std::size_t index = 0; index < sourceArray.size(); ++index)
+		{
+			float x = sourceArray[index].X;
+			float y = sourceArray[index].Y;
+			float z = sourceArray[index].Z;
+
+			// Rotação dos eixos X, Y e Z calculada puramente em float
+			destinationArray[index].X = (x * num13) + (y * num14) + (z * num15);
+			destinationArray[index].Y = (x * num16) + (y * num17) + (z * num18);
+			destinationArray[index].Z = (x * num19) + (y * num20) + (z * num21);
+
+			// Em uma rotação baseada em quaternions, o eixo W permanece inalterado
+			destinationArray[index].W = sourceArray[index].W;
+		}
+	}
+
+	constexpr void Vector4::Transform(
+		std::span<const Vector4> sourceArray,
+		std::size_t sourceIndex,
+		const Quaternion& rotation,
+		std::span<Vector4> destinationArray,
+		std::size_t destinationIndex,
+		std::size_t length)
+	{
+		// Validações de limites e nulidade usando assert e std::size_t
+		assert(sourceArray.data() != nullptr && "sourceArray cannot be null");
+		assert(destinationArray.data() != nullptr && "destinationArray cannot be null");
+		assert(sourceArray.size() >= sourceIndex + length && "Not enough source size");
+		assert(destinationArray.size() >= destinationIndex + length && "Not enough target size");
+
+		// Pré-cálculo da matriz de rotação 3x3 a partir do Quaternion
+		float num1 = rotation.X + rotation.X;
+		float num2 = rotation.Y + rotation.Y;
+		float num3 = rotation.Z + rotation.Z;
+		float num4 = rotation.W * num1;
+		float num5 = rotation.W * num2;
+		float num6 = rotation.W * num3;
+		float num7 = rotation.X * num1;
+		float num8 = rotation.X * num2;
+		float num9 = rotation.X * num3;
+		float num10 = rotation.Y * num2;
+		float num11 = rotation.Y * num3;
+		float num12 = rotation.Z * num3;
+
+		// Componentes finais equivalentes aos elementos da matriz de rotação 3D
+		float num13 = 1.0f - num10 - num12;
+		float num14 = num8 - num6;
+		float num15 = num9 + num5;
+		float num16 = num8 + num6;
+		float num17 = 1.0f - num7 - num12;
+		float num18 = num11 - num4;
+		float num19 = num9 - num5;
+		float num20 = num11 + num4;
+		float num21 = 1.0f - num7 - num10;
+
+		// Processa apenas o segmento ('length') especificado
+		for (; length > 0; --length)
+		{
+			float x = sourceArray[sourceIndex].X;
+			float y = sourceArray[sourceIndex].Y;
+			float z = sourceArray[sourceIndex].Z;
+			float w = sourceArray[sourceIndex].W;
+
+			// Rotação dos eixos X, Y e Z calculada puramente em float
+			destinationArray[destinationIndex].X = (x * num13) + (y * num14) + (z * num15);
+			destinationArray[destinationIndex].Y = (x * num16) + (y * num17) + (z * num18);
+			destinationArray[destinationIndex].Z = (x * num19) + (y * num20) + (z * num21);
+
+			// Em uma rotação, o componente W permanece inalterado
+			destinationArray[destinationIndex].W = w;
+
+			++sourceIndex;
+			++destinationIndex;
+		}
+	}
 }
 
 #endif

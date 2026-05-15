@@ -55,7 +55,7 @@ namespace Xna {
 			M21(M21), M22(M22), M23(M23), M24(M24),
 			M31(M31), M32(M32), M33(M33), M34(M34),
 			M41(M41), M42(M42), M43(M43), M44(M44) {
-		}		
+		}
 
 		//Returns an instance of the identity matrix.
 		constexpr static const Matrix& Identity();
@@ -447,7 +447,7 @@ namespace Xna {
 			assert(nearPlaneDistance > 0.0 && "nearPlaneDistance <= 0");
 			assert(farPlaneDistance > 0.0 && "farPlaneDistance <= 0");
 			assert((nearPlaneDistance < farPlaneDistance) && "(nearPlaneDistance >= farPlaneDistance");
-			
+
 			const auto num1 = 1.0f / MathHelper::Extensions::Tan(fieldOfView * 0.5f);
 			const auto num2 = num1 / aspectRatio;
 			Matrix perspectiveFieldOfView;
@@ -591,10 +591,10 @@ namespace Xna {
 		static constexpr Matrix CreateFromYawPitchRoll(float yaw, float pitch, float roll);
 		static constexpr Matrix CreateShadow(Vector3 const& lightDirection, Plane const& plane);
 		static constexpr Matrix CreateReflection(Plane value);
-		
+
 		//Transforms a Matrix by applying a Quaternion rotation.
 		static constexpr Matrix Transform(Matrix const& value, Quaternion const& rotation);
-		
+
 		//Transposes the rows and columns of a matrix.
 		static constexpr Matrix Transpose(Matrix const& matrix) {
 			Matrix matrix1;
@@ -996,7 +996,7 @@ namespace Xna {
 		vector4.Z = num3;
 		vector4.W = num4;
 		return vector4;
-	}	
+	}
 
 	struct _Matrix {
 		static constexpr Matrix Identity = Matrix(
@@ -1008,6 +1008,256 @@ namespace Xna {
 
 	constexpr const Matrix& Xna::Matrix::Identity() {
 		return _Matrix::Identity;
+	}
+
+	constexpr void Vector2::Transform(
+		std::span<const Vector2> sourceArray,
+		const Matrix& matrix,
+		std::span<Vector2> destinationArray)
+	{
+		for (std::size_t index = 0; index < sourceArray.size(); ++index)
+		{
+			float x = sourceArray[index].X;
+			float y = sourceArray[index].Y;
+			
+			destinationArray[index].X = (x * matrix.M11) + (y * matrix.M21) + matrix.M41;
+			destinationArray[index].Y = (x * matrix.M12) + (y * matrix.M22) + matrix.M42;
+		}
+	}
+
+	constexpr void Vector2::Transform(
+		std::span<const Vector2> sourceArray,
+		std::size_t sourceIndex,
+		Matrix const& matrix,
+		std::span<Vector2> destinationArray,
+		std::size_t destinationIndex,
+		std::size_t length)
+	{
+		assert(sourceArray.data() != nullptr && "sourceArray cannot be null");
+		assert(destinationArray.data() != nullptr && "destinationArray cannot be null");
+		assert(sourceArray.size() >= sourceIndex + length && "Not enough source size");
+		assert(destinationArray.size() >= destinationIndex + length && "Not enough target size");
+
+		for (; length > 0; --length)
+		{
+			float x = sourceArray[sourceIndex].X;
+			float y = sourceArray[sourceIndex].Y;
+
+			destinationArray[destinationIndex].X = x * matrix.M11 + y * matrix.M21 + matrix.M41;
+			destinationArray[destinationIndex].Y = x * matrix.M12 + y * matrix.M22 + matrix.M42;
+
+			++sourceIndex;
+			++destinationIndex;
+		}
+	}
+
+	constexpr void Vector2::TransformNormal(
+		std::span<const Vector2> sourceArray,
+		const Matrix& matrix,
+		std::span<Vector2> destinationArray)
+	{		
+		assert(sourceArray.data() != nullptr && "sourceArray cannot be null");
+		assert(destinationArray.data() != nullptr && "destinationArray cannot be null");
+		assert(destinationArray.size() >= sourceArray.size() && "Not enough target size");
+
+		for (std::size_t index = 0; index < sourceArray.size(); ++index)
+		{
+			float x = sourceArray[index].X;
+			float y = sourceArray[index].Y;
+
+			// Transformação de Normais ignora translação (M41, M42)
+			destinationArray[index].X = (x * matrix.M11) + (y * matrix.M21);
+			destinationArray[index].Y = (x * matrix.M12) + (y * matrix.M22);
+		}
+	}
+
+	constexpr void Vector2::TransformNormal(
+		std::span<const Vector2> sourceArray,
+		std::size_t sourceIndex,
+		const Matrix& matrix,
+		std::span<Vector2> destinationArray,
+		std::size_t destinationIndex,
+		std::size_t length)
+	{
+		assert(sourceArray.data() != nullptr && "sourceArray cannot be null");
+		assert(destinationArray.data() != nullptr && "destinationArray cannot be null");
+		assert(sourceArray.size() >= sourceIndex + length && "Not enough source size");
+		assert(destinationArray.size() >= destinationIndex + length && "Not enough target size");
+
+		for (; length > 0; --length)
+		{
+			float x = sourceArray[sourceIndex].X;
+			float y = sourceArray[sourceIndex].Y;
+
+			// Transformação de Normais (sem translação) calculada em float puro
+			destinationArray[destinationIndex].X = (x * matrix.M11) + (y * matrix.M21);
+			destinationArray[destinationIndex].Y = (x * matrix.M12) + (y * matrix.M22);
+
+			++sourceIndex;
+			++destinationIndex;
+		}
+	}
+
+	constexpr void Vector3::Transform(
+		std::span<const Vector3> sourceArray,
+		const Matrix& matrix,
+		std::span<Vector3> destinationArray)
+	{
+		assert(sourceArray.data() != nullptr && "sourceArray cannot be null");
+		assert(destinationArray.data() != nullptr && "destinationArray cannot be null");
+		assert(destinationArray.size() >= sourceArray.size() && "Not enough target size");
+
+		for (std::size_t index = 0; index < sourceArray.size(); ++index)
+		{
+			float x = sourceArray[index].X;
+			float y = sourceArray[index].Y;
+			float z = sourceArray[index].Z;
+
+			// Transformação 3D com translação calculada diretamente em float puro
+			destinationArray[index].X = (x * matrix.M11) + (y * matrix.M21) + (z * matrix.M31) + matrix.M41;
+			destinationArray[index].Y = (x * matrix.M12) + (y * matrix.M22) + (z * matrix.M32) + matrix.M42;
+			destinationArray[index].Z = (x * matrix.M13) + (y * matrix.M23) + (z * matrix.M33) + matrix.M43;
+		}
+	}
+
+	constexpr void Vector3::Transform(
+		std::span<const Vector3> sourceArray,
+		std::size_t sourceIndex,
+		const Matrix& matrix,
+		std::span<Vector3> destinationArray,
+		std::size_t destinationIndex,
+		std::size_t length)
+	{
+		// Validações com assert e std::size_t para garantir o limite do buffer
+		assert(sourceArray.data() != nullptr && "sourceArray cannot be null");
+		assert(destinationArray.data() != nullptr && "destinationArray cannot be null");
+		assert(sourceArray.size() >= sourceIndex + length && "Not enough source size");
+		assert(destinationArray.size() >= destinationIndex + length && "Not enough target size");
+
+		for (; length > 0; --length)
+		{
+			float x = sourceArray[sourceIndex].X;
+			float y = sourceArray[sourceIndex].Y;
+			float z = sourceArray[sourceIndex].Z;
+
+			// Transformação 3D com translação e matemática puramente em float
+			destinationArray[destinationIndex].X = (x * matrix.M11) + (y * matrix.M21) + (z * matrix.M31) + matrix.M41;
+			destinationArray[destinationIndex].Y = (x * matrix.M12) + (y * matrix.M22) + (z * matrix.M32) + matrix.M42;
+			destinationArray[destinationIndex].Z = (x * matrix.M13) + (y * matrix.M23) + (z * matrix.M33) + matrix.M43;
+
+			++sourceIndex;
+			++destinationIndex;
+		}
+	}
+
+	constexpr void Vector3::TransformNormal(
+		std::span<const Vector3> sourceArray,
+		const Matrix& matrix,
+		std::span<Vector3> destinationArray)
+	{
+		assert(sourceArray.data() != nullptr && "sourceArray cannot be null");
+		assert(destinationArray.data() != nullptr && "destinationArray cannot be null");
+		assert(destinationArray.size() >= sourceArray.size() && "Not enough target size");
+
+		for (std::size_t index = 0; index < sourceArray.size(); ++index)
+		{
+			float x = sourceArray[index].X;
+			float y = sourceArray[index].Y;
+			float z = sourceArray[index].Z;
+
+			// Transformação de normais em 3D (ignora a translação M41, M42, M43) 
+			// Realizada diretamente em ponto flutuante de precisão simples (float)
+			destinationArray[index].X = (x * matrix.M11) + (y * matrix.M21) + (z * matrix.M31);
+			destinationArray[index].Y = (x * matrix.M12) + (y * matrix.M22) + (z * matrix.M32);
+			destinationArray[index].Z = (x * matrix.M13) + (y * matrix.M23) + (z * matrix.M33);
+		}
+	}
+
+	constexpr void Vector3::TransformNormal(
+		std::span<const Vector3> sourceArray,
+		std::size_t sourceIndex,
+		const Matrix& matrix,
+		std::span<Vector3> destinationArray,
+		std::size_t destinationIndex,
+		std::size_t length)
+	{
+		// Validações de nulidade e de limites utilizando asserts e std::size_t
+		assert(sourceArray.data() != nullptr && "sourceArray cannot be null");
+		assert(destinationArray.data() != nullptr && "destinationArray cannot be null");
+		assert(sourceArray.size() >= sourceIndex + length && "Not enough source size");
+		assert(destinationArray.size() >= destinationIndex + length && "Not enough target size");
+
+		for (; length > 0; --length)
+		{
+			float x = sourceArray[sourceIndex].X;
+			float y = sourceArray[sourceIndex].Y;
+			float z = sourceArray[sourceIndex].Z;
+
+			// Transformação de normais 3D (ignora componentes de translação)
+			// Cálculos realizados diretamente em float
+			destinationArray[destinationIndex].X = (x * matrix.M11) + (y * matrix.M21) + (z * matrix.M31);
+			destinationArray[destinationIndex].Y = (x * matrix.M12) + (y * matrix.M22) + (z * matrix.M32);
+			destinationArray[destinationIndex].Z = (x * matrix.M13) + (y * matrix.M23) + (z * matrix.M33);
+
+			++sourceIndex;
+			++destinationIndex;
+		}
+	}
+
+	constexpr void Vector4::Transform(
+		std::span<const Vector4> sourceArray,
+		const Matrix& matrix,
+		std::span<Vector4> destinationArray)
+	{
+		assert(sourceArray.data() != nullptr && "sourceArray cannot be null");
+		assert(destinationArray.data() != nullptr && "destinationArray cannot be null");
+		assert(destinationArray.size() >= sourceArray.size() && "Not enough target size");
+
+		for (std::size_t index = 0; index < sourceArray.size(); ++index)
+		{
+			float x = sourceArray[index].X;
+			float y = sourceArray[index].Y;
+			float z = sourceArray[index].Z;
+			float w = sourceArray[index].W;
+
+			// Multiplicação de matriz 4x4 por vetor 4D realizada puramente em float
+			destinationArray[index].X = (x * matrix.M11) + (y * matrix.M21) + (z * matrix.M31) + (w * matrix.M41);
+			destinationArray[index].Y = (x * matrix.M12) + (y * matrix.M22) + (z * matrix.M32) + (w * matrix.M42);
+			destinationArray[index].Z = (x * matrix.M13) + (y * matrix.M23) + (z * matrix.M33) + (w * matrix.M43);
+			destinationArray[index].W = (x * matrix.M14) + (y * matrix.M24) + (z * matrix.M34) + (w * matrix.M44);
+		}
+	}
+
+	constexpr void Vector4::Transform(
+		std::span<const Vector4> sourceArray,
+		std::size_t sourceIndex,
+		const Matrix& matrix,
+		std::span<Vector4> destinationArray,
+		std::size_t destinationIndex,
+		std::size_t length)
+	{
+		assert(sourceArray.data() != nullptr && "sourceArray cannot be null");
+		assert(destinationArray.data() != nullptr && "destinationArray cannot be null");
+		assert(sourceArray.size() >= sourceIndex + length && "Not enough source size");
+		assert(destinationArray.size() >= destinationIndex + length && "Not enough target size");
+
+		// Processa apenas o segmento ('length') especificado
+		for (; length > 0; --length)
+		{
+			float x = sourceArray[sourceIndex].X;
+			float y = sourceArray[sourceIndex].Y;
+			float z = sourceArray[sourceIndex].Z;
+			float w = sourceArray[sourceIndex].W;
+
+			// Multiplicação de matriz 4x4 por vetor 4D realizada puramente em float
+			destinationArray[destinationIndex].X = (x * matrix.M11) + (y * matrix.M21) + (z * matrix.M31) + (w * matrix.M41);
+			destinationArray[destinationIndex].Y = (x * matrix.M12) + (y * matrix.M22) + (z * matrix.M32) + (w * matrix.M42);
+			destinationArray[destinationIndex].Z = (x * matrix.M13) + (y * matrix.M23) + (z * matrix.M33) + (w * matrix.M43);
+			destinationArray[destinationIndex].W = (x * matrix.M14) + (y * matrix.M24) + (z * matrix.M34) + (w * matrix.M44);
+
+			++sourceIndex;
+			++destinationIndex;
+		}
 	}
 }
 
