@@ -1,5 +1,9 @@
 ﻿# Xn++ (Xnpp)
 
+<p align="left">
+<img src="images/xnpp_logo4.png" alt="xnpp logo">
+</p>
+
 > Xnpp is an implementation of Microsoft XNA 4.0 in modern C++, with SDL3 and bgfx library.
 
 ### Project examples
