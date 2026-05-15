@@ -2,8 +2,8 @@
 #include "Xna/Framework/Input/GamePad.hpp"
 #include "Xna/Framework/Input/Mouse.hpp"
 #include "Xna/Framework/Input/Keyboard.hpp"
-#include "Xna/CSharp/Windows/Forms/SystemInformation.hpp"
-#include "Xna/CSharp/Exception.hpp"
+#include <Xna/CSharp/Windows/Forms/SystemInformation.hpp>
+#include <Xna/CSharp/Exception.hpp>
 #include "Xna/Platform/Platform.hpp"
 #include <optional>
 
@@ -23,11 +23,11 @@ namespace Xna {
 
 	void GameWindow::Create() {
 		Platform::GameWindow_Create(*this);
-		Activated().Invoke(this, CSharp::EventArgs::Empty);
+		Activated().Invoke(this, CSharp::EventArgs::Empty());
 	}	
 
 	void GameWindow::Close() {
-		Deactivated().Invoke(this, CSharp::EventArgs::Empty);
+		Deactivated().Invoke(this, CSharp::EventArgs::Empty());
 		Platform::GameWindow_Close(*this);
 	}		
 

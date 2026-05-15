@@ -1,7 +1,7 @@
 #ifndef XNA_FRAMEWORK_AUDIO_SOUNDEFFECTINSTANCE_HPP
 #define XNA_FRAMEWORK_AUDIO_SOUNDEFFECTINSTANCE_HPP
 
-#include "Xna/CSharp/IO/Stream.hpp"
+#include <Xna/CSharp/IO/Stream.hpp>
 #include <cstdint>
 #include <limits>
 #include "Shared.hpp"
@@ -9,7 +9,7 @@
 #include "AudioListener.hpp"
 #include "SoundEffect.hpp"
 #include "Xna/Platform/Platform.hpp"
-#include "Xna/Internal/Export.hpp"
+#include "Xna/Internal/Macros.hpp"
 
 namespace Xna {
 

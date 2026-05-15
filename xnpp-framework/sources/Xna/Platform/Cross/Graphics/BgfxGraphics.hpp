@@ -38,6 +38,79 @@ namespace Xna {
 			((xnaColor & 0xFF000000) >> 24);  // A
 
 		return bgfxColor;
+	}	
+
+	constexpr bgfx::TextureFormat::Enum SwapXnaSurfaceFormat(SurfaceFormat f) {
+		switch (f)
+		{
+		case Xna::SurfaceFormat::Color:
+			return bgfx::TextureFormat::RGBA8;
+		case Xna::SurfaceFormat::Bgr565:
+			return bgfx::TextureFormat::B5G6R5;
+		case Xna::SurfaceFormat::Bgra5551:
+			return bgfx::TextureFormat::BGR5A1;
+		case Xna::SurfaceFormat::Bgra4444:
+			return bgfx::TextureFormat::BGRA4;
+		case Xna::SurfaceFormat::Dxt1:
+			return bgfx::TextureFormat::BC1;
+		case Xna::SurfaceFormat::Dxt3:
+			return bgfx::TextureFormat::BC2;
+		case Xna::SurfaceFormat::Dxt5:
+			return bgfx::TextureFormat::BC3;
+		case Xna::SurfaceFormat::Rgba1010102:
+			return bgfx::TextureFormat::RGB10A2;
+		case Xna::SurfaceFormat::Rg32:
+			return bgfx::TextureFormat::RG32U;
+		case Xna::SurfaceFormat::Rgba64:
+			return bgfx::TextureFormat::RGBA32U;
+		case Xna::SurfaceFormat::Alpha8:
+			return bgfx::TextureFormat::A8;
+		case Xna::SurfaceFormat::NormalizedByte2: //2 bytes normalizados (SNORM)
+			return bgfx::TextureFormat::RG8S;
+		case Xna::SurfaceFormat::NormalizedByte4: //4 bytes normalizados (SNORM)
+			return bgfx::TextureFormat::RGBA8S;
+		case Xna::SurfaceFormat::Single: //float 32-bit
+			return bgfx::TextureFormat::R32F;
+		case Xna::SurfaceFormat::Vector2: //2 floats
+			return bgfx::TextureFormat::RG32F;
+		case Xna::SurfaceFormat::Vector4: //4 floats
+			return bgfx::TextureFormat::RGBA32F;
+		case Xna::SurfaceFormat::HalfSingle: //half float
+			return bgfx::TextureFormat::R16F;
+		case Xna::SurfaceFormat::HalfVector2: //2 half floats
+			return bgfx::TextureFormat::RG16F; //TODO: RG32U?
+		case Xna::SurfaceFormat::HalfVector4: //4 half floats
+			return bgfx::TextureFormat::RGBA16F; //TODO: RGBA32U
+		case Xna::SurfaceFormat::HdrBlendable: //HDR 16-bit float RGBA
+			return bgfx::TextureFormat::RGBA16F;
+		case Xna::SurfaceFormat::Unknown:
+		default:
+			return bgfx::TextureFormat::Unknown;
+		}
+	}
+
+	constexpr bgfx::TextureFormat::Enum SwapXnaDepthFormat(DepthFormat f)
+	{
+		switch (f)
+		{
+		case DepthFormat::None:
+			return bgfx::TextureFormat::Unknown;
+
+		case DepthFormat::Depth16:
+			return bgfx::TextureFormat::D16;
+
+		case DepthFormat::Depth24:
+			return bgfx::TextureFormat::D24;
+
+		case DepthFormat::Depth24Stencil8:
+			return bgfx::TextureFormat::D24S8;
+
+		case DepthFormat::Depth32:
+			return bgfx::TextureFormat::D32F;
+
+		default:
+			return bgfx::TextureFormat::Unknown;
+		}
 	}
 
 	//Padrão do Blend para Bgfx
@@ -449,6 +522,9 @@ namespace Xna {
 		constexpr BgfxDepthStencilState() = default;
 		constexpr operator uint64_t() const noexcept { return depthBuffer; }
 		
+		//fStencil = Front Face
+		//bStencil = Back Face (CounterClockWise)
+		//bgfx::setStencil(fStencil, bStencil);
 		uint64_t depthBuffer{ 0 };
 		uint32_t frontStencil{ BGFX_STENCIL_NONE };
 		uint32_t backStencil{ BGFX_STENCIL_NONE };
@@ -475,13 +551,18 @@ namespace Xna {
 
 			scissorTestEnable = rasterizer.ScissorTestEnable;
 			depthBias = rasterizer.DepthBias;
-			slopeScaleDepthBias = rasterizer.SlopeScaleDepthBias;
+			slopeScaleDepthBias = rasterizer.SlopeScaleDepthBias;			
 		}
 
 		constexpr BgfxRasterizerState() = default;
 		constexpr operator uint64_t() const noexcept { return state; }
 
 		uint64_t state{ 0 };
+
+		// Para habilitar (equivalente a ScissorTestEnable = true)
+		//bgfx::setScissor(x, y, width, height);
+		// Para desabilitar (equivalente a ScissorTestEnable = false)
+		//bgfx::setScissor(); // Chama sem argumentos ou com zeros
 		bool scissorTestEnable{ false };
 
 		//Não existe uma função no bgfx para aplicar o bias

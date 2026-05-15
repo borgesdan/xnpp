@@ -10,7 +10,7 @@ namespace Xna {
 			return "BoundingBoxReader";
 		}
 	protected:
-		void WriteT(ContentWriter& output, const BoundingBox* value) override {
+		inline void WriteT(ContentWriter& output, const BoundingBox* value) override {
 			output.Write(value->Min);
 			output.Write(value->Max);
 		}

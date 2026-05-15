@@ -3,7 +3,7 @@
 
 #include <optional>
 #include "_GraphicsDevice.hpp"
-#include "Xna/Internal/Export.hpp"
+#include "Xna/Internal/Macros.hpp"
 
 namespace Xna {
 	//Queries and prepares resources. 

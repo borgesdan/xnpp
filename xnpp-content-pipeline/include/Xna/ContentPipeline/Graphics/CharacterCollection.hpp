@@ -4,6 +4,7 @@
 #include <unordered_map>
 #include <memory>
 #include <cstdint>
+#include <Xna/Internal/Macros.hpp>
 
 namespace Xna {
 	class CharacterCollection {
@@ -38,7 +39,7 @@ namespace Xna {
 			return true;
 		}		
 
-		std::vector<uint32_t> CharList() const {
+		inline std::vector<uint32_t> CharList() const {
 			std::vector<uint32_t> charList;
 			for (auto const& [character, exists] : *charsAdded) {
 				charList.push_back(character);
@@ -47,10 +48,7 @@ namespace Xna {
 			return charList;
 		}
 		
-		inline CharacterCollection(std::nullptr_t) { charsAdded = nullptr; }
-		inline bool operator==(CharacterCollection const& other) const noexcept { return charsAdded == other.charsAdded; }
-		inline bool operator==(std::nullptr_t) const noexcept { return charsAdded == nullptr; }
-		inline explicit operator bool() const noexcept { return charsAdded != nullptr; }
+		XNPP_DECLARE_NULL_IMPL_WRAPPER(CharacterCollection, charsAdded);
 
 		std::unordered_map<uint32_t, bool>::iterator begin() { return charsAdded->begin(); }
 		std::unordered_map<uint32_t, bool>::iterator end() { return charsAdded->end(); }

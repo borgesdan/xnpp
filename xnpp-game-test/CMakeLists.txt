@@ -1,18 +1,10 @@
-﻿# Enable Hot Reload for MSVC compilers if supported.
-if (POLICY CMP0141)
-    cmake_policy(SET CMP0141 NEW)
-    set(CMAKE_MSVC_DEBUG_INFORMATION_FORMAT "$<IF:$<AND:$<C_COMPILER_ID:MSVC>,$<CXX_COMPILER_ID:MSVC>>,$<$<CONFIG:Debug,RelWithDebInfo>:EditAndContinue>,$<$<CONFIG:Debug,RelWithDebInfo>:ProgramDatabase>>")
-endif ()
-
-# Includes directory
+﻿# Includes directory
 set(PROJECT_INCLUDES_DIR "${CMAKE_CURRENT_SOURCE_DIR}/include")
 
 # Add source to this project's executable.
 add_executable(GameTest WIN32 Game.cpp)
 
 target_compile_features(GameTest PUBLIC cxx_std_20)
-target_compile_definitions(GameTest PRIVATE XNPP_DONT_USE_XNA_KEYS)
-target_compile_definitions(GameTest PRIVATE XNPP_EXPORT_DLL)
 
 #Add tests and install targets
 
@@ -31,4 +23,10 @@ add_custom_command(TARGET GameTest POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_if_different
         $<TARGET_FILE:xnpp>
         $<TARGET_FILE_DIR:GameTest>
+)
+
+add_custom_command(TARGET GameTest POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+        "$<TARGET_FILE_DIR:xnpp>/shaders"
+        "$<TARGET_FILE_DIR:GameTest>/shaders"
 )

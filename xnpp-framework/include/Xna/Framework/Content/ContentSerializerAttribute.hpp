@@ -2,7 +2,7 @@
 #define XNA_FRAMEWORK_CONTENT_CONTENTSERIALIZEATTRIBUTE_HPP
 
 #include <string>
-#include "Xna/CSharp/Attribute.hpp"
+#include <Xna/CSharp/Attribute.hpp>
 
 namespace Xna {
 	struct ContentSerializerAttribute : public CSharp::Attribute {

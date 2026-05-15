@@ -4,9 +4,9 @@
 #include "MediaQueue.hpp"
 #include "Song.hpp"
 #include "VisualizationData.hpp"
-#include "Xna/CSharp/Event.hpp"
-#include "Xna/CSharp/TimeSpan.hpp"
-#include "Xna/Internal/Export.hpp"
+#include <Xna/CSharp/Event.hpp>
+#include <Xna/CSharp/TimeSpan.hpp>
+#include "Xna/Internal/Macros.hpp"
 
 namespace Xna {
 	//Media playback state (playing, paused, or stopped).

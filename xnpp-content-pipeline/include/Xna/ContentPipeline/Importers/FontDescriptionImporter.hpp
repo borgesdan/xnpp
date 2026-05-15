@@ -3,10 +3,11 @@
 
 #include "../ContentImporter.hpp"
 #include "../Graphics/FontDescription.hpp"
+#include <Xna/Internal/Macros.hpp>
 
 namespace Xna {
 	struct FontDescriptionImporter : public ContentImporter<FontDescription> {
-		FontDescription ImportT(std::filesystem::path const& filename, ContentImporterContext& context) override;
+		XNPP_API FontDescription ImportT(std::filesystem::path const& filename, ContentImporterContext& context) override;
 	};
 }
 

@@ -5,15 +5,16 @@
 #include <memory>
 #include <unordered_map>
 #include "Shared.hpp"
+#include <Xna/Internal/Macros.hpp>
 
 namespace Xna {
 	class TimestampCache {
 	public:
 		inline TimestampCache() { impl = std::make_shared<Implementation>(); }
 
-		TimePoint GetTimestamp(std::filesystem::path const& filename);
-		void Remove(std::filesystem::path const& filename);
-		bool FileExists(std::filesystem::path const& filename);
+		XNPP_API TimePoint GetTimestamp(std::filesystem::path const& filename);
+		XNPP_API void Remove(std::filesystem::path const& filename);
+		XNPP_API bool FileExists(std::filesystem::path const& filename);
 
 		inline TimestampCache(std::nullptr_t) { impl = nullptr; }
 		inline bool operator==(TimestampCache const& other) const noexcept { return impl == other.impl; }

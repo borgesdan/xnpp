@@ -4,8 +4,8 @@
 #include <vector>
 #include <cstdint>
 #include "Shared.hpp"
-#include "Xna/CSharp/TimeSpan.hpp"
-#include "Xna/Internal/Export.hpp"
+#include <Xna/CSharp/TimeSpan.hpp>
+#include "Xna/Internal/Macros.hpp"
 
 namespace Xna {
 	class AudioFormat {

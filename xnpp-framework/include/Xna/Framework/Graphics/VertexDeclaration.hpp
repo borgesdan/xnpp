@@ -27,22 +27,6 @@ namespace Xna {
 
 			//TODO:[!] implementar		
 			//VertexElementValidator.Validate(vertexStride, elements1);
-		}
-
-		//Initializes a new instance of the VertexDeclaration class.		
-		constexpr VertexDeclaration(size_t vertexStride, std::vector<VertexElement> const& elements)
-			: vertexStride(vertexStride), elements(elements) {
-
-			//TODO:[!] implementar
-			//VertexElementValidator.Validate(vertexStride, elements1);
-		}
-
-		//Initializes a new instance of the VertexDeclaration class.
-		constexpr VertexDeclaration(std::vector<VertexElement> const& elements)
-			: elements(elements), vertexStride(VertexElementValidator::GetVertexStride(this->elements)) {
-
-			//TODO:[!] implementar		
-			//VertexElementValidator.Validate(vertexStride, elements1);
 		}			
 
 		//The number of bytes from one vertex to the next.

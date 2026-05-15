@@ -1,6 +1,6 @@
 #include "Xna/Framework/Audio/AudioFormat.hpp"
-#include "Xna/CSharp/IO/BinaryReader.hpp"
-#include "Xna/CSharp/IO/MemoryStream.hpp"
+#include <Xna/CSharp/IO/BinaryReader.hpp>
+#include <Xna/CSharp/IO/MemoryStream.hpp>
 #include "AudioHelper.hpp"
 
 namespace Xna {

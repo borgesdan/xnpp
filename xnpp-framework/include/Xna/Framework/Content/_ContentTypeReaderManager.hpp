@@ -5,8 +5,8 @@
 #include <memory>
 #include <string>
 #include <map>
-#include "Xna/CSharp/Type.hpp"
-#include "Xna/Internal/Export.hpp"
+#include <Xna/CSharp/Type.hpp>
+#include "Xna/Internal/Macros.hpp"
 
 namespace Xna {
 	class ContentTypeReader;

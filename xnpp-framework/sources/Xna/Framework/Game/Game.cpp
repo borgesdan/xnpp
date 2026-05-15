@@ -1,5 +1,5 @@
 #include "Xna/Framework/Game/Game.hpp"
-#include "Xna/CSharp/Thread.hpp"
+#include <Xna/CSharp/Thread.hpp>
 #include <cmath>
 #include <limits>
 #include <exception>
@@ -10,7 +10,7 @@
 using Xna::CSharp::TimeSpan;
 
 namespace Xna {
-    GameRunMode Game::RunMode = GameRunMode::Bgfx;
+    GameRunMode Game::RunMode = GameRunMode::HostFirst;
 
     GameRunMode Game::CurrentRunMode() { return RunMode; }
 
@@ -95,13 +95,13 @@ namespace Xna {
         impl->doneFirstUpdate = true;
     }
 
-	void Game::RunGame(bool useBlockingRun) {
-		impl->graphicsDeviceManager = impl->gameServices.GetService<IGraphicsDeviceManager>();
+	void Game::RunGame(bool useBlockingRun) {		        
+        impl->graphicsDeviceManager = impl->gameServices.GetService<IGraphicsDeviceManager>();
 
-		if (impl->graphicsDeviceManager != nullptr)
-			impl->graphicsDeviceManager->CreateDevice();
+        if (RunMode == GameRunMode::Classic) {           
+            if (impl->graphicsDeviceManager != nullptr)
+                impl->graphicsDeviceManager->CreateDevice();
 
-        if (RunMode == GameRunMode::Classic) {
             InternalRunGame();
         }	
 
@@ -382,7 +382,7 @@ namespace Xna {
     }
 
     void Game::HostExiting(void* sender, CSharp::EventArgs const& e) {
-        OnExiting(sender, CSharp::EventArgs::Empty);
+        OnExiting(sender, CSharp::EventArgs::Empty());
     }
 
     void Game::HostIdle(void* sender, CSharp::EventArgs const& e) {
@@ -394,30 +394,22 @@ namespace Xna {
             return;
 
         impl->isActive = false;
-        OnDeactivated(this, CSharp::EventArgs::Empty);
+        OnDeactivated(this, CSharp::EventArgs::Empty());
     }
 
     void Game::HostActivated(void* sender, CSharp::EventArgs const& e) {
         if (impl->isActive)
             return;
 
-        if (RunMode == GameRunMode::Bgfx) {
-            auto graphicsDevice = GraphicsDevice();
-
-            //[!] -- Sobre a inicialização tardia -- [!]
-            //Uma inicialização tardia pois a janela foi criada neste momento
-            //e o dispositivo gráfico foi criado sem o swapChain.		
-            //No XNA, que usava DirectX 9, aparentemente, poderia criar o dispositivo gráfico antes
-            //e depois vincular a janela.
-            //No DX11 precisa do SwapChain e este precisa do handle da janela.
-            auto& backend = graphicsDevice.GetBackend();
-            backend.LazyInitialization(impl->host->Window().Handle());
+        if (RunMode == GameRunMode::HostFirst) {
+            if (impl->graphicsDeviceManager != nullptr)
+                impl->graphicsDeviceManager->CreateDevice();
 
             InternalRunGame();
         }
 
         impl->isActive = true;
-        OnActivated(this, CSharp::EventArgs::Empty);
+        OnActivated(this, CSharp::EventArgs::Empty());
     }
 
     void Game::HookDeviceEvents() {

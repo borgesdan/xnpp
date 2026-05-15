@@ -3,22 +3,20 @@
 #include <optional>
 #include "AudioContent.hpp"
 #include "Shared.hpp"
+#include <Xna/Internal/Macros.hpp>
 
 namespace Xna {
 	struct AudioHelper final {
-		AudioHelper();
-		bool OpenFile(std::filesystem::path const& filename);
-		bool IsSupportedAudioFile(AudioFileType& audioFileType);
-		int64_t GetDuration();
-		bool Convert(ConversionFormat conversionFormat, ConversionQuality quality, std::optional<std::filesystem::path> const& targetFileName, AudioContent& audioContent);
+		XNPP_API AudioHelper();
+		XNPP_API bool OpenFile(std::filesystem::path const& filename);
+		XNPP_API bool IsSupportedAudioFile(AudioFileType& audioFileType);
+		XNPP_API int64_t GetDuration();
+		XNPP_API bool Convert(ConversionFormat conversionFormat, ConversionQuality quality, std::optional<std::filesystem::path> const& targetFileName, AudioContent& audioContent);
 
-		inline AudioHelper(std::nullptr_t) { impl = nullptr; }
-		inline bool operator==(AudioHelper const& other) const noexcept { return impl == other.impl; }
-		inline bool operator==(std::nullptr_t) const noexcept { return impl == nullptr; }
-		inline explicit operator bool() const noexcept { return impl != nullptr; }
+		XNPP_DECLARE_NULL_IMPL_WRAPPER(AudioHelper, impl);
 
 	private:
-		std::vector<uint8_t> ConvertWmaToWavInMemory();
+		XNPP_API std::vector<uint8_t> ConvertWmaToWavInMemory();
 
 	private:
 		struct Implementation;

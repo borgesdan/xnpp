@@ -5,7 +5,6 @@
 #include <string>
 #include <memory>
 #include "DisplayMode.hpp"
-#include "DisplayModeCollection.hpp"
 #include "Xna/Platform/Platform.hpp"
 #include "Xna/Internal/Macros.hpp"
 
@@ -85,7 +84,7 @@ namespace Xna {
 			DepthFormat& selectedDepthFormat,
 			int32_t& selectedMultiSampleCount) const;
 
-		XNPP_DECLARE_IMPL_WRAPPER(GraphicsAdapter, backend);
+		XNPP_DECLARE_NULL_IMPL_WRAPPER(GraphicsAdapter, backend);
 
 	private:
 		inline static bool _UseNullDevice = false;

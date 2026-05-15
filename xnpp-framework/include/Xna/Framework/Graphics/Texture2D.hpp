@@ -7,9 +7,9 @@
 #include <vector>
 #include <string>
 #include <optional>
-#include "Xna/CSharp/IO/Stream.hpp"
+#include <Xna/CSharp/IO/Stream.hpp>
 #include "Xna/Platform/Platform.hpp"
-#include "Xna/Internal/Export.hpp"
+#include "Xna/Internal/Macros.hpp"
 
 namespace Xna {
 	//Represents a 2D grid of texels. 

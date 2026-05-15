@@ -1,7 +1,7 @@
 #ifndef XNA_FRAMEWORK_GAME_GAMETIME_HPP
 #define XNA_FRAMEWORK_GAME_GAMETIME_HPP
 
-#include "Xna/CSharp/TimeSpan.hpp"
+#include <Xna/CSharp/TimeSpan.hpp>
 
 namespace Xna {
 	class GameTime {

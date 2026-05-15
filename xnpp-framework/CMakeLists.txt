@@ -1,22 +1,7 @@
-﻿# Enable Hot Reload for MSVC compilers if supported.
-if (POLICY CMP0141)
-    cmake_policy(SET CMP0141 NEW)
-    set(CMAKE_MSVC_DEBUG_INFORMATION_FORMAT "$<IF:$<AND:$<C_COMPILER_ID:MSVC>,$<CXX_COMPILER_ID:MSVC>>,$<$<CONFIG:Debug,RelWithDebInfo>:EditAndContinue>,$<$<CONFIG:Debug,RelWithDebInfo>:ProgramDatabase>>")
-endif ()
-
-# Includes directory
+﻿# Includes directory
 set(PROJECT_INCLUDES_DIR "${CMAKE_CURRENT_SOURCE_DIR}/include")
 
-set(XNPP_FRAMEWORK_SRC 
-    "sources/Xna/CSharp/IO/MemoryStream.cpp"
-    "sources/Xna/CSharp/IO/Stream.cpp"
-    "sources/Xna/CSharp/IO/FileStream.cpp"
-    "sources/Xna/CSharp/IO/BinaryReader.cpp"
-    "sources/Xna/CSharp/Windows/Forms/SystemInformation.cpp"
-    "sources/Xna/CSharp/Windows/Forms/Screen.cpp"
-    "sources/Xna/CSharp/Event.cpp"
-    "sources/Xna/CSharp/IO/BinaryWriter.cpp"
-    "sources/Xna/CSharp/BitConverter.cpp"        
+set(XNPP_FRAMEWORK_SRC  
     "sources/Xna/Framework/FrameworkDispatcher.cpp"       
     "sources/xna/Framework/PackUtils.cpp"
     "sources/Xna/Framework/TitleContainer.cpp"
@@ -34,28 +19,12 @@ set(XNPP_FRAMEWORK_SRC
     "sources/Xna/Framework/Graphics/Texture2D.cpp"        
     "sources/Xna/Framework/Graphics/GraphicsDevice.cpp"
     "sources/Xna/Framework/Graphics/RenderTarget2D.cpp"
-    "sources/Xna/Framework/Graphics/IndexBuffer.cpp"
-    "sources/Xna/Framework/Graphics/DynamicIndexBuffer.cpp"
+    "sources/Xna/Framework/Graphics/IndexBuffer.cpp"    
     "sources/Xna/Framework/Graphics/DisplayModeCollection.cpp"
     "sources/Xna/Framework/Graphics/GraphicsAdapter.cpp"
     "sources/Xna/Framework/Graphics/SpriteBatch.cpp"
     "sources/Xna/Framework/Graphics/SpriteFont.cpp"
-    "sources/Xna/Framework/Graphics/GraphicsContentHelper.cpp"
-    "sources/Xna/Framework/Graphics/ModelBoneCollection.cpp" 
-    "sources/Xna/Framework/Graphics/ModelBone.cpp"
-    "sources/Xna/Framework/Graphics/ModelMesh.cpp" 
-    "sources/Xna/Framework/Graphics/EffectPass.cpp"
-    "sources/Xna/Framework/Graphics/EffectAnnotation.cpp"
-    "sources/Xna/Framework/Graphics/EffectParameter.cpp"
-    "sources/Xna/Framework/Graphics/Effect.cpp"
-    "sources/Xna/Framework/Graphics/BasicEffect.cpp"
-    "sources/Xna/Framework/Graphics/EffectHelpers.cpp"     
-    "sources/Xna/Framework/Graphics/EffectTechniqueCollection.cpp"
-    "sources/Xna/Framework/Graphics/EffectAnnotationCollection.cpp"
-    "sources/Xna/Framework/Graphics/DynamicVertexBuffer.cpp"
-    "sources/Xna/Framework/Graphics/VertexDeclaration.cpp"
-    "sources/Xna/Framework/Graphics/VertexBufferBinding.cpp"
-    "sources/Xna/Framework/Graphics/VertexBuffer.cpp"
+    "sources/Xna/Framework/Graphics/GraphicsContentHelper.cpp"   
     "sources/Xna/Framework/Input/Input.cpp"
     "sources/Xna/Framework/Content/ContentManager.cpp"
     "sources/Xna/Framework/Content/ContentReader.cpp"
@@ -70,9 +39,8 @@ set(XNPP_FRAMEWORK_SRC
     "sources/Xna/Framework/Media/Song.cpp" 
     "sources/Xna/Framework/Media/MediaPlayer.cpp"
     "sources/Xna/Framework/Media/MediaQueue.cpp"
-    "sources/Xna/CSharp/Type.cpp"
-    "sources/Xna/Framework/Content/Readers/BasicReaders.cpp"
- #"sources/Xna/Framework/Graphics/_Effects.cpp"
+    "sources/Xna/Framework/Content/Readers/BasicReaders.cpp" 
+    "sources/Xna/Framework/Graphics/Model.cpp"
 )
 
 set(XNPP_PLATFORM_SRC
@@ -85,6 +53,7 @@ set(XNPP_PLATFORM_SRC
     "sources/Xna/Platform/Cross/Graphics/Texture.cpp"
     "sources/Xna/Platform/Cross/Graphics/SpriteBatch.cpp"
     "sources/Xna/Platform/Cross/Graphics/Adapter.cpp"
+    "sources/Xna/Platform/Cross/Graphics/Buffer.cpp"
 )
 
 set(MINIAUDIO_VORBIS_SRC 
@@ -97,10 +66,19 @@ add_library(xnpp
         ${MINIAUDIO_VORBIS_SRC} 
 )
 
-target_compile_features(xnpp PUBLIC cxx_std_20)
+# Lógica mágica de exportação/importação:
+if(BUILD_SHARED_LIBS)
+    # Se for DLL, dizemos APENAS para o xnpp exportar os símbolos.
+    # Os consumidores não recebem essa macro e caem no 'dllimport'.
+    target_compile_definitions(xnpp PRIVATE XNPP_EXPORT_DLL)
+else()
+    # Se for ESTÁTICO, nós desligamos o import/export.
+    # Usamos PUBLIC para que qualquer target que faça link com xnpp 
+    # (como seus .exe) também herde a macro XNPP_STATIC automaticamente!
+    target_compile_definitions(xnpp PUBLIC XNPP_STATIC)
+endif()
 
-target_compile_definitions(xnpp PRIVATE XNPP_EXPORT_DLL)
-target_compile_definitions(xnpp PRIVATE XNPP_DONT_USE_XNA_KEYS)
+target_compile_features(xnpp PUBLIC cxx_std_20)
 
 #SDL3
 find_package(SDL3 CONFIG REQUIRED)
@@ -111,6 +89,8 @@ find_package(Vorbis CONFIG REQUIRED)
 find_package(bgfx CONFIG REQUIRED)
 
 target_link_libraries(xnpp       
+    PUBLIC
+        xnpp-csharp
     PRIVATE 
         SDL3::SDL3
         Ogg::ogg
@@ -162,6 +142,9 @@ install(
 
 include(CMakePackageConfigHelpers)
 
+# Define onde os shaders serão instalados no sistema do usuário / vcpkg (ex: share/xnpp/shaders)
+set(SHADERS_INSTALL_DIR "${CMAKE_INSTALL_DATADIR}/xnpp/shaders")
+
 write_basic_package_version_file(
     "${CMAKE_CURRENT_BINARY_DIR}/xnppConfigVersion.cmake"
     VERSION ${PROJECT_VERSION}
@@ -172,6 +155,7 @@ configure_package_config_file(
     "${CMAKE_CURRENT_SOURCE_DIR}/cmake/xnppConfig.cmake.in"
     "${CMAKE_CURRENT_BINARY_DIR}/xnppConfig.cmake"
     INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/xnpp
+    PATH_VARS SHADERS_INSTALL_DIR # Expondo o diretório para o arquivo .cmake.in
 )
 
 install(
@@ -181,7 +165,8 @@ install(
     DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/xnpp
 )
 
-# Post build commands
+# Cópia da pasta shaders
+# Descobre a plataforma alvo
 if(WIN32)
     set(SHADER_OS_DIR "windows")
 elseif(APPLE)
@@ -190,13 +175,25 @@ elseif(UNIX)
     set(SHADER_OS_DIR "linux")
 endif()
 
+# ---------------------------------------------------------
+# 1. PARA O BUILD LOCAL (Testes internos da XNPP)
+# ---------------------------------------------------------
 add_custom_command(TARGET xnpp POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_directory
-        "${CMAKE_CURRENT_SOURCE_DIR}/shaders/bgfx/${SHADER_OS_DIR}"
-        "$<TARGET_FILE_DIR:xnpp>/shaders/bgfx"
-    COMMENT "Copying the shaders folder to the output directory..."
+        "${CMAKE_CURRENT_SOURCE_DIR}/shaders/binary/${SHADER_OS_DIR}"
+        "$<TARGET_FILE_DIR:xnpp>/shaders"
+    COMMENT "Copying the shaders folder to the local output directory..."
 )
 
 set_target_properties(xnpp PROPERTIES
     ADDITIONAL_CLEAN_FILES "$<TARGET_FILE_DIR:xnpp>/shaders"
+)
+
+# ---------------------------------------------------------
+# 2. PARA O EMPACOTAMENTO (vcpkg / install)
+# ---------------------------------------------------------
+# Instala os shaders da plataforma correspondente usando a variável dinâmica
+install(
+    DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/shaders/binary/${SHADER_OS_DIR}/"
+    DESTINATION "${SHADERS_INSTALL_DIR}"
 )

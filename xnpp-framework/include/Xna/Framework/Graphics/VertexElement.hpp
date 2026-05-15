@@ -2,37 +2,32 @@
 #define XNA_FRAMEWORK_GRAPHICS_VERTEXELEMENT_HPP
 
 #include "Shared.hpp"
-#include <optional>
+#include <cstdint>
 
 namespace Xna {
 	//Defines input vertex data to the pipeline.
 	struct VertexElement final {
 		//Retrieves or sets the offset (if any) from the beginning of the stream to the beginning of the vertex data.
-		size_t Offset;
+		uint32_t Offset{ 0 };
 		//Gets or sets the format of this vertex element.
-		Xna::VertexElementFormat VertexElementFormat;
+		Xna::VertexElementFormat VertexElementFormat{ Xna::VertexElementFormat::Single };
 		//Gets or sets a value describing how the vertex element is to be used.
-		Xna::VertexElementUsage VertexElementUsage;
+		Xna::VertexElementUsage VertexElementUsage{ Xna::VertexElementUsage::Position };
 		//Modifies the usage data to allow the user to specify multiple usage types.
-		size_t UsageIndex;
+		uint32_t UsageIndex{ 0 };
 
 		//Initializes a new instance of the VertexElement class.
 		constexpr VertexElement(
-			size_t offset,
+			uint32_t offset,
 			Xna::VertexElementFormat elementFormat,
 			Xna::VertexElementUsage elementUsage,
-			size_t usageIndex) : Offset(offset), VertexElementFormat(elementFormat),
+			uint32_t usageIndex) : Offset(offset), VertexElementFormat(elementFormat),
 			VertexElementUsage(elementUsage), UsageIndex(usageIndex) {
 		}
 
-		constexpr bool operator==(const VertexElement& other) const noexcept {
-			return Offset == other.Offset && VertexElementFormat == other.VertexElementFormat
-				&& VertexElementUsage == other.VertexElementUsage && UsageIndex == other.UsageIndex;
-		}
+		constexpr VertexElement() = default;
 
-		constexpr operator std::optional<VertexElement>() const {
-			return std::make_optional<VertexElement>(*this);
-		}
+		constexpr bool operator==(const VertexElement& other) const noexcept = default;
 	};
 }
 

@@ -1,6 +1,6 @@
 #include "Xna/Framework/Media/MediaQueue.hpp"
 #include "Xna/Platform/Platform.hpp"
-#include "Xna/CSharp/Exception.hpp"
+#include <Xna/CSharp/Exception.hpp>
 
 namespace Xna {
 	void MediaQueue::Play(Song const& song) {

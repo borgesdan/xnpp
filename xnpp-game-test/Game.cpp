@@ -6,12 +6,13 @@
 #include <Xna/Media.hpp>
 #include <Xna/Audio.hpp>
 #include <Xna/Input.hpp>
+#include <Xna/CSharp/TimeSpan.hpp>
 #include <Windows.h>
 
 class Game1 : public Xna::Game {
 	using base = Xna::Game;
 public:
-	Game1() : Xna::Game(Xna::GameRunMode::Bgfx) {
+	Game1() : Xna::Game(Xna::GameRunMode::HostFirst) {
 		graphics = Xna::GraphicsDeviceManager(*this);
 		Content().RootDirectory("Content");
 	}
@@ -28,9 +29,12 @@ public:
 		texture2 = Content().Load<Xna::Texture2D>("Sprites/Player/Idle");
 		texture3 = Content().Load<Xna::Texture2D>("Overlays/you_died");
 		font = Content().Load<Xna::SpriteFont>("Fonts/Hud");
+		sound = Content().Load<Xna::SoundEffect>("Sounds/PlayerKilled");
 
 		auto adp = Xna::GraphicsAdapter::DefaultAdapter();
-		auto display = adp.CurrentDisplayMode(); 
+		auto display = adp.CurrentDisplayMode();
+
+		auto timeSpan = Xna::CSharp::TimeSpan(1, 00, 0);
 	}
 
 	void Update(Xna::GameTime& gameTime) override {
@@ -41,8 +45,8 @@ public:
 
 		if (curKState.IsKeyDown(Xna::Keys::Right) && oldKState.IsKeyUp(Xna::Keys::Right)) {
 			backColor = Xna::Color::Red();
-			/*auto soundEffectInstance1 = soundEffect.CreateInstance();
-			soundEffectInstance1.Play();		*/
+			//auto soundEffectInstance1 = soundEffect.CreateInstance();
+
 			one = true;
 		}
 
@@ -65,7 +69,7 @@ public:
 
 		if (curKState.IsKeyDown(Xna::Keys::Space) && oldKState.IsKeyUp(Xna::Keys::Space)) {
 			backColor = Xna::Color::Azure();
-
+			sound.Play();
 			four = true;
 		}
 
@@ -129,7 +133,9 @@ public:
 
 	void Draw(Xna::GameTime& gameTime) override {
 		graphics.GraphicsDevice()->Clear(backColor);
-		
+
+		auto viewport = graphics.GraphicsDevice()->Viewport();
+
 		spriteBatch.Begin(Xna::SpriteSortMode::Deferred, nullptr, nullptr, nullptr, nullptr, nullptr, Xna::Matrix::Identity());
 
 		//if (one)
@@ -146,15 +152,18 @@ public:
 			0);
 
 		//if (two)
-			spriteBatch.Draw(texture2, Xna::Vector2(100, 100), Xna::Color::White());
+		spriteBatch.Draw(texture2, Xna::Vector2(100, 100), Xna::Color::White());
 
 		//if (three)
-			spriteBatch.Draw(texture, texPos, Xna::Color::Black());
+		spriteBatch.Draw(texture, texPos, Xna::Color::Black());
 
 		////if (four)
 		//	spriteBatch.Draw(texture, Xna::Vector2(300, 100), Xna::Color::White());
 
-			spriteBatch.DrawString(font, U"Teste", Xna::Vector2(500, 400), Xna::Color::Red());
+		spriteBatch.DrawString(font, "Alfafa para D. Florinda", Xna::Vector2(200, 100), Xna::Color::Red());
+		spriteBatch.DrawString(font, U"Uma torta para Jaiminho.", Xna::Vector2(200, 200), Xna::Color::BlueViolet());
+
+
 
 		spriteBatch.End();
 
@@ -177,6 +186,7 @@ private:
 	Xna::Texture2D texture3 = nullptr;
 	Xna::Vector2 texPos{};
 	Xna::SpriteFont font = nullptr;
+	Xna::SoundEffect sound = nullptr;
 	float rotation = 0;
 
 	bool one = false;

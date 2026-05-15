@@ -1,7 +1,7 @@
 #include "Xna/Framework/Vector4.hpp"
 #include "Xna/Framework/Matrix.hpp"
 #include "Xna/Framework/Quaternion.hpp"
-#include "Xna/CSharp/Exception.hpp"
+#include <Xna/CSharp/Exception.hpp>
 
 namespace Xna {
     void Vector4::Transform(Vector4 const* sourceArray, size_t sourceLength, Matrix const& matrix, Vector4* destinationArray, size_t destinationLength)

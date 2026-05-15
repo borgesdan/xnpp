@@ -1,7 +1,7 @@
 #ifndef XNA_FRAMEWORK_FRAMEWORKDISPATCHER_HPP
 #define XNA_FRAMEWORK_FRAMEWORKDISPATCHER_HPP
 
-#include "Xna/Internal/Export.hpp"
+#include "Xna/Internal/Macros.hpp"
 
 namespace Xna {
 	//FrameworkDispatcher

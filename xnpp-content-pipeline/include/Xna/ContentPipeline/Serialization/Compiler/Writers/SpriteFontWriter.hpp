@@ -6,7 +6,7 @@
 
 namespace Xna {
 	struct SpriteFontWriter : BuiltinTypeWriter<SpriteFontContent> {
-        std::string GetRuntimeReader(TargetPlatform targetPlatform) override {
+        inline std::string GetRuntimeReader(TargetPlatform targetPlatform) override {
             return "SpriteFontReader";
         }
 

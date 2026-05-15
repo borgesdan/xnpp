@@ -3,7 +3,7 @@
 
 #include "_ContentManager.hpp"
 #include "ContentTypeReader.hpp"
-#include "Xna/CSharp/IO/BinaryReader.hpp"
+#include <Xna/CSharp/IO/BinaryReader.hpp>
 #include <memory>
 #include <vector>
 #include <string>
@@ -16,7 +16,7 @@
 #include "Xna/Framework/Quaternion.hpp"
 #include "Xna/Framework/Color.hpp"
 #include "_ContentTypeReaderManager.hpp"
-#include "Xna/Internal/Export.hpp"
+#include "Xna/Internal/Macros.hpp"
 #include "Xna/Internal/Misc.hpp"
 
 namespace Xna {

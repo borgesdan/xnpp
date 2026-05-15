@@ -65,7 +65,8 @@ namespace Xna {
 	}
 
 	void SoundEffectInstance::DeallocateVoice() {
-		impl->platform = nullptr;
+		//impl->platform = nullptr;
+		impl->platform->Unload();
 	}
 
 	SoundState SoundEffectInstance::State() const {

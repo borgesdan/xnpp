@@ -11,7 +11,7 @@ namespace Xna {
         else if (context.TargetPlatform() == TargetPlatform::Xbox360)
             formatType = ConversionFormat::Xma;            
 
-        if (input.FileType != AudioFileType::Wav) {
+        if (input.FileType == AudioFileType::Wav || input.FileType == AudioFileType::Wma) {
             AudioHelper helper{};
             helper.OpenFile(input.ContentItem.Identity.SourceFileName);
             helper.Convert(formatType, ConversionQuality::Best, std::nullopt, input);

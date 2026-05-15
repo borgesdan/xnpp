@@ -89,7 +89,7 @@ namespace Xna {
 
 		if (index < 0 || index >= 4)
 			return {};
-				
+
 		SDL_Gamepad* pad = SDL_GetGamepadFromPlayerIndex(index);
 
 		if (!pad)
@@ -162,7 +162,7 @@ namespace Xna {
 		const auto triggers = GamePadTriggers(lt, rt);
 		const auto padState = GamePadState(thumbSticks, triggers, buttons, dpad, isConnected);
 		return padState;
-	}	
+	}
 
 	static GamePadCapabilitiesType ConvertGamepadType(SDL_Gamepad* pad)
 	{
@@ -247,12 +247,12 @@ namespace Xna {
 		pad.low_frequency_rumble = ConvertRumble(leftMotor);
 		pad.high_frequency_rumble = ConvertRumble(rightMotor);
 		pad.left_rumble = ConvertRumble(leftTrigger);
-		pad.right_rumble = ConvertRumble(rightTrigger);		
+		pad.right_rumble = ConvertRumble(rightTrigger);
 
 		return true;
 	}
 
-	void Platform::GamePad_Suspend() {	
+	void Platform::GamePad_Suspend() {
 		Cross::Global::SuspendGamepads = true;
 	}
 
@@ -260,9 +260,7 @@ namespace Xna {
 		Cross::Global::SuspendGamepads = false;
 	}
 
-
-#ifndef XNPP_DONT_USE_XNA_KEYS
-	//Valores VK_ estão no intervalo 0x00–0xFF, 256 entradas.
+	// Valores VK_ estão no intervalo 0x00–0xFF, 256 entradas.
 	static const std::array<SDL_Scancode, 256>& BuildVKToScancodeTable()
 	{
 		static std::array<SDL_Scancode, 256> table{};
@@ -273,7 +271,7 @@ namespace Xna {
 			for (auto& v : table)
 				v = SDL_SCANCODE_UNKNOWN;
 
-			// Letras
+			// --- Letras ---
 			table['A'] = SDL_SCANCODE_A;
 			table['B'] = SDL_SCANCODE_B;
 			table['C'] = SDL_SCANCODE_C;
@@ -301,6 +299,7 @@ namespace Xna {
 			table['Y'] = SDL_SCANCODE_Y;
 			table['Z'] = SDL_SCANCODE_Z;
 
+			// --- Números ---
 			table['0'] = SDL_SCANCODE_0;
 			table['1'] = SDL_SCANCODE_1;
 			table['2'] = SDL_SCANCODE_2;
@@ -312,36 +311,149 @@ namespace Xna {
 			table['8'] = SDL_SCANCODE_8;
 			table['9'] = SDL_SCANCODE_9;
 
-			table[0x08] = SDL_SCANCODE_BACKSPACE; //VK_BACK
-			table[0x09] = SDL_SCANCODE_TAB; //VK_TAB
-			table[0x0D] = SDL_SCANCODE_RETURN; //VK_RETURN
-			table[0x1B] = SDL_SCANCODE_ESCAPE; //VK_ESCAPE
-			table[0x20] = SDL_SCANCODE_SPACE; //VK_SPACE
+			// --- Teclas de Controle Básicas ---
+			table[0x08] = SDL_SCANCODE_BACKSPACE; // VK_BACK
+			table[0x09] = SDL_SCANCODE_TAB;       // VK_TAB
+			table[0x0D] = SDL_SCANCODE_RETURN;    // VK_RETURN
+			table[0x13] = SDL_SCANCODE_PAUSE;     // VK_PAUSE
+			table[0x14] = SDL_SCANCODE_CAPSLOCK;  // VK_CAPITAL
+			table[0x15] = SDL_SCANCODE_UNKNOWN;   // VK_KANA
+			table[0x16] = SDL_SCANCODE_UNKNOWN;   // VK_IME_ON
+			table[0x19] = SDL_SCANCODE_UNKNOWN;   // VK_HANJA
+			table[0x1A] = SDL_SCANCODE_UNKNOWN;   // VK_IME_OFF
+			table[0x1B] = SDL_SCANCODE_ESCAPE;    // VK_ESCAPE
+			table[0x1C] = SDL_SCANCODE_UNKNOWN;   // VK_CONVERT
+			table[0x1D] = SDL_SCANCODE_UNKNOWN;   // VK_NONCONVERT
 
-			table[0x25] = SDL_SCANCODE_LEFT; //VK_LEFT
-			table[0x27] = SDL_SCANCODE_RIGHT; //VK_RIGHT
-			table[0x26] = SDL_SCANCODE_UP; //VK_UP
-			table[0x28] = SDL_SCANCODE_DOWN; //VK_DOWN
+			// --- Navegação e Edição ---
+			table[0x20] = SDL_SCANCODE_SPACE;       // VK_SPACE
+			table[0x21] = SDL_SCANCODE_PAGEUP;      // VK_PRIOR
+			table[0x22] = SDL_SCANCODE_PAGEDOWN;    // VK_NEXT
+			table[0x23] = SDL_SCANCODE_END;         // VK_END
+			table[0x24] = SDL_SCANCODE_HOME;        // VK_HOME
+			table[0x25] = SDL_SCANCODE_LEFT;        // VK_LEFT
+			table[0x26] = SDL_SCANCODE_UP;          // VK_UP
+			table[0x27] = SDL_SCANCODE_RIGHT;       // VK_RIGHT
+			table[0x28] = SDL_SCANCODE_DOWN;        // VK_DOWN
+			table[0x29] = SDL_SCANCODE_SELECT;      // VK_SELECT
+			table[0x2A] = SDL_SCANCODE_UNKNOWN;     // VK_PRINT (Geralmente obsoleto, PrintScreen cobre)
+			table[0x2B] = SDL_SCANCODE_EXECUTE;     // VK_EXECUTE
+			table[0x2C] = SDL_SCANCODE_PRINTSCREEN; // VK_SNAPSHOT
+			table[0x2D] = SDL_SCANCODE_INSERT;      // VK_INSERT
+			table[0x2E] = SDL_SCANCODE_DELETE;      // VK_DELETE
+			table[0x2F] = SDL_SCANCODE_HELP;        // VK_HELP
 
-			table[0xA0] = SDL_SCANCODE_LSHIFT; //VK_LSHIFT
-			table[0xA1] = SDL_SCANCODE_RSHIFT; //VK_RSHIFT
-			table[0xA2] = SDL_SCANCODE_LCTRL; //VK_LCONTROL
-			table[0xA3] = SDL_SCANCODE_RCTRL; //VK_RCONTROL
-			table[0xA4] = SDL_SCANCODE_LALT; //VK_LMENU
-			table[0xA5] = SDL_SCANCODE_RALT; //VK_RMENU
+			// --- Modificadores (Shift, Ctrl, Alt) ---
+			table[0xA0] = SDL_SCANCODE_LSHIFT; // VK_LSHIFT
+			table[0xA1] = SDL_SCANCODE_RSHIFT; // VK_RSHIFT
+			table[0xA2] = SDL_SCANCODE_LCTRL;  // VK_LCONTROL
+			table[0xA3] = SDL_SCANCODE_RCTRL;  // VK_RCONTROL
+			table[0xA4] = SDL_SCANCODE_LALT;   // VK_LMENU
+			table[0xA5] = SDL_SCANCODE_RALT;   // VK_RMENU
 
-			table[0x70] = SDL_SCANCODE_F1; //VK_F1
-			table[0x71] = SDL_SCANCODE_F2; //VK_F2
-			table[0x72] = SDL_SCANCODE_F3; //VK_F3
-			table[0x73] = SDL_SCANCODE_F4; //VK_F4
-			table[0x74] = SDL_SCANCODE_F5; //VK_F5
-			table[0x75] = SDL_SCANCODE_F6; //VK_F6
-			table[0x76] = SDL_SCANCODE_F7; //VK_F7
-			table[0x77] = SDL_SCANCODE_F8; //VK_F8
-			table[0x78] = SDL_SCANCODE_F9; //VK_F9
-			table[0x79] = SDL_SCANCODE_F10; //VK_F10
-			table[0x7A] = SDL_SCANCODE_F11; //VK_F11
-			table[0x7B] = SDL_SCANCODE_F12; //VK_F12
+			// --- Teclas do Windows, Menu e Sleep ---
+			table[0x5B] = SDL_SCANCODE_LGUI;        // VK_LWIN
+			table[0x5C] = SDL_SCANCODE_RGUI;        // VK_RWIN
+			table[0x5D] = SDL_SCANCODE_APPLICATION; // VK_APPS
+			table[0x5F] = SDL_SCANCODE_SLEEP;       // VK_SLEEP
+
+			// --- Teclado Numérico (Numpad) ---
+			table[0x60] = SDL_SCANCODE_KP_0;        // VK_NUMPAD0
+			table[0x61] = SDL_SCANCODE_KP_1;        // VK_NUMPAD1
+			table[0x62] = SDL_SCANCODE_KP_2;        // VK_NUMPAD2
+			table[0x63] = SDL_SCANCODE_KP_3;        // VK_NUMPAD3
+			table[0x64] = SDL_SCANCODE_KP_4;        // VK_NUMPAD4
+			table[0x65] = SDL_SCANCODE_KP_5;        // VK_NUMPAD5
+			table[0x66] = SDL_SCANCODE_KP_6;        // VK_NUMPAD6
+			table[0x67] = SDL_SCANCODE_KP_7;        // VK_NUMPAD7
+			table[0x68] = SDL_SCANCODE_KP_8;        // VK_NUMPAD8
+			table[0x69] = SDL_SCANCODE_KP_9;        // VK_NUMPAD9
+			table[0x6A] = SDL_SCANCODE_KP_MULTIPLY; // VK_MULTIPLY
+			table[0x6B] = SDL_SCANCODE_KP_PLUS;     // VK_ADD
+			table[0x6C] = SDL_SCANCODE_SEPARATOR;   // VK_SEPARATOR
+			table[0x6D] = SDL_SCANCODE_KP_MINUS;    // VK_SUBTRACT
+			table[0x6E] = SDL_SCANCODE_KP_PERIOD;   // VK_DECIMAL
+			table[0x6F] = SDL_SCANCODE_KP_DIVIDE;   // VK_DIVIDE
+			table[0x90] = SDL_SCANCODE_NUMLOCKCLEAR;// VK_NUMLOCK
+			table[0x91] = SDL_SCANCODE_SCROLLLOCK;  // VK_SCROLL
+
+			// --- Teclas de Função F1 ao F24 ---
+			table[0x70] = SDL_SCANCODE_F1;  // VK_F1
+			table[0x71] = SDL_SCANCODE_F2;  // VK_F2
+			table[0x72] = SDL_SCANCODE_F3;  // VK_F3
+			table[0x73] = SDL_SCANCODE_F4;  // VK_F4
+			table[0x74] = SDL_SCANCODE_F5;  // VK_F5
+			table[0x75] = SDL_SCANCODE_F6;  // VK_F6
+			table[0x76] = SDL_SCANCODE_F7;  // VK_F7
+			table[0x77] = SDL_SCANCODE_F8;  // VK_F8
+			table[0x78] = SDL_SCANCODE_F9;  // VK_F9
+			table[0x79] = SDL_SCANCODE_F10; // VK_F10
+			table[0x7A] = SDL_SCANCODE_F11; // VK_F11
+			table[0x7B] = SDL_SCANCODE_F12; // VK_F12
+			table[0x7C] = SDL_SCANCODE_F13; // VK_F13
+			table[0x7D] = SDL_SCANCODE_F14; // VK_F14
+			table[0x7E] = SDL_SCANCODE_F15; // VK_F15
+			table[0x7F] = SDL_SCANCODE_F16; // VK_F16
+			table[0x80] = SDL_SCANCODE_F17; // VK_F17
+			table[0x81] = SDL_SCANCODE_F18; // VK_F18
+			table[0x82] = SDL_SCANCODE_F19; // VK_F19
+			table[0x83] = SDL_SCANCODE_F20; // VK_F20
+			table[0x84] = SDL_SCANCODE_F21; // VK_F21
+			table[0x85] = SDL_SCANCODE_F22; // VK_F22
+			table[0x86] = SDL_SCANCODE_F23; // VK_F23
+			table[0x87] = SDL_SCANCODE_F24; // VK_F24
+
+			// --- Controles de Navegador e Mídia ---
+			table[0xA6] = SDL_SCANCODE_AC_BACK;      // VK_BROWSER_BACK
+			table[0xA7] = SDL_SCANCODE_AC_FORWARD;   // VK_BROWSER_FORWARD
+			table[0xA8] = SDL_SCANCODE_AC_REFRESH;   // VK_BROWSER_REFRESH
+			table[0xA9] = SDL_SCANCODE_AC_STOP;      // VK_BROWSER_STOP
+			table[0xAA] = SDL_SCANCODE_AC_SEARCH;    // VK_BROWSER_SEARCH
+			table[0xAB] = SDL_SCANCODE_AC_BOOKMARKS; // VK_BROWSER_FAVORITES
+			table[0xAC] = SDL_SCANCODE_AC_HOME;      // VK_BROWSER_HOME
+			table[0xAD] = SDL_SCANCODE_UNKNOWN;    // VK_VOLUME_MUTE
+			table[0xAE] = SDL_SCANCODE_VOLUMEDOWN;   // VK_VOLUME_DOWN
+			table[0xAF] = SDL_SCANCODE_VOLUMEUP;     // VK_VOLUME_UP
+			table[0xB0] = SDL_SCANCODE_UNKNOWN;    // VK_MEDIA_NEXT_TRACK
+			table[0xB1] = SDL_SCANCODE_UNKNOWN;    // VK_MEDIA_PREV_TRACK
+			table[0xB2] = SDL_SCANCODE_UNKNOWN;    // VK_MEDIA_STOP
+			table[0xB3] = SDL_SCANCODE_UNKNOWN;    // VK_MEDIA_PLAY_PAUSE
+			table[0xB4] = SDL_SCANCODE_UNKNOWN;         // VK_LAUNCH_MAIL
+			table[0xB5] = SDL_SCANCODE_UNKNOWN;  // VK_LAUNCH_MEDIA_SELECT
+			table[0xB6] = SDL_SCANCODE_UNKNOWN;         // VK_LAUNCH_APP1
+			table[0xB7] = SDL_SCANCODE_UNKNOWN;         // VK_LAUNCH_APP2
+
+			// --- Teclas OEM (Mapeadas pela posição física no teclado US) ---
+			table[0xBA] = SDL_SCANCODE_SEMICOLON;    // VK_OEM_1 (;: US)
+			table[0xBB] = SDL_SCANCODE_EQUALS;       // VK_OEM_PLUS (=+)
+			table[0xBC] = SDL_SCANCODE_COMMA;        // VK_OEM_COMMA (,<)
+			table[0xBD] = SDL_SCANCODE_MINUS;        // VK_OEM_MINUS (-_)
+			table[0xBE] = SDL_SCANCODE_PERIOD;       // VK_OEM_PERIOD (.>)
+			table[0xBF] = SDL_SCANCODE_SLASH;        // VK_OEM_2 (/? US)
+			table[0xC0] = SDL_SCANCODE_GRAVE;        // VK_OEM_3 (`~ US)
+			table[0xDB] = SDL_SCANCODE_LEFTBRACKET;  // VK_OEM_4 ([{ US)
+			table[0xDC] = SDL_SCANCODE_BACKSLASH;    // VK_OEM_5 (\| US)
+			table[0xDD] = SDL_SCANCODE_RIGHTBRACKET; // VK_OEM_6 (]} US)
+			table[0xDE] = SDL_SCANCODE_APOSTROPHE;   // VK_OEM_7 ('" US)
+			table[0xDF] = SDL_SCANCODE_UNKNOWN;      // VK_OEM_8
+			table[0xE2] = SDL_SCANCODE_NONUSBACKSLASH;// VK_OEM_102 (Tecla Extra entre LShift e Z no ISO)
+
+			// --- Teclas Legadas e Especiais Específicas do Hardware ---
+			table[0xE5] = SDL_SCANCODE_UNKNOWN;      // VK_PROCESSKEY
+			table[0xF2] = SDL_SCANCODE_UNKNOWN;      // VK_OEM_COPY
+			table[0xF3] = SDL_SCANCODE_UNKNOWN;      // VK_OEM_AUTO
+			table[0xF4] = SDL_SCANCODE_UNKNOWN;      // VK_OEM_ENLW
+			table[0xF6] = SDL_SCANCODE_UNKNOWN;      // VK_ATTN
+			table[0xF7] = SDL_SCANCODE_CRSEL;        // VK_CRSEL
+			table[0xF8] = SDL_SCANCODE_EXSEL;        // VK_EXSEL
+			table[0xF9] = SDL_SCANCODE_UNKNOWN;      // VK_EREOF
+			table[0xFA] = SDL_SCANCODE_UNKNOWN;      // VK_PLAY
+			table[0xFB] = SDL_SCANCODE_UNKNOWN;      // VK_ZOOM
+			table[0xFD] = SDL_SCANCODE_UNKNOWN;      // VK_PA1
+			table[0xFE] = SDL_SCANCODE_CLEAR;        // VK_OEM_CLEAR
+
+			// FLAG para evitar recalcular a tabela inteira nas próximas chamadas.
+			initialized = true;
 		}
 
 		return table;
@@ -374,129 +486,17 @@ namespace Xna {
 		int numKeys = 0;
 		const bool* sdlState = SDL_GetKeyboardState(&numKeys);
 
+		// Inicializa toda a union/struct com zeros automaticamente
 		KeyboardState state{};
-		auto ptr = reinterpret_cast<uint32_t*>(&state);
 
-		for (int i = 0; i < 8; ++i)
-			ptr[i] = 0;
-
-		for (unsigned int vk = 0; vk <= 0xFE; ++vk)
-		{
+		for (unsigned int vk = 0; vk <= 0xFE; ++vk) {
 			SDL_Scancode sc = WinVKToSDLScancode(static_cast<Keys>(vk));
 
-			if (sc != SDL_SCANCODE_UNKNOWN &&
-				sc < numKeys &&
-				sdlState[sc])
-			{
+			if (sc != SDL_SCANCODE_UNKNOWN && sc < numKeys && sdlState[sc]) {
 				SetKeyBit(state, vk);
 			}
 		}
 
 		return state;
 	}
-
-#else
-	static constexpr std::array<std::pair<SDL_Scancode, Keys>, 78> SDLKeyMap =
-	{ {
-		{ SDL_SCANCODE_UNKNOWN, Keys::None},
-		{ SDL_SCANCODE_A, Keys::A },
-		{ SDL_SCANCODE_B, Keys::B },
-		{ SDL_SCANCODE_C, Keys::C },
-		{ SDL_SCANCODE_D, Keys::D },
-		{ SDL_SCANCODE_E, Keys::E },
-		{ SDL_SCANCODE_F, Keys::F },
-		{ SDL_SCANCODE_G, Keys::G },
-		{ SDL_SCANCODE_H, Keys::H },
-		{ SDL_SCANCODE_I, Keys::I },
-		{ SDL_SCANCODE_J, Keys::J },
-		{ SDL_SCANCODE_K, Keys::K },
-		{ SDL_SCANCODE_L, Keys::L },
-		{ SDL_SCANCODE_M, Keys::M },
-		{ SDL_SCANCODE_N, Keys::N },
-		{ SDL_SCANCODE_O, Keys::O },
-		{ SDL_SCANCODE_P, Keys::P },
-		{ SDL_SCANCODE_Q, Keys::Q },
-		{ SDL_SCANCODE_R, Keys::R },
-		{ SDL_SCANCODE_S, Keys::S },
-		{ SDL_SCANCODE_T, Keys::T },
-		{ SDL_SCANCODE_U, Keys::U },
-		{ SDL_SCANCODE_V, Keys::V },
-		{ SDL_SCANCODE_W, Keys::W },
-		{ SDL_SCANCODE_X, Keys::X },
-		{ SDL_SCANCODE_Y, Keys::Y },
-		{ SDL_SCANCODE_Z, Keys::Z },
-		{ SDL_SCANCODE_0, Keys::D0 },
-		{ SDL_SCANCODE_1, Keys::D1 },
-		{ SDL_SCANCODE_2, Keys::D2 },
-		{ SDL_SCANCODE_3, Keys::D3 },
-		{ SDL_SCANCODE_4, Keys::D4 },
-		{ SDL_SCANCODE_5, Keys::D5 },
-		{ SDL_SCANCODE_6, Keys::D6 },
-		{ SDL_SCANCODE_7, Keys::D7 },
-		{ SDL_SCANCODE_8, Keys::D8 },
-		{ SDL_SCANCODE_9, Keys::D9 },
-		{ SDL_SCANCODE_KP_0, Keys::NumPad0 },
-		{ SDL_SCANCODE_KP_1, Keys::NumPad1 },
-		{ SDL_SCANCODE_KP_2, Keys::NumPad2 },
-		{ SDL_SCANCODE_KP_3, Keys::NumPad3 },
-		{ SDL_SCANCODE_KP_4, Keys::NumPad4 },
-		{ SDL_SCANCODE_KP_5, Keys::NumPad5 },
-		{ SDL_SCANCODE_KP_6, Keys::NumPad6 },
-		{ SDL_SCANCODE_KP_7, Keys::NumPad7 },
-		{ SDL_SCANCODE_KP_8, Keys::NumPad8 },
-		{ SDL_SCANCODE_KP_9, Keys::NumPad9 },
-		{ SDL_SCANCODE_LEFT, Keys::Left },
-		{ SDL_SCANCODE_RIGHT, Keys::Right },
-		{ SDL_SCANCODE_UP, Keys::Up },
-		{ SDL_SCANCODE_DOWN, Keys::Down },
-		{ SDL_SCANCODE_F1, Keys::F1 },
-		{ SDL_SCANCODE_F2, Keys::F2 },
-		{ SDL_SCANCODE_F3, Keys::F3 },
-		{ SDL_SCANCODE_F4, Keys::F4 },
-		{ SDL_SCANCODE_F5, Keys::F5 },
-		{ SDL_SCANCODE_F6, Keys::F6 },
-		{ SDL_SCANCODE_F7, Keys::F7 },
-		{ SDL_SCANCODE_F8, Keys::F8 },
-		{ SDL_SCANCODE_F9, Keys::F9 },
-		{ SDL_SCANCODE_F10, Keys::F10 },
-		{ SDL_SCANCODE_F11, Keys::F11 },
-		{ SDL_SCANCODE_F12, Keys::F12 },
-		{ SDL_SCANCODE_SEPARATOR, Keys::Separator },
-
-		{ SDL_SCANCODE_SPACE, Keys::Space },
-		{ SDL_SCANCODE_RETURN, Keys::Enter },
-		{ SDL_SCANCODE_ESCAPE, Keys::Escape },
-		{ SDL_SCANCODE_TAB, Keys::Tab },
-		{ SDL_SCANCODE_BACKSPACE, Keys::Backspace },
-		{ SDL_SCANCODE_CAPSLOCK, Keys::CapsLock },
-		{ SDL_SCANCODE_PAGEUP, Keys::PageUp },
-		{ SDL_SCANCODE_PAGEDOWN, Keys::PageDown },
-		{ SDL_SCANCODE_LSHIFT, Keys::LeftShift },
-		{ SDL_SCANCODE_RSHIFT, Keys::RightShift },
-		{ SDL_SCANCODE_LCTRL, Keys::LeftControl },
-		{ SDL_SCANCODE_RCTRL, Keys::RightControl },
-		{ SDL_SCANCODE_LALT, Keys::LeftAlt },
-		{ SDL_SCANCODE_RALT, Keys::RightAlt },
-	} };
-
-	KeyboardState Platform::Keyboard_GetState()
-	{
-		int numKeys = 0;
-		const bool* sdlState = SDL_GetKeyboardState(&numKeys);
-
-		KeyboardState state{};
-
-		for (const auto& [sc, key] : SDLKeyMap)
-		{
-			if (sc < numKeys && sdlState[sc])
-			{
-				size_t k = static_cast<size_t>(key);
-				state.m_bits[k >> 5] |= (1u << (k & 31));
-			}
-		}
-
-		return state;
-	}
-
-#endif		
 }

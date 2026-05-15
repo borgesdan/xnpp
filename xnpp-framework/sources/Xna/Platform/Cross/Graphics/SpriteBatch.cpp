@@ -86,11 +86,11 @@ namespace Xna {
 			// Criar uniform para textura
 			m_textureUniform = bgfx::createUniform("s_texture", bgfx::UniformType::Sampler);
 
-			// Criar shaders (você precisará compilar seus próprios shaders)
+			// Criar shaders
 			std::filesystem::path currentPath;
 			Platform::System_GetExecutablePath(currentPath);
 			currentPath.remove_filename();
-			currentPath /= "shaders/bgfx/";
+			currentPath /= "shaders/";
 			currentPath = currentPath.lexically_normal();
 
 			m_program = loadShaderProgram(currentPath / "sprite.vs.bin", currentPath / "sprite.fs.bin");

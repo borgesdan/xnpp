@@ -7,9 +7,10 @@
 #include <optional>
 #include <exception>
 #include <filesystem>
-#include <tuple>
 #include <functional>
-#include "Xna/CSharp/IO/Stream.hpp"
+#include "Xna/Framework/Graphics/Shared.hpp"
+#include "Xna/Framework/Graphics/VertexDeclaration.hpp"
+#include "Xna/Internal/Macros.hpp"
 
 //OS
 #if defined(_WIN32)
@@ -107,11 +108,6 @@
 #define FORCE_INLINE inline
 #endif
 
-//MAIN
-#if defined(PLATFORM_WINDOWS)
-#define MAIN_FUNC APIENTRY WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPSTR lpCmdLine, _In_ int nCmdShow)
-#endif
-
 namespace Xna {
 	namespace CSharp {
 		class Screen;
@@ -158,6 +154,7 @@ namespace Xna {
 	struct MouseState;
 	struct GamePadState;
 	struct GamePadCapabilities;
+	struct VertexDeclaration;
 
 	enum class DepthFormat;
 	enum class GraphicsProfile;
@@ -171,6 +168,7 @@ namespace Xna {
 	enum class SoundState;
 	enum class SetDataOptions;
 	enum class ClearOptions;
+	enum class BufferUsage;
 
 	struct PlatformImpl {
 		struct BlendStateImpl;
@@ -320,6 +318,7 @@ namespace Xna {
 		struct ISoundEffectInstance {
 			virtual ~ISoundEffectInstance() = default;
 			XNPP_API virtual void Load(ISoundEffect* baseSE) = 0;
+			XNPP_API virtual void Unload() = 0;
 			XNPP_API virtual void SetVolume(float value) = 0;
 			XNPP_API virtual void SetPan(float value) = 0;
 			XNPP_API virtual void SetPitch(float value) = 0;
@@ -381,13 +380,22 @@ namespace Xna {
 
 			XNPP_API virtual void CreateDevice(GraphicsAdapter const& adapter, Xna::PresentationParameters const& presentationParameters) = 0;
 			XNPP_API virtual void Present(std::optional<Rectangle> const& rec, std::optional<Rectangle> const& destination, intptr_t overrideWindowHandle) = 0;
+			XNPP_API virtual Viewport GetViewport() = 0;
 			XNPP_API virtual void SetViewport(Viewport const& viewport) = 0;
-			XNPP_API virtual void MakeWindowAssociation(PresentationParameters const& pp) = 0;
 			XNPP_API virtual void Reset(Xna::PresentationParameters const& presentationParameters, GraphicsAdapter const& graphicsAdapter) = 0;
-			XNPP_API virtual void LazyInitialization(intptr_t windowHandle) = 0;
+
+			XNPP_API virtual const BlendState& GetBlendState() const = 0;
+			XNPP_API virtual const DepthStencilState& GetDepthStencilState() const = 0;
+			XNPP_API virtual const RasterizerState& GetRasterizerState() const = 0;
+			XNPP_API virtual const Color GetBlendFactor() const = 0;
+
+			XNPP_API virtual void SetVertexBuffer(VertexBuffer const& vertexBuffer, uint32_t vertexOffset) = 0;
+
 			XNPP_API virtual void ApplyBlendState(BlendState const& blend) = 0;
 			XNPP_API virtual void ApplyDepthStencilState(DepthStencilState const& depth) = 0;
 			XNPP_API virtual void ApplyRasterizerState(RasterizerState const& rasterizer) = 0;
+			XNPP_API virtual void ApplyBlendFactor(Color const& color) = 0;
+
 			XNPP_API virtual void Clear(ClearOptions options, Color const& color, float depth, int32_t stencil) = 0;
 
 			XNPP_API static std::unique_ptr<IGraphicsDevice> Create();
@@ -416,7 +424,7 @@ namespace Xna {
 
 			XNPP_API virtual void Draw(
 				ITexture2D const& texture,
-				Vector2 const& pos,				
+				Vector2 const& pos,
 				const Rectangle* sourceRect,
 				Vector2 const& origin,
 				Vector2 const& scale,
@@ -428,7 +436,43 @@ namespace Xna {
 			XNPP_API virtual void End() = 0;
 
 			XNPP_API static std::unique_ptr<ISpriteBatch> Create(GraphicsDevice const& device);
-		};		
+		};
+
+		struct IndexBufferStats {
+			Xna::BufferUsage Usage{ Xna::BufferUsage::None };
+			int IndexElementSize{ 0 };
+			size_t IndexCount{ 0 };
+		};
+
+		struct IIndexBuffer {
+			XNPP_API virtual ~IIndexBuffer() = default;
+
+			XNPP_API virtual void Init(GraphicsDevice& device, size_t sizeOfIndexType, size_t indexCount, Xna::BufferUsage usage) = 0;
+			XNPP_API virtual void SetData(size_t offsetInBytes, const void* data, size_t startIndex, size_t elementCount, size_t elementSize, SetDataOptions setDataOptions) = 0;
+			XNPP_API virtual void GetData(size_t offsetInBytes, void* data, size_t startIndex, size_t elementCount, size_t elementSize) = 0;
+			XNPP_API virtual IndexBufferStats GetStats() = 0;
+
+			XNPP_API static std::unique_ptr<IIndexBuffer> Create();
+			XNPP_API static std::unique_ptr<IIndexBuffer> CreateDynamic();
+		};
+
+		struct VertexBufferStats {
+			Xna::BufferUsage Usage{ Xna::BufferUsage::None };
+			uint32_t VertexCount{ 0 };
+			Xna::VertexDeclaration VertexDeclaration{};
+		};
+
+		struct IVertexBuffer {
+			XNPP_API virtual ~IVertexBuffer() = default;
+
+			XNPP_API virtual void Init(Xna::GraphicsDevice const& graphicsDevice, Xna::VertexDeclaration const& vertexDeclaration, size_t vertexCount, Xna::BufferUsage usage) = 0;
+			XNPP_API virtual void SetData(size_t offsetInBytes, const void* data, size_t startIndex, size_t elementCount, size_t vertexStride, size_t elementSize, SetDataOptions options) = 0;
+			XNPP_API virtual void GetData(size_t offsetInBytes, void* data, size_t startIndex, size_t elementCount, size_t vertexStride, size_t elementSize) = 0;
+			XNPP_API virtual VertexBufferStats GetStats() = 0;
+
+			XNPP_API static std::unique_ptr<IVertexBuffer> Create();
+			XNPP_API static std::unique_ptr<IVertexBuffer> CreateDynamic();
+		};
 	}
 }
 

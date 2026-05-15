@@ -3,9 +3,9 @@
 
 #include <string>
 #include <memory>
-#include "Xna/CSharp/Windows/Forms/Screen.hpp"
-#include "Xna/CSharp/Event.hpp"
-#include "Xna/CSharp/Windows/Forms/Screen.hpp"
+#include <Xna/CSharp/Windows/Forms/Screen.hpp>
+#include <Xna/CSharp/Event.hpp>
+#include <Xna/CSharp/Windows/Forms/Screen.hpp>
 #include "Xna/Framework/Graphics/GraphicsAdapter.hpp"
 #include "Xna/Framework/Rectangle.hpp"
 #include "Xna/Framework/Shared.hpp"

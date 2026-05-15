@@ -5,12 +5,12 @@
 #include <memory>
 #include <optional>
 #include <vector>
-#include "Xna/CSharp/BitConverter.hpp"
-#include "Xna/CSharp/IO/Stream.hpp"
+#include <Xna/CSharp/BitConverter.hpp>
+#include <Xna/CSharp/IO/Stream.hpp>
 #include "AudioFormat.hpp"
-#include "Xna/CSharp/IO/BinaryReader.hpp"
+#include <Xna/CSharp/IO/BinaryReader.hpp>
 #include "LoopRegion.hpp"
-#include "Xna/Internal/Export.hpp"
+#include "Xna/Internal/Macros.hpp"
 
 namespace Xna {
     class WavFile final {
@@ -20,13 +20,13 @@ namespace Xna {
         }
 
     private:
-        void ParseWavHeader();
-        void ReadChunk();
-        void ParseFormat();
-        void ParseData();
-        void ParseLoopRegion();
-        void ParseWsmpChunk();
-        void ParseSmplChunk();
+        XNPP_API void ParseWavHeader();
+        XNPP_API void ReadChunk();
+        XNPP_API void ParseFormat();
+        XNPP_API void ParseData();
+        XNPP_API void ParseLoopRegion();
+        XNPP_API void ParseWsmpChunk();
+        XNPP_API void ParseSmplChunk();
 
         //Internal
     public:
@@ -38,7 +38,7 @@ namespace Xna {
         constexpr CSharp::TimeSpan Duration() const { return format->DurationFromSize(buffer->size()); }
 
     private:
-        WavFile(std::shared_ptr<CSharp::Stream> const& source);
+        XNPP_API WavFile(std::shared_ptr<CSharp::Stream> const& source);
 
         struct RiffChunk {
             int32_t id{};

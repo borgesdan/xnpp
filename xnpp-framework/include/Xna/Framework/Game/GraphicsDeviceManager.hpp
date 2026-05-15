@@ -3,14 +3,14 @@
 
 #include "GraphicsDeviceInformation.hpp"
 #include "IGraphicsDeviceManager.hpp"
-#include "Xna/CSharp/Exception.hpp"
-#include "Xna/CSharp/TimeSpan.hpp"
+#include <Xna/CSharp/Exception.hpp>
+#include <Xna/CSharp/TimeSpan.hpp>
 #include "Xna/Framework/Game/Game.hpp"
 #include "Xna/Framework/Graphics/GraphicsDevice.hpp"
 #include "Xna/Framework/Graphics/IGraphicsDeviceService.hpp"
 #include "Xna/Framework/Graphics/Shared.hpp"
 #include "Xna/Framework/Shared.hpp"
-#include "Xna/Internal/Export.hpp"
+#include "Xna/Internal/Macros.hpp"
 #include <cstdint>
 #include <memory>
 #include <optional>

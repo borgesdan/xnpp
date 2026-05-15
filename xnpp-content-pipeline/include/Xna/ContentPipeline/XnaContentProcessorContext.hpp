@@ -6,11 +6,12 @@
 #include "BuildCoordinator.hpp"
 #include "ContentBuildLogger.hpp"
 #include <string>
+#include <Xna/Internal/Macros.hpp>
 
 namespace Xna {
 	class XnaContentProcessorContext : public ContentProcessorContext {
 	public:
-		XnaContentProcessorContext(
+		XNPP_API XnaContentProcessorContext(
 			BuildCoordinator const& buildCoordinator,
 			BuildItem const& buildItem,
 			ContentBuildLogger const& logger,
@@ -31,7 +32,7 @@ namespace Xna {
 		void AddDependency(std::filesystem::path filename)const override { impl->buildCoordinator.AddDependency(impl->buildItem, filename); }
 		void AddOutputFile(std::filesystem::path filename)const override { impl->buildCoordinator.AddExtraOutput(impl->buildItem, filename); }
 
-		void BuildAsset(
+		XNPP_API void BuildAsset(
 			ExternalReferenceBase& sourceAsset,
 			ExternalReferenceBase& output,
 			std::string const& processorName,
@@ -45,7 +46,7 @@ namespace Xna {
 		inline explicit operator bool() const noexcept { return impl != nullptr; }
 
 	private:
-		BuildItem RequestBuild(
+		XNPP_API BuildItem RequestBuild(
 			ExternalReferenceBase& sourceAsset,
 			std::filesystem::path const& assetName,
 			std::string const& importerName,

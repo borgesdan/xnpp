@@ -4,7 +4,7 @@
 #include "Texture2D.hpp"
 #include "Xna/Platform/Platform.hpp"
 #include "IDynamicGraphicsResource.hpp"
-#include "Xna/Internal/Export.hpp"
+#include "Xna/Internal/Macros.hpp"
 
 namespace Xna {
 	//Contains a 2D texture that can be used as a render target. 

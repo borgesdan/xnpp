@@ -5,6 +5,7 @@
 #include <string>
 #include <Xna/Framework/Content/Pipeline/Shared.hpp>
 #include <Xna/Framework/Graphics/Shared.hpp>
+#include <Xna/Internal/Macros.hpp>
 
 namespace Xna {
 	struct BuildCoordinatorSettings final {
@@ -21,15 +22,15 @@ namespace Xna {
         //[ContentSerializerIgnore]
         bool RebuildAll{false};
 
-        void InitializePaths();
+        XNPP_API void InitializePaths();
 
         std::filesystem::path CacheFilename() const {
             auto dir = IntermediateDirectory;
             return  dir / "ContentPipeline.xml";
         }
 
-        std::filesystem::path GetAbsolutePath(std::filesystem::path const& path) const;
-        std::filesystem::path GetRelativePath(std::filesystem::path const& path) const;
+        XNPP_API std::filesystem::path GetAbsolutePath(std::filesystem::path const& path) const;
+        XNPP_API std::filesystem::path GetRelativePath(std::filesystem::path const& path) const;
         inline bool MatchesPreviousSettings(BuildCoordinatorSettings const other) const {
             return TargetPlatform == other.TargetPlatform
                 && TargetProfile == other.TargetProfile
@@ -54,7 +55,7 @@ namespace Xna {
         }
 
 	private:
-        std::filesystem::path PrepareOutputDirectory(std::filesystem::path directory, std::filesystem::path defaultValue);
+        XNPP_API std::filesystem::path PrepareOutputDirectory(std::filesystem::path directory, std::filesystem::path defaultValue);
         
         static inline const std::filesystem::path defaultIntermediateDirectory = "obj";
 		static inline const std::filesystem::path defaultOutputDirectory = "bin";

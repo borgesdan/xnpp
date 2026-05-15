@@ -1,7 +1,7 @@
 #include "Xna/Framework/Content/ContentManager.hpp"
 #include "Xna/Framework/TitleContainer.hpp"
 #include "../TitleLocation.hpp"
-#include "Xna/CSharp/Path.hpp"
+#include <Xna/CSharp/Path.hpp>
 
 namespace Xna {
 	ContentManager::ContentManager(GameServiceContainer const& serviceProvider) {

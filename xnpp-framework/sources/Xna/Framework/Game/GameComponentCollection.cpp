@@ -1,5 +1,5 @@
 #include "Xna/Framework/Game/GameComponentCollection.hpp"
-#include "Xna/CSharp/Exception.hpp"
+#include <Xna/CSharp/Exception.hpp>
 #include <algorithm>
 
 namespace Xna {

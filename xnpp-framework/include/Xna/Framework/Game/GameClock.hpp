@@ -1,9 +1,9 @@
 #ifndef XNA_FRAMEWORK_GAME_GAMECLOCK_HPP
 #define XNA_FRAMEWORK_GAME_GAMECLOCK_HPP
 
-#include "Xna/CSharp/TimeSpan.hpp"
+#include <Xna/CSharp/TimeSpan.hpp>
 #include <cstdint>
-#include "Xna/Internal/Export.hpp"
+#include "Xna/Internal/Macros.hpp"
 
 namespace Xna {
 	//Internal game clock

@@ -2,7 +2,7 @@
 #define XNA_FRAMEWORK_PACKUTILS_HPP
 
 #include <cstdint>
-#include "Xna/Internal/Export.hpp"
+#include "Xna/Internal/Macros.hpp"
 
 namespace Xna {
 	//Internal class

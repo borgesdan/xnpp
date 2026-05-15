@@ -2,7 +2,7 @@
 #define XNA_FRAMEWORK_VECTOR4_HPP
 
 #include "Vector3.hpp"
-#include "Xna/Internal/Export.hpp"
+#include "Xna/Internal/Macros.hpp"
 
 namespace Xna {
 	//Defines a vector with four components.

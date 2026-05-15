@@ -7,11 +7,11 @@
 
 namespace Xna {
 	struct TextureWriter : BuiltinTypeWriter<std::shared_ptr<TextureContent>>{
-		std::string GetRuntimeReader(TargetPlatform targetPlatform) override {
+		inline std::string GetRuntimeReader(TargetPlatform targetPlatform) override {
 			return "TextureReader";
 		}
 	protected:
-		void WriteT(ContentWriter& output, const std::shared_ptr<TextureContent>* value) override {
+		inline void WriteT(ContentWriter& output, const std::shared_ptr<TextureContent>* value) override {
 		}
 	};
 }

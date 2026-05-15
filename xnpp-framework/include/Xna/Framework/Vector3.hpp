@@ -3,7 +3,7 @@
 
 #include "Vector2.hpp"
 #include <cmath>
-#include "Xna/Internal/Export.hpp"
+#include "Xna/Internal/Macros.hpp"
 
 namespace Xna {
 	//Defines a vector with three components. 

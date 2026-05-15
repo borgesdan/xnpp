@@ -5,7 +5,7 @@
 #include <vector>
 #include "Point.hpp"
 #include "MathHelper.hpp"
-#include "Xna/Internal/Export.hpp"
+#include "Xna/Internal/Macros.hpp"
 
 namespace Xna {
 	struct Matrix;
