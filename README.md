@@ -1,8 +1,8 @@
 ﻿<p align="left">
-<img src="images/xnpp_logo4.png" alt="xnpp logo">
+<img src="images/xnpp_logo5.png" alt="xnpp logo">
 </p>
 
-# 🚀 XNPP (xn++)
+# 🚀 Xnpp (xn++)
 
 A Modern, Cross-Platform C++ Implementation of the Microsoft XNA 4.0 Framework.
 
@@ -20,10 +20,10 @@ The framework is modularized into four core components to ensure flexibility and
 ## 🛠 Tech Stack
 
 - Language: Modern C++ (C++20/23)
-- Graphics: bgfx (DirectX, Vulkan, Metal, OpenGL)
-- Platform Layer: SDL3
-- Audio: miniaudio
-- Package Management: vcpkg & CMake
+- Graphics: [bgfx](https://github.com/bkaradzic/bgfx) (DirectX, Vulkan, Metal, OpenGL)
+- Platform Layer: [SDL3](https://github.com/libsdl-org/SDL)
+- Audio: [miniaudio](https://github.com/mackron/miniaudio)
+- Package Management: [vcpkg](https://github.com/microsoft/vcpkg) & CMake
 
 ## 💻 Project examples
 
