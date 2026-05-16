@@ -4,6 +4,7 @@
 #include "Xna/Framework/Input/Keyboard.hpp"
 #include <Xna/CSharp/Windows/Forms/SystemInformation.hpp>
 #include <Xna/CSharp/Exception.hpp>
+#include <Xna/CSharp/Platform.hpp>
 #include "Xna/Platform/Platform.hpp"
 #include <optional>
 
@@ -72,8 +73,8 @@ namespace Xna {
 	std::optional<CSharp::Screen> GameWindow::ScreenFromHandle(intptr_t windowHandle) {
 		int num1 = 0;
 		std::optional<CSharp::Screen> screen;
-		auto rect = Platform::System_WindowRect(windowHandle);
-		auto rectangle1 = CSharp::Rectangle::FromLTRB(rect.Left, rect.Top, rect.Right, rect.Bottom);
+		auto rect = CSharp::Platform::System_WindowRect(windowHandle);
+		auto rectangle1 = rect;
 
 		auto allScreens = CSharp::Screen::AllScreens();
 

@@ -3,6 +3,7 @@
 #include "Xna/Platform/Platform.hpp"
 #include <algorithm>
 #include <Xna/CSharp/Thread.hpp>
+#include <Xna/CSharp/Platform.hpp>
 #include <cmath>
 
 //Helpers
@@ -190,9 +191,9 @@ namespace Xna {
 		int32_t right{ 0 };
 		int32_t bottom{ 0 };
 
-		const auto rect = Platform::System_ClientRect(hWnd);
-		right = rect.Right;
-		bottom = rect.Bottom;
+		const auto rect = CSharp::Platform::System_ClientRect(hWnd);
+		right = rect.Right();
+		bottom = rect.Bottom();
 
 		if (flag1 && right == 0)
 			pp.BackBufferWidth = 1;

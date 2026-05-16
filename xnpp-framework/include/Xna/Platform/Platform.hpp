@@ -170,26 +170,7 @@ namespace Xna {
 	enum class ClearOptions;
 	enum class BufferUsage;
 
-	struct PlatformImpl {
-		struct BlendStateImpl;
-		struct DepthStencilStateImpl;
-		struct GraphicsAdapterImpl;
-		struct GraphicsDeviceImpl;
-		struct Texture2DImpl;
-		struct Texture3DImpl;
-		struct RenderTarget2DImpl;
-		struct RasterizerStateImpl;
-		struct SamplerStateImpl;
-		struct SpriteBatchImpl;
-		struct SpriteFontImpl;
-		struct GameWindowImpl;
-		struct SoundEffectImpl;
-		struct SoundEffectInstanceImpl;
-		struct DynamicSoundEffectInstanceImpl;
-		struct VertexBufferImpl;
-		struct DynamicVertexBufferImpl;
-		struct BasicEffectImpl;
-	};
+	
 
 	struct PlatformRectangle {
 		int Left{ 0 };
@@ -239,27 +220,11 @@ namespace Xna {
 		XNPP_API static void Suspend();
 		XNPP_API static void Resume();
 
-		//System		
-
-		XNPP_API static PlatformRectangle System_ClientRect(intptr_t hwnd);
-		XNPP_API static PlatformRectangle System_WindowRect(intptr_t hwnd);
+		//platform dependent
 		XNPP_API static size_t System_GetClockCounter();
 		XNPP_API static size_t System_GetClockFrequency();
 		XNPP_API static bool System_MultiMonitorSupport();
-		XNPP_API static PlatformRectangle System_VirtualScreen();
-		XNPP_API static PlatformSize System_PrimaryMonitorSize();
-		XNPP_API static PlatformRectangle System_WorkingArea();
-		XNPP_API static PlatformRectangle System_MonitorWorkingArea(intptr_t hMonitor);
-		XNPP_API static intptr_t System_MonitorFromHandle(intptr_t hwnd);
-		XNPP_API static intptr_t System_MonitorFromRect(int32_t left, int32_t top, int32_t right, int32_t bottom);
-		XNPP_API static intptr_t System_MonitorFromPoint(int32_t x, int32_t y);
-		XNPP_API static std::string System_MonitorDeviceName(intptr_t monitor);
-		XNPP_API static PlatformRectangle System_MonitorArea(intptr_t monitor);
-		XNPP_API static bool System_MonitorIsPrimary(intptr_t monitor);
-		XNPP_API static int32_t System_MonitorBitDepth(intptr_t monitor, intptr_t hdc);
-		XNPP_API static std::vector<Value2> System_GetAllMonitorHandlers();
 
-		//platform dependent
 		XNPP_API static void System_ProcessException(std::string const& exception);
 		XNPP_API static void System_GetExecutablePath(std::filesystem::path& path);
 
