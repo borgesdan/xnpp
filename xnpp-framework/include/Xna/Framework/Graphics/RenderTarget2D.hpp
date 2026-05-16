@@ -89,9 +89,7 @@ namespace Xna {
 		
 		inline virtual void SetContentLost(bool IsContentLost) {
 			
-		}
-
-		friend struct Platform;
+		}		
 	};
 }
 

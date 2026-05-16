@@ -32,15 +32,15 @@ namespace Xna {
 		DisposeVideo();
 	}
 
-	size_t Platform::System_GetClockCounter() {
+	size_t Platform::System::GetClockCounter() {
 		return static_cast<size_t>(SDL_GetPerformanceCounter());
 	}
 
-	size_t Platform::System_GetClockFrequency() {
+	size_t Platform::System::GetClockFrequency() {
 		return static_cast<size_t>(SDL_GetPerformanceFrequency());
 	}
 
-	bool Platform::System_MultiMonitorSupport() {
+	bool Platform::System::MultiMonitorSupport() {
 		int count = 0;
 		auto displays = SDL_GetDisplays(&count);
 
@@ -50,7 +50,7 @@ namespace Xna {
 		return count > 1;
 	}		
 
-	void Platform::System_GetExecutablePath(std::filesystem::path& path) {
+	void Platform::System::GetExecutablePath(std::filesystem::path& path) {
 #ifdef PLATFORM_WINDOWS
 		wchar_t buffer[MAX_PATH]{};
 		const auto length = GetModuleFileNameW(nullptr, buffer, MAX_PATH);
@@ -72,7 +72,7 @@ namespace Xna {
 #endif
 	}
 
-	void Platform::System_ProcessException(std::string const& exception) {
+	void Platform::System::ProcessException(std::string const& exception) {
 #ifdef PLATFORM_WINDOWS
 		MessageBox(nullptr, exception.c_str(), "XN++", MB_OK);		
 #elif
@@ -80,20 +80,20 @@ namespace Xna {
 #endif
 	}
 
-	void Platform::Initialize() {
+	void Platform::System::Initialize() {
 		Cross::System::Initialize();
 	}
 
-	void Platform::Dispose() {
+	void Platform::System::Dispose() {
 		Cross::System::Dispose();
 	}
 
-	void Platform::Update() {
+	void Platform::System::Update() {
 	}
 
-	void Platform::Suspend() {
+	void Platform::System::Suspend() {
 	}
 
-	void Platform::Resume() {
+	void Platform::System::Resume() {
 	}
 }

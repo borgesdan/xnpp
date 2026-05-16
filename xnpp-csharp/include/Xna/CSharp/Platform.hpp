@@ -37,24 +37,26 @@ namespace Xna::CSharp::Platform {
 		}
 	};
 
-	XNPP_API Rectangle System_ClientRect(intptr_t hwnd);
-	XNPP_API Rectangle System_WindowRect(intptr_t hwnd);
-	XNPP_API size_t System_GetClockCounter();
-	XNPP_API size_t System_GetClockFrequency();
-	XNPP_API bool System_MultiMonitorSupport();
-	XNPP_API Rectangle System_VirtualScreen();
-	XNPP_API Size System_PrimaryMonitorSize();
-	XNPP_API Rectangle System_WorkingArea();
-	XNPP_API Rectangle System_MonitorWorkingArea(intptr_t hMonitor);
-	XNPP_API intptr_t System_MonitorFromHandle(intptr_t hwnd);
-	XNPP_API intptr_t System_MonitorFromRect(int32_t left, int32_t top, int32_t right, int32_t bottom);
-	XNPP_API intptr_t System_MonitorFromPoint(int32_t x, int32_t y);
-	XNPP_API std::string System_MonitorDeviceName(intptr_t monitor);
-	XNPP_API Rectangle System_MonitorArea(intptr_t monitor);
-	XNPP_API bool System_MonitorIsPrimary(intptr_t monitor);
-	XNPP_API int32_t System_MonitorBitDepth(intptr_t monitor, intptr_t hdc);
-	XNPP_API std::vector<Value2> System_GetAllMonitorHandlers();
-	XNPP_API void System_GetExecutablePath(std::filesystem::path& path);
+	struct System {
+		XNPP_API static Rectangle ClientRect(intptr_t hwnd);
+		XNPP_API static Rectangle WindowRect(intptr_t hwnd);
+		XNPP_API static size_t GetClockCounter();
+		XNPP_API static size_t GetClockFrequency();
+		XNPP_API static bool MultiMonitorSupport();
+		XNPP_API static Rectangle VirtualScreen();
+		XNPP_API static Size PrimaryMonitorSize();
+		XNPP_API static Rectangle WorkingArea();
+		XNPP_API static Rectangle MonitorWorkingArea(intptr_t hMonitor);
+		XNPP_API static intptr_t MonitorFromHandle(intptr_t hwnd);
+		XNPP_API static intptr_t MonitorFromRect(int32_t left, int32_t top, int32_t right, int32_t bottom);
+		XNPP_API static intptr_t MonitorFromPoint(int32_t x, int32_t y);
+		XNPP_API static std::string MonitorDeviceName(intptr_t monitor);
+		XNPP_API static Rectangle MonitorArea(intptr_t monitor);
+		XNPP_API static bool MonitorIsPrimary(intptr_t monitor);
+		XNPP_API static int32_t MonitorBitDepth(intptr_t monitor, intptr_t hdc);
+		XNPP_API static std::vector<Value2> GetAllMonitorHandlers();
+		XNPP_API static void GetExecutablePath(std::filesystem::path& path);
+	};	
 }
 
 #endif

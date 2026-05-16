@@ -5,7 +5,6 @@
 #include <memory>
 #include <Xna/CSharp/Windows/Forms/Screen.hpp>
 #include <Xna/CSharp/Event.hpp>
-#include <Xna/CSharp/Windows/Forms/Screen.hpp>
 #include "Xna/Framework/Graphics/GraphicsAdapter.hpp"
 #include "Xna/Framework/Rectangle.hpp"
 #include "Xna/Framework/Shared.hpp"
@@ -17,7 +16,7 @@ namespace Xna {
 		//Gets and sets the title of the system window.
 		XNPP_API void Title(std::string const& value);
 		//The screen dimensions of the game window's client rectangle.
-		inline Rectangle ClientBounds() const { return Platform::GameWindow_ClientBounds(*this); }
+		inline Rectangle ClientBounds() const { return Platform::Window::ClientBounds(*this); }
 		//Gets the current display orientation, which reflects the physical orientation of the phone in the user's hand.
 		inline DisplayOrientation CurrentOrientation() const { return impl->displayOrientation; }
 		//Gets the handle to the system window.
@@ -53,8 +52,8 @@ namespace Xna {
 	private:
 		bool IsMouseVisible() const { return impl->isMouseVisible; }
 		void IsMouseVisible(bool value);
-		bool (IsMinimized)() const { return Platform::GameWindow_WindowIsMinimized(*this); }
-		void (IsMinimized)(bool value) { Platform::GameWindow_MinimizeWindow(*this, value); }
+		bool (IsMinimized)() const { return Platform::Window::WindowIsMinimized(*this); }
+		void (IsMinimized)(bool value) { Platform::Window::MinimizeWindow(*this, value); }
 
 		inline void BeginScreenDeviceChange(bool willBeFullScreen) { 
 			impl->style = willBeFullScreen ? Style::Fullscreen : Style::Windowed;
@@ -68,7 +67,7 @@ namespace Xna {
 		inline void EndScreenDeviceChange(std::string const& screenDeviceName, int32_t clientWidth, int32_t clientHeight) { 
 			impl->height = clientHeight;
 			impl->width = clientWidth;
-			Platform::GameWindow_Update(*this);
+			Platform::Window::Update(*this);
 		}
 
 		void Close();
@@ -90,7 +89,7 @@ namespace Xna {
 
 	private:
 		struct Implementation {
-			std::string title{ "XN65 Game" };
+			std::string title{ "XN++ Game" };
 			std::string screenDeviceName;
 			intptr_t handle{ 0 };
 			DisplayOrientation displayOrientation{ DisplayOrientation::Default };
@@ -113,8 +112,9 @@ namespace Xna {
 
 		friend class Game;
 		friend class GameHost;
-		friend class GraphicsDeviceManager;
-		friend struct Platform;
+		friend class GraphicsDeviceManager;		
+		friend struct Platform::Window;
+		friend struct Platform::Host;
 	};
 }
 #endif

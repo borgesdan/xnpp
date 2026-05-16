@@ -8,259 +8,92 @@
 #include <exception>
 #include <filesystem>
 #include <functional>
+#include "Xna/Internal/Macros.hpp"
 #include "Xna/Framework/Graphics/Shared.hpp"
 #include "Xna/Framework/Graphics/VertexDeclaration.hpp"
-#include "Xna/Internal/Macros.hpp"
-
-//OS
-#if defined(_WIN32)
-#define PLATFORM_WINDOWS 1
-#elif defined(__APPLE__) && defined(__MACH__)
-#define PLATFORM_MACOS 1
-#elif defined(__ANDROID__)
-#define PLATFORM_ANDROID 1
-#elif defined(__linux__)
-#define PLATFORM_LINUX 1
-#elif defined(__unix__)
-#define PLATFORM_UNIX 1
-#else
-#error "Sistema operacional não suportado"
-#endif
-#ifndef PLATFORM_WINDOWS
-#define PLATFORM_WINDOWS 0
-#endif
-#ifndef PLATFORM_MACOS
-#define PLATFORM_MACOS 0
-#endif
-#ifndef PLATFORM_LINUX
-#define PLATFORM_LINUX 0
-#endif
-#ifndef PLATFORM_ANDROID
-#define PLATFORM_ANDROID 0
-#endif
-#ifndef PLATFORM_UNIX
-#define PLATFORM_UNIX 0
-#endif
-
-//Architecture
-#if defined(_M_X64) || defined(__x86_64__)
-#define ARCH_X64 1
-#elif defined(_M_IX86) || defined(__i386__)
-#define ARCH_X86 1
-#elif defined(_M_ARM64) || defined(__aarch64__)
-#define ARCH_ARM64 1
-#elif defined(_M_ARM) || defined(__arm__)
-#define ARCH_ARM 1
-#else
-#error "Arquitetura não suportada"
-#endif
-
-#ifndef ARCH_X64
-#define ARCH_X64 0
-#endif
-#ifndef ARCH_X86
-#define ARCH_X86 0
-#endif
-#ifndef ARCH_ARM64
-#define ARCH_ARM64 0
-#endif
-#ifndef ARCH_ARM
-#define ARCH_ARM 0
-#endif
-
-//Compiler
-
-#if defined(_MSC_VER)
-#define COMPILER_MSVC 1
-#elif defined(__clang__)
-#define COMPILER_CLANG 1
-#elif defined(__GNUC__)
-#define COMPILER_GCC 1
-#else
-#error "Compilador não suportado"
-#endif
-
-#ifndef COMPILER_MSVC
-#define COMPILER_MSVC 0
-#endif
-#ifndef COMPILER_CLANG
-#define COMPILER_CLANG 0
-#endif
-#ifndef COMPILER_GCC
-#define COMPILER_GCC 0
-#endif
-
-//Endianess
-#if defined(__BYTE_ORDER__) && (__BYTE_ORDER__ == __ORDER_BIG_ENDIAN__)
-#define PLATFORM_BIG_ENDIAN 1
-#define PLATFORM_LITTLE_ENDIAN 0
-#else
-#define PLATFORM_BIG_ENDIAN 0
-#define PLATFORM_LITTLE_ENDIAN 1
-#endif
-
-//Util
-#if PLATFORM_WINDOWS
-#define FORCE_INLINE __forceinline
-#elif COMPILER_GCC || COMPILER_CLANG
-#define FORCE_INLINE inline __attribute__((always_inline))
-#else
-#define FORCE_INLINE inline
-#endif
 
 namespace Xna {
-	namespace CSharp {
-		class Screen;
-	}
-
-	class BlendState;
-	class DepthStencilState;
-	class RasterizerState;
-	class SamplerState;
-	class GraphicsAdapter;
-	class GraphicsDevice;
-	class RenderTarget2D;
-	class Texture2D;
-	class Texture3D;
-	class SpriteBatch;
-	class SpriteFont;
-	class Effect;
-	class GameWindow;
-	class GameHost;
-	class SoundEffect;
-	class SoundEffectInstance;
-	class AudioListener;
-	class AudioEmitter;
-	class DynamicSoundEffectInstance;
-	class Song;
-	class Effect;
-	class EffectPass;
-	class EffectTechnique;
-	class EffectAnnotation;
-	class BasicEffect;
-	class VertexBuffer;
-	class DynamicVertexBuffer;
-
-	struct Color;
-	struct DisplayMode;
-	struct DisplayModeCollection;
-	struct Rectangle;
-	struct PresentationParameters;
-	struct Viewport;
-	struct Matrix;
-	struct Vector2;
-	struct Vector3;
-	struct KeyboardState;
-	struct MouseState;
-	struct GamePadState;
-	struct GamePadCapabilities;
-	struct VertexDeclaration;
-
+	enum class PlayerIndex;
+	enum class SurfaceFormat;
 	enum class DepthFormat;
 	enum class GraphicsProfile;
-	enum class SurfaceFormat;
-	enum class RenderTargetUsage;
-	enum class SamplerStateApplyType;
-	enum class SpriteSortMode;
-	enum class SpriteEffects;
-	enum class PlayerIndex;
-	enum class GamePadDeadZone;
-	enum class SoundState;
-	enum class SetDataOptions;
 	enum class ClearOptions;
+	enum class SpriteEffects;
 	enum class BufferUsage;
+	enum class SetDataOptions;
+	enum class GamePadDeadZone;
 
-	
+	struct Rectangle;
+	struct MouseState;
+	struct GamePadState;
+	struct KeyboardState;
+	struct GamePadCapabilities;	
+	struct PresentationParameters;
+	struct DisplayMode;
+	struct Viewport;
+	struct BlendState;
+	struct DepthStencilState;
+	struct RasterizerState;
+	struct SamplerState;
+	struct Color;
+	struct Matrix;
+	struct Vector2;
+	struct VertexDeclaration;
 
-	struct PlatformRectangle {
-		int Left{ 0 };
-		int Top{ 0 };
-		int Right{ 0 };
-		int Bottom{ 0 };
+	class GameWindow;
+	class GameHost;
+	class VertexBuffer;
+	class GraphicsAdapter;
+	class GraphicsDevice;
 
-		constexpr PlatformRectangle() = default;
-		constexpr PlatformRectangle(int x, int y, int right, int bottom)
-			:Left(x), Top(y), Right(right), Bottom(bottom) {
-		}
+	namespace Platform {
+		struct System {
+			XNPP_API static void Initialize();
+			XNPP_API static void Dispose();
+			XNPP_API static void Update();
+			XNPP_API static void Suspend();
+			XNPP_API static void Resume();
+			XNPP_API static size_t GetClockCounter();
+			XNPP_API static size_t GetClockFrequency();
+			XNPP_API static bool MultiMonitorSupport();
+			XNPP_API static void ProcessException(std::string const& exception);
+			XNPP_API static void GetExecutablePath(std::filesystem::path& path);
+		};		
 
-		constexpr int X() const noexcept { return Left; }
-		constexpr int Y() const noexcept { return Top; }
-		constexpr int W() const noexcept { return Right - Left; }
-		constexpr int H() const noexcept { return Bottom - Top; }
-	};
+		struct Window {
+			XNPP_API static void Create(GameWindow const& gw);
+			XNPP_API static void Update(GameWindow const& gw);
+			XNPP_API static void Close(GameWindow const& gw);
+			XNPP_API static bool WindowIsMinimized(GameWindow const& gw);
+			XNPP_API static void MinimizeWindow(GameWindow const& gw, bool value);
+			XNPP_API static void SetMouseVisible(GameWindow const& gw, bool value);
+			XNPP_API static void AllowUserResizing(GameWindow const& gw, bool value);
+			XNPP_API static Rectangle ClientBounds(GameWindow const& gw);
+			XNPP_API static void SetTitle(GameWindow const& gw, std::string const& title);
+		};
 
-	struct PlatformSize {
-		int Width{ 0 };
-		int Height{ 0 };
+		struct Host {
+			XNPP_API static void Tick(GameHost& gh);
+		};
 
-		constexpr PlatformSize() = default;
-		constexpr PlatformSize(int w, int h) :Width(w), Height(h) {}
-	};
+		struct Input {
+			XNPP_API static KeyboardState KeyboardGetState();
 
-	struct Value2 {
-		intptr_t One{ 0 };
-		intptr_t Two{ 0 };
+			XNPP_API static MouseState MouseGetState();
+			XNPP_API static intptr_t MouseGetWindowHandle();
+			XNPP_API static void MouseSetWindowHandle(intptr_t value);
+			XNPP_API static void MouseSetPosition(int32_t x, int32_t y);
 
-		constexpr Value2() = default;
-		constexpr Value2(intptr_t one, intptr_t two)
-			: One(one), Two(two) {
-		}
-	};
+			XNPP_API static GamePadState GamePadGetState(PlayerIndex index, GamePadDeadZone deadZone);
+			XNPP_API static GamePadCapabilities GamePadGetCapabilities(PlayerIndex index);
+			XNPP_API static bool GamePadSetVibration(PlayerIndex index, float leftMotor, float rightMotor, float leftTrigger, float rightTrigger);
+			XNPP_API static void GamePadSuspend();
+			XNPP_API static void GamePadResume();
+		};
 
-	struct Platform {
-
-		struct InputProcessMessage;
-		static size_t MaxSamplerStates;
-
-		//Platform
-
-		XNPP_API static void Initialize();
-		XNPP_API static void Dispose();
-		XNPP_API static void Update();
-		XNPP_API static void Suspend();
-		XNPP_API static void Resume();
-
-		//platform dependent
-		XNPP_API static size_t System_GetClockCounter();
-		XNPP_API static size_t System_GetClockFrequency();
-		XNPP_API static bool System_MultiMonitorSupport();
-
-		XNPP_API static void System_ProcessException(std::string const& exception);
-		XNPP_API static void System_GetExecutablePath(std::filesystem::path& path);
-
-		//GameWindow
-
-		XNPP_API static void GameWindow_Create(GameWindow const& gw);
-		XNPP_API static void GameWindow_Update(GameWindow const& gw);
-		XNPP_API static void GameWindow_Close(GameWindow const& gw);
-		XNPP_API static bool GameWindow_WindowIsMinimized(GameWindow const& gw);
-		XNPP_API static void GameWindow_MinimizeWindow(GameWindow const& gw, bool value);
-		XNPP_API static void GameWindow_SetMouseVisible(GameWindow const& gw, bool value);
-		XNPP_API static void GameWindow_AllowUserResizing(GameWindow const& gw, bool value);
-		XNPP_API static Rectangle GameWindow_ClientBounds(GameWindow const& gw);
-		XNPP_API static void GameWindow_SetTitle(GameWindow const& gw, std::string const& title);
-
-		//GameHost
-
-		XNPP_API static void GameHost_Tick(GameHost& gh);
-
-		//Input
-		XNPP_API static KeyboardState Keyboard_GetState();
-
-		XNPP_API static MouseState Mouse_GetState();
-		XNPP_API static intptr_t Mouse_GetWindowHandle();
-		XNPP_API static void Mouse_SetWindowHandle(intptr_t value);
-		XNPP_API static void Mouse_SetPosition(int32_t x, int32_t y);
-
-		XNPP_API static GamePadState GamePad_GetState(PlayerIndex index, GamePadDeadZone deadZone);
-		XNPP_API static GamePadCapabilities GamePad_GetCapabilities(PlayerIndex index);
-		XNPP_API static bool GamePad_SetVibration(PlayerIndex index, float leftMotor, float rightMotor, float leftTrigger, float rightTrigger);
-		XNPP_API static void GamePad_Suspend();
-		XNPP_API static void GamePad_Resume();
-	};
-
-	namespace PlatformNS {
-		XNPP_API size_t Graphics_GetMaxSamplerStates();
+		struct Graphics {
+			XNPP_API size_t GetMaxSamplerStates();
+		};
 
 		enum class MediaState {
 			Playing,
@@ -343,11 +176,11 @@ namespace Xna {
 		struct IGraphicsDevice {
 			XNPP_API virtual ~IGraphicsDevice() = default;
 
-			XNPP_API virtual void CreateDevice(GraphicsAdapter const& adapter, Xna::PresentationParameters const& presentationParameters) = 0;
+			XNPP_API virtual void CreateDevice(GraphicsAdapter const& adapter, PresentationParameters const& presentationParameters) = 0;
 			XNPP_API virtual void Present(std::optional<Rectangle> const& rec, std::optional<Rectangle> const& destination, intptr_t overrideWindowHandle) = 0;
 			XNPP_API virtual Viewport GetViewport() = 0;
 			XNPP_API virtual void SetViewport(Viewport const& viewport) = 0;
-			XNPP_API virtual void Reset(Xna::PresentationParameters const& presentationParameters, GraphicsAdapter const& graphicsAdapter) = 0;
+			XNPP_API virtual void Reset(PresentationParameters const& presentationParameters, GraphicsAdapter const& graphicsAdapter) = 0;
 
 			XNPP_API virtual const BlendState& GetBlendState() const = 0;
 			XNPP_API virtual const DepthStencilState& GetDepthStencilState() const = 0;
@@ -404,7 +237,7 @@ namespace Xna {
 		};
 
 		struct IndexBufferStats {
-			Xna::BufferUsage Usage{ Xna::BufferUsage::None };
+			BufferUsage Usage{ BufferUsage::None };
 			int IndexElementSize{ 0 };
 			size_t IndexCount{ 0 };
 		};
@@ -412,7 +245,7 @@ namespace Xna {
 		struct IIndexBuffer {
 			XNPP_API virtual ~IIndexBuffer() = default;
 
-			XNPP_API virtual void Init(GraphicsDevice& device, size_t sizeOfIndexType, size_t indexCount, Xna::BufferUsage usage) = 0;
+			XNPP_API virtual void Init(GraphicsDevice& device, size_t sizeOfIndexType, size_t indexCount, BufferUsage usage) = 0;
 			XNPP_API virtual void SetData(size_t offsetInBytes, const void* data, size_t startIndex, size_t elementCount, size_t elementSize, SetDataOptions setDataOptions) = 0;
 			XNPP_API virtual void GetData(size_t offsetInBytes, void* data, size_t startIndex, size_t elementCount, size_t elementSize) = 0;
 			XNPP_API virtual IndexBufferStats GetStats() = 0;
@@ -422,15 +255,15 @@ namespace Xna {
 		};
 
 		struct VertexBufferStats {
-			Xna::BufferUsage Usage{ Xna::BufferUsage::None };
+			BufferUsage Usage{ BufferUsage::None };
 			uint32_t VertexCount{ 0 };
-			Xna::VertexDeclaration VertexDeclaration{};
+			VertexDeclaration VertexDeclaration{};
 		};
 
 		struct IVertexBuffer {
 			XNPP_API virtual ~IVertexBuffer() = default;
 
-			XNPP_API virtual void Init(Xna::GraphicsDevice const& graphicsDevice, Xna::VertexDeclaration const& vertexDeclaration, size_t vertexCount, Xna::BufferUsage usage) = 0;
+			XNPP_API virtual void Init(GraphicsDevice const& graphicsDevice, VertexDeclaration const& vertexDeclaration, size_t vertexCount, BufferUsage usage) = 0;
 			XNPP_API virtual void SetData(size_t offsetInBytes, const void* data, size_t startIndex, size_t elementCount, size_t vertexStride, size_t elementSize, SetDataOptions options) = 0;
 			XNPP_API virtual void GetData(size_t offsetInBytes, void* data, size_t startIndex, size_t elementCount, size_t vertexStride, size_t elementSize) = 0;
 			XNPP_API virtual VertexBufferStats GetStats() = 0;
@@ -438,7 +271,7 @@ namespace Xna {
 			XNPP_API static std::unique_ptr<IVertexBuffer> Create();
 			XNPP_API static std::unique_ptr<IVertexBuffer> CreateDynamic();
 		};
-	}
+	}	
 }
 
 #endif

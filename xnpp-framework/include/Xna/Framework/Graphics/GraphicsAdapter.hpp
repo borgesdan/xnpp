@@ -90,10 +90,10 @@ namespace Xna {
 		inline static bool _UseNullDevice = false;
 		inline static bool _UseReferenceDevice = false;
 
-		std::shared_ptr<PlatformNS::IGraphicsAdapter> backend;
+		std::shared_ptr<Platform::IGraphicsAdapter> backend;
 
 		inline GraphicsAdapter() {			
-			backend = PlatformNS::IGraphicsAdapter::Create();
+			backend = Platform::IGraphicsAdapter::Create();
 		}
 	};
 }

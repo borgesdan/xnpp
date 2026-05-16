@@ -10,7 +10,7 @@ namespace Xna {
         assert(adapter != nullptr && "GraphicsAdapter is null.");
 
         impl = std::make_shared<Implementation>();
-        impl->backend = PlatformNS::IGraphicsDevice::Create();
+        impl->backend = Platform::IGraphicsDevice::Create();
 
         impl->adapter = adapter;
         impl->graphicsProfile = graphicsProfile;

@@ -16,13 +16,13 @@ namespace Xna {
 	public:
 		//Initializes a new instance of this class.
 		inline IndexBuffer(GraphicsDevice& device, size_t sizeOfIndexType, size_t indexCount, Xna::BufferUsage usage) {
-			m_backend = PlatformNS::IIndexBuffer::Create();
+			m_backend = Platform::IIndexBuffer::Create();
 			m_backend->Init(device, sizeOfIndexType, indexCount, usage);
 		}
 
 		//Initializes a new instance of this class.
 		inline IndexBuffer(GraphicsDevice& device, Xna::IndexElementSize indexElementSize, size_t indexCount, Xna::BufferUsage usage) {
-			m_backend = PlatformNS::IIndexBuffer::Create();
+			m_backend = Platform::IIndexBuffer::Create();
 			m_backend->Init(device, indexElementSize == Xna::IndexElementSize::SixteenBits ? 2 : 4, indexCount, usage);
 		}
 
@@ -77,7 +77,7 @@ namespace Xna {
 
 		XNPP_DECLARE_NULL_IMPL_WRAPPER(IndexBuffer, m_backend);
 	protected:
-		std::shared_ptr<PlatformNS::IIndexBuffer> m_backend;	
+		std::shared_ptr<Platform::IIndexBuffer> m_backend;	
 	};
 
 	//Describes the rendering order of the vertices in a vertex buffer. 
@@ -86,13 +86,13 @@ namespace Xna {
 	public:
 		//Initializes a new instance of DynamicIndexBuffer.		
 		inline DynamicIndexBuffer(GraphicsDevice& graphicsDevice, size_t sizeOfIndexType, size_t indexCount, Xna::BufferUsage usage) : IndexBuffer(nullptr)  {
-			m_backend = PlatformNS::IIndexBuffer::CreateDynamic();
+			m_backend = Platform::IIndexBuffer::CreateDynamic();
 			m_backend->Init(graphicsDevice, sizeOfIndexType, indexCount, usage);
 		}
 
 		//Initializes a new instance of DynamicIndexBuffer.		
 		inline DynamicIndexBuffer(GraphicsDevice& graphicsDevice, Xna::IndexElementSize indexElementSize,	size_t indexCount, Xna::BufferUsage usage) : IndexBuffer(nullptr) {
-			m_backend = PlatformNS::IIndexBuffer::CreateDynamic();
+			m_backend = Platform::IIndexBuffer::CreateDynamic();
 			m_backend->Init(graphicsDevice, indexElementSize == Xna::IndexElementSize::SixteenBits ? 2 : 4, indexCount, usage);
 		}
 
@@ -120,7 +120,7 @@ namespace Xna {
 	public:
 		//Initializes a new instance of the VertexBuffer class.
 		inline VertexBuffer(Xna::GraphicsDevice const& graphicsDevice, Xna::VertexDeclaration const& vertexDeclaration,	size_t vertexCount,	Xna::BufferUsage usage) {
-			m_backend = PlatformNS::IVertexBuffer::Create();
+			m_backend = Platform::IVertexBuffer::Create();
 			m_backend->Init(graphicsDevice, vertexDeclaration, vertexCount, usage);
 		}		
 
@@ -172,7 +172,7 @@ namespace Xna {
 		XNPP_DECLARE_NULL_IMPL_WRAPPER(VertexBuffer, m_backend);
 
 	protected:
-		std::shared_ptr<PlatformNS::IVertexBuffer> m_backend;
+		std::shared_ptr<Platform::IVertexBuffer> m_backend;
 	};
 
 	//Represents a list of 3D vertices to be streamed to the graphics device. 
@@ -181,7 +181,7 @@ namespace Xna {
 	public:
 		//Initializes a new instance of DynamicVertexBuffer with the specified parameters.		
 		XNPP_API DynamicVertexBuffer(GraphicsDevice const& graphicsDevice, Xna::VertexDeclaration const& vertexDeclaration, size_t vertexCount, Xna::BufferUsage usage) : VertexBuffer(nullptr) {
-			m_backend = PlatformNS::IVertexBuffer::CreateDynamic();
+			m_backend = Platform::IVertexBuffer::CreateDynamic();
 			m_backend->Init(graphicsDevice, vertexDeclaration, vertexCount, usage);
 		}
 

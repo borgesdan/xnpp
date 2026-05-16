@@ -12,7 +12,7 @@
 #endif
 
 namespace Xna::CSharp::Platform {
-	Rectangle System_ClientRect(intptr_t hwnd) {
+	Rectangle System::ClientRect(intptr_t hwnd) {
 		auto window = reinterpret_cast<SDL_Window*>(hwnd);
 		if (window) {
 			int width, height;
@@ -23,7 +23,7 @@ namespace Xna::CSharp::Platform {
 		return {};
 	}
 
-	Rectangle System_WindowRect(intptr_t hwnd) {
+	Rectangle System::WindowRect(intptr_t hwnd) {
 		auto window = reinterpret_cast<SDL_Window*>(hwnd);
 
 		if (window) {
@@ -37,15 +37,15 @@ namespace Xna::CSharp::Platform {
 		return {};
 	}
 
-	size_t System_GetClockCounter() {
+	size_t System::GetClockCounter() {
 		return static_cast<size_t>(SDL_GetPerformanceCounter());
 	}
 
-	size_t System_GetClockFrequency() {
+	size_t System::GetClockFrequency() {
 		return static_cast<size_t>(SDL_GetPerformanceFrequency());
 	}
 
-	bool System_MultiMonitorSupport() {
+	bool System::MultiMonitorSupport() {
 		int count = 0;
 		auto displays = SDL_GetDisplays(&count);
 
@@ -55,7 +55,7 @@ namespace Xna::CSharp::Platform {
 		return count > 1;
 	}
 
-	Rectangle System_VirtualScreen() {
+	Rectangle System::VirtualScreen() {
 		int count = 0;
 		auto displays = SDL_GetDisplays(&count);
 
@@ -92,7 +92,7 @@ namespace Xna::CSharp::Platform {
 		return Rectangle(minX, minY, maxX, maxY);
 	}
 
-	Size System_PrimaryMonitorSize() {
+	Size System::PrimaryMonitorSize() {
 		SDL_Rect rect;
 		if (SDL_GetDisplayBounds(SDL_GetPrimaryDisplay(), &rect)) {
 			return { rect.w, rect.h };
@@ -100,7 +100,7 @@ namespace Xna::CSharp::Platform {
 		return {};
 	}
 
-	Rectangle System_WorkingArea() {
+	Rectangle System::WorkingArea() {
 		SDL_Rect rect;
 
 		if (SDL_GetDisplayUsableBounds(SDL_GetPrimaryDisplay(), &rect)) {
@@ -110,7 +110,7 @@ namespace Xna::CSharp::Platform {
 		return {};
 	}
 
-	Rectangle System_MonitorWorkingArea(intptr_t displayID) {
+	Rectangle System::MonitorWorkingArea(intptr_t displayID) {
 		SDL_Rect rect;
 		const auto id = static_cast<SDL_DisplayID>(displayID);
 
@@ -121,14 +121,14 @@ namespace Xna::CSharp::Platform {
 		return {};
 	}
 
-	intptr_t System_MonitorFromHandle(intptr_t windowPtr) {
+	intptr_t System::MonitorFromHandle(intptr_t windowPtr) {
 		auto window = reinterpret_cast<SDL_Window*>(windowPtr);
 		SDL_DisplayID displayID = SDL_GetDisplayForWindow(window);
 
 		return static_cast<intptr_t>(displayID);
 	}
 
-	intptr_t System_MonitorFromRect(int32_t left, int32_t top, int32_t right, int32_t bottom) {
+	intptr_t System::MonitorFromRect(int32_t left, int32_t top, int32_t right, int32_t bottom) {
 		SDL_Rect targetRect = { left, top, right - left, bottom - top };
 
 		int count = 0;
@@ -158,7 +158,7 @@ namespace Xna::CSharp::Platform {
 		return static_cast<intptr_t>(bestMonitor);
 	}
 
-	intptr_t System_MonitorFromPoint(int32_t x, int32_t y) {
+	intptr_t System::MonitorFromPoint(int32_t x, int32_t y) {
 		SDL_Point point = { x, y };
 		SDL_DisplayID displayID = SDL_GetDisplayForPoint(&point);
 
@@ -169,7 +169,7 @@ namespace Xna::CSharp::Platform {
 		return static_cast<intptr_t>(displayID);
 	}
 
-	std::string System_MonitorDeviceName(intptr_t monitorID) {
+	std::string System::MonitorDeviceName(intptr_t monitorID) {
 		SDL_DisplayID id = static_cast<SDL_DisplayID>(monitorID);
 
 		if (id == 0)
@@ -184,7 +184,7 @@ namespace Xna::CSharp::Platform {
 		return {};
 	}
 
-	Rectangle System_MonitorArea(intptr_t monitor) {
+	Rectangle System::MonitorArea(intptr_t monitor) {
 		SDL_DisplayID id = static_cast<SDL_DisplayID>(monitor);
 
 		if (id == 0)
@@ -198,14 +198,14 @@ namespace Xna::CSharp::Platform {
 		return Rectangle(rect.x, rect.y, rect.w, rect.h);
 	}
 
-	bool System_MonitorIsPrimary(intptr_t monitor) {
+	bool System::MonitorIsPrimary(intptr_t monitor) {
 		SDL_DisplayID id = static_cast<SDL_DisplayID>(monitor);
 		const auto primary = SDL_GetPrimaryDisplay();
 
 		return id == 0 || id == primary;
 	}
 
-	int32_t System_MonitorBitDepth(intptr_t monitorID, intptr_t _) {
+	int32_t System::MonitorBitDepth(intptr_t monitorID, intptr_t _) {
 		SDL_DisplayID id = static_cast<SDL_DisplayID>(monitorID);
 		if (id == 0) {
 			id = SDL_GetPrimaryDisplay();
@@ -219,7 +219,7 @@ namespace Xna::CSharp::Platform {
 		return 32;
 	}
 
-	std::vector<Value2> System_GetAllMonitorHandlers() {
+	std::vector<Value2> System::GetAllMonitorHandlers() {
 		std::vector<Value2> list;
 		int count = 0;
 
@@ -236,7 +236,7 @@ namespace Xna::CSharp::Platform {
 		return list;
 	}
 
-	void System_GetExecutablePath(std::filesystem::path& path) {
+	void System::GetExecutablePath(std::filesystem::path& path) {
 #ifdef PLATFORM_WINDOWS
 		wchar_t buffer[MAX_PATH]{};
 		const auto length = GetModuleFileNameW(nullptr, buffer, MAX_PATH);

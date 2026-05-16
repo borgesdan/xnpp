@@ -12,7 +12,7 @@
 #include <cstdint>
 
 namespace Xna {
-	struct BgfxTexture2D final : PlatformNS::ITexture2D {
+	struct BgfxTexture2D final : Platform::ITexture2D {
 		bgfx::TextureHandle textureHandle{};
 		size_t width{ 0 };
 		size_t height{ 0 };

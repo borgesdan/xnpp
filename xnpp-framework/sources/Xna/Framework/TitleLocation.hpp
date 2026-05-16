@@ -10,7 +10,7 @@ namespace Xna {
 	private:
 		static inline const std::filesystem::path& Path() {
 			if (_titleLocation.empty())
-				Platform::System_GetExecutablePath(_titleLocation);
+				Platform::System::GetExecutablePath(_titleLocation);
 
 			return _titleLocation;
 		}

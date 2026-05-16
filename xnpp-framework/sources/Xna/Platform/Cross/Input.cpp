@@ -9,7 +9,7 @@
 #include <stdexcept>
 
 namespace Xna {
-	MouseState Platform::Mouse_GetState() {
+	MouseState Platform::Input::MouseGetState() {
 		float posX, posY;
 		auto flags = SDL_GetMouseState(&posX, &posY);
 
@@ -32,7 +32,7 @@ namespace Xna {
 		return state;
 	}
 
-	void Platform::Mouse_SetPosition(int32_t x, int32_t y) {
+	void Platform::Input::MouseSetPosition(int32_t x, int32_t y) {
 		if (Cross::Global::CurrentWindowHandle == 0)
 			return;
 
@@ -40,12 +40,12 @@ namespace Xna {
 		SDL_WarpMouseInWindow(window, static_cast<float>(x), static_cast<float>(y));
 	}
 
-	intptr_t Platform::Mouse_GetWindowHandle() {
-		throw std::runtime_error("Platform::Mouse_GetWindowHandle not supported.");
+	intptr_t Platform::Input::MouseGetWindowHandle() {
+		throw std::runtime_error("Platform::Input::MouseGetWindowHandle not supported.");
 	}
 
-	void Platform::Mouse_SetWindowHandle(intptr_t value) {
-		throw std::runtime_error("Platform::Mouse_SetWindowHandle not supported.");
+	void Platform::Input::MouseSetWindowHandle(intptr_t value) {
+		throw std::runtime_error("Platform::Input::MouseSetWindowHandle not supported.");
 	}
 
 	static void GamepadApplyAxialDeadzone(float& v, float deadzone)
@@ -84,7 +84,7 @@ namespace Xna {
 		if (std::abs(y) > 1.0f) y = (y > 0) ? 1.0f : -1.0f;
 	}
 
-	GamePadState Platform::GamePad_GetState(PlayerIndex playerIndex, GamePadDeadZone deadZone) {
+	GamePadState Platform::Input::GamePadGetState(PlayerIndex playerIndex, GamePadDeadZone deadZone) {
 		const auto index = static_cast<int>(playerIndex);
 
 		if (index < 0 || index >= 4)
@@ -211,7 +211,7 @@ namespace Xna {
 		return GamePadCapabilitiesType::Unknown;
 	}
 
-	GamePadCapabilities Platform::GamePad_GetCapabilities(PlayerIndex playerIndex) {
+	GamePadCapabilities Platform::Input::GamePadGetCapabilities(PlayerIndex playerIndex) {
 		const auto index = static_cast<int>(playerIndex);
 
 		if (index < 0 || index >= 4)
@@ -233,7 +233,7 @@ namespace Xna {
 		return static_cast<Uint16>(v * 65535.0f);
 	}
 
-	bool Platform::GamePad_SetVibration(PlayerIndex playerIndex, float leftMotor, float rightMotor, float leftTrigger, float rightTrigger) {
+	bool Platform::Input::GamePadSetVibration(PlayerIndex playerIndex, float leftMotor, float rightMotor, float leftTrigger, float rightTrigger) {
 		const auto index = static_cast<int>(playerIndex);
 
 		if (index < 0 || index >= 4)
@@ -252,11 +252,11 @@ namespace Xna {
 		return true;
 	}
 
-	void Platform::GamePad_Suspend() {
+	void Platform::Input::GamePadSuspend() {
 		Cross::Global::SuspendGamepads = true;
 	}
 
-	void Platform::GamePad_Resume() {
+	void Platform::Input::GamePadResume() {
 		Cross::Global::SuspendGamepads = false;
 	}
 
@@ -482,7 +482,7 @@ namespace Xna {
 		ptr[index] |= (1u << bit);
 	}
 
-	KeyboardState Platform::Keyboard_GetState() {
+	KeyboardState Platform::Input::KeyboardGetState() {
 		int numKeys = 0;
 		const bool* sdlState = SDL_GetKeyboardState(&numKeys);
 

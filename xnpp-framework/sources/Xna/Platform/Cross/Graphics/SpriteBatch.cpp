@@ -47,7 +47,7 @@ namespace Xna {
 		bgfx::TextureHandle texture;
 	};
 
-	struct BgfxSpriteBatch final : public PlatformNS::ISpriteBatch {
+	struct BgfxSpriteBatch final : public Platform::ISpriteBatch {
 		BgfxSpriteBatch() : m_beginCalled(false), m_currentSpriteCount(0) {
 			SpriteVertex::init();
 			m_layout = SpriteVertex::ms_layout;
@@ -88,7 +88,7 @@ namespace Xna {
 
 			// Criar shaders
 			std::filesystem::path currentPath;
-			Platform::System_GetExecutablePath(currentPath);
+			Platform::System::GetExecutablePath(currentPath);
 			currentPath.remove_filename();
 			currentPath /= "shaders/";
 			currentPath = currentPath.lexically_normal();
@@ -110,7 +110,7 @@ namespace Xna {
 			m_transformMatrix = matrix ? *matrix : Matrix::Identity();
 		}
 
-		void Draw(PlatformNS::ITexture2D const& texture, Vector2 const& pos, const Rectangle* sourceRect, Vector2 const& origin, Vector2 const& scale, float rotation, Color const& color, SpriteEffects effects, float layerDepth) override {
+		void Draw(Platform::ITexture2D const& texture, Vector2 const& pos, const Rectangle* sourceRect, Vector2 const& origin, Vector2 const& scale, float rotation, Color const& color, SpriteEffects effects, float layerDepth) override {
 			if (!m_beginCalled) return;
 
 			float width, height;
@@ -421,7 +421,7 @@ namespace Xna {
 		static constexpr uint16_t kMaxIndices = kMaxSprites * 6;
 	};
 
-	std::unique_ptr<PlatformNS::ISpriteBatch> PlatformNS::ISpriteBatch::Create(GraphicsDevice const& device) {
+	std::unique_ptr<Platform::ISpriteBatch> Platform::ISpriteBatch::Create(GraphicsDevice const& device) {
 		//O backend padrão com bgfx não necessita do GraphicsDevice
 		return std::make_unique<BgfxSpriteBatch>();
 	}

@@ -74,11 +74,11 @@ namespace Xna {
 	}
 
 	int64_t GameClock::Counter() {
-		return static_cast<int64_t>(Platform::System_GetClockCounter());
+		return static_cast<int64_t>(Platform::System::GetClockCounter());
 	}
 	
 	int64_t GameClock::Frequency() {
-		return static_cast<int64_t>(Platform::System_GetClockFrequency());
+		return static_cast<int64_t>(Platform::System::GetClockFrequency());
 	}
 
 	CSharp::TimeSpan GameClock::CounterToTimeSpan(int64_t delta) {

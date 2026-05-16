@@ -28,7 +28,7 @@ namespace Xna {
 	// Bgfx: Stateless por design
 	// Ao contrário do XNA o bgfx limpa o estado configurado após cada bgfx::submit().
 	// Necessário chamar bgfx::setState (funções set/apply) em cada frame para cada objeto de desenho.
-	struct BgfxGraphicsDevice final : public PlatformNS::IGraphicsDevice {
+	struct BgfxGraphicsDevice final : public Platform::IGraphicsDevice {
 		//state = currentBlendState | currentDepthBuffer | currentRasterizerState
 		//bgfx::setState(state, blendFactor);
 		BgfxBlendState currentBlendState{ BlendState::Opaque() };
@@ -180,11 +180,11 @@ namespace Xna {
 		cache.rasterizerState = rasterizer;
 	}
 
-	std::unique_ptr<PlatformNS::IGraphicsDevice> PlatformNS::IGraphicsDevice::Create() {
+	std::unique_ptr<Platform::IGraphicsDevice> Platform::IGraphicsDevice::Create() {
 		return std::make_unique<BgfxGraphicsDevice>();
 	}
 
-	size_t PlatformNS::Graphics_GetMaxSamplerStates() {
+	size_t Platform::Graphics::GetMaxSamplerStates() {
 		return 16;
 	}
 

@@ -9,8 +9,8 @@ namespace Xna {
 		
 		impl->activeSong = song;		
 
-		PlatformNS::IMediaPlayer::GetInstance().Stop();
-		PlatformNS::IMediaPlayer::GetInstance().Play(impl->activeSong->impl->fileName);
+		Platform::IMediaPlayer::GetInstance().Stop();
+		Platform::IMediaPlayer::GetInstance().Play(impl->activeSong->impl->fileName);
 	}
 
 	void MediaQueue::Play(SongCollection const& songCollection) {
@@ -75,7 +75,7 @@ namespace Xna {
 	}
 
 	CSharp::TimeSpan MediaQueue::PlayPosition() const {
-		const auto position = PlatformNS::IMediaPlayer::GetInstance().GetPlayPosition();
+		const auto position = Platform::IMediaPlayer::GetInstance().GetPlayPosition();
 		return CSharp::TimeSpan(0, 0, 0, 0, position);
 	}
 }

@@ -61,7 +61,7 @@ namespace Xna {
 	//Somente uma instância para todo o programa
 	static AudioEngineManager AudioEngine = {};	
 
-	namespace PlatformNS {
+	namespace Platform {
 #pragma pack(push, 1)
 		//The WAVEFORMATEX structure as implemented in the mmeapi.h header.
 		struct WAVEFORMATEX
@@ -376,8 +376,8 @@ namespace Xna {
 	}
 
 	void Cross::System::DisposeAudio() {
-		if (PlatformNS::MiniAudioMediaPlayer::MediaPlayer)
-			PlatformNS::MiniAudioMediaPlayer::MediaPlayer = nullptr;
+		if (Platform::MiniAudioMediaPlayer::MediaPlayer)
+			Platform::MiniAudioMediaPlayer::MediaPlayer = nullptr;
 
 		AudioEngine.Shutdown();
 	}

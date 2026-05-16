@@ -56,7 +56,7 @@ namespace Xna {
 
 		impl->gameWindow.Create();		
 
-		Platform::GameHost_Tick(*this);
+		Platform::Host::Tick(*this);
 
 		impl->doneRun = true;
 		OnExiting();

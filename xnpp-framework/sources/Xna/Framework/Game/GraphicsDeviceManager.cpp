@@ -191,7 +191,7 @@ namespace Xna {
 		int32_t right{ 0 };
 		int32_t bottom{ 0 };
 
-		const auto rect = CSharp::Platform::System_ClientRect(hWnd);
+		const auto rect = CSharp::Platform::System::ClientRect(hWnd);
 		right = rect.Right();
 		bottom = rect.Bottom();
 

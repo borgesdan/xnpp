@@ -142,7 +142,7 @@ namespace Xna {
 			std::string effectName;
 			std::vector<std::weak_ptr<SoundEffectInstance>> children;
 			std::stack<std::shared_ptr<SoundEffectInstance>> instancePool;	
-			std::unique_ptr<PlatformNS::ISoundEffect> platform;
+			std::unique_ptr<Platform::ISoundEffect> platform;
 		};
 		
 		std::shared_ptr<Implementation> impl = nullptr;		

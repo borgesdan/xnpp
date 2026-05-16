@@ -12,7 +12,7 @@ using Xna::CSharp::Screen;
 
 namespace Xna {
 	void GameWindow::Title(std::string const& value) {
-		Platform::GameWindow_SetTitle(*this, value);
+		Platform::Window::SetTitle(*this, value);
 		impl->title = value;
 	}			
 
@@ -23,17 +23,17 @@ namespace Xna {
 	}
 
 	void GameWindow::Create() {
-		Platform::GameWindow_Create(*this);
+		Platform::Window::Create(*this);
 		Activated().Invoke(this, CSharp::EventArgs::Empty());
 	}	
 
 	void GameWindow::Close() {
 		Deactivated().Invoke(this, CSharp::EventArgs::Empty());
-		Platform::GameWindow_Close(*this);
+		Platform::Window::Close(*this);
 	}		
 
 	void GameWindow::IsMouseVisible(bool value) {
-		Platform::GameWindow_SetMouseVisible(*this, value);
+		Platform::Window::SetMouseVisible(*this, value);
 		impl->isMouseVisible = value;
 	}
 
@@ -41,7 +41,7 @@ namespace Xna {
 		if (impl->allowUserResizing == value)
 			return;
 
-		Platform::GameWindow_AllowUserResizing(*this, value);
+		Platform::Window::AllowUserResizing(*this, value);
 
 		impl->allowUserResizing = value;
 	}
@@ -73,7 +73,7 @@ namespace Xna {
 	std::optional<CSharp::Screen> GameWindow::ScreenFromHandle(intptr_t windowHandle) {
 		int num1 = 0;
 		std::optional<CSharp::Screen> screen;
-		auto rect = CSharp::Platform::System_WindowRect(windowHandle);
+		auto rect = CSharp::Platform::System::WindowRect(windowHandle);
 		auto rectangle1 = rect;
 
 		auto allScreens = CSharp::Screen::AllScreens();

@@ -73,8 +73,7 @@ namespace Xna {
 		};
 
 		std::shared_ptr<Implementation> impl;
-
-		friend struct Platform;
+		
 		friend struct MediaPlayer;
 		friend class MediaQueue;
 	};

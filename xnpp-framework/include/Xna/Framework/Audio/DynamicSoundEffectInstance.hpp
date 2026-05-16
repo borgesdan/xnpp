@@ -42,8 +42,6 @@ namespace Xna {
 		};
 
 		std::shared_ptr<Implementation> impl;
-
-		friend struct Platform;
 	};
 }
 

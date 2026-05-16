@@ -11,7 +11,7 @@ namespace Xna {
 	}
 
 	SpriteBatch::SpriteBatch(GraphicsDevice const& device) {
-		backend = PlatformNS::ISpriteBatch::Create(device);
+		backend = Platform::ISpriteBatch::Create(device);
 	}
 
 	void SpriteBatch::Begin(

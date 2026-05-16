@@ -11,7 +11,7 @@ namespace Xna {
 		if (!all.empty())
 			return all;
 
-		auto backend = PlatformNS::IGraphicsAdapter::Create();
+		auto backend = Platform::IGraphicsAdapter::Create();
 		auto adapters = backend->GetAll();
 
 		if (adapters.empty())

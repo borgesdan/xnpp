@@ -173,7 +173,7 @@ namespace Xna {
 		inline bool operator==(std::nullptr_t) const noexcept { return impl == nullptr; }
 		inline explicit operator bool() const noexcept { return impl != nullptr; }
 
-		inline PlatformNS::IGraphicsDevice& GetBackend();
+		inline Platform::IGraphicsDevice& GetBackend();
 		static GraphicsDevice GetCurrent();
 
 	private:		
@@ -182,9 +182,7 @@ namespace Xna {
 		static void SetCurrentDevice(GraphicsDevice const& device);
 	
 		struct Implementation;
-		std::shared_ptr<Implementation> impl;	
-
-		friend struct Platform;
+		std::shared_ptr<Implementation> impl;			
 	};
 }
 #endif

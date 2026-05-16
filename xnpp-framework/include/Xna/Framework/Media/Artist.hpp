@@ -34,8 +34,7 @@ namespace Xna {
 		//AlbumCollection albums;
 
 		friend class Song;
-		friend class Album;
-		friend struct Platform;		
+		friend class Album;			
 	};
 }
 

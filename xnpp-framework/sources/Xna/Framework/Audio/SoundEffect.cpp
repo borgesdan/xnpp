@@ -17,7 +17,7 @@ namespace Xna {
 		impl->loopInfo.Start = loopStart;
 		impl->loopInfo.Length = loopLength;
 		impl->duration = duration;
-		impl->platform = PlatformNS::ISoundEffect::Create();
+		impl->platform = Platform::ISoundEffect::Create();
 
 		impl->platform->Load(format, data, offset, count, loopStart, loopLength);		
 	}
@@ -151,7 +151,7 @@ namespace Xna {
 		if (value < 0.0 || value > 1.0)
 			throw CSharp::ArgumentOutOfRangeException("value");
 
-		PlatformNS::MasterAudio::SetMasterVolume(value);
+		Platform::MasterAudio::SetMasterVolume(value);
 		currentVolume = value;
 	}
 

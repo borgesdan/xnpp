@@ -68,8 +68,7 @@ namespace Xna {
 		std::vector<DisplayMode> displayModes;
 
 		constexpr size_t Count() const noexcept { return displayModes.size(); }
-
-		friend struct Platform;
+		
 		friend class GraphicsAdapter;
 	};
 }
