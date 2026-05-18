@@ -2,15 +2,31 @@
   "version": 3,
   "configurePresets": [
     {
-      "name": "windows-base",
+      "name": "base-vcpkg-ninja",
       "hidden": true,
       "generator": "Ninja",
       "binaryDir": "${sourceDir}/out/build/${presetName}",
       "installDir": "${sourceDir}/out/install/${presetName}",
       "cacheVariables": {
+        "CMAKE_EXPORT_COMPILE_COMMANDS": "ON",
+        "CMAKE_TOOLCHAIN_FILE": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake"
+      }
+    },
+
+    // ==========================================
+    // WINDOWS PRESETS (x64 e x86)
+    // ==========================================
+    {
+      "name": "windows-base-x64",
+      "hidden": true,
+      "inherits": "base-vcpkg-ninja",
+      "architecture": {
+        "value": "x64",
+        "strategy": "external"
+      },
+      "cacheVariables": {
         "CMAKE_C_COMPILER": "cl.exe",
-        "CMAKE_CXX_COMPILER": "cl.exe",
-        "CMAKE_TOOLCHAIN_FILE": "%VCPKG_ROOT%/scripts/buildsystems/vcpkg.cmake"
+        "CMAKE_CXX_COMPILER": "cl.exe"
       },
       "condition": {
         "type": "equals",
@@ -20,34 +36,27 @@
     },
     {
       "name": "x64-debug",
-      "displayName": "x64 Debug",
-      "inherits": "windows-base",
-      "architecture": {
-        "value": "x64",
-        "strategy": "external"
-      },
-      "cacheVariables": {
-        "CMAKE_BUILD_TYPE": "Debug"
-      }
+      "displayName": "Windows x64 Debug",
+      "inherits": "windows-base-x64",
+      "cacheVariables": { "CMAKE_BUILD_TYPE": "Debug" }
     },
     {
       "name": "x64-release",
-      "displayName": "x64 Release",
-      "inherits": "x64-debug",
-      "cacheVariables": {
-        "CMAKE_BUILD_TYPE": "Release"
-      }
+      "displayName": "Windows x64 Release",
+      "inherits": "windows-base-x64",
+      "cacheVariables": { "CMAKE_BUILD_TYPE": "Release" }
     },
     {
       "name": "windows-base-x86",
       "hidden": true,
-      "generator": "Ninja",
-      "binaryDir": "${sourceDir}/out/build/${presetName}",
-      "installDir": "${sourceDir}/out/install/${presetName}",
+      "inherits": "base-vcpkg-ninja",
+      "architecture": {
+        "value": "x86",
+        "strategy": "external"
+      },
       "cacheVariables": {
         "CMAKE_C_COMPILER": "cl.exe",
-        "CMAKE_CXX_COMPILER": "cl.exe",
-        "CMAKE_TOOLCHAIN_FILE": "%VCPKG_ROOT%/scripts/buildsystems/vcpkg.cmake"
+        "CMAKE_CXX_COMPILER": "cl.exe"
       },
       "condition": {
         "type": "equals",
@@ -57,23 +66,82 @@
     },
     {
       "name": "x86-debug",
-      "displayName": "x86 Debug",
+      "displayName": "Windows x86 Debug",
       "inherits": "windows-base-x86",
-      "architecture": {
-        "value": "x86",
-        "strategy": "external"
-      },
-      "cacheVariables": {
-        "CMAKE_BUILD_TYPE": "Debug"
-      }
+      "cacheVariables": { "CMAKE_BUILD_TYPE": "Debug" }
     },
     {
       "name": "x86-release",
-      "displayName": "x86 Release",
-      "inherits": "x86-debug",
+      "displayName": "Windows x86 Release",
+      "inherits": "windows-base-x86",
+      "cacheVariables": { "CMAKE_BUILD_TYPE": "Release" }
+    },
+
+    // ==========================================
+    // LINUX PRESETS (x64)
+    // ==========================================
+    {
+      "name": "linux-base",
+      "hidden": true,
+      "inherits": "base-vcpkg-ninja",
       "cacheVariables": {
-        "CMAKE_BUILD_TYPE": "Release"
+        "CMAKE_C_COMPILER": "gcc",
+        "CMAKE_CXX_COMPILER": "g++"
+      },
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Linux"
       }
+    },
+    {
+      "name": "linux-debug",
+      "displayName": "Linux Debug",
+      "inherits": "linux-base",
+      "cacheVariables": { "CMAKE_BUILD_TYPE": "Debug" }
+    },
+    {
+      "name": "linux-release",
+      "displayName": "Linux Release",
+      "inherits": "linux-base",
+      "cacheVariables": { "CMAKE_BUILD_TYPE": "Release" }
+    },
+
+    // ==========================================
+    // MACOS PRESETS (Universal/Apple Silicon)
+    // ==========================================
+    {
+      "name": "mac-base",
+      "hidden": true,
+      "inherits": "base-vcpkg-ninja",
+      "cacheVariables": {
+        "CMAKE_C_COMPILER": "clang",
+        "CMAKE_CXX_COMPILER": "clang++"
+      },
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Darwin"
+      }
+    },
+    {
+      "name": "mac-debug",
+      "displayName": "macOS Debug",
+      "inherits": "mac-base",
+      "cacheVariables": { "CMAKE_BUILD_TYPE": "Debug" }
+    },
+    {
+      "name": "mac-release",
+      "displayName": "macOS Release",
+      "inherits": "mac-base",
+      "cacheVariables": { "CMAKE_BUILD_TYPE": "Release" }
     }
   ]
 }
+
+//================================================
+//Linux/Mac
+//export VCPKG_ROOT="/source/to/my/vcpkg"
+//$ sudo apt install ninja-build
+//$ brew install ninja
+//================================================
