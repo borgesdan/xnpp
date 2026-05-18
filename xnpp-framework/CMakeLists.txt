@@ -3,9 +3,9 @@ set(PROJECT_INCLUDES_DIR "${CMAKE_CURRENT_SOURCE_DIR}/include")
 
 set(XNPP_FRAMEWORK_SRC  
     "sources/Xna/Framework/FrameworkDispatcher.cpp"       
-    "sources/xna/Framework/PackUtils.cpp"
+    "sources/Xna/Framework/PackUtils.cpp"
     "sources/Xna/Framework/TitleContainer.cpp"   
-    "sources/xna/Framework/Game/GameWindow.cpp"
+    "sources/Xna/Framework/Game/GameWindow.cpp"
     "sources/Xna/Framework/Game/Game.cpp"
     "sources/Xna/Framework/Game/GameHost.cpp"
     "sources/Xna/Framework/Game/GameClock.cpp"
