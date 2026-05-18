@@ -11,11 +11,7 @@
         "CMAKE_EXPORT_COMPILE_COMMANDS": "ON",
         "CMAKE_TOOLCHAIN_FILE": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake"
       }
-    },
-
-    // ==========================================
-    // WINDOWS PRESETS (x64 e x86)
-    // ==========================================
+    },    
     {
       "name": "windows-base-x64",
       "hidden": true,
@@ -75,11 +71,7 @@
       "displayName": "Windows x86 Release",
       "inherits": "windows-base-x86",
       "cacheVariables": { "CMAKE_BUILD_TYPE": "Release" }
-    },
-
-    // ==========================================
-    // LINUX PRESETS (x64)
-    // ==========================================
+    },    
     {
       "name": "linux-base",
       "hidden": true,
@@ -106,10 +98,6 @@
       "inherits": "linux-base",
       "cacheVariables": { "CMAKE_BUILD_TYPE": "Release" }
     },
-
-    // ==========================================
-    // MACOS PRESETS (Universal/Apple Silicon)
-    // ==========================================
     {
       "name": "mac-base",
       "hidden": true,
@@ -138,10 +126,3 @@
     }
   ]
 }
-
-//================================================
-//Linux/Mac
-//export VCPKG_ROOT="/source/to/my/vcpkg"
-//$ sudo apt install ninja-build
-//$ brew install ninja
-//================================================
