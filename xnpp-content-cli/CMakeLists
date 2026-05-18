@@ -4,6 +4,7 @@ add_executable(xnpp-content-cli
     source/main.cpp
 )
 
+
 target_compile_features(xnpp-content-cli PRIVATE cxx_std_20)
 
 target_link_libraries(xnpp-content-cli
