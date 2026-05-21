@@ -81,7 +81,7 @@ namespace Xna::CSharp {
         Type(const std::type_info& info) : info_(&info) {}
     
     private:        
-        template <class T> static constexpr Type FromTemplate();
+        template <class T> static Type FromTemplate();
 
     private:        
         const std::type_info* info_;
@@ -94,7 +94,7 @@ namespace Xna::CSharp {
     template <class T> Type Typeof() { return Type::FromTemplate<T>(); }
     template <class T> Type Typeof(T const& _) { return Type::FromTemplate<T>(); }
 
-    template <class T> static constexpr Type Type::FromTemplate() {
+    template <class T> Type Type::FromTemplate() {
         int flags{ 0 };
         
         if constexpr (std::is_arithmetic<T>::value) {

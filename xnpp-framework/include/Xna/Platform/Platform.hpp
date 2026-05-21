@@ -258,7 +258,7 @@ namespace Xna {
 		struct VertexBufferStats {
 			BufferUsage Usage{ BufferUsage::None };
 			uint32_t VertexCount{ 0 };
-			VertexDeclaration VertexDeclaration{};
+			Xna::VertexDeclaration VertexDeclaration{};
 		};
 
 		struct IVertexBuffer {
