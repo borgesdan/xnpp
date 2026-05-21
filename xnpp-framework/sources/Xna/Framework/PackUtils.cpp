@@ -26,10 +26,10 @@ namespace Xna {
 	}
 
 	double PackUtils::ClampAndRound(float value, float min, float max) {
-		if (isnan(value))
+		if (std::isnan(value))
 			return 0.0;
 
-		if (isinf(value))
+		if (std::isinf(value))
 			return value < 0 ? static_cast<double>(min) : static_cast<double>(max);
 
 		if (value < min)
