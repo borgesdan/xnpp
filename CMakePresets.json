@@ -11,7 +11,7 @@
         "CMAKE_EXPORT_COMPILE_COMMANDS": "ON",
         "CMAKE_TOOLCHAIN_FILE": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake"
       }
-    },    
+    },
     {
       "name": "windows-base-x64",
       "hidden": true,
@@ -71,7 +71,7 @@
       "displayName": "Windows x86 Release",
       "inherits": "windows-base-x86",
       "cacheVariables": { "CMAKE_BUILD_TYPE": "Release" }
-    },    
+    },
     {
       "name": "linux-base",
       "hidden": true,
@@ -123,6 +123,40 @@
       "displayName": "macOS Release",
       "inherits": "mac-base",
       "cacheVariables": { "CMAKE_BUILD_TYPE": "Release" }
+    }
+  ],
+  "buildPresets": [
+    {
+      "name": "x64-debug",
+      "configurePreset": "x64-debug"
+    },
+    {
+      "name": "x64-release",
+      "configurePreset": "x64-release"
+    },
+    {
+      "name": "x86-debug",
+      "configurePreset": "x86-debug"
+    },
+    {
+      "name": "x86-release",
+      "configurePreset": "x86-release"
+    },
+    {
+      "name": "linux-debug",
+      "configurePreset": "linux-debug"
+    },
+    {
+      "name": "linux-release",
+      "configurePreset": "linux-release"
+    },
+    {
+      "name": "mac-debug",
+      "configurePreset": "mac-debug"
+    },
+    {
+      "name": "mac-release",
+      "configurePreset": "mac-release"
     }
   ]
 }
