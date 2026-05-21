@@ -1,4 +1,6 @@
-﻿#include <bgfx/bgfx.h>
+﻿#include "Xna/Internal/Macros.hpp"
+
+#include <bgfx/bgfx.h>
 #include <bgfx/platform.h>
 #include <bx/bx.h>
 #include <bx/math.h>
@@ -12,8 +14,81 @@
 #include "Xna/Framework/Rectangle.hpp"
 #include "Xna/Framework/Vector2.hpp"
 #include "BgfxGraphics.hpp"
+#include "EmbeddedShaders.hpp"
+
 
 namespace Xna {
+	static inline bgfx::ShaderHandle GetEmbeddedVertexShader() {
+		bgfx::RendererType::Enum renderer = bgfx::getRendererType();
+
+#if PLATFORM_WINDOWS
+		assert((renderer == bgfx::RendererType::Direct3D11 ||
+			renderer == bgfx::RendererType::Direct3D12) && "Invalid renderer type for Windows.");
+
+		const bgfx::Memory* vsMem = bgfx::makeRef(EmbeddedShaders::Windows::sprite_vs_bytes, EmbeddedShaders::Windows::sprite_vs_len);
+		return bgfx::createShader(vsMem);
+
+#elif PLATFORM_LINUX
+		assert((renderer == bgfx::RendererType::Vulkan ||
+			renderer == bgfx::RendererType::OpenGL ||
+			renderer == bgfx::RendererType::OpenGLES) && "Invalid renderer type for Linux.");
+
+		const bgfx::Memory* vsMem = nullptr;
+
+		if (renderer == bgfx::RendererType::Vulkan) {
+			vsMem = bgfx::makeRef(EmbeddedShaders::Linux::sprite_vs_bytes, EmbeddedShaders::Linux::sprite_vs_len);
+		}
+		else if (renderer == bgfx::RendererType::OpenGL || renderer == bgfx::RendererType::OpenGLES) {
+			vsMem = bgfx::makeRef(EmbeddedShaders::LinuxOpengl::sprite_vs_bytes, EmbeddedShaders::LinuxOpengl::sprite_vs_len);
+		}
+
+		// Prevenção de crash em Release mode caso o renderer seja inesperado
+		if (vsMem != nullptr) {
+			return bgfx::createShader(vsMem);
+		}
+
+		return BGFX_INVALID_HANDLE;
+#else
+		assert(false && "Not supported");
+		return BGFX_INVALID_HANDLE;
+#endif
+	}
+
+	static inline bgfx::ShaderHandle GetEmbeddedFragmentShader() {
+		bgfx::RendererType::Enum renderer = bgfx::getRendererType();
+
+#if PLATFORM_WINDOWS
+		assert((renderer == bgfx::RendererType::Direct3D11 ||
+			renderer == bgfx::RendererType::Direct3D12) && "Invalid renderer type for Windows.");
+
+		const bgfx::Memory* fsMem = bgfx::makeRef(EmbeddedShaders::Windows::sprite_fs_bytes, EmbeddedShaders::Windows::sprite_fs_len);
+		return bgfx::createShader(fsMem);
+
+#elif PLATFORM_LINUX
+		assert((renderer == bgfx::RendererType::Vulkan ||
+			renderer == bgfx::RendererType::OpenGL ||
+			renderer == bgfx::RendererType::OpenGLES) && "Invalid renderer type for Linux.");
+
+		const bgfx::Memory* fsMem = nullptr;
+
+		if (renderer == bgfx::RendererType::Vulkan) {
+			fsMem = bgfx::makeRef(EmbeddedShaders::Linux::sprite_fs_bytes, EmbeddedShaders::Linux::sprite_fs_len);
+		}
+		else if (renderer == bgfx::RendererType::OpenGL || renderer == bgfx::RendererType::OpenGLES) {
+			fsMem = bgfx::makeRef(EmbeddedShaders::LinuxOpengl::sprite_fs_bytes, EmbeddedShaders::LinuxOpengl::sprite_fs_len);
+		}
+
+		if (fsMem != nullptr) {
+			return bgfx::createShader(fsMem);
+		}
+
+		return BGFX_INVALID_HANDLE;
+#else
+		assert(false && "Not supported");
+		return BGFX_INVALID_HANDLE;
+#endif
+	}
+
 	struct SpriteVertex {
 		float x, y, z;
 		uint32_t color;
@@ -85,16 +160,13 @@ namespace Xna {
 
 			// Criar uniform para textura
 			m_textureUniform = bgfx::createUniform("s_texture", bgfx::UniformType::Sampler);
-
-			// Criar shaders
-			std::filesystem::path currentPath;
-			Platform::System::GetExecutablePath(currentPath);
-			currentPath.remove_filename();
-			currentPath /= "shaders/";
-			currentPath = currentPath.lexically_normal();
-
-			m_program = loadShaderProgram(currentPath / "sprite.vs.bin", currentPath / "sprite.fs.bin");
-		}
+			
+			bgfx::ShaderHandle fsHandle = GetEmbeddedFragmentShader();			
+			bgfx::ShaderHandle vsHandle = GetEmbeddedVertexShader();
+			
+			// O parâmetro 'true' no final diz para destruir as handles dos shaders assim que o programa for criado.
+			m_program = bgfx::createProgram(vsHandle, fsHandle, true);
+		}		
 
 		void Begin(SpriteSortMode sortMode, const BlendState* blendState, const SamplerState* samplerState, 
 			const DepthStencilState* depthStencilState, const RasterizerState* rasterizerState, const Matrix* matrix) override {
@@ -399,7 +471,7 @@ namespace Xna {
 		std::vector<Sprite> m_sprites;
 		bgfx::ProgramHandle m_program;
 		bgfx::UniformHandle m_textureUniform;
-		bgfx::TextureHandle m_currentTexture;
+		bgfx::TextureHandle m_currentTexture{bgfx::kInvalidHandle};
 		bgfx::DynamicIndexBufferHandle m_ib;
 		bgfx::DynamicVertexBufferHandle m_vb;
 		bgfx::VertexLayout m_layout;
