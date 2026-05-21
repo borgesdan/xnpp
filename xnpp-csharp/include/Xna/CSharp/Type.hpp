@@ -72,8 +72,8 @@ namespace Xna::CSharp {
         inline std::string Name() const { return info_->name(); }
         inline bool operator<(const Type& other) const { return info_->name() < other.info().name(); }       
         
-        template <class T> friend Type typeof();
-        template <class T> friend Type typeof(T const& _);
+        template <class T> friend Type Typeof();
+        template <class T> friend Type Typeof(T const& _);
 
         static Type Empty() { return Type(); }
         
@@ -91,8 +91,8 @@ namespace Xna::CSharp {
         static XNPP_API std::map<std::string, Type>& NamedTypes();
     };
 
-    template <class T> Type typeof() { return Type::FromTemplate<T>(); }
-    template <class T> Type typeof(T const& _) { return Type::FromTemplate<T>(); }
+    template <class T> Type Typeof() { return Type::FromTemplate<T>(); }
+    template <class T> Type Typeof(T const& _) { return Type::FromTemplate<T>(); }
 
     template <class T> static constexpr Type Type::FromTemplate() {
         int flags{ 0 };

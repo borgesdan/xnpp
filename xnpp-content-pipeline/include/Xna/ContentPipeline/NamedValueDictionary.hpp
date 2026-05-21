@@ -85,7 +85,7 @@ namespace Xna {
 			items->at(key) = value;
 		}
 
-		inline virtual CSharp::Type DefaultSerializerType() const { return CSharp::typeof<T>(); }
+		inline virtual CSharp::Type DefaultSerializerType() const { return CSharp::Typeof<T>(); }
 
 	private:
 		std::shared_ptr<std::unordered_map<std::string, T>> items;

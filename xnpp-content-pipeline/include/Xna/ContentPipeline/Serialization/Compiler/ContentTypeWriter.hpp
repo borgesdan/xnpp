@@ -61,7 +61,7 @@ namespace Xna {
 
 	protected:
 		ContentTypeWriterT()
-			: ContentTypeWriter(CSharp::typeof<T>()) {
+			: ContentTypeWriter(CSharp::Typeof<T>()) {
 		}		
 		
 		virtual void WriteT(ContentWriter& output, const T* value) = 0;

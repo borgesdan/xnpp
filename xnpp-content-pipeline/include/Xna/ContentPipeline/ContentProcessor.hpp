@@ -34,8 +34,8 @@ namespace Xna {
 			}
 		}
 
-		CSharp::Type InputType() const override { return CSharp::typeof<TInput>(); }
-		CSharp::Type OutputType() const override { return CSharp::typeof<TOutput>(); }
+		CSharp::Type InputType() const override { return CSharp::Typeof<TInput>(); }
+		CSharp::Type OutputType() const override { return CSharp::Typeof<TOutput>(); }
 	};
 }
 

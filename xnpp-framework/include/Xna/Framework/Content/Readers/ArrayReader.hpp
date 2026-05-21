@@ -11,7 +11,7 @@ namespace Xna {
 	struct ArrayReader : public ContentTypeReaderT<std::vector<T>> {
 	protected:
 		inline void Initialize(ContentTypeReaderManager& manager) override {
-			elementReader = manager.GetTypeReader(CSharp::typeof<T>());
+			elementReader = manager.GetTypeReader(CSharp::Typeof<T>());
 		}
 
 		inline std::vector<T> Read(ContentReader& input, std::vector<T>& existingInstance) override {
