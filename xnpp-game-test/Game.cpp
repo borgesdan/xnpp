@@ -157,7 +157,7 @@ public:
 		spriteBatch.Draw(texture2, Xna::Vector2(100, 100), Xna::Color::White());
 
 		//if (three)
-		spriteBatch.Draw(texture, texPos, Xna::Color::Black());
+		spriteBatch.Draw(texture, texPos, Xna::Color::AntiqueWhite());
 
 		////if (four)
 		//	spriteBatch.Draw(texture, Xna::Vector2(300, 100), Xna::Color::White());
