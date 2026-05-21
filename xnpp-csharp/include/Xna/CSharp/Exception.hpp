@@ -146,7 +146,7 @@ namespace Xna::CSharp {
 
         constexpr virtual std::string Message() const { return message.value_or(""); }
 
-        constexpr virtual std::string FullMessage() const {
+        inline virtual std::string FullMessage() const {
             std::string msg;
 
             msg.append(message.value_or(""));
