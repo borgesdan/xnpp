@@ -3,6 +3,7 @@
 
 #include "Xna/ContentPipeline/ContentItem.hpp"
 #include <Xna/Framework/Graphics/Shared.hpp>
+#include <cstddef>
 #include <vector>
 
 namespace Xna {

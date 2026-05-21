@@ -3,6 +3,7 @@
 
 #include "Matrix.hpp"
 #include "MathHelper.hpp"
+#include <cstddef>
 
 namespace Xna {
 	//Defines a four-dimensional vector (x,y,z,w), which is used to efficiently rotate an object about the (x, y, z) vector by the angle theta, where w = cos(theta/2).

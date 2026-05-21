@@ -4,6 +4,7 @@
 #include <optional>
 #include <vector>
 #include <memory>
+#include <cstddef>
 
 namespace Xna {
 	//A collection of game services.

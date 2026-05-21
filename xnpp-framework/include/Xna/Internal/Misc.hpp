@@ -13,6 +13,7 @@
 #include <algorithm>
 #include <any>
 #include <typeindex>
+#include <cstddef>
 
 namespace Xna::Misc {
 	template <typename TENUM>

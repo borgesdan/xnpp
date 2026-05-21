@@ -5,6 +5,7 @@
 #include "Xna/Internal/Macros.hpp"
 #include <memory>
 #include <filesystem>
+#include <cstddef>
 
 namespace Xna {
 	//Provides file stream access to the title's default storage location.

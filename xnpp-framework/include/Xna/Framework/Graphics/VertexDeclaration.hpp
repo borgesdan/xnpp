@@ -4,6 +4,7 @@
 #include "VertexElement.hpp"
 #include <vector>
 #include <memory>
+#include <cstddef>
 #include "Xna/Framework/Graphics/VertexElementValidator.hpp"
 
 namespace Xna {
@@ -39,7 +40,7 @@ namespace Xna {
 
 	private:
 		std::vector<VertexElement> elements;
-		size_t vertexStride;
+		size_t vertexStride{0};
 	};
 }
 

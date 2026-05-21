@@ -4,6 +4,7 @@
 #include <cstdint>
 #include <string>
 #include <stack>
+#include <cstddef>
 #include <unordered_map>
 #include "Shared.hpp"
 #include "LoopRegion.hpp"

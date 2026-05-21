@@ -3,6 +3,7 @@
 
 #include <memory>
 #include <vector>
+#include <cstddef>
 #include "Texture.hpp"
 #include "Xna/Platform/Platform.hpp"
 #include "Xna/Internal/Macros.hpp"

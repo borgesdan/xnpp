@@ -4,6 +4,7 @@
 #include "../ContentTypeReader.hpp"
 #include "../ContentReader.hpp"
 #include <vector>
+#include <cstddef>
 
 namespace Xna {
 	template <typename T>

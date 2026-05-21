@@ -5,6 +5,7 @@
 #include <queue>
 #include <unordered_map>
 #include "_ContentWriter.hpp"
+#include <cstddef>
 #include <Xna/CSharp/IO/MemoryStream.hpp>
 #include <Xna/CSharp/Exception.hpp>
 #include <Xna/Internal/Misc.hpp>

@@ -7,6 +7,7 @@
 #include <vector>
 #include <string>
 #include <optional>
+#include <cstddef>
 #include <Xna/CSharp/IO/Stream.hpp>
 #include "Xna/Platform/Platform.hpp"
 #include "Xna/Internal/Macros.hpp"

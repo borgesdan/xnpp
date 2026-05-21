@@ -5,6 +5,7 @@
 #include <vector>
 #include <memory>
 #include <string>
+#include <cstddef>
 #include <Xna/CSharp/Exception.hpp>
 #include <Xna/CSharp/Type.hpp>
 

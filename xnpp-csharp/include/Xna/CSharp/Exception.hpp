@@ -6,6 +6,7 @@
 #include <source_location>
 #include <memory>
 #include <optional>
+#include <cstddef>
 #include "SR.hpp"
 
 namespace Xna::CSharp {

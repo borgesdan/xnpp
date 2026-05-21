@@ -7,6 +7,7 @@
 #include <optional>
 #include <exception>
 #include <filesystem>
+#include <cstddef>
 #include <functional>
 #include "Xna/Internal/Macros.hpp"
 #include "Xna/Framework/Graphics/Shared.hpp"

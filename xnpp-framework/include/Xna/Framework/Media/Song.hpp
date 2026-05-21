@@ -12,6 +12,7 @@
 #include <filesystem>
 #include <memory>
 #include <string>
+#include <cstddef>
 
 namespace Xna {
 	struct Album;

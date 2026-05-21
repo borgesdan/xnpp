@@ -3,6 +3,7 @@
 
 #include "Vector4.hpp"
 #include <cassert>
+#include <cstddef>
 
 namespace Xna {
 	struct Plane;

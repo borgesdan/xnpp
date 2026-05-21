@@ -5,6 +5,7 @@
 #include <memory>
 #include <optional>
 #include <vector>
+#include <cstddef>
 
 namespace Xna {
 	template <typename TBASE>

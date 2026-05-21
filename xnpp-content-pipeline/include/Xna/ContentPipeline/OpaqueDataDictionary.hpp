@@ -4,6 +4,7 @@
 #include <any>
 #include <string>
 #include <optional>
+#include <cstddef>
 #include <functional>
 #include "NamedValueDictionary.hpp"
 #include <Xna/Internal/Macros.hpp>

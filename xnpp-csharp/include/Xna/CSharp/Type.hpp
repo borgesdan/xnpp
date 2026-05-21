@@ -9,6 +9,7 @@
 #include <string>
 #include <optional>
 #include <functional>
+#include <cstddef>
 #include "Macros.hpp"
 
 namespace Xna::CSharp {

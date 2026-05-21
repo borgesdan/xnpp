@@ -1,4 +1,5 @@
 #include <stdexcept>
+#include <cstddef>
 #include "SDL3/SDL.h"
 #include "Xna/Platform/Platform.hpp"
 #include "Xna/Framework/Graphics/GraphicsAdapter.hpp"

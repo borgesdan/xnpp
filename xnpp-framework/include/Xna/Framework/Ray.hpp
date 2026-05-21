@@ -3,6 +3,7 @@
 
 #include "BoundingSphere.hpp"
 #include <optional>
+#include <cstddef>
 #include "MathHelper.hpp"
 
 namespace Xna {

@@ -4,6 +4,7 @@
 #include "Texture.hpp"
 #include "_GraphicsDevice.hpp"
 #include <memory>
+#include <cstddef>
 
 namespace Xna {
 	class TextureCollection final {

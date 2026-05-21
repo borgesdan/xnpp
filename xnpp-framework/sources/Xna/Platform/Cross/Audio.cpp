@@ -9,6 +9,7 @@
 #include "Xna/Framework/Audio/SoundEffect.hpp"
 #include "Internal.hpp"
 #include <functional>
+#include <cstddef>
 #define MINIAUDIO_IMPLEMENTATION
 #include "third-party/miniaudio/miniaudio.h"
 #include "third-party/miniaudio/miniaudio_libvorbis.h"

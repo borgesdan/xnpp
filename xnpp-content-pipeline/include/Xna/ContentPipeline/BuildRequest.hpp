@@ -5,6 +5,7 @@
 #include "Shared.hpp"
 #include "OpaqueDataDictionary.hpp"
 #include <Xna/Internal/Misc.hpp>
+#include <cstddef>
 
 namespace Xna {
 	struct BuildRequest final {

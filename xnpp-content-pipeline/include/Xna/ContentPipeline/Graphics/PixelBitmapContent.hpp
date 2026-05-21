@@ -3,6 +3,7 @@
 
 #include "BitmapContent.hpp"
 #include <vector>
+#include <cstddef>
 #include <Xna/Framework/Color.hpp>
 #include <Xna/Framework/Vector4.hpp>
 
