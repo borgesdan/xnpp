@@ -14,6 +14,7 @@
 #include <any>
 #include <typeindex>
 #include <cstddef>
+#include <cstdlib>
 
 namespace Xna::Misc {
 	template <typename TENUM>
@@ -70,23 +71,50 @@ namespace Xna::Misc {
 		return is_shared_ptr<T>::value || is_unique_ptr<T>::value || is_weak_ptr<T>::value;
 	}
 
-	//Convert a string to wstring
+	// Convert a string to wstring
 	static inline std::wstring ToWString(const std::string& str)
 	{
-		std::wstring wstr;
-		size_t size;
-		wstr.resize(str.length());
-		mbstowcs_s(&size, &wstr[0], wstr.size() + 1, str.c_str(), str.size());
+		if (str.empty()) {
+			return std::wstring();
+		}
+
+		// Passar nullptr no destino retorna a quantidade de wchar_t necessários
+		size_t requiredSize = std::mbstowcs(nullptr, str.c_str(), 0);
+
+		// Se a conversão falhar (caractere inválido), retorna string vazia
+		if (requiredSize == static_cast<size_t>(-1)) {
+			return std::wstring();
+		}
+
+		// Aloca exatamente o tamanho necessário
+		std::wstring wstr(requiredSize, L'\0');
+
+		// Executa a conversão real
+		std::mbstowcs(&wstr[0], str.c_str(), requiredSize);
+
 		return wstr;
 	}
 
-	//Convert a wstring to string
+	// Convert a wstring to string
 	static inline std::string ToString(const std::wstring& wstr)
 	{
-		std::string str;
-		size_t size;
-		str.resize(wstr.length());
-		wcstombs_s(&size, &str[0], str.size() + 1, wstr.c_str(), wstr.size());
+		if (wstr.empty()) {
+			return std::string();
+		}
+
+		// Passar nullptr no destino retorna a quantidade de bytes (char) necessários
+		size_t requiredSize = std::wcstombs(nullptr, wstr.c_str(), 0);
+
+		if (requiredSize == static_cast<size_t>(-1)) {
+			return std::string();
+		}
+
+		// Aloca exatamente o tamanho necessário
+		std::string str(requiredSize, '\0');
+
+		// Executa a conversão real
+		std::wcstombs(&str[0], wstr.c_str(), requiredSize);
+
 		return str;
 	}
 

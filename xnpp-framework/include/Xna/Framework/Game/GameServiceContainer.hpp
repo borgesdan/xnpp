@@ -27,10 +27,10 @@ namespace Xna {
 		template <class TBase, class TDerived>
 		void AddService(TDerived const& item) {
 			auto ptr = std::make_shared<TDerived>(item);
-			auto ptrBase = dynamic_pointer_cast<TBase>(ptr);
+			auto ptrBase = std::dynamic_pointer_cast<TBase>(ptr);
 
 			auto serviceItem = std::make_shared<GameServiceItem<TBase>>(ptrBase);			
-			auto baseServiceItem = dynamic_pointer_cast<IGameServiceItem>(serviceItem);
+			auto baseServiceItem = std::dynamic_pointer_cast<IGameServiceItem>(serviceItem);
 
 			items->push_back(baseServiceItem);
 		}
@@ -39,7 +39,7 @@ namespace Xna {
 		template <typename T>
 		void RemoveService() {
 			for (size_t i = 0; i < items->size(); ++i) {
-				auto ptr = dynamic_pointer_cast<GameServiceItem<T>>(items[i]);
+				auto ptr = std::dynamic_pointer_cast<GameServiceItem<T>>((*items)[i]);
 
 				if (ptr != nullptr)
 				{
@@ -52,11 +52,11 @@ namespace Xna {
 		template <typename T>
 		std::shared_ptr<T> GetService() {
 			for (size_t i = 0; i < items->size(); ++i) {
-				auto ptr = dynamic_pointer_cast<GameServiceItem<T>>(items->at(i));
+				auto ptr = std::dynamic_pointer_cast<GameServiceItem<T>>(items->at(i));
 
 				if (ptr != nullptr)
 				{
-					auto obj = dynamic_pointer_cast<T>(ptr->item);
+					auto obj = std::dynamic_pointer_cast<T>(ptr->item);
 
 					if (obj != nullptr)
 						return obj;
