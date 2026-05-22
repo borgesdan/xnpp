@@ -109,8 +109,10 @@ namespace Xna {
 		}
 
 		const std::vector<std::string>& GetFriendlyNames(size_t index) {
-			if (index >= values.size())
-				return {};
+			if (index >= values.size()) {
+				static const std::vector<std::string> empty;
+				return empty;
+			}				
 
 			return values[index].friendlyNames;
 		}
