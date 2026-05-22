@@ -50,20 +50,23 @@ namespace Xna {
 #if PLATFORM_WINDOWS
 			pd.nwh = SDL_GetPointerProperty(SDL_GetWindowProperties(window), SDL_PROP_WINDOW_WIN32_HWND_POINTER, NULL);
 #elif PLATFORM_LINUX
-			const auto props = SDL_GetWindowProperties(window);
-			const auto driver = SDL_GetCurrentVideoDriver();
-			std::string driver_name = driver;
+			SDL_PropertiesID props = SDL_GetWindowProperties(window);
+			const char* videoDriver = SDL_GetCurrentVideoDriver();
 
-			if (driver_name == "wayland") {
-				pd.ndt = SDL_GetPointerProperty(props, SDL_PROP_WINDOW_WAYLAND_DISPLAY_POINTER, NULL);
-				pd.nwh = SDL_GetPointerProperty(props, SDL_PROP_WINDOW_WAYLAND_SURFACE_POINTER, NULL);
+			if (SDL_strcmp(videoDriver, "x11") == 0) {
+				// No X11, precisamos passar o Display (ndt) e o Window (nwh)
+				pd.ndt = SDL_GetPointerProperty(props, SDL_PROP_WINDOW_X11_DISPLAY_POINTER, nullptr);
+				// O Window no X11 é um número (XID), precisamos fazer o cast para void*
+				pd.nwh = (void*)(uintptr_t)SDL_GetNumberProperty(props, SDL_PROP_WINDOW_X11_WINDOW_NUMBER, 0);
 			}
-			else {
-				pd.nwh = SDL_GetPointerProperty(SDL_GetWindowProperties(window), SDL_PROP_WINDOW_X11_WINDOW_NUMBER, NULL);
-				pd.ndt = SDL_GetPointerProperty(SDL_GetWindowProperties(window), SDL_PROP_WINDOW_X11_DISPLAY_POINTER, NULL);
+			else if (SDL_strcmp(videoDriver, "wayland") == 0) {
+				// No Wayland, passamos o Display e a Surface
+				pd.ndt = SDL_GetPointerProperty(props, SDL_PROP_WINDOW_WAYLAND_DISPLAY_POINTER, nullptr);
+				pd.nwh = SDL_GetPointerProperty(props, SDL_PROP_WINDOW_WAYLAND_SURFACE_POINTER, nullptr);
 			}
 #elif PLATFORM_MACOS
-			pd.nwh = (void*)SDL_GetPointerProperty(SDL_GetWindowProperties(window), SDL_PROP_WINDOW_COCOA_WINDOW_POINTER, NULL);
+			SDL_PropertiesID props = SDL_GetWindowProperties(sdlWindow);
+			pd.nwh = SDL_GetPointerProperty(props, SDL_PROP_WINDOW_COCOA_WINDOW_POINTER, nullptr);
 #endif	
 
 			int w, h;
