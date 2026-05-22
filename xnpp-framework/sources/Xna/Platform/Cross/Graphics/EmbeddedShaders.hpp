@@ -301,8 +301,8 @@ namespace Xna {
 			  0x00, 0x03, 0x05, 0x00, 0x01, 0x00, 0x10, 0x00, 0x40, 0x00
 			};
 
-			static constexpr unsigned int sprite_vs_bin_len = 1270;
-			static constexpr unsigned int sprite_vs_len = 862;
+			static constexpr unsigned int sprite_vs_len = 1270;
+			static constexpr unsigned int sprite_fs_len = 862;
 		};
 
 		struct LinuxOpengl {

@@ -4,6 +4,7 @@
 #include "BitmapContent.hpp"
 #include <vector>
 #include <cstddef>
+#include <cstring>
 #include <Xna/Framework/Color.hpp>
 #include <Xna/Framework/Vector4.hpp>
 
@@ -138,10 +139,10 @@ namespace Xna {
 			return At(x, y);
 		}
 
-		// Função Blit para copiar um bitmap para dentro deste
+		// Funï¿½ï¿½o Blit para copiar um bitmap para dentro deste
 		void Blit(PixelBitmapContent<T> const& source, size_t destX, size_t destY) {
 			for (size_t y = 0; y < source.Height; ++y) {
-				// Calcula o início da linha no destino e na origem
+				// Calcula o inï¿½cio da linha no destino e na origem
 				const auto destRowStart = (destY + y) * Width + destX;
 				const auto srcRowStart = y * source.Width;
 
@@ -153,16 +154,16 @@ namespace Xna {
 		}
 
 		void BlitFast(const PixelBitmapContent& source, int destX, int destY) {
-			// Validação básica para evitar escrita fora da memória
+			// Validaï¿½ï¿½o bï¿½sica para evitar escrita fora da memï¿½ria
 			if (destX + source.Width > this->Width || destY + source.Height > this->Height) {
 				return;
 			}
 
 			for (int y = 0; y < source.Height; ++y) {
-				// Ponteiro para o início da linha no destino
+				// Ponteiro para o inï¿½cio da linha no destino
 				T* destPtr = &this->pixelData[(destY + y) * this->Width + destX];
 
-				// Ponteiro para o início da linha na origem
+				// Ponteiro para o inï¿½cio da linha na origem
 				const T* srcPtr = &source.pixelData[y * source.Width];
 
 				// Copia a linha inteira de pixels

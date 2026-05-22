@@ -13,7 +13,7 @@ namespace Xna {
 		//[ContentSerializer(Optional = true)]
 		std::string FragmentIdentifier;
 
-		constexpr ContentIdentity() = default;
+		ContentIdentity() = default;
 		inline ContentIdentity(std::filesystem::path const& sourceFilename)
 			: SourceFileName(sourceFilename) { }
 		inline ContentIdentity(std::filesystem::path const& sourceFilename, std::filesystem::path const& sourceTool)

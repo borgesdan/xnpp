@@ -53,7 +53,7 @@ namespace Xna {
 		inline std::unordered_map<std::string, T>::iterator end() const { return items->end(); }
 
 		inline NamedValueDictionary(std::nullptr_t) { items = nullptr; }
-		inline bool operator==(NamedValueDictionary const& other) const noexcept { return items == other.impl; }
+		inline bool operator==(NamedValueDictionary const& other) const noexcept { return items == other.items; }
 		inline bool operator==(std::nullptr_t) const noexcept { return items == nullptr; }
 		inline explicit operator bool() const noexcept { return items != nullptr; }
 	protected:

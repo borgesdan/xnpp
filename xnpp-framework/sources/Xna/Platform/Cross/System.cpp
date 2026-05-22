@@ -51,7 +51,7 @@ namespace Xna {
 	}		
 
 	void Platform::System::GetExecutablePath(std::filesystem::path& path) {
-#ifdef PLATFORM_WINDOWS
+#if PLATFORM_WINDOWS
 		wchar_t buffer[MAX_PATH]{};
 		const auto length = GetModuleFileNameW(nullptr, buffer, MAX_PATH);
 
@@ -73,9 +73,9 @@ namespace Xna {
 	}
 
 	void Platform::System::ProcessException(std::string const& exception) {
-#ifdef PLATFORM_WINDOWS
+#if PLATFORM_WINDOWS
 		MessageBox(nullptr, exception.c_str(), "XN++", MB_OK);		
-#elif
+#else
 		SDL_Log(exception.c_str());
 #endif
 	}

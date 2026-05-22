@@ -1,8 +1,8 @@
 /*
-* A biblioteca miniaudio.h é a responsável pela reprodução de músicas e sons no jogo.
-* Suporta nativamente MP3, WAV, FLAC, para OGG é necessário a integração de biblioteca externa (libvorbis, libogg).
-* A biblioteca não suporta WMA.
-* Por padrão temos somente uma instância da engine de áudio que persistirá até o encerramento do programa.
+* A biblioteca miniaudio.h ï¿½ a responsï¿½vel pela reproduï¿½ï¿½o de mï¿½sicas e sons no jogo.
+* Suporta nativamente MP3, WAV, FLAC, para OGG ï¿½ necessï¿½rio a integraï¿½ï¿½o de biblioteca externa (libvorbis, libogg).
+* A biblioteca nï¿½o suporta WMA.
+* Por padrï¿½o temos somente uma instï¿½ncia da engine de ï¿½udio que persistirï¿½ atï¿½ o encerramento do programa.
 */
 
 #include "Xna/Platform/Platform.hpp"
@@ -10,12 +10,17 @@
 #include "Internal.hpp"
 #include <functional>
 #include <cstddef>
+#include <cstring>
 #define MINIAUDIO_IMPLEMENTATION
 #include "third-party/miniaudio/miniaudio.h"
 #include "third-party/miniaudio/miniaudio_libvorbis.h"
 
+#ifndef WAVE_FORMAT_IEEE_FLOAT
+#define WAVE_FORMAT_IEEE_FLOAT MA_DR_WAVE_FORMAT_IEEE_FLOAT
+#endif
+
 namespace Xna {
-	//Gerenciador de áudio é sons
+	//Gerenciador de ï¿½udio ï¿½ sons
 	class AudioEngineManager
 	{
 	public:
@@ -27,7 +32,7 @@ namespace Xna {
 			// Configurar o resource manager
 			ma_resource_manager_config resourceManagerConfig = ma_resource_manager_config_init();
 			resourceManagerConfig.ppCustomDecodingBackendVTables = pCustomBackendVTables;
-			resourceManagerConfig.customDecodingBackendCount = 1;  // Número de backends
+			resourceManagerConfig.customDecodingBackendCount = 1;  // Nï¿½mero de backends
 
 			// Inicializar resource manager
 			if (ma_resource_manager_init(&resourceManagerConfig, &resourceManager) != MA_SUCCESS) {
@@ -59,7 +64,7 @@ namespace Xna {
 		ma_engine engine{};
 	};
 
-	//Somente uma instância para todo o programa
+	//Somente uma instï¿½ncia para todo o programa
 	static AudioEngineManager AudioEngine = {};	
 
 	namespace Platform {
@@ -77,7 +82,7 @@ namespace Xna {
 		};
 #pragma pack(pop)
 
-		//Representação interna do SoundEffect com miniaudio
+		//Representaï¿½ï¿½o interna do SoundEffect com miniaudio
 		struct MiniAudioSoundEffect final : public ISoundEffect {
 			std::vector<uint8_t> pcmData{};
 			ma_audio_buffer audioBuffer{};
@@ -92,7 +97,7 @@ namespace Xna {
 				ma_audio_buffer_uninit(&audioBuffer);
 			}
 
-			//Carrega o arquivo WAV já decodificado pela engine e transformado em array de bytes.
+			//Carrega o arquivo WAV jï¿½ decodificado pela engine e transformado em array de bytes.
 			void Load(std::vector<uint8_t> const& format, std::vector<uint8_t> const& data, size_t offset, size_t count, size_t loopStart, size_t loopLength) override {
 				auto wfx = reinterpret_cast<const WAVEFORMATEX*>(format.data());				
 				waveFormatex = *wfx;
@@ -147,7 +152,7 @@ namespace Xna {
 			}
 		};		
 
-		//Representação interna do SoundEffectInstance
+		//Representaï¿½ï¿½o interna do SoundEffectInstance
 		struct MiniAudioSoundEffectInstance final : public ISoundEffectInstance {
 			ma_sound sound{};
 			ma_audio_buffer buffer{};
@@ -256,7 +261,7 @@ namespace Xna {
 			MiniAudioSoundEffect::MasterVolume = value;
 		}
 
-		//Representação interna do MediaPlayer
+		//Representaï¿½ï¿½o interna do MediaPlayer
 		struct MiniAudioMediaPlayer final : public IMediaPlayer {
 			std::filesystem::path currentFile;
 			float currentVolume = 1.0f;
@@ -363,7 +368,7 @@ namespace Xna {
 			}
 		};
 
-		//Temos somente uma instância do Media Player para todo o tempo de vida do programa.
+		//Temos somente uma instï¿½ncia do Media Player para todo o tempo de vida do programa.
 		IMediaPlayer& IMediaPlayer::GetInstance() {
 
 			if(!MiniAudioMediaPlayer::MediaPlayer)

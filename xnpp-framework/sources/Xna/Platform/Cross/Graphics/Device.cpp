@@ -47,7 +47,7 @@ namespace Xna {
 
 			bgfx::PlatformData pd{};
 
-#ifdef PLATFORM_WINDOWS
+#if PLATFORM_WINDOWS
 			pd.nwh = SDL_GetPointerProperty(SDL_GetWindowProperties(window), SDL_PROP_WINDOW_WIN32_HWND_POINTER, NULL);
 #elif PLATFORM_LINUX
 			const auto props = SDL_GetWindowProperties(window);

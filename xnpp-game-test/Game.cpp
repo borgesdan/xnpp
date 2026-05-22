@@ -7,7 +7,7 @@
 #include <Xna/Audio.hpp>
 #include <Xna/Input.hpp>
 #include <Xna/CSharp/TimeSpan.hpp>
-#include <Windows.h>
+
 
 using namespace Xna;
 
@@ -198,7 +198,7 @@ private:
 };
 
 
-int APIENTRY WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPSTR lpCmdLine, _In_ int nCmdShow)
+int main()
 {
 	auto game1 = Game1();
 	game1.Run();
