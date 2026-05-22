@@ -4,9 +4,9 @@
 #include "Internal.hpp"
 #include <stdexcept>
 
-#ifdef PLATFORM_WINDOWS
+#if PLATFORM_WINDOWS
 #define NOMINMAX
-#include <windows.h>
+#include <Windows.h>
 #elif PLATFORM_LINUX
 #include <unistd.h>
 #include <limits.h>

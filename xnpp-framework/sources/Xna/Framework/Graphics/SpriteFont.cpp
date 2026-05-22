@@ -44,7 +44,11 @@ namespace Xna {
         
         const auto character2 = *impl->defaultCharacter;
 
+        assert(character != character2 && "Invalid default character!.");
+
         if (character != character2)
             return GetIndexForCharacter(character2);
+
+        return 0;
     }	        
 }
