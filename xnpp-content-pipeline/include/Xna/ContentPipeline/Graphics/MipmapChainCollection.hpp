@@ -5,6 +5,7 @@
 #include "MipmapChain.hpp"
 #include <memory>
 #include <optional>
+#include <cstddef>
 #include <Xna/Internal/Macros.hpp>
 
 namespace Xna {

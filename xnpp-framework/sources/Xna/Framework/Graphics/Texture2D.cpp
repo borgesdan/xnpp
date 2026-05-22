@@ -9,7 +9,7 @@ namespace Xna {
 		impl->width = width;
 		impl->height = height;
 		impl->format = format;
-		impl->backend = PlatformNS::ITexture2D::Create();		
+		impl->backend = Platform::ITexture2D::Create();		
 
 		impl->backend->Initialize(width, height, mipMap, format);
 	}

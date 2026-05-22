@@ -3,6 +3,7 @@
 
 #include "BoundingBox.hpp"
 #include "Shared.hpp"
+#include <cstddef>
 
 namespace Xna {
 	//Defines a sphere. 

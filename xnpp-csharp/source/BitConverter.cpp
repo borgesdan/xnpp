@@ -1,6 +1,7 @@
 #include "Xna/CSharp/BitConverter.hpp"
 #include "Xna/CSharp/Exception.hpp"
 #include <bit>
+#include <cstring>
 
 namespace Xna::CSharp {
     int32_t BitConverter::ToInt32(const uint8_t *value, size_t valueSize, size_t startIndex) {

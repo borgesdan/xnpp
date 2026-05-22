@@ -4,6 +4,7 @@
 #include "BaseTextureWriter.hpp"
 #include <Xna/Framework/Graphics/Texture2D.hpp>
 #include <memory>
+#include <cstddef>
 #include "Xna/ContentPipeline/Graphics/Texture2DContent.hpp"
 
 namespace Xna {

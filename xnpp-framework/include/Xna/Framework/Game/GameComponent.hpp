@@ -14,7 +14,7 @@ namespace Xna {
 	class GameComponent : public IGameComponent, public IUpdateable {
 	public:		
 		//Initializes a new instance of this class.
-		GameComponent(Game const& game) {}
+		GameComponent(Xna::Game const& game) {}
 
 		virtual ~GameComponent() override = default;
 

@@ -4,6 +4,7 @@
 #include "Song.hpp"
 #include <optional>
 #include <memory>
+#include <cstddef>
 #include <Xna/CSharp/TimeSpan.hpp>
 #include "Xna/Internal/Macros.hpp"
 

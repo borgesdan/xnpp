@@ -5,13 +5,14 @@
 #include <memory>
 #include <optional>
 #include <vector>
+#include <cstddef>
 
 namespace Xna {
 	template <typename TBASE>
 	class TypeRegistry {
 	public:
 		template <typename T> void Add(T const& value) {
-			const auto type = CSharp::typeof<T>();
+			const auto type = CSharp::Typeof<T>();
 
 			if (Contains(type))
 				return;
@@ -29,13 +30,13 @@ namespace Xna {
 			auto find = CSharp::Type::NamedTypes().find(typeName);
 
 			if (find == CSharp::Type::NamedTypes().end())
-				CSharp::Type::NamedTypes().emplace(typeName, CSharp::typeof<T>());
+				CSharp::Type::NamedTypes().emplace(typeName, CSharp::Typeof<T>());
 
 			needUpdate = true;
 		}
 
 		template <typename T> void Add(T const& value, std::vector<std::string> const& friendlyNames) {
-			const auto type = CSharp::typeof<T>();
+			const auto type = CSharp::Typeof<T>();
 			
 			if (Contains(type))
 				return;
@@ -54,11 +55,11 @@ namespace Xna {
 			auto find = CSharp::Type::NamedTypes().find(typeName);
 
 			if (find == CSharp::Type::NamedTypes().end())
-				CSharp::Type::NamedTypes().emplace(typeName, CSharp::typeof<T>());
+				CSharp::Type::NamedTypes().emplace(typeName, CSharp::Typeof<T>());
 
 			for (const auto& friendlyName : friendlyNames) {
 				if (CSharp::Type::NamedTypes().find(friendlyName) == CSharp::Type::NamedTypes().end())
-					CSharp::Type::NamedTypes().emplace(friendlyName, CSharp::typeof<T>());
+					CSharp::Type::NamedTypes().emplace(friendlyName, CSharp::Typeof<T>());
 			}
 
 			needUpdate = true;
@@ -108,8 +109,10 @@ namespace Xna {
 		}
 
 		const std::vector<std::string>& GetFriendlyNames(size_t index) {
-			if (index >= values.size())
-				return {};
+			if (index >= values.size()) {
+				static const std::vector<std::string> empty;
+				return empty;
+			}				
 
 			return values[index].friendlyNames;
 		}

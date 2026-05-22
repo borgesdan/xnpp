@@ -42120,7 +42120,7 @@ static ma_result ma_device_init__webaudio(ma_device* pDevice, const ma_device_co
             var pIntermediaryBuffer = $4;
             var pDevice    = $5;
 
-            if (typeof(window.miniaudio) === 'undefined') {
+            if (Typeof(window.miniaudio) === 'undefined') {
                 return -1;  /* Context not initialized. */
             }
 
@@ -42288,7 +42288,7 @@ static ma_result ma_context_uninit__webaudio(ma_context* pContext)
 
     /* Remove the global miniaudio object from window if there are no more references to it. */
     EM_ASM({
-        if (typeof(window.miniaudio) !== 'undefined') {
+        if (Typeof(window.miniaudio) !== 'undefined') {
             window.miniaudio.unlock_event_types.map(function(event_type) {
                 document.removeEventListener(event_type, window.miniaudio.unlock, true);
             });
@@ -42313,11 +42313,11 @@ static ma_result ma_context_init__webaudio(ma_context* pContext, const ma_contex
 
     /* Here is where our global JavaScript object is initialized. */
     resultFromJS = EM_ASM_INT({
-        if (typeof window === 'undefined' || (window.AudioContext || window.webkitAudioContext) === undefined) {
+        if (Typeof window === 'undefined' || (window.AudioContext || window.webkitAudioContext) === undefined) {
             return 0;   /* Web Audio not supported. */
         }
 
-        if (typeof(window.miniaudio) === 'undefined') {
+        if (Typeof(window.miniaudio) === 'undefined') {
             window.miniaudio = {
                 referenceCount: 0
             };

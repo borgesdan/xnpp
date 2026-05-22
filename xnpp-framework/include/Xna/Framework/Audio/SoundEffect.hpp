@@ -4,6 +4,7 @@
 #include <cstdint>
 #include <string>
 #include <stack>
+#include <cstddef>
 #include <unordered_map>
 #include "Shared.hpp"
 #include "LoopRegion.hpp"
@@ -67,7 +68,7 @@ namespace Xna {
 		inline CSharp::TimeSpan Duration() { return impl->duration; }
 
 		//Gets or sets the master volume that affects all SoundEffectInstance sounds.
-		inline static float MasterVolume() { currentVolume; }
+		inline static float MasterVolume() { return currentVolume; }
 		//Gets or sets the master volume that affects all SoundEffectInstance sounds.
 		XNPP_API static void MasterVolume(float value);
 
@@ -142,7 +143,7 @@ namespace Xna {
 			std::string effectName;
 			std::vector<std::weak_ptr<SoundEffectInstance>> children;
 			std::stack<std::shared_ptr<SoundEffectInstance>> instancePool;	
-			std::unique_ptr<PlatformNS::ISoundEffect> platform;
+			std::unique_ptr<Platform::ISoundEffect> platform;
 		};
 		
 		std::shared_ptr<Implementation> impl = nullptr;		

@@ -7,6 +7,7 @@
 #include <Xna/CSharp/Event.hpp>
 #include <Xna/CSharp/TimeSpan.hpp>
 #include "Xna/Internal/Macros.hpp"
+#include <cstddef>
 
 namespace Xna {
 	//Media playback state (playing, paused, or stopped).

@@ -2,6 +2,7 @@
 #define XNA_FRAMEWORK_BOUNDINGBOX_HPP
 
 #include "BoundingFrustum.hpp"
+#include <cstddef>
 
 namespace Xna {
 	//Defines an axis-aligned box-shaped 3D volume. 

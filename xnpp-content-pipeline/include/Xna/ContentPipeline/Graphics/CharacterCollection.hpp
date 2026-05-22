@@ -5,6 +5,7 @@
 #include <memory>
 #include <cstdint>
 #include <Xna/Internal/Macros.hpp>
+#include <cstddef>
 
 namespace Xna {
 	class CharacterCollection {

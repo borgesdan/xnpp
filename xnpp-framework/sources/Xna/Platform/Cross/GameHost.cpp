@@ -9,7 +9,7 @@ namespace Xna {
     static void CloseAllGamepads(std::vector<Cross::GamepadPlayer>& gamePadPlayers);
     static void UpdateGamePads(std::vector<Cross::GamepadPlayer>& gamePadPlayers);
 
-	void Platform::GameHost_Tick(GameHost& gh) {
+	void Platform::Host::Tick(GameHost& gh) {
         SDL_Event event;
         bool running = true;        
 
@@ -23,10 +23,10 @@ namespace Xna {
 
                     //WM_ACTIVATE e WM_SETFOCUS / WM_KILLFOCUS
                 case SDL_EVENT_WINDOW_FOCUS_GAINED:
-                    Platform::GamePad_Resume();
+                    Platform::Input::GamePadResume();
                     break;
                 case SDL_EVENT_WINDOW_FOCUS_LOST:
-                    Platform::GamePad_Suspend();
+                    Platform::Input::GamePadSuspend();
                     break;          
 
                     //WM_MOUSEMOVE, WM_LBUTTONDOWN, etc.                

@@ -2,7 +2,7 @@
 set(PROJECT_INCLUDES_DIR "${CMAKE_CURRENT_SOURCE_DIR}/include")
 
 # Add source to this project's executable.
-add_executable(GameTest WIN32 Game.cpp)
+add_executable(GameTest Game.cpp)
 
 target_compile_features(GameTest PUBLIC cxx_std_20)
 
@@ -23,10 +23,4 @@ add_custom_command(TARGET GameTest POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_if_different
         $<TARGET_FILE:xnpp>
         $<TARGET_FILE_DIR:GameTest>
-)
-
-add_custom_command(TARGET GameTest POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy_directory
-        "$<TARGET_FILE_DIR:xnpp>/shaders"
-        "$<TARGET_FILE_DIR:GameTest>/shaders"
 )

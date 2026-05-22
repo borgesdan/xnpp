@@ -61,7 +61,7 @@ namespace Xna {
 		template <typename... Args>
 		void LogWarning(std::string const& helpLink, ContentIdentity contentIdentity, std::string_view message, Args&&... messageArgs) {
 			std::string formatted = std::vformat(message, std::make_format_args(messageArgs...));
-			impl->logger->LogWarning(formatted);
+			impl->logger->LogWarning(helpLink, contentIdentity, formatted);
 		}
 
 		inline void PushFile(std::filesystem::path const& filename) {

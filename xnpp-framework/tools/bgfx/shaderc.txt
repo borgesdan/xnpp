@@ -23,6 +23,12 @@ cmake --build . --config Release
 .\shaderc.exe -f "C:/Users/Borges/source/repos/xnpp/xnpp-framework/shaders/sprite.vs.sc" -o "C:/Users/Borges/source/repos/xnpp/xnpp-framework/shaders/sprite.vs.bin" --platform windows --profile s_5_0 --type vertex --varyingdef "C:/Users/Borges/source/repos/xnpp/xnpp-framework/shaders/varying.def.sc" --verbose
 
 .\shaderc.exe -f "C:/Users/Borges/source/repos/xnpp/xnpp-framework/shaders/sprite.fs.sc" -o "C:/Users/Borges/source/repos/xnpp/xnpp-framework/shaders/sprite.fs.bin" --platform windows --profile s_5_0 --type fragment --varyingdef "C:/Users/Borges/source/repos/xnpp/xnpp-framework/shaders/varying.def.sc" --verbose
+
+linux: 
+--platform linux
+--profile spirv (vulkan)
+--profile 150 (opengl) ... 120, 130, 140, 150, 330, 400, 430
+
 ---------------------------------------------------------------
 
 https://bkaradzic.github.io/bgfx/tools.html#shader-compiler-shaderc

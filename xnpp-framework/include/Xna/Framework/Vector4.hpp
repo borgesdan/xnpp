@@ -2,7 +2,9 @@
 #define XNA_FRAMEWORK_VECTOR4_HPP
 
 #include "Vector3.hpp"
-#include "Xna/Internal/Macros.hpp"
+#include <cassert>
+#include <span>
+#include <cstddef>
 
 namespace Xna {
 	//Defines a vector with four components.
@@ -209,22 +211,32 @@ namespace Xna {
 		//Transforms a Vector3 by a specified Quaternion into a Vector4.
 		static constexpr Vector4 Transform(Vector3 const& value, Quaternion const& rotation);
 
-		//Transforms an array of Vector4s by a specified Matrix.
-		XNPP_API static void Transform(Vector4 const* sourceArray, size_t sourceLength, Matrix const& matrix, Vector4* destinationArray, size_t destinationLength);
-		//Transforms an array of Vector4s by a specified Matrix.
-		XNPP_API static void Transform(std::vector<Vector4> const& sourceArray, size_t sourceLength, Matrix const& matrix, std::vector<Vector4>& destinationArray);
-		//Transforms a specified range in an array of Vector4s by a specified Matrix into a specified range in a destination array.
-		XNPP_API static void Transform(Vector4 const* sourceArray, size_t sourceLength, size_t sourceIndex, Matrix const& matrix, Vector4* destinationArray, size_t destinationLength, size_t destinationIndex, size_t length);
-		////Transforms a specified range in an array of Vector4s by a specified Matrix into a specified range in a destination array.
-		XNPP_API static void Transform(std::vector<Vector4> const& sourceArray, size_t sourceIndex, Matrix const& matrix, std::vector<Vector4>& destinationArray, size_t destinationIndex, size_t length);
-		//Transforms an array of Vector4s by a specified Quaternion.
-		XNPP_API static void Transform(Vector4 const* sourceArray, size_t sourceLength, Quaternion const& rotation, Vector4* destinationArray, size_t destinationLength);
-		//Transforms an array of Vector4s by a specified Quaternion.
-		XNPP_API static void Transform(std::vector<Vector4> const& sourceArray, Quaternion const& rotation, std::vector<Vector4>& destinationArray);
-		//Transforms a specified range in an array of Vector4s by a specified Quaternion into a specified range in a destination array.
-		XNPP_API static void Transform(Vector4 const* sourceArray, size_t sourceLength, size_t sourceIndex, Quaternion const& rotation, Vector4* destinationArray, size_t destinationLength, size_t destinationIndex, size_t length);
-		//Transforms a specified range in an array of Vector4s by a specified Quaternion into a specified range in a destination array.
-		XNPP_API static void Transform(std::vector<Vector4> const& sourceArray, size_t sourceIndex, Quaternion const& rotation, std::vector<Vector4>& destinationArray, size_t destinationIndex, size_t length);
+		static constexpr void Transform(
+			std::span<const Vector4> sourceArray,
+			const Matrix& matrix,
+			std::span<Vector4> destinationArray);
+
+		static constexpr void Transform(
+			std::span<const Vector4> sourceArray,
+			std::size_t sourceIndex,
+			const Matrix& matrix,
+			std::span<Vector4> destinationArray,
+			std::size_t destinationIndex,
+			std::size_t length);
+
+		static constexpr void Transform(
+			std::span<const Vector4> sourceArray,
+			const Quaternion& rotation,
+			std::span<Vector4> destinationArray);
+
+		static constexpr void Transform(
+			std::span<const Vector4> sourceArray,
+			std::size_t sourceIndex,
+			const Quaternion& rotation,
+			std::span<Vector4> destinationArray,
+			std::size_t destinationIndex,
+			std::size_t length);
+		
 
 		//Returns a vector pointing in the opposite direction.
 		static constexpr Vector4 Negate(Vector4 const& value) {
