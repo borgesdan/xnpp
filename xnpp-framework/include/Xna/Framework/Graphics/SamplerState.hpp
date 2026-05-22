@@ -6,6 +6,7 @@
 #include <memory>
 #include <vector>
 #include <optional>
+#include <cstddef>
 
 namespace Xna {
 	//Contains sampler state, which determines how to sample texture data. 

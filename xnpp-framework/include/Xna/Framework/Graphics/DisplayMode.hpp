@@ -5,6 +5,7 @@
 #include <cstdint>
 #include <vector>
 #include <optional>
+#include <cstddef>
 #include "Shared.hpp"
 #include "../Rectangle.hpp"
 #include "Xna/Internal/Macros.hpp"

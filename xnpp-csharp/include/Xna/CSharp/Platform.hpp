@@ -9,6 +9,7 @@
 #include <string>
 #include <vector>
 #include <filesystem>
+#include <cstddef>
 
 //OS
 #if defined(_WIN32)

@@ -5,6 +5,7 @@
 #include "Shared.hpp"
 #include "OpaqueDataDictionary.hpp"
 #include <Xna/Internal/Misc.hpp>
+#include <cstddef>
 
 namespace Xna {
 	struct BuildRequest final {
@@ -19,7 +20,7 @@ namespace Xna {
 		//[ContentSerializer(ElementName = "Parameters", Optional = true)]
 		OpaqueDataDictionary ProcessorParameters{};
 		//[ContentSerializer(ElementName = "Options")]
-		BuildOptions BuildOptions;
+		Xna::BuildOptions BuildOptions;
 
 		inline bool operator==(const BuildRequest& other) const noexcept {
 			return SourceFilename == other.SourceFilename 

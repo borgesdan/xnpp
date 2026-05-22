@@ -5,6 +5,7 @@
 #include "VertexElement.hpp"
 #include <memory>
 #include <cassert>
+#include <cstddef>
 
 namespace Xna {
 

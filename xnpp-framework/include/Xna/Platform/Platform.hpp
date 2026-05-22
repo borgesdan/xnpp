@@ -7,6 +7,7 @@
 #include <optional>
 #include <exception>
 #include <filesystem>
+#include <cstddef>
 #include <functional>
 #include "Xna/Internal/Macros.hpp"
 #include "Xna/Framework/Graphics/Shared.hpp"
@@ -257,7 +258,7 @@ namespace Xna {
 		struct VertexBufferStats {
 			BufferUsage Usage{ BufferUsage::None };
 			uint32_t VertexCount{ 0 };
-			VertexDeclaration VertexDeclaration{};
+			Xna::VertexDeclaration VertexDeclaration{};
 		};
 
 		struct IVertexBuffer {

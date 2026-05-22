@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <algorithm>
+#include <cstddef>
 #include "Shared.hpp"
 #include "CurveKeyCollection.hpp"
 

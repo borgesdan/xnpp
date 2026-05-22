@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <memory>
+#include <cstddef>
 #include "IGameComponent.hpp"
 #include <Xna/CSharp/Event.hpp>
 #include <Xna/CSharp/Collection.hpp>

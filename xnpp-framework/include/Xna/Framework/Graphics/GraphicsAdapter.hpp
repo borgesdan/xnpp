@@ -44,22 +44,22 @@ namespace Xna {
 		inline uint32_t VendorId() const { return backend->GetDesc().vendorId; }
 
 		//Gets or sets a NULL device. 
-		static constexpr bool UseNullDevice() {
+		static inline bool UseNullDevice() {
 			return _UseNullDevice;
 		}
 
 		//Gets or sets a NULL device. 
-		static constexpr void UseNullDevice(bool value) {
+		static inline void UseNullDevice(bool value) {
 			_UseNullDevice = value;
 		}
 
 		//Gets or sets a reference device.
-		static constexpr bool UseReferenceDevice() {
+		static inline bool UseReferenceDevice() {
 			return _UseReferenceDevice;
 		}
 
 		//Gets or sets a reference device. 
-		static constexpr void UseReferenceDevice(bool value) {
+		static inline void UseReferenceDevice(bool value) {
 			_UseReferenceDevice = value;
 		}
 

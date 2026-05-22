@@ -6,6 +6,7 @@
 #include <cassert>
 #include <span>
 #include <cstddef>
+#include <cstddef>
 #include "Point.hpp"
 #include "MathHelper.hpp"
 

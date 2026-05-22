@@ -1,7 +1,7 @@
 #include "Xna/CSharp/Platform.hpp"
 #include <SDL3/SDL.h>
 
-#ifdef PLATFORM_WINDOWS
+#if PLATFORM_WINDOWS
 #define NOMINMAX
 #include <windows.h>
 #elif PLATFORM_LINUX
@@ -237,7 +237,7 @@ namespace Xna::CSharp::Platform {
 	}
 
 	void System::GetExecutablePath(std::filesystem::path& path) {
-#ifdef PLATFORM_WINDOWS
+#if PLATFORM_WINDOWS
 		wchar_t buffer[MAX_PATH]{};
 		const auto length = GetModuleFileNameW(nullptr, buffer, MAX_PATH);
 

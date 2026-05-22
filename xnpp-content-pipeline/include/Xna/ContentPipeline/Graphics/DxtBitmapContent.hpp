@@ -6,6 +6,7 @@
 #include <vector>
 #include <cstdint>
 #include <exception>
+#include <cstddef>
 
 
 namespace Xna{

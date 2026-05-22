@@ -3,6 +3,7 @@
 
 #include <memory>
 #include <vector>
+#include <cstddef>
 #include "GraphicsDevice.hpp"
 #include "Shared.hpp"
 #include "Xna/Internal/Macros.hpp"

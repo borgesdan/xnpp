@@ -126,7 +126,7 @@ namespace Xna::CSharp {
 
 	int64_t FileStream::Seek(int64_t offset, SeekOrigin origin) {
 		EnsureNotClosed();
-		impl->stream.seekg(static_cast<std::streamoff>(offset), static_cast<int>(origin));
+		impl->stream.seekg(static_cast<std::streamoff>(offset), static_cast<std::ios_base::seekdir>(origin));
 		impl->_position = impl->stream.tellg();
 		return static_cast<int64_t>(impl->_position);
 	}

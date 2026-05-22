@@ -3,6 +3,7 @@
 
 #include "Shared.hpp"
 #include "CurveKey.hpp"
+#include <cstddef>
 
 namespace Xna {
 	//Contains the CurveKeys making up a Curve. 

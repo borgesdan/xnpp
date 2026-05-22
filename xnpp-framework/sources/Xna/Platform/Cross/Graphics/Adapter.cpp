@@ -1,16 +1,17 @@
 #include <stdexcept>
+#include <cstddef>
 #include "SDL3/SDL.h"
 #include "Xna/Platform/Platform.hpp"
 #include "Xna/Framework/Graphics/GraphicsAdapter.hpp"
 
-#ifdef PLATFORM_WINDOWS
+#if PLATFORM_WINDOWS
 #include <wrl\client.h>
 #include "dxgi.h"
 #include "Xna/Internal/Misc.hpp"
 #endif
 
 namespace Xna {
-#ifdef PLATFORM_WINDOWS
+#if PLATFORM_WINDOWS
 	using Microsoft::WRL::ComPtr;
 	struct SdlGraphicsAdapter;
 
@@ -74,7 +75,7 @@ namespace Xna {
 				Platform::GraphicsAdapterDesc desc{};
 				desc.deviceName = SDL_GetDisplayName(displays[i]);
 
-#ifdef PLATFORM_WINDOWS
+#if PLATFORM_WINDOWS
 				WindowsGraphicsAdapter::SetDesc(desc, i);
 #endif				
 

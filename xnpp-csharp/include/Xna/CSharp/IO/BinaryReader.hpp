@@ -6,6 +6,7 @@
 #include "Stream.hpp"
 #include <cstdint>
 #include <optional>
+#include <cstddef>
 
 namespace Xna::CSharp {
 	class BinaryReader {

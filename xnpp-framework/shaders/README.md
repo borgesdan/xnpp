@@ -1,0 +1,1 @@
+xxd -i sprite.fs.bin > sprite_fs_bytes.h

@@ -7,7 +7,7 @@
 #include <Xna/Audio.hpp>
 #include <Xna/Input.hpp>
 #include <Xna/CSharp/TimeSpan.hpp>
-#include <Windows.h>
+
 
 using namespace Xna;
 
@@ -157,7 +157,7 @@ public:
 		spriteBatch.Draw(texture2, Xna::Vector2(100, 100), Xna::Color::White());
 
 		//if (three)
-		spriteBatch.Draw(texture, texPos, Xna::Color::Black());
+		spriteBatch.Draw(texture, texPos, Xna::Color::AntiqueWhite());
 
 		////if (four)
 		//	spriteBatch.Draw(texture, Xna::Vector2(300, 100), Xna::Color::White());
@@ -198,7 +198,7 @@ private:
 };
 
 
-int APIENTRY WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPSTR lpCmdLine, _In_ int nCmdShow)
+int main()
 {
 	auto game1 = Game1();
 	game1.Run();
