@@ -3,7 +3,7 @@
 namespace Xna {
 	SoundEffectInstance::SoundEffectInstance(Xna::SoundEffect const& parentEffect, bool fireAndForget) {
 		impl = std::make_shared<Implementation>();
-		impl->platform = PlatformNS::ISoundEffectInstance::Create();
+		impl->platform = Platform::ISoundEffectInstance::Create();
 		SoundEffect(parentEffect);
 		AllocateVoice();
 		Volume(1);
@@ -74,9 +74,9 @@ namespace Xna {
 
 		switch (state)
 		{
-		case PlatformNS::MediaState::Playing:
+		case Platform::MediaState::Playing:
 			return SoundState::Playing;
-		case PlatformNS::MediaState::Paused:
+		case Platform::MediaState::Paused:
 			return SoundState::Paused;
 		default:
 			return SoundState::Stopped;

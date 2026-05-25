@@ -55,8 +55,7 @@ namespace Xna {
 		static inline Album Empty() { return Album(); }
 		std::string name;
 
-		friend class Song;
-		friend struct Platform;		
+		friend class Song;			
 	};
 
 	class AlbumCollection final : public CSharp::Collection<Album> {

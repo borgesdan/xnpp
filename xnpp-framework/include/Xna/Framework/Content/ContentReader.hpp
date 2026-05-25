@@ -9,6 +9,7 @@
 #include <string>
 #include <any>
 #include <filesystem>
+#include <cstddef>
 #include "Xna/Framework/Vector2.hpp"
 #include "Xna/Framework/Vector3.hpp"
 #include "Xna/Framework/Vector4.hpp"

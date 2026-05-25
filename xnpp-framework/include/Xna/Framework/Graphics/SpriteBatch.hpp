@@ -101,7 +101,7 @@ namespace Xna {
 
 		XNPP_DECLARE_NULL_IMPL_WRAPPER(SpriteBatch, backend);
 	private:
-		std::shared_ptr<PlatformNS::ISpriteBatch> backend;
+		std::shared_ptr<Platform::ISpriteBatch> backend;
 	};
 }
 

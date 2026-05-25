@@ -5,6 +5,7 @@
 #include "AudioFormat.hpp"
 #include "Xna/Platform/Platform.hpp"
 #include "Xna/Internal/Macros.hpp"
+#include <cstddef>
 
 namespace Xna {
 	class DynamicSoundEffectInstance final : public SoundEffectInstance {
@@ -42,8 +43,6 @@ namespace Xna {
 		};
 
 		std::shared_ptr<Implementation> impl;
-
-		friend struct Platform;
 	};
 }
 

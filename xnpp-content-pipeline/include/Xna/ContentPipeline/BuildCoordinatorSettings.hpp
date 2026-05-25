@@ -11,7 +11,7 @@ namespace Xna {
 	struct BuildCoordinatorSettings final {
 	public:
 		static inline const std::string CacheFilenameWithoutDirectory = "ContentPipeline.xml";
-        TargetPlatform TargetPlatform;
+        Xna::TargetPlatform TargetPlatform;
         GraphicsProfile TargetProfile;
         std::string BuildConfiguration;
         bool CompressContent{ false };

@@ -8,7 +8,7 @@ namespace Xna {
 	struct IVertexType {
 		virtual ~IVertexType() = default;
 		//Vertex declaration, which defines per-vertex data.
-		virtual VertexDeclaration VertexDeclaration() const = 0;
+		virtual Xna::VertexDeclaration VertexDeclaration() const = 0;
 	};
 }
 

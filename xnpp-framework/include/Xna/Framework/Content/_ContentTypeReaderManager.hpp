@@ -5,6 +5,7 @@
 #include <memory>
 #include <string>
 #include <map>
+#include <cstddef>
 #include <Xna/CSharp/Type.hpp>
 #include "Xna/Internal/Macros.hpp"
 

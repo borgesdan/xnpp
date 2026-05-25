@@ -5,6 +5,7 @@
 #include <cstdint>
 #include <vector>
 #include <optional>
+#include <cstddef>
 #include "Shared.hpp"
 #include "../Rectangle.hpp"
 #include "Xna/Internal/Macros.hpp"
@@ -68,8 +69,7 @@ namespace Xna {
 		std::vector<DisplayMode> displayModes;
 
 		constexpr size_t Count() const noexcept { return displayModes.size(); }
-
-		friend struct Platform;
+		
 		friend class GraphicsAdapter;
 	};
 }

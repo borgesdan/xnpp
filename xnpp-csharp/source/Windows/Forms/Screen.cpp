@@ -7,23 +7,23 @@ namespace Xna::CSharp {
 		if (!SystemInformation::MultiMonitorSupport() || monitor == 0) {
 			_bounds = SystemInformation::VirtualScreen();
 			_primary = true;
-			_deviceName = Platform::System_MonitorDeviceName(monitor);
+			_deviceName = Platform::System::MonitorDeviceName(monitor);
 		}
 		else {
-			auto info = Platform::System_MonitorArea(monitor);
+			auto info = Platform::System::MonitorArea(monitor);
 			_bounds = Rectangle::FromLTRB(info.Left(), info.Top(), info.Right(), info.Bottom());
-			_primary = Platform::System_MonitorIsPrimary(monitor);			
+			_primary = Platform::System::MonitorIsPrimary(monitor);			
 		}
 
 		_hmonitor = monitor;
-		_bitDepth = Platform::System_MonitorBitDepth(monitor, hdc);		
+		_bitDepth = Platform::System::MonitorBitDepth(monitor, hdc);		
 	}	
 
 	std::vector<Screen> Screen::AllScreens() {
 		std::vector<Screen> s_screens;
 		
 		if (SystemInformation::MultiMonitorSupport()) {			
-			auto handlers = Platform::System_GetAllMonitorHandlers();
+			auto handlers = Platform::System::GetAllMonitorHandlers();
 			
 			if (!handlers.empty()) {
 				s_screens.reserve(handlers.size());
@@ -67,7 +67,7 @@ namespace Xna::CSharp {
 				_workingArea = SystemInformation::WorkingArea();
 			}
 			else {
-				_workingArea = Platform::System_MonitorWorkingArea(_hmonitor);
+				_workingArea = Platform::System::MonitorWorkingArea(_hmonitor);
 			}
 		}
 
@@ -85,7 +85,7 @@ namespace Xna::CSharp {
 	Screen Screen::FromPoint(Point const& point) {
 		if (SystemInformation::MultiMonitorSupport())
 		{			
-			auto i_monitor = Platform::System_MonitorFromPoint(point.X, point.Y);
+			auto i_monitor = Platform::System::MonitorFromPoint(point.X, point.Y);
 			return Screen(i_monitor);
 		}
 
@@ -95,7 +95,7 @@ namespace Xna::CSharp {
 	Screen Screen::FromRectangle(Rectangle const& rectangle) {
 		if (SystemInformation::MultiMonitorSupport())
 		{			
-			const auto i_monitor = Platform::System_MonitorFromRect(
+			const auto i_monitor = Platform::System::MonitorFromRect(
 				rectangle.Left(),
 				rectangle.Top(),
 				rectangle.Right(),
@@ -110,7 +110,7 @@ namespace Xna::CSharp {
 	Screen Screen::FromHandle(intptr_t hwnd) {
 		if (SystemInformation::MultiMonitorSupport())
 		{			
-			auto i_monitor = Platform::System_MonitorFromHandle(hwnd);
+			auto i_monitor = Platform::System::MonitorFromHandle(hwnd);
 			return Screen(i_monitor);
 		}
 

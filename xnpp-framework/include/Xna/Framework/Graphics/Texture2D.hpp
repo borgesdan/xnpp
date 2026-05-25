@@ -7,6 +7,7 @@
 #include <vector>
 #include <string>
 #include <optional>
+#include <cstddef>
 #include <Xna/CSharp/IO/Stream.hpp>
 #include "Xna/Platform/Platform.hpp"
 #include "Xna/Internal/Macros.hpp"
@@ -79,11 +80,11 @@ namespace Xna {
 		inline bool operator==(std::nullptr_t) const noexcept { return impl == nullptr; }
 		inline explicit operator bool() const noexcept { return impl != nullptr; }
 
-		PlatformNS::ITexture2D& GetBackend() {
+		Platform::ITexture2D& GetBackend() {
 			return *impl->backend.get();
 		}
 
-		const PlatformNS::ITexture2D& GetBackend() const {
+		const Platform::ITexture2D& GetBackend() const {
 			return *impl->backend.get();
 		}
 
@@ -94,12 +95,10 @@ namespace Xna {
 			size_t height{ 0 };			
 			SurfaceFormat format{};
 			
-			std::unique_ptr<PlatformNS::ITexture2D> backend;
+			std::unique_ptr<Platform::ITexture2D> backend;
 		};
 	
-		std::shared_ptr<Implementation> impl;	
-
-		friend struct Platform;
+		std::shared_ptr<Implementation> impl;			
 	};
 }
 

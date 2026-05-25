@@ -4,6 +4,7 @@
 #include <any>
 #include <string>
 #include <optional>
+#include <cstddef>
 #include <functional>
 #include "NamedValueDictionary.hpp"
 #include <Xna/Internal/Macros.hpp>
@@ -38,7 +39,7 @@ namespace Xna {
 		XNPP_API bool RemoveItem(std::string const& key) override;
 		XNPP_API void SetItem(std::string const& key, std::any const& value) override;
 		inline CSharp::Type DefaultSerializerType() const override {
-			return CSharp::typeof<std::string>();
+			return CSharp::Typeof<std::string>();
 		}
 
 	private:

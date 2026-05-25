@@ -5,6 +5,7 @@
 #include <vector>
 #include <memory>
 #include <string>
+#include <cstddef>
 #include <Xna/CSharp/Exception.hpp>
 #include <Xna/CSharp/Type.hpp>
 
@@ -52,7 +53,7 @@ namespace Xna {
 		inline std::unordered_map<std::string, T>::iterator end() const { return items->end(); }
 
 		inline NamedValueDictionary(std::nullptr_t) { items = nullptr; }
-		inline bool operator==(NamedValueDictionary const& other) const noexcept { return items == other.impl; }
+		inline bool operator==(NamedValueDictionary const& other) const noexcept { return items == other.items; }
 		inline bool operator==(std::nullptr_t) const noexcept { return items == nullptr; }
 		inline explicit operator bool() const noexcept { return items != nullptr; }
 	protected:
@@ -84,7 +85,7 @@ namespace Xna {
 			items->at(key) = value;
 		}
 
-		inline virtual CSharp::Type DefaultSerializerType() const { return CSharp::typeof<T>(); }
+		inline virtual CSharp::Type DefaultSerializerType() const { return CSharp::Typeof<T>(); }
 
 	private:
 		std::shared_ptr<std::unordered_map<std::string, T>> items;

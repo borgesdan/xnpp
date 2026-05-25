@@ -81,8 +81,6 @@ namespace Xna {
 			paths,
 			noneItems);
 
-		buildContent.Execute();
-		
-		
+		return buildContent.Execute();
 	}
 }

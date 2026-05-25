@@ -5,6 +5,7 @@
 #include <queue>
 #include <unordered_map>
 #include "_ContentWriter.hpp"
+#include <cstddef>
 #include <Xna/CSharp/IO/MemoryStream.hpp>
 #include <Xna/CSharp/Exception.hpp>
 #include <Xna/Internal/Misc.hpp>
@@ -108,7 +109,7 @@ namespace Xna {
 			throw CSharp::ArgumentNullException("value");
 
 		int32_t _{ 0 };
-		auto typeWriter = GetTypeWriter(CSharp::typeof<T>(), _);
+		auto typeWriter = GetTypeWriter(CSharp::Typeof<T>(), _);
 		InvokeWriter(value, *typeWriter);
 	}
 
@@ -132,7 +133,7 @@ namespace Xna {
 			typeWriter = GetTypeWriter(value->type(), typeIndex);
 		}
 		else {
-			typeWriter = GetTypeWriter(CSharp::typeof<T>(), typeIndex);
+			typeWriter = GetTypeWriter(CSharp::Typeof<T>(), typeIndex);
 		}	
 
 		if (!typeWriter)
