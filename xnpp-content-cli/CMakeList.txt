@@ -6,9 +6,12 @@ add_executable(xnpp-content-cli
 
 target_compile_features(xnpp-content-cli PRIVATE cxx_std_20)
 
+find_package(nlohmann_json CONFIG REQUIRED)
+
 target_link_libraries(xnpp-content-cli
     PRIVATE
         xnpp-content-pipeline
+        nlohmann_json::nlohmann_json
 )
 
 # Para Windows: copiar DLLs runtime se xnpp virar shared futuramente
