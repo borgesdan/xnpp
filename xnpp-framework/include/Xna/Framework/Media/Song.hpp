@@ -12,6 +12,7 @@
 #include <filesystem>
 #include <memory>
 #include <string>
+#include <cstddef>
 
 namespace Xna {
 	struct Album;
@@ -73,8 +74,7 @@ namespace Xna {
 		};
 
 		std::shared_ptr<Implementation> impl;
-
-		friend struct Platform;
+		
 		friend struct MediaPlayer;
 		friend class MediaQueue;
 	};

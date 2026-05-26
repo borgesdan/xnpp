@@ -2,6 +2,7 @@
 #define XNA_BITCONVERTER_HPP
 
 #include <cstdint>
+#include <cstddef>
 #include "Macros.hpp"
 
 namespace Xna::CSharp {

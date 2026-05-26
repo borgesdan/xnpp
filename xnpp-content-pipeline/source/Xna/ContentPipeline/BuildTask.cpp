@@ -83,8 +83,6 @@ namespace Xna {
 			noneItems //copyAssets
 		); 
 
-		buildContent.Execute();
-		
-		
+		return buildContent.Execute();
 	}
 }

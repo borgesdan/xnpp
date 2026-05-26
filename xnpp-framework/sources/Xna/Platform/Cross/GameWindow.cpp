@@ -25,7 +25,7 @@ namespace Xna {
 		}
 	}
 
-	void Platform::GameWindow_Create(GameWindow const& gw) {
+	void Platform::Window::Create(GameWindow const& gw) {
 		auto& impl = gw.impl;
 
 		if (!SDL_WasInit(SDL_INIT_VIDEO)) {
@@ -50,7 +50,7 @@ namespace Xna {
 		Cross::Global::MouseWheel = impl->handle;
 	}
 
-	void Platform::GameWindow_Update(GameWindow const& gw) {
+	void Platform::Window::Update(GameWindow const& gw) {
 		auto handle = reinterpret_cast<SDL_Window*>(gw.impl->handle);
 
 		int w, h;
@@ -65,7 +65,7 @@ namespace Xna {
 			SDL_SetWindowPosition(handle, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED);
 	}
 
-	void Platform::GameWindow_Close(GameWindow const& gw) {
+	void Platform::Window::Close(GameWindow const& gw) {
 		SDL_Window* window = reinterpret_cast<SDL_Window*>(gw.impl->handle);
 
 		if (window) {
@@ -75,14 +75,14 @@ namespace Xna {
 		}
 	}
 
-	bool Platform::GameWindow_WindowIsMinimized(GameWindow const& gw) {
+	bool Platform::Window::WindowIsMinimized(GameWindow const& gw) {
 		auto handle = reinterpret_cast<SDL_Window*>(gw.impl->handle);
 		const auto flags = SDL_GetWindowFlags(handle);
 
 		return (flags & SDL_WINDOW_MINIMIZED) != 0;
 	}
 
-	void Platform::GameWindow_MinimizeWindow(GameWindow const& gw, bool value) {
+	void Platform::Window::MinimizeWindow(GameWindow const& gw, bool value) {
 		auto window = reinterpret_cast<SDL_Window*>(gw.impl->handle);
 
 		if (!window)
@@ -97,21 +97,21 @@ namespace Xna {
 		}
 	}
 
-	void Platform::GameWindow_SetMouseVisible(GameWindow const& gw, bool value) {
+	void Platform::Window::SetMouseVisible(GameWindow const& gw, bool value) {
 		if (value)
 			SDL_ShowCursor();
 		else
 			SDL_HideCursor();
 	}
 
-	void Platform::GameWindow_AllowUserResizing(GameWindow const& gw, bool value) {
+	void Platform::Window::AllowUserResizing(GameWindow const& gw, bool value) {
 		auto window = reinterpret_cast<SDL_Window*>(gw.impl->handle);
 
 		if (window)
 			SDL_SetWindowResizable(window, value);
 	}
 
-	Rectangle Platform::GameWindow_ClientBounds(GameWindow const& gw) {
+	Rectangle Platform::Window::ClientBounds(GameWindow const& gw) {
 		auto window = reinterpret_cast<SDL_Window*>(gw.impl->handle);
 
 		int x, y, w, h;
@@ -121,7 +121,7 @@ namespace Xna {
 		return { x, y, w, h, };
 	}
 
-	void Platform::GameWindow_SetTitle(GameWindow const& gw, std::string const& title) {
+	void Platform::Window::SetTitle(GameWindow const& gw, std::string const& title) {
 		auto window = reinterpret_cast<SDL_Window*>(gw.impl->handle);
 		SDL_SetWindowTitle(window, title.c_str());
 	}	

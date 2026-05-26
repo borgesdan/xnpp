@@ -6,6 +6,7 @@
 #include "Xna/ContentPipeline/Serialization/Compiler/ContentWriter.hpp"
 #include <cstdint>
 #include <vector>
+#include <cstddef>
 #include <Xna/CSharp/Exception.hpp>
 #include <Xna/Framework/Graphics/Shared.hpp>
 

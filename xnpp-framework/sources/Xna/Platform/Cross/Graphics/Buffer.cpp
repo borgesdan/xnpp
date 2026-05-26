@@ -6,7 +6,7 @@
 
 
 namespace Xna {
-	struct BgfxIndexBuffer final : public PlatformNS::IIndexBuffer {
+	struct BgfxIndexBuffer final : public Platform::IIndexBuffer {
 		bgfx::IndexBufferHandle m_handle{ BGFX_INVALID_HANDLE };
 		size_t m_sizeOfIndexType;
 		size_t m_indexCount;
@@ -53,8 +53,8 @@ namespace Xna {
 			assert(false && "not supported");
 		}
 
-		PlatformNS::IndexBufferStats GetStats() override {
-			PlatformNS::IndexBufferStats stats{};
+		Platform::IndexBufferStats GetStats() override {
+			Platform::IndexBufferStats stats{};
 			stats.Usage = (flags & static_cast<int>(BGFX_BUFFER_INDEX32)) == static_cast<int>(BGFX_BUFFER_INDEX32) ? BufferUsage::WriteOnly : BufferUsage::None;
 			stats.IndexCount = m_indexCount;
 			stats.IndexElementSize = m_sizeOfIndexType;
@@ -67,7 +67,7 @@ namespace Xna {
 		}
 	};
 
-	struct BgfxDynamicIndexBuffer final : PlatformNS::IIndexBuffer {
+	struct BgfxDynamicIndexBuffer final : Platform::IIndexBuffer {
 		bgfx::DynamicIndexBufferHandle m_handle{ BGFX_INVALID_HANDLE };
 
 		size_t m_sizeOfIndexType{ 0 };
@@ -130,8 +130,8 @@ namespace Xna {
 			assert(false && "not supported");
 		}
 
-		PlatformNS::IndexBufferStats GetStats() override {
-			PlatformNS::IndexBufferStats stats{};
+		Platform::IndexBufferStats GetStats() override {
+			Platform::IndexBufferStats stats{};
 			stats.Usage = (m_flags & static_cast<int>(BGFX_BUFFER_INDEX32)) == static_cast<int>(BGFX_BUFFER_INDEX32) ? BufferUsage::WriteOnly : BufferUsage::None;
 			stats.IndexCount = m_indexCount;
 			stats.IndexElementSize = m_sizeOfIndexType;
@@ -267,7 +267,7 @@ namespace Xna {
 	//A ordem dos elementos precisa estar correta
 	//Não há suporte direto para gaps (padding manual)
 
-	struct BgfxVertexBuffer final : public PlatformNS::IVertexBuffer {
+	struct BgfxVertexBuffer final : public Platform::IVertexBuffer {
 		bgfx::VertexBufferHandle m_handle{ BGFX_INVALID_HANDLE };
 		bgfx::VertexLayout m_layout{};
 		uint32_t m_flags{ 0 };
@@ -347,8 +347,8 @@ namespace Xna {
 			assert(false && "not supported");
 		}
 
-		PlatformNS::VertexBufferStats GetStats() override {
-			PlatformNS::VertexBufferStats stats{};
+		Platform::VertexBufferStats GetStats() override {
+			Platform::VertexBufferStats stats{};
 			stats.Usage = m_usage;
 			stats.VertexCount = m_vertexCount;
 			stats.VertexDeclaration = m_vertexDeclaration;
@@ -360,7 +360,7 @@ namespace Xna {
 		}
 	};
 
-	struct BgfxDynamicVertexBuffer final : public PlatformNS::IVertexBuffer {
+	struct BgfxDynamicVertexBuffer final : public Platform::IVertexBuffer {
 		bgfx::DynamicVertexBufferHandle m_dynamicHandle{ BGFX_INVALID_HANDLE };
 		bgfx::VertexLayout m_layout{};
 		uint32_t m_flags{ 0 };
@@ -460,8 +460,8 @@ namespace Xna {
 			assert(false && "not supported");
 		}
 
-		PlatformNS::VertexBufferStats GetStats() override {
-			PlatformNS::VertexBufferStats stats{};
+		Platform::VertexBufferStats GetStats() override {
+			Platform::VertexBufferStats stats{};
 			stats.Usage = m_usage;
 			stats.VertexCount = m_vertexCount;
 			stats.VertexDeclaration = m_vertexDeclaration;
@@ -473,19 +473,19 @@ namespace Xna {
 		}
 	};
 
-	std::unique_ptr<PlatformNS::IIndexBuffer> PlatformNS::IIndexBuffer::Create() {
+	std::unique_ptr<Platform::IIndexBuffer> Platform::IIndexBuffer::Create() {
 		return std::make_unique<BgfxIndexBuffer>();
 	}
 
-	std::unique_ptr<PlatformNS::IIndexBuffer>PlatformNS::IIndexBuffer::CreateDynamic() {
+	std::unique_ptr<Platform::IIndexBuffer>Platform::IIndexBuffer::CreateDynamic() {
 		return std::make_unique<BgfxDynamicIndexBuffer>();
 	}
 
-	std::unique_ptr<PlatformNS::IVertexBuffer> PlatformNS::IVertexBuffer::Create() {
+	std::unique_ptr<Platform::IVertexBuffer> Platform::IVertexBuffer::Create() {
 		return std::make_unique<BgfxVertexBuffer>();
 	}
 
-	std::unique_ptr<PlatformNS::IVertexBuffer> PlatformNS::IVertexBuffer::CreateDynamic() {
+	std::unique_ptr<Platform::IVertexBuffer> Platform::IVertexBuffer::CreateDynamic() {
 		return std::make_unique<BgfxDynamicVertexBuffer>();
 	}
 }

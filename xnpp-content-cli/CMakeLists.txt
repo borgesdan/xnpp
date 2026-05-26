@@ -4,6 +4,7 @@ add_executable(xnpp-content-cli
     source/main.cpp
  "source/ProjectReader.cpp")
 
+
 target_compile_features(xnpp-content-cli PRIVATE cxx_std_20)
 
 find_package(nlohmann_json CONFIG REQUIRED)

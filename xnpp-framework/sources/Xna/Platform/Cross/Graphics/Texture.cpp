@@ -6,7 +6,7 @@
 #include <cassert>
 
 namespace Xna {
-	std::unique_ptr<PlatformNS::ITexture2D> PlatformNS::ITexture2D::Create() {
+	std::unique_ptr<Platform::ITexture2D> Platform::ITexture2D::Create() {
 		return std::make_unique<BgfxTexture2D>();
 	}
 

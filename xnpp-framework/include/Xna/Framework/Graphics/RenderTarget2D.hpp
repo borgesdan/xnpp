@@ -5,6 +5,7 @@
 #include "Xna/Platform/Platform.hpp"
 #include "IDynamicGraphicsResource.hpp"
 #include "Xna/Internal/Macros.hpp"
+#include <cstddef>
 
 namespace Xna {
 	//Contains a 2D texture that can be used as a render target. 
@@ -89,9 +90,7 @@ namespace Xna {
 		
 		inline virtual void SetContentLost(bool IsContentLost) {
 			
-		}
-
-		friend struct Platform;
+		}		
 	};
 }
 

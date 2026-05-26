@@ -5,6 +5,7 @@
 #include <memory>
 #include <algorithm>
 #include "Exception.hpp"
+#include <cstddef>
 
 namespace Xna::CSharp {
 	template <class T> class IEnumerable {

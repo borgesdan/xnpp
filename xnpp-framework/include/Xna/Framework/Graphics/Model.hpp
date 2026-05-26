@@ -3,6 +3,7 @@
 
 #include "Xna/Framework/Matrix.hpp"
 #include "Xna/Internal/Macros.hpp"
+#include <cstddef>
 #include <Xna/CSharp/Collection.hpp>
 #include "Xna/Framework/BoundingSphere.hpp"
 #include "Buffers.hpp"

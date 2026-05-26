@@ -1,21 +1,22 @@
 #include <stdexcept>
+#include <cstddef>
 #include "SDL3/SDL.h"
 #include "Xna/Platform/Platform.hpp"
 #include "Xna/Framework/Graphics/GraphicsAdapter.hpp"
 
-#ifdef PLATFORM_WINDOWS
+#if PLATFORM_WINDOWS
 #include <wrl\client.h>
 #include "dxgi.h"
 #include "Xna/Internal/Misc.hpp"
 #endif
 
 namespace Xna {
-#ifdef PLATFORM_WINDOWS
+#if PLATFORM_WINDOWS
 	using Microsoft::WRL::ComPtr;
 	struct SdlGraphicsAdapter;
 
 	struct WindowsGraphicsAdapter {
-		static void SetDesc(PlatformNS::GraphicsAdapterDesc& desc, size_t index) {
+		static void SetDesc(Platform::GraphicsAdapterDesc& desc, size_t index) {
 			Microsoft::WRL::ComPtr<IDXGIFactory1> pFactory;
 
 			if FAILED(CreateDXGIFactory1(__uuidof(IDXGIFactory1), (void**)pFactory.ReleaseAndGetAddressOf()))
@@ -49,32 +50,32 @@ namespace Xna {
 	};
 #endif
 
-	struct SdlGraphicsAdapter final : public PlatformNS::IGraphicsAdapter {
-		PlatformNS::GraphicsAdapterDesc _desc{};
+	struct SdlGraphicsAdapter final : public Platform::IGraphicsAdapter {
+		Platform::GraphicsAdapterDesc _desc{};
 		SDL_DisplayID _id{0};		
 
 		constexpr SdlGraphicsAdapter() = default;
-		constexpr SdlGraphicsAdapter(PlatformNS::GraphicsAdapterDesc const& desc, SDL_DisplayID id) : _desc(desc), _id(id){}
+		constexpr SdlGraphicsAdapter(Platform::GraphicsAdapterDesc const& desc, SDL_DisplayID id) : _desc(desc), _id(id){}
 
-		const PlatformNS::GraphicsAdapterDesc& GetDesc() const override {
+		const Platform::GraphicsAdapterDesc& GetDesc() const override {
 			return _desc;
 		}
 
-		std::vector<std::unique_ptr<PlatformNS::IGraphicsAdapter>> GetAll() override {
+		std::vector<std::unique_ptr<Platform::IGraphicsAdapter>> GetAll() override {
 			int displayCount = 0;
 			SDL_DisplayID* displays = SDL_GetDisplays(&displayCount);
 
 			if (displayCount == 0)
 				return {};
 
-			std::vector<std::unique_ptr<PlatformNS::IGraphicsAdapter>> adapters;
+			std::vector<std::unique_ptr<Platform::IGraphicsAdapter>> adapters;
 			adapters.resize(displayCount);
 
 			for (int i = 0; i < displayCount; ++i) {
-				PlatformNS::GraphicsAdapterDesc desc{};
+				Platform::GraphicsAdapterDesc desc{};
 				desc.deviceName = SDL_GetDisplayName(displays[i]);
 
-#ifdef PLATFORM_WINDOWS
+#if PLATFORM_WINDOWS
 				WindowsGraphicsAdapter::SetDesc(desc, i);
 #endif				
 
@@ -146,7 +147,7 @@ namespace Xna {
 		~SdlGraphicsAdapter() override = default;
 	};
 
-	std::unique_ptr<PlatformNS::IGraphicsAdapter> PlatformNS::IGraphicsAdapter::Create() {
+	std::unique_ptr<Platform::IGraphicsAdapter> Platform::IGraphicsAdapter::Create() {
 		return std::make_unique<SdlGraphicsAdapter>();
 	}
 }

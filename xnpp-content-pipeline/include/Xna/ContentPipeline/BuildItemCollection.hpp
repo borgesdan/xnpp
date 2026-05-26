@@ -9,6 +9,7 @@
 #include <optional>
 #include <unordered_map>
 #include <utility>
+#include <cstddef>
 #include <Xna/CSharp/Collection.hpp>
 #include <Xna/Internal/Macros.hpp>
 

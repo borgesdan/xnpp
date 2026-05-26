@@ -10,6 +10,7 @@
 #include <memory>
 #include <optional>
 #include <string>
+#include <cstddef>
 #include "SpriteBatch.hpp"
 #include "Xna/Framework/Matrix.hpp"
 

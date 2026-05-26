@@ -59,7 +59,7 @@ namespace Xna {
         try {
             App::RegisterContentTypeReaders();
 
-            Platform::Initialize();
+            Platform::System::Initialize();
             RunGame(true);            
         }
         catch (std::exception& ex) {
@@ -78,10 +78,10 @@ namespace Xna {
 #endif
             }
 
-            Platform::System_ProcessException(message);
+            Platform::System::ProcessException(message);
         }        
 
-        Platform::Dispose();
+        Platform::System::Dispose();
     }	
 
     void Game::InternalRunGame() {
@@ -272,7 +272,7 @@ namespace Xna {
 
         //Movido para o Tick()
         //FrameworkDispatcher::Update();
-        Platform::Update();
+        Platform::System::Update();
     }
 
     bool Game::BeginDraw() {

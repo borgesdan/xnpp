@@ -282,6 +282,8 @@ namespace Xna {
 			impl->buildItemsChanged = true;
 			std::cout << ex.what() << std::endl;
 		}
+
+		return {};
 	}
 
 	std::any BuildCoordinator::BuildAssetWorker(BuildItem& item) {

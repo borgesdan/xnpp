@@ -13,7 +13,7 @@ namespace Xna {
 	protected:
 		inline XmlListItemSerializer() {}
 		inline XmlListItemSerializer(std::string const& xmlTypeName)
-			:ContentTypeSerializerT<T>(CSharp::typeof<T>(), xmlTypeName) {}
+			:ContentTypeSerializerT<T>(CSharp::Typeof<T>(), xmlTypeName) {}
 
 		virtual T Deserialize(XmlListReader& input) = 0;
 

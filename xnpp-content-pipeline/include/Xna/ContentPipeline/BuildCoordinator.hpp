@@ -30,7 +30,7 @@ namespace Xna {
 		}
 
 		XNPP_API Xna::ImporterManager ImporterManager();
-		XNPP_API ProcessorManager ProcessorManager();
+		XNPP_API Xna::ProcessorManager ProcessorManager();
 		XNPP_API Xna::ContentCompiler ContentCompiler();
 
 		XNPP_API void Dispose();
@@ -46,11 +46,11 @@ namespace Xna {
 		XNPP_API std::any BuildAndLoadAsset(BuildItem& item, BuildItem& requestingItem);
 
 		XNPP_API void RunTheBuild();
-		XNPP_API std::vector<std::filesystem::path> GetOutputFiles() const; //TODO: [!] deixar as funções const
+		XNPP_API std::vector<std::filesystem::path> GetOutputFiles() const; //TODO: [!] deixar as funï¿½ï¿½es const
 		XNPP_API std::vector<std::filesystem::path> GetRebuiltFiles() const;
 		XNPP_API std::vector<std::filesystem::path> GetIntermediateFiles() const;
 		XNPP_API std::unordered_map<std::filesystem::path, TimePoint> GetDependencyTimestamps() const;
-		//tuple é um KeyValuePair<string, string>
+		//tuple ï¿½ um KeyValuePair<string, string>
 		XNPP_API std::vector<std::pair<std::filesystem::path, std::string>> GetWarnings() const;
 		XNPP_API void AddDependency(BuildItem& item, std::filesystem::path const& filename);
 		XNPP_API void AddExtraOutput(BuildItem& item, std::filesystem::path const& filename);

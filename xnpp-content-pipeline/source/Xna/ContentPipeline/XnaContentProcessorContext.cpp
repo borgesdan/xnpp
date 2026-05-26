@@ -46,7 +46,7 @@ namespace Xna {
 
         //TODO: [?] essa parte do código usa generics, mas a função não permite isso
         //if (!processorName.empty())
-        //    impl->buildCoordinator.ProcessorManager().ValidateProcessorTypes(processorName, typeof(TInput), typeof(TOutput)); 
+        //    impl->buildCoordinator.ProcessorManager().ValidateProcessorTypes(processorName, Typeof(TInput), Typeof(TOutput)); 
 
         BuildRequest request{};
         request.SourceFilename = sourceAsset.Filename();

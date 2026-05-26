@@ -20,7 +20,7 @@ namespace Xna {
 
 	protected:
 		void Initialize(ContentCompiler& compiler) override {
-			elementWriter = compiler.GetTypeWriter(CSharp::typeof<T>());
+			elementWriter = compiler.GetTypeWriter(CSharp::Typeof<T>());
 
 			if (!elementWriter)
 				throw std::runtime_error("ElementeWriter not founded.");
