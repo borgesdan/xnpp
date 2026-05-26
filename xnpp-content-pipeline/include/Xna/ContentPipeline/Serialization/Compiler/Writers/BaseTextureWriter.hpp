@@ -48,13 +48,9 @@ namespace Xna {
 			switch (output.TargetPlatform())
 			{
 			case TargetPlatform::Windows:
-			case TargetPlatform::WindowsPhone:				
+			case TargetPlatform::Linux:			
 				output1.Write(pixelData.data(), pixelData.size());
-				break;
-			case TargetPlatform::Xbox360:
-				//BaseTextureWriter<T, TRuntime>.WriteXboxBits(output, bitmap, pixelData);
-				throw CSharp::NotSupportedException();
-				break;
+				break;			
 			default:
 				throw CSharp::NotSupportedException();
 			}

@@ -48,7 +48,7 @@ namespace Xna {
 
 	private:
 		ContentBuildLogger logger{nullptr};
-		TargetPlatform targetPlatform{TargetPlatform::Windows};
+		TargetPlatform targetPlatform{TargetPlatform::CrossDesktop};
 		GraphicsProfile targetProfile{GraphicsProfile::HiDef};
 		std::string const& buildConfiguration{};
 		bool compressContent;

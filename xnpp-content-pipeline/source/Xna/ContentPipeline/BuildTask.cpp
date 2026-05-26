@@ -69,17 +69,19 @@ namespace Xna {
 		logger = ContentBuildLogger();
 
 		auto buildContent = BuildContent(
-			logger, Xna::TargetPlatform::Windows, 
-			Xna::GraphicsProfile::HiDef,
-			"",
-			false,
-			rootDirectory,
-			loggerDir,
-			"",
-			"",
-			true, 
-			paths,
-			noneItems);
+			logger, //logger
+			Xna::TargetPlatform::Windows, //targetPlatform
+			Xna::GraphicsProfile::HiDef,//targetProfile
+			"", //buildConfiguration
+			false, //compressContent
+			rootDirectory, //rootDirectory
+			loggerDir, //loggerRootDirectory
+			"", //intermediateDirectory
+			"", //outputDirectory
+			true, //rebuildAll
+			paths, //sourceAssets
+			noneItems //copyAssets
+		); 
 
 		buildContent.Execute();
 		
