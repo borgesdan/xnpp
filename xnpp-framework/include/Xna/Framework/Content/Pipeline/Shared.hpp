@@ -5,6 +5,9 @@ namespace Xna {
     enum class TargetPlatform
     {
         Windows,
+        Linux,
+        Mac,
+        CrossDesktop,
         Xbox360,
         WindowsPhone,
     };

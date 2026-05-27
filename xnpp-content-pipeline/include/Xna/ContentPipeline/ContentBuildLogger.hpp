@@ -8,6 +8,7 @@
 #include <filesystem>
 #include <stack>
 #include "ContentIdentity.hpp"
+#include "ConsoleColor.hpp"
 
 namespace Xna {
 	struct ContentBuildLoggerInterface {	
@@ -26,17 +27,28 @@ namespace Xna {
 		}
 
 		void LogImportantMessage(std::string const& message) override {
-			std::cout << "[!] -- " << message << std::endl;
+			std::cout 
+				<< ConsoleColor::Red
+				<< "[!] -- " 
+				<< message 
+				<< ConsoleColor::Reset
+				<< std::endl;
 		}
 
 		void LogWarning(std::string const& helpLink, ContentIdentity contentIdentity, std::string const& message) override {
-			std::cout << "[w] -- " << message << std::endl;
+			std::cout 
+				<< ConsoleColor::BoldYellow 
+				<< "[w] -- " 
+				<< message 
+				<< ConsoleColor::Reset 
+				<< std::endl;
 		}
 	};
 
 	class ContentBuildLogger final {
 	public:
 		inline ContentBuildLogger() { 
+			ConsoleColor::EnableVirtualTerminal();
 			impl = std::make_shared<Implementation>(); 
 			impl->logger = std::make_unique<ConsoleLoggerInterface>();
 		}

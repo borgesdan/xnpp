@@ -19,12 +19,12 @@ namespace Xna {
 		{
 		case TargetPlatform::Windows:
 			return "Windows";
-		case TargetPlatform::WindowsPhone:
-			return "WindowsPhone";
-		case TargetPlatform::Xbox360:
-			return "Xbox360";
+		case TargetPlatform::Linux:
+			return "Linux";
+		case TargetPlatform::CrossDesktop:
+			return "CrossDesktop";
 		default:
-			return "Windows";
+			throw std::runtime_error("Platform not supported.");
 		}
 	}
 
