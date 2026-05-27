@@ -7,6 +7,7 @@
 #include "ProjectReader.hpp"
 #include <Xna/ContentPipeline/BuildContent.hpp>
 #include <Xna/ContentPipeline/App.hpp>
+#include <Xna/ContentPipeline/ConsoleColor.hpp>
 
 using namespace Xna;
 
@@ -48,6 +49,7 @@ static void PrintHelp() {
 int main(int argc, char* argv[]) {
 
     App::Register();
+    ConsoleColor::EnableVirtualTerminal();
 
     // 1. Default Values
     std::string filePath = "";
@@ -96,14 +98,22 @@ int main(int argc, char* argv[]) {
             filePath = arg;
         }
         else {
-            std::cerr << "Invalid argument or missing parameter: " << arg << "\n";
+            std::cerr 
+                << ConsoleColor::Red
+                << "Invalid argument or missing parameter: " 
+                << arg 
+                << ConsoleColor::Reset
+                << std::endl;
             return 1;
         }
     }
 
     // 3. File Validation
     if (filePath.empty()) {
-        std::cerr << "Error: JSON file not specified.\n\n";
+        std::cerr 
+            << ConsoleColor::Red
+            << "Error: JSON file not specified.\n\n"
+            << ConsoleColor::Reset;
         PrintHelp();
         return 1;
     }

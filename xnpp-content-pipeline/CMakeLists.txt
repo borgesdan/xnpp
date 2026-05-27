@@ -42,7 +42,7 @@ add_library(xnpp-content-pipeline
     source/Xna/ContentPipeline/Serialization/Compiler/SoundEffectWriter.cpp
     source/Xna/ContentPipeline/Serialization/Compiler/SongWriter.cpp
     source/Xna/ContentPipeline/Serialization/Compiler/ContentTypeWriter.cpp
- )
+  "source/Xna/ContentPipeline/ConsoleColor.cpp")
 
 target_compile_features(xnpp-content-pipeline PRIVATE cxx_std_20)
 
