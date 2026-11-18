@@ -85,7 +85,7 @@ namespace Xna {
 		if (num7 > num5)
 			return {};
 
-		const auto num8 = MathHelper::Extensions::Sqrt(num5 - num7);
+		const auto num8 = MathHelper::Sqrt(num5 - num7);
 
 		return num6 - num8;
 	}
@@ -94,7 +94,7 @@ namespace Xna {
 		float num1 = 0.0f;
 		float num2 = FLOAT_MAX_VALUE;
 		
-		if (MathHelper::Extensions::Abs(ray.Direction.X) < 9.9999999747524271E-07)
+		if (MathHelper::Abs(ray.Direction.X) < 9.9999999747524271E-07)
 		{
 			if (ray.Position.X < Min.X || ray.Position.X > Max.X)
 				return {};
@@ -115,7 +115,7 @@ namespace Xna {
 			if (num1 > num2)
 				return {};
 		}
-		if (MathHelper::Extensions::Abs(ray.Direction.Y) < 9.9999999747524271E-07)
+		if (MathHelper::Abs(ray.Direction.Y) < 9.9999999747524271E-07)
 		{
 			if (ray.Position.Y < Min.Y || ray.Position.Y > Max.Y)
 				return {};
@@ -136,7 +136,7 @@ namespace Xna {
 			if (num1 > num2)
 				return {};
 		}
-		if (MathHelper::Extensions::Abs(ray.Direction.Z) < 9.9999999747524271E-07)
+		if (MathHelper::Abs(ray.Direction.Z) < 9.9999999747524271E-07)
 		{
 			if (ray.Position.Z < Min.Z || ray.Position.Z > Max.Z)
 				return {};
@@ -164,7 +164,7 @@ namespace Xna {
 	constexpr std::optional<float> Plane::Intersects(Ray const& ray) const {
 		const auto num1 = (Normal.X * ray.Direction.X + Normal.Y * ray.Direction.Y + Normal.Z * ray.Direction.Z);
 
-		if (MathHelper::Extensions::Abs(num1) < 9.9999997473787516E-06)
+		if (MathHelper::Abs(num1) < 9.9999997473787516E-06)
 			return {};
 
 		const auto num2 = (Normal.X * ray.Position.X + Normal.Y * ray.Position.Y + Normal.Z * ray.Position.Z);

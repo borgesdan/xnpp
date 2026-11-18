@@ -202,14 +202,14 @@ namespace Xna {
 		[[nodiscard]] static constexpr Vector2 UnitY() noexcept { return { 0, 1 }; }
 
 		//Calculates the length of the vector.
-		[[nodiscard]] constexpr float Length() const noexcept { return static_cast<float>(MathHelper::Extensions::Sqrt(LengthSquared())); }
+		[[nodiscard]] constexpr float Length() const noexcept { return static_cast<float>(MathHelper::Sqrt(LengthSquared())); }
 
 		//Calculates the length of the vector squared.
 		[[nodiscard]] constexpr float LengthSquared() const noexcept { return (X * X + Y * Y); }
 
 		//Divides a vector by a scalar or another vector.
 		[[nodiscard]] static constexpr float Distance(Vector2 const& value1, Vector2 const& value2) noexcept {
-			return MathHelper::Extensions::Sqrt(DistanceSquared(value1, value2));
+			return MathHelper::Sqrt(DistanceSquared(value1, value2));
 		}
 
 		//Calculates the distance between two vectors squared.
@@ -487,12 +487,12 @@ namespace Xna {
 		[[nodiscard]] static constexpr Vector3 Backward() noexcept { return UnitZ(); }
 
 		//Calculates the length of the vector.
-		[[nodiscard]] constexpr float Length() const noexcept { return MathHelper::Extensions::Sqrt(LengthSquared()); }
+		[[nodiscard]] constexpr float Length() const noexcept { return MathHelper::Sqrt(LengthSquared()); }
 		//Calculates the length of the vector squared.
 		[[nodiscard]] constexpr float LengthSquared() const noexcept { return (X * X + Y * Y + Z * Z); }
 		//Calculates the distance between two vectors.
 		[[nodiscard]] static constexpr float Distance(Vector3 const& value1, Vector3 const& value2) noexcept {
-			return MathHelper::Extensions::Sqrt(DistanceSquared(value1, value2));
+			return MathHelper::Sqrt(DistanceSquared(value1, value2));
 		}
 		//Calculates the distance between two vectors squared.
 		[[nodiscard]] static constexpr float DistanceSquared(Vector3 const& value1, Vector3 const& value2) noexcept {
@@ -833,7 +833,7 @@ namespace Xna {
 
 		//Calculates the length of the vector.
 		[[nodiscard]] constexpr float Length() const noexcept {
-			return MathHelper::Extensions::Sqrt(LengthSquared());
+			return MathHelper::Sqrt(LengthSquared());
 		}
 
 		// 	Calculates the length of the vector squared.
@@ -843,7 +843,7 @@ namespace Xna {
 
 		//Calculates the distance between two vectors.
 		[[nodiscard]] static constexpr float Distance(Vector4 const& value1, Vector4 const& value2) noexcept {
-			return MathHelper::Extensions::Sqrt(DistanceSquared(value1, value2));
+			return MathHelper::Sqrt(DistanceSquared(value1, value2));
 		}
 
 		//Calculates the distance between two vectors squared.
@@ -1307,17 +1307,17 @@ namespace Xna {
 			float result2 = Vector3::Dot(rotateAxis, result1);
 			Vector3 result3;
 			Vector3 result4;
-			if (MathHelper::Extensions::Abs(result2) > 0.998254656791687) {
+			if (MathHelper::Abs(result2) > 0.998254656791687) {
 				if (objectForwardVector)
 				{
 					result3 = *objectForwardVector;
 					result2 = Vector3::Dot(rotateAxis, result3);
 
-					if (MathHelper::Extensions::Abs(result2) > 0.998254656791687)
-						result3 = MathHelper::Extensions::Abs((rotateAxis.X * Vector3::Forward().X + rotateAxis.Y * Vector3::Forward().Y + rotateAxis.Z * Vector3::Forward().Z)) > 0.998254656791687 ? Vector3::Right() : Vector3::Forward();
+					if (MathHelper::Abs(result2) > 0.998254656791687)
+						result3 = MathHelper::Abs((rotateAxis.X * Vector3::Forward().X + rotateAxis.Y * Vector3::Forward().Y + rotateAxis.Z * Vector3::Forward().Z)) > 0.998254656791687 ? Vector3::Right() : Vector3::Forward();
 				}
 				else
-					result3 = MathHelper::Extensions::Abs((rotateAxis.X * Vector3::Forward().X + rotateAxis.Y * Vector3::Forward().Y + rotateAxis.Z * Vector3::Forward().Z)) > 0.998254656791687 ? Vector3::Right() : Vector3::Forward();
+					result3 = MathHelper::Abs((rotateAxis.X * Vector3::Forward().X + rotateAxis.Y * Vector3::Forward().Y + rotateAxis.Z * Vector3::Forward().Z)) > 0.998254656791687 ? Vector3::Right() : Vector3::Forward();
 
 				result4 = Vector3::Cross(rotateAxis, result3);
 				result4.Normalize();
@@ -1463,8 +1463,8 @@ namespace Xna {
 
 		//Returns an x-axis rotation matrix.
 		[[nodiscard]] static constexpr Matrix CreateRotationX(float radians) noexcept {
-			const auto num1 = MathHelper::Extensions::Cos(radians);
-			const auto num2 = MathHelper::Extensions::Sin(radians);
+			const auto num1 = MathHelper::Cos(radians);
+			const auto num2 = MathHelper::Sin(radians);
 			Matrix rotationX;
 			rotationX.M11 = 1.0f;
 			rotationX.M12 = 0.0f;
@@ -1487,8 +1487,8 @@ namespace Xna {
 
 		//Returns a y-axis rotation matrix.
 		[[nodiscard]] static constexpr Matrix CreateRotationY(float radians) noexcept {
-			const auto num1 = MathHelper::Extensions::Cos(radians);
-			const auto num2 = MathHelper::Extensions::Sin(radians);
+			const auto num1 = MathHelper::Cos(radians);
+			const auto num2 = MathHelper::Sin(radians);
 			Matrix rotationY;
 			rotationY.M11 = num1;
 			rotationY.M12 = 0.0f;
@@ -1511,8 +1511,8 @@ namespace Xna {
 
 		//Returns an z-axis rotation matrix.
 		[[nodiscard]] static constexpr Matrix CreateRotationZ(float radians) noexcept {
-			const auto num1 = MathHelper::Extensions::Cos(radians);
-			const auto num2 = MathHelper::Extensions::Sin(radians);
+			const auto num1 = MathHelper::Cos(radians);
+			const auto num2 = MathHelper::Sin(radians);
 			Matrix rotationZ;
 			rotationZ.M11 = num1;
 			rotationZ.M12 = num2;
@@ -1538,8 +1538,8 @@ namespace Xna {
 			const auto x = axis.X;
 			const auto y = axis.Y;
 			const auto z = axis.Z;
-			const auto num1 = MathHelper::Extensions::Sin(angle);
-			const auto num2 = MathHelper::Extensions::Cos(angle);
+			const auto num1 = MathHelper::Sin(angle);
+			const auto num2 = MathHelper::Cos(angle);
 			const auto num3 = x * x;
 			const auto num4 = y * y;
 			const auto num5 = z * z;
@@ -1573,7 +1573,7 @@ namespace Xna {
 			assert(farPlaneDistance > 0.0 && "farPlaneDistance <= 0");
 			assert((nearPlaneDistance < farPlaneDistance) && "(nearPlaneDistance >= farPlaneDistance");
 
-			const auto num1 = 1.0f / MathHelper::Extensions::Tan(fieldOfView * 0.5f);
+			const auto num1 = 1.0f / MathHelper::Tan(fieldOfView * 0.5f);
 			const auto num2 = num1 / aspectRatio;
 			Matrix perspectiveFieldOfView;
 			perspectiveFieldOfView.M11 = num2;
@@ -2071,7 +2071,7 @@ namespace Xna {
 		}
 
 		//Calculates the length of a Quaternion.
-		[[nodiscard]] constexpr float Length() const noexcept { return MathHelper::Extensions::Sqrt(LengthSquared()); }
+		[[nodiscard]] constexpr float Length() const noexcept { return MathHelper::Sqrt(LengthSquared()); }
 
 		//Divides each component of a quaternion by the length of the quaternion.
 		constexpr void Normalize() noexcept {
@@ -2119,8 +2119,8 @@ namespace Xna {
 		//Creates a Quaternion from a vector and an angle to rotate about the vector.
 		[[nodiscard]] static constexpr Quaternion CreateFromAxisAngle(Vector3 const& axis, float angle) noexcept {
 			const auto num1 = angle * 0.5f;
-			const auto num2 = MathHelper::Extensions::Sin(num1);
-			const auto num3 = MathHelper::Extensions::Cos(num1);
+			const auto num2 = MathHelper::Sin(num1);
+			const auto num3 = MathHelper::Cos(num1);
 			Quaternion fromAxisAngle;
 			fromAxisAngle.X = axis.X * num2;
 			fromAxisAngle.Y = axis.Y * num2;
@@ -2131,14 +2131,14 @@ namespace Xna {
 		//Creates a new Quaternion from specified yaw, pitch, and roll angles.
 		[[nodiscard]] static constexpr Quaternion CreateFromYawPitchRoll(float yaw, float pitch, float roll) noexcept {
 			const auto num1 = roll * 0.5f;
-			const auto num2 = MathHelper::Extensions::Sin(num1);
-			const auto num3 = MathHelper::Extensions::Cos(num1);
+			const auto num2 = MathHelper::Sin(num1);
+			const auto num3 = MathHelper::Cos(num1);
 			const auto num4 = pitch * 0.5f;
-			const auto num5 = MathHelper::Extensions::Sin(num4);
-			const auto num6 = MathHelper::Extensions::Cos(num4);
+			const auto num5 = MathHelper::Sin(num4);
+			const auto num6 = MathHelper::Cos(num4);
 			const auto num7 = yaw * 0.5f;
-			const auto num8 = MathHelper::Extensions::Sin(num7);
-			const auto num9 = MathHelper::Extensions::Cos(num7);
+			const auto num8 = MathHelper::Sin(num7);
+			const auto num9 = MathHelper::Cos(num7);
 			Quaternion fromYawPitchRoll;
 			fromYawPitchRoll.X = (num9 * num5 * num3 + num8 * num6 * num2);
 			fromYawPitchRoll.Y = (num8 * num6 * num3 - num9 * num5 * num2);
@@ -2153,7 +2153,7 @@ namespace Xna {
 			Quaternion fromRotationMatrix;
 			if (num1 > 0.0)
 			{
-				const auto num2 = MathHelper::Extensions::Sqrt(num1 + 1.0F);
+				const auto num2 = MathHelper::Sqrt(num1 + 1.0F);
 				fromRotationMatrix.W = num2 * 0.5f;
 				const auto num3 = 0.5f / num2;
 				fromRotationMatrix.X = (matrix.M23 - matrix.M32) * num3;
@@ -2162,7 +2162,7 @@ namespace Xna {
 			}
 			else if (matrix.M11 >= matrix.M22 && matrix.M11 >= matrix.M33)
 			{
-				const auto num4 = MathHelper::Extensions::Sqrt(1.0F + matrix.M11 - matrix.M22 - matrix.M33);
+				const auto num4 = MathHelper::Sqrt(1.0F + matrix.M11 - matrix.M22 - matrix.M33);
 				const auto num5 = 0.5f / num4;
 				fromRotationMatrix.X = 0.5f * num4;
 				fromRotationMatrix.Y = (matrix.M12 + matrix.M21) * num5;
@@ -2171,7 +2171,7 @@ namespace Xna {
 			}
 			else if (matrix.M22 > matrix.M33)
 			{
-				const auto num6 = MathHelper::Extensions::Sqrt(1.0F + matrix.M22 - matrix.M11 - matrix.M33);
+				const auto num6 = MathHelper::Sqrt(1.0F + matrix.M22 - matrix.M11 - matrix.M33);
 				const auto num7 = 0.5f / num6;
 				fromRotationMatrix.X = (matrix.M21 + matrix.M12) * num7;
 				fromRotationMatrix.Y = 0.5f * num6;
@@ -2180,7 +2180,7 @@ namespace Xna {
 			}
 			else
 			{
-				const auto num8 = MathHelper::Extensions::Sqrt(1.0F + matrix.M33 - matrix.M11 - matrix.M22);
+				const auto num8 = MathHelper::Sqrt(1.0F + matrix.M33 - matrix.M11 - matrix.M22);
 				const auto num9 = 0.5f / num8;
 				fromRotationMatrix.X = (matrix.M31 + matrix.M13) * num9;
 				fromRotationMatrix.Y = (matrix.M32 + matrix.M23) * num9;
@@ -2215,9 +2215,9 @@ namespace Xna {
 			}
 			else {
 				const auto a = std::acos(d);
-				const auto num4 = 1.0F / MathHelper::Extensions::Sin(a);
-				num2 = MathHelper::Extensions::Sin((1.0F - num1) * a) * num4;
-				num3 = flag ? -MathHelper::Extensions::Sin(num1 * a) * num4 : MathHelper::Extensions::Sin(num1 * a) * num4;
+				const auto num4 = 1.0F / MathHelper::Sin(a);
+				num2 = MathHelper::Sin((1.0F - num1) * a) * num4;
+				num3 = flag ? -MathHelper::Sin(num1 * a) * num4 : MathHelper::Sin(num1 * a) * num4;
 			}
 			Quaternion quaternion;
 			quaternion.X = num2 * quaternion1.X + num3 * quaternion2.X;
@@ -2245,7 +2245,7 @@ namespace Xna {
 				quaternion.Z = num2 * quaternion1.Z - num1 * quaternion2.Z;
 				quaternion.W = num2 * quaternion1.W - num1 * quaternion2.W;
 			}
-			const auto num3 = 1.0f / MathHelper::Extensions::Sqrt(quaternion.X * quaternion.X + quaternion.Y * quaternion.Y + quaternion.Z * quaternion.Z + quaternion.W * quaternion.W);
+			const auto num3 = 1.0f / MathHelper::Sqrt(quaternion.X * quaternion.X + quaternion.Y * quaternion.Y + quaternion.Z * quaternion.Z + quaternion.W * quaternion.W);
 			quaternion.X *= num3;
 			quaternion.Y *= num3;
 			quaternion.Z *= num3;

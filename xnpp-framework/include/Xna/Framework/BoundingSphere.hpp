@@ -291,7 +291,7 @@ namespace Xna {
 		BoundingSphere boundingSphere;
 		boundingSphere.Center = Vector3::Transform(Center, matrix);
 		float d = MathHelper::Max((matrix.M11 * matrix.M11 + matrix.M12 * matrix.M12 + matrix.M13 * matrix.M13), MathHelper::Max((matrix.M21 * matrix.M21 + matrix.M22 * matrix.M22 + matrix.M23 * matrix.M23), (matrix.M31 * matrix.M31 + matrix.M32 * matrix.M32 + matrix.M33 * matrix.M33)));
-		boundingSphere.Radius = Radius * MathHelper::Extensions::Sqrt(d);
+		boundingSphere.Radius = Radius * MathHelper::Sqrt(d);
 		return boundingSphere;
 	}
 

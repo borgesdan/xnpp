@@ -52,7 +52,7 @@ namespace Xna {
 			const auto num7 = (num2 * num6 - num3 * num5);
 			const auto num8 = (num3 * num4 - num1 * num6);
 			const auto num9 = (num1 * num5 - num2 * num4);
-			const auto num10 = 1.0f / MathHelper::Extensions::Sqrt(num7 * num7 + num8 * num8 + num9 * num9);
+			const auto num10 = 1.0f / MathHelper::Sqrt(num7 * num7 + num8 * num8 + num9 * num9);
 			Normal.X = num7 * num10;
 			Normal.Y = num8 * num10;
 			Normal.Z = num9 * num10;
@@ -63,10 +63,10 @@ namespace Xna {
 		constexpr void Normalize() {
 			const auto d = (Normal.X * Normal.X + Normal.Y * Normal.Y + Normal.Z * Normal.Z);
 
-			if (MathHelper::Extensions::Abs(d - 1.0f) < 1.1920928955078125E-07)
+			if (MathHelper::Abs(d - 1.0f) < 1.1920928955078125E-07)
 				return;
 
-			const auto num = 1.0f / MathHelper::Extensions::Sqrt(d);
+			const auto num = 1.0f / MathHelper::Sqrt(d);
 
 			Normal.X *= num;
 			Normal.Y *= num;
