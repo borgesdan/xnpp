@@ -1,7 +1,7 @@
 #ifndef XNA_FRAMEWORK_MATRIX_HPP
 #define XNA_FRAMEWORK_MATRIX_HPP
 
-#include "Vector4.hpp"
+#include "MathTypes.hpp"
 #include <cassert>
 #include <cstddef>
 
@@ -126,7 +126,7 @@ namespace Xna {
 		}
 
 		//Creates a spherical billboard that rotates around a specified object position.
-		static constexpr Matrix CreateBillboard(Vector3 const& objectPosition, Vector3 const& cameraPosition, Vector3 const& cameraUpVector, std::optional<Vector3> const& cameraForwardVector) {
+		static constexpr Matrix CreateBillboard(Vector3 const& objectPosition, Vector3 const& cameraPosition, Vector3 const& cameraUpVector, const Vector3* cameraForwardVector) {
 			Vector3 result1;
 			result1.X = objectPosition.X - cameraPosition.X;
 			result1.Y = objectPosition.Y - cameraPosition.Y;
@@ -134,7 +134,7 @@ namespace Xna {
 			const auto d = result1.LengthSquared();
 
 			if (static_cast<double>(d) < 9.9999997473787516E-05)
-				result1 = cameraForwardVector ? -cameraForwardVector.value() : Vector3::Forward();
+				result1 = cameraForwardVector ? -*cameraForwardVector : Vector3::Forward();
 			else
 				result1 = Vector3::Multiply(result1, 1.0f / std::sqrt(d));
 
@@ -167,15 +167,15 @@ namespace Xna {
 			Vector3 const& objectPosition,
 			Vector3 const& cameraPosition,
 			Vector3 const& rotateAxis,
-			std::optional<Vector3> const& cameraForwardVector,
-			std::optional<Vector3> const& objectForwardVector) {
+			const Vector3* cameraForwardVector,
+			const Vector3* objectForwardVector) {
 			Vector3 result1;
 			result1.X = objectPosition.X - cameraPosition.X;
 			result1.Y = objectPosition.Y - cameraPosition.Y;
 			result1.Z = objectPosition.Z - cameraPosition.Z;
 			const auto d = result1.LengthSquared();
 			if (static_cast<double>(d) < 9.9999997473787516E-05)
-				result1 = cameraForwardVector ? -cameraForwardVector.value() : Vector3::Forward();
+				result1 = cameraForwardVector ? -*cameraForwardVector : Vector3::Forward();
 			else
 				result1 = Vector3::Multiply(result1, 1.0f / std::sqrt(d));
 
@@ -186,7 +186,7 @@ namespace Xna {
 			if (MathHelper::Extensions::Abs(result2) > 0.998254656791687) {
 				if (objectForwardVector)
 				{
-					result3 = objectForwardVector.value();
+					result3 = *objectForwardVector;
 					result2 = Vector3::Dot(rotateAxis, result3);
 
 					if (MathHelper::Extensions::Abs(result2) > 0.998254656791687)
@@ -916,10 +916,7 @@ namespace Xna {
 				&& M21 == other.M21 && M22 == other.M22 && M23 == other.M23 && M24 == other.M24
 				&& M31 == other.M31 && M32 == other.M32 && M33 == other.M33 && M34 == other.M34
 				&& M41 == other.M41 && M42 == other.M42 && M43 == other.M43 && M44 == other.M44;
-		}
-
-		constexpr operator std::optional<Matrix>() const noexcept { return *this; }
-		constexpr operator std::optional<std::reference_wrapper<const Matrix>>() const noexcept { return std::cref(*this); }
+		}		
 	};
 
 	constexpr Vector2 Vector2::Transform(Vector2 const& position, Matrix const& matrix) {

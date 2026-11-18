@@ -10,7 +10,7 @@
 #include "Effects/Effect.hpp"
 #include "Xna/Framework/Matrix.hpp"
 #include "Xna/Framework/Color.hpp"
-#include "Xna/Framework/Vector2.hpp"
+#include "Xna/Framework/MathTypes.hpp"
 #include "Shared.hpp"
 #include <optional>
 #include <string>

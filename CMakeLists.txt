@@ -19,11 +19,11 @@ if (XNPP_BUILD_LIB)
 endif()
 
 if (XNPP_BUILD_CONTENT_PIPELINE)
-	add_subdirectory("xnpp-content-pipeline")
+	#add_subdirectory("xnpp-content-pipeline")
 endif()
 
 if (XNPP_BUILD_CONTENT_CLI)
-	add_subdirectory("xnpp-content-cli")
+	#add_subdirectory("xnpp-content-cli")
 endif()
 
 if(XNPP_BUILD_GAME_TEST)

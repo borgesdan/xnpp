@@ -8,15 +8,10 @@
 #include "Framework/MathHelper.hpp"
 #include "Framework/Matrix.hpp"
 #include "Framework/Plane.hpp"
-#include "Framework/Point.hpp"
 #include "Framework/Quaternion.hpp"
 #include "Framework/Ray.hpp"
-#include "Framework/Rectangle.hpp"
 #include "Framework/Shared.hpp"
-#include "Framework/Vector2.hpp"
-#include "Framework/Vector3.hpp"
-#include "Framework/Vector4.hpp"
-
+#include "Framework/MathTypes.hpp"
 
 //Game
 #include "Framework/Game/DrawableGameComponent.hpp"

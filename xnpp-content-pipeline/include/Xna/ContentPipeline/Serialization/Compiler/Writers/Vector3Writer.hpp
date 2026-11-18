@@ -2,7 +2,7 @@
 #define XNA_WRITERS_VECTOR3WRITTER_HPP
 
 #include "../BuiltinTypeWriter.hpp"
-#include <Xna/Framework/Vector3.hpp>
+#include <Xna/Framework/MathTypes.hpp>
 
 namespace Xna {
 	struct Vector3Writer final : public BuiltinTypeWriter<Vector3> {

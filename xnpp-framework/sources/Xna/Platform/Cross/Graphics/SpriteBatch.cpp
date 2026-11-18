@@ -11,8 +11,8 @@
 #include <cmath>
 
 #include "Xna/Framework/Graphics/SpriteBatch.hpp"
-#include "Xna/Framework/Rectangle.hpp"
-#include "Xna/Framework/Vector2.hpp"
+#include "Xna/Framework/MathTypes.hpp"
+#include "Xna/Framework/MathTypes.hpp"
 #include "BgfxGraphics.hpp"
 #include "EmbeddedShaders.hpp"
 

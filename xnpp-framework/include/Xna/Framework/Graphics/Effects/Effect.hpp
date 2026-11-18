@@ -1,7 +1,7 @@
 #ifndef XNA_EFFECTS_EFFECT_HPP
 #define XNA_EFFECTS_EFFECT_HPP
 
-#include "Xna/Framework/Vector4.hpp"
+#include "Xna/Framework/MathTypes.hpp"
 
 namespace Xna {
 	struct EffectTechnique{};

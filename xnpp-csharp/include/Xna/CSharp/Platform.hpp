@@ -3,7 +3,6 @@
 
 #include "Macros.hpp"
 #include <cstdint>
-#include "Drawing/Point.hpp"
 #include "Drawing/Rectangle.hpp"
 #include "Drawing/Size.hpp"
 #include <string>

@@ -1,7 +1,7 @@
 #ifndef XNA_FRAMEWORK_AUDIO_UNSAFENATIVESTRUCTURES_HPP
 #define XNA_FRAMEWORK_AUDIO_UNSAFENATIVESTRUCTURES_HPP
 
-#include "Xna/Framework/Vector3.hpp"
+#include "Xna/Framework/MathTypes.hpp"
 #include <cstdint>
 
 namespace Xna {

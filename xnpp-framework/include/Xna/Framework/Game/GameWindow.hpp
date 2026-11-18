@@ -6,7 +6,7 @@
 #include <Xna/CSharp/Windows/Forms/Screen.hpp>
 #include <Xna/CSharp/Event.hpp>
 #include "Xna/Framework/Graphics/GraphicsAdapter.hpp"
-#include "Xna/Framework/Rectangle.hpp"
+#include "Xna/Framework/MathTypes.hpp"
 #include "Xna/Framework/Shared.hpp"
 #include "Xna/Platform/Platform.hpp"
 

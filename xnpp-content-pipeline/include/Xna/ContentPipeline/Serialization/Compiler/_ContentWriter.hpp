@@ -9,7 +9,7 @@
 #include <Xna/CSharp/Type.hpp>
 #include <Xna/Framework/Content/Pipeline/Shared.hpp>
 #include <Xna/Framework/Graphics/Shared.hpp>
-#include <Xna/Framework/Vector4.hpp>
+#include <Xna/Framework/MathTypes.hpp>
 #include <Xna/Framework/Matrix.hpp>
 #include <Xna/Framework/Quaternion.hpp>
 #include <Xna/Framework/Color.hpp>

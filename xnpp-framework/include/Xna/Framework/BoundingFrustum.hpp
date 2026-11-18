@@ -5,6 +5,7 @@
 #include "Matrix.hpp"
 #include <optional>
 #include <cstddef>
+#include <vector>
 
 namespace Xna {
 	//Defines a frustum and helps determine whether forms intersect with it. 

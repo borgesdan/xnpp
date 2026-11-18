@@ -10,9 +10,9 @@
 #include <any>
 #include <filesystem>
 #include <cstddef>
-#include "Xna/Framework/Vector2.hpp"
-#include "Xna/Framework/Vector3.hpp"
-#include "Xna/Framework/Vector4.hpp"
+#include "Xna/Framework/MathTypes.hpp"
+#include "Xna/Framework/MathTypes.hpp"
+#include "Xna/Framework/MathTypes.hpp"
 #include "Xna/Framework/Matrix.hpp"
 #include "Xna/Framework/Quaternion.hpp"
 #include "Xna/Framework/Color.hpp"

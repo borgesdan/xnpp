@@ -2,7 +2,7 @@
 #define XNA_FRAMEWORK_GRAPHICS_VERTEXPOSITIONCOLOR_HPP
 
 #include "IVertexType.hpp"
-#include "Xna/Framework/Vector3.hpp"
+#include "Xna/Framework/MathTypes.hpp"
 #include "Xna/Framework/Color.hpp"
 #include "Texture2D.hpp"
 

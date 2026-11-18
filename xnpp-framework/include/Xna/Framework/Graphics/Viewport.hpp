@@ -1,8 +1,8 @@
 #ifndef XNA_FRAMEWORK_GRAPHICS_VIEWPORT_HPP
 #define XNA_FRAMEWORK_GRAPHICS_VIEWPORT_HPP
 
-#include "../Rectangle.hpp"
-#include "../Vector3.hpp"
+#include "../MathTypes.hpp"
+#include "../MathTypes.hpp"
 #include "../Matrix.hpp"
 #include <optional>
 

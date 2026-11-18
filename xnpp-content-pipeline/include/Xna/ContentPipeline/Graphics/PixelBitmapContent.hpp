@@ -6,7 +6,7 @@
 #include <cstddef>
 #include <cstring>
 #include <Xna/Framework/Color.hpp>
-#include <Xna/Framework/Vector4.hpp>
+#include <Xna/Framework/MathTypes.hpp>
 
 namespace Xna {
 	template <class T>

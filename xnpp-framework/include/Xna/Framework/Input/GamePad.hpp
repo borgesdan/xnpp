@@ -2,7 +2,7 @@
 #define XNA_FRAMEWORK_INPUT_GAMEPAD_HPP
 
 #include "Shared.hpp"
-#include "Xna/Framework/Vector2.hpp"
+#include "Xna/Framework/MathTypes.hpp"
 #include "Xna/Internal/Macros.hpp"
 
 namespace Xna {

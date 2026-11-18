@@ -2,7 +2,7 @@
 #define XNA_FRAMEWORK_AUDIO_AUDIOLISTER_HPP
 
 #include "UnsafeNativeStructures.hpp"
-#include "Xna/Framework/Vector3.hpp"
+#include "Xna/Framework/MathTypes.hpp"
 
 namespace Xna {
 	class AudioListener {

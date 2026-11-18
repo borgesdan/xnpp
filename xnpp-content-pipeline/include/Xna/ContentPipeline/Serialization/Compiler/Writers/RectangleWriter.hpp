@@ -2,7 +2,7 @@
 #define XNA_WRITERS_RECTANGLERITTER_HPP
 
 #include "../BuiltinTypeWriter.hpp"
-#include <Xna/Framework/Rectangle.hpp>
+#include <Xna/Framework/MathTypes.hpp>
 
 namespace Xna {
 	struct RectangleWriter final : public BuiltinTypeWriter<Rectangle> {

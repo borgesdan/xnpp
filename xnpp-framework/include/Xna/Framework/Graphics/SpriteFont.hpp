@@ -3,8 +3,8 @@
 
 #include "_GraphicsDevice.hpp"
 #include "Texture2D.hpp"
-#include "Xna/Framework/Vector2.hpp"
-#include "Xna/Framework/Vector3.hpp"
+#include "Xna/Framework/MathTypes.hpp"
+#include "Xna/Framework/MathTypes.hpp"
 #include "Xna/Internal/Macros.hpp"
 #include <cstdint>
 #include <memory>

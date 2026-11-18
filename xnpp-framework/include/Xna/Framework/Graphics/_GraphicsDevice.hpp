@@ -6,7 +6,7 @@
 #include <cstdint>
 #include <vector>
 #include "Shared.hpp"
-#include "../Rectangle.hpp"
+#include "../MathTypes.hpp"
 #include <Xna/CSharp/Exception.hpp>
 #include <Xna/CSharp/Event.hpp>
 #include "PresentationParameters.hpp"

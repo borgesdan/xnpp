@@ -3,6 +3,7 @@
 
 #include "BoundingFrustum.hpp"
 #include <cstddef>
+#include <vector>
 
 namespace Xna {
 	//Defines an axis-aligned box-shaped 3D volume. 

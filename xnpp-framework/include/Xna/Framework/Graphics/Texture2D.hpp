@@ -1,7 +1,7 @@
 #ifndef XNA_FRAMEWORK_GRAPHICS_TEXTURE2D_HPP
 #define XNA_FRAMEWORK_GRAPHICS_TEXTURE2D_HPP
 
-#include "../Rectangle.hpp"
+#include "../MathTypes.hpp"
 #include "../Color.hpp"
 #include "Texture.hpp"
 #include <vector>

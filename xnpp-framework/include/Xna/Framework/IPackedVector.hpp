@@ -1,7 +1,7 @@
 #ifndef XNA_FRAMEWORK_IPACKEDVECTOR_HPP
 #define XNA_FRAMEWORK_IPACKEDVECTOR_HPP
 
-#include "Vector4.hpp"
+#include "MathTypes.hpp"
 
 namespace Xna {
 	//Interface that converts packed vector types to and from Vector4 values, allowing multiple encodings to be manipulated in a generic way.

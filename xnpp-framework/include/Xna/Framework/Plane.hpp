@@ -2,8 +2,8 @@
 #define XNA_FRAMEWORK_PLANE_HPP
 
 #include "Shared.hpp"
-#include "Vector3.hpp"
-#include "Vector4.hpp"
+#include "MathTypes.hpp"
+#include "MathTypes.hpp"
 #include "Matrix.hpp"
 #include "Quaternion.hpp"
 #include <optional>

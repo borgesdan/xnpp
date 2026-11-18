@@ -7,7 +7,7 @@
 #include <optional>
 #include <cstddef>
 #include "Shared.hpp"
-#include "../Rectangle.hpp"
+#include "../MathTypes.hpp"
 #include "Xna/Internal/Macros.hpp"
 
 namespace Xna {

@@ -360,10 +360,6 @@ namespace Xna {
 		constexpr bool operator==(const Quaternion& other) const {
 			return X == other.X && Y == other.Y && Z == other.Z && W == other.W;
 		}
-
-		constexpr operator std::optional<Quaternion>() const {
-			return std::make_optional<Quaternion>(X, Y, Z, W);
-		}
 	};
 
 	constexpr Vector3 Vector3::Transform(Vector3 const& value, Quaternion const& rotation)

@@ -2,8 +2,8 @@
 #define XNA_GRAPHICS_SPRITEFONTCONTENT_HPP
 
 #include "Texture2DContent.hpp"
-#include <Xna/Framework/Rectangle.hpp>
-#include <Xna/Framework/Vector3.hpp>
+#include <Xna/Framework/MathTypes.hpp>
+#include <Xna/Framework/MathTypes.hpp>
 #include <cstdint>
 #include <vector>
 #include <optional>
