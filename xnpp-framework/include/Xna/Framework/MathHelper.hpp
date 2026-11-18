@@ -24,15 +24,24 @@ namespace Xna {
 		static constexpr double PI = 3.1415926535897931;
 
 		//Converts degrees to radians.
-		[[nodiscard]] static constexpr float ToRadians(float degrees) noexcept { return degrees * (static_cast<float>(PI) / 180.0f); }
+		template <FloatOrDouble T>
+		[[nodiscard]] static constexpr T ToRadians(T degrees) noexcept { return degrees * (static_cast<T>(PI) / 180.0f); }
+		
 		//Converts radians to degrees.
-		[[nodiscard]] static constexpr float ToDegrees(float radians) noexcept { return radians * 57.2957764F; }
+		template <FloatOrDouble T>
+		[[nodiscard]] static constexpr T ToDegrees(T radians) noexcept { return radians * T(57.2957764); }
+		
 		//Calculates the absolute value of the difference of two values
-		[[nodiscard]] static float Distance(float value1, float value2) noexcept { return std::abs(value1 - value2); }
+		template <FloatOrDouble T>
+		[[nodiscard]] static constexpr T Distance(T value1, T value2) noexcept { return std::abs(value1 - value2); }
+		
 		//Returns the lesser of two values.
-		[[nodiscard]] static constexpr float Min(float value1, float value2) noexcept { return (std::min)(value1, value2); }
+		template <FloatOrDouble T>
+		[[nodiscard]] static constexpr T Min(T value1, T value2) noexcept { return (std::min)(value1, value2); }
+		
 		//Returns the greater of two values.
-		[[nodiscard]] static constexpr float Max(float value1, float value2) noexcept { return (std::max)(value1, value2); }
+		template <FloatOrDouble T>
+		[[nodiscard]] static constexpr T Max(T value1, T value2) noexcept { return (std::max)(value1, value2); }
 
 		//Restricts a value to be within a specified range.
 		template <typename T>
