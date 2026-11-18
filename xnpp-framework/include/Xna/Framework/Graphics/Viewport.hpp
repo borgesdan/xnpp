@@ -3,7 +3,7 @@
 
 #include "../MathTypes.hpp"
 #include "../MathTypes.hpp"
-#include "../Matrix.hpp"
+#include "../MathTypes.hpp"
 #include <optional>
 
 namespace Xna {

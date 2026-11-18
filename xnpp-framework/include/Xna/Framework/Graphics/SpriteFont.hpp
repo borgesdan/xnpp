@@ -12,7 +12,7 @@
 #include <string>
 #include <cstddef>
 #include "SpriteBatch.hpp"
-#include "Xna/Framework/Matrix.hpp"
+#include "Xna/Framework/MathTypes.hpp"
 
 namespace Xna {
 

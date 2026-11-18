@@ -2,7 +2,7 @@
 #define XNA_FRAMEWORK_BOUNDINGFRUSTUM_HPP
 
 #include "Plane.hpp"
-#include "Matrix.hpp"
+#include "MathTypes.hpp"
 #include <optional>
 #include <cstddef>
 #include <vector>

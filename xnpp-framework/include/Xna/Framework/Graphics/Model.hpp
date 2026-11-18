@@ -1,7 +1,7 @@
 #ifndef XNA_FRAMEWORK_GRAPHICS_MODEL_HPP
 #define XNA_FRAMEWORK_GRAPHICS_MODEL_HPP
 
-#include "Xna/Framework/Matrix.hpp"
+#include "Xna/Framework/MathTypes.hpp"
 #include "Xna/Internal/Macros.hpp"
 #include <cstddef>
 #include <Xna/CSharp/Collection.hpp>

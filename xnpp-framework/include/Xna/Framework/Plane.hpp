@@ -4,8 +4,8 @@
 #include "Shared.hpp"
 #include "MathTypes.hpp"
 #include "MathTypes.hpp"
-#include "Matrix.hpp"
-#include "Quaternion.hpp"
+#include "MathTypes.hpp"
+#include "MathTypes.hpp"
 #include <optional>
 #include "Xna/Framework/MathHelper.hpp"
 

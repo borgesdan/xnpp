@@ -8,7 +8,7 @@
 #include "DepthStencilState.hpp"
 #include "Texture2D.hpp"
 #include "Effects/Effect.hpp"
-#include "Xna/Framework/Matrix.hpp"
+#include "Xna/Framework/MathTypes.hpp"
 #include "Xna/Framework/Color.hpp"
 #include "Xna/Framework/MathTypes.hpp"
 #include "Shared.hpp"
