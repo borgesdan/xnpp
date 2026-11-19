@@ -1,5 +1,4 @@
-#ifndef XNA_FRAMEWORK_MATHHELPER_HPP
-#define XNA_FRAMEWORK_MATHHELPER_HPP
+#pragma once
 
 #include <algorithm>
 #include <cmath>
@@ -8,42 +7,54 @@
 #include <type_traits>
 
 namespace Xna {
-	// Define um concept que aceita estritamente float ou double
+	// Defines a concept that strictly accepts float or double
 	template<typename T>
 	concept FloatOrDouble = std::same_as<T, float> || std::same_as<T, double>;
 
-	//Contains commonly used precalculated values. 
+	// Contains commonly used precalculated values and math utilities.
 	struct MathHelper final {
 		MathHelper() = delete;
-		MathHelper(MathHelper&) = delete;
+		MathHelper(const MathHelper&) = delete;
 		MathHelper(MathHelper&&) = delete;
+		MathHelper& operator=(const MathHelper&) = delete;
+		MathHelper& operator=(MathHelper&&) = delete;
 
-		//Represents the mathematical constant e.
+		// Represents the mathematical constant e.
 		static constexpr double E = 2.7182818284590451;
-		//Represents the value of pi.
+		// Represents the value of pi.
 		static constexpr double PI = 3.1415926535897931;
 
-		//Converts degrees to radians.
+		// Converts degrees to radians.
 		template <FloatOrDouble T>
-		[[nodiscard]] static constexpr T ToRadians(T degrees) noexcept { return degrees * (static_cast<T>(PI) / 180.0f); }
-		
-		//Converts radians to degrees.
-		template <FloatOrDouble T>
-		[[nodiscard]] static constexpr T ToDegrees(T radians) noexcept { return radians * T(57.2957764); }
-		
-		//Calculates the absolute value of the difference of two values
-		template <FloatOrDouble T>
-		[[nodiscard]] static constexpr T Distance(T value1, T value2) noexcept { return std::abs(value1 - value2); }
-		
-		//Returns the lesser of two values.
-		template <FloatOrDouble T>
-		[[nodiscard]] static constexpr T Min(T value1, T value2) noexcept { return (std::min)(value1, value2); }
-		
-		//Returns the greater of two values.
-		template <FloatOrDouble T>
-		[[nodiscard]] static constexpr T Max(T value1, T value2) noexcept { return (std::max)(value1, value2); }
+		[[nodiscard]] static constexpr T ToRadians(T degrees) noexcept {
+			return degrees * static_cast<T>(PI / 180.0);
+		}
 
-		//Restricts a value to be within a specified range.
+		// Converts radians to degrees.
+		template <FloatOrDouble T>
+		[[nodiscard]] static constexpr T ToDegrees(T radians) noexcept {
+			return radians * static_cast<T>(180.0 / PI);
+		}
+
+		// Calculates the absolute value of the difference of two values.
+		template <FloatOrDouble T>
+		[[nodiscard]] static constexpr T Distance(T value1, T value2) noexcept {
+			return Abs(value1 - value2);
+		}
+
+		// Returns the lesser of two values.
+		template <FloatOrDouble T>
+		[[nodiscard]] static constexpr T Min(T value1, T value2) noexcept {
+			return (std::min)(value1, value2);
+		}
+
+		// Returns the greater of two values.
+		template <FloatOrDouble T>
+		[[nodiscard]] static constexpr T Max(T value1, T value2) noexcept {
+			return (std::max)(value1, value2);
+		}
+
+		// Restricts a value to be within a specified range.
 		template <typename T>
 		[[nodiscard]] static constexpr T Clamp(T value, T min, T max) noexcept {
 			value = value > max ? max : value;
@@ -51,34 +62,36 @@ namespace Xna {
 			return value;
 		}
 
-		//Linearly interpolates between two values.
+		// Linearly interpolates between two values.
 		template <typename T1, FloatOrDouble T2>
 		[[nodiscard]] static constexpr T2 Lerp(T1 value1, T1 value2, T2 amount) noexcept {
 			return std::lerp(static_cast<T2>(value1), static_cast<T2>(value2), amount);
 		}
 
-		//Returns the Cartesian coordinate for one axis of a point that is defined by a given triangle and two normalized barycentric (areal) coordinates.
+		// Returns the Cartesian coordinate for one axis of a point defined by a triangle and two barycentric coordinates.
 		template <typename T>
 		[[nodiscard]] static constexpr T Barycentric(T value1, T value2, T value3, T amount1, T amount2) noexcept {
-			return value1 + amount1 * (value2 - value1) + amount2 * (value3 - value1);			
+			return value1 + amount1 * (value2 - value1) + amount2 * (value3 - value1);
 		}
 
-		//Interpolates between two values using a cubic equation.
+		// Interpolates between two values using a cubic equation.
 		template <typename T>
 		[[nodiscard]] static constexpr T SmoothStep(T value1, T value2, T amount) noexcept {
 			const auto num = Clamp(amount, T(0.0), T(1.0));
 			return Lerp(value1, value2, (num * num * (T(3.0) - T(2.0) * num)));
 		}
 
-		//Performs a Catmull-Rom interpolation using the specified positions.
+		// Performs a Catmull-Rom interpolation using the specified positions.
 		template <typename T>
 		[[nodiscard]] static constexpr T CatmullRom(T value1, T value2, T value3, T value4, T amount) noexcept {
 			const auto num1 = amount * amount;
 			const auto num2 = amount * num1;
-			return (T(0.5) * (T(2.0) * value2 + (-value1 + value3) * amount + (T(2.0) * value1 - T(5.0) * value2 + T(4.0) * value3 - value4) * num1 + (-value1 + T(3.0) * value2 - T(3.0) * value3 + value4) * num2));
+			return (T(0.5) * (T(2.0) * value2 + (-value1 + value3) * amount +
+				(T(2.0) * value1 - T(5.0) * value2 + T(4.0) * value3 - value4) * num1 +
+				(-value1 + T(3.0) * value2 - T(3.0) * value3 + value4) * num2));
 		}
 
-		//Performs a Hermite spline interpolation.
+		// Performs a Hermite spline interpolation.
 		template <typename T>
 		[[nodiscard]] static constexpr T Hermite(T value1, T tangent1, T value2, T tangent2, T amount) noexcept {
 			const auto num1 = amount;
@@ -89,7 +102,7 @@ namespace Xna {
 			const auto num6 = num3 - T(2.0) * num2 + num1;
 			const auto num7 = num3 - num2;
 			return value1 * num4 + value2 * num5 + tangent1 * num6 + tangent2 * num7;
-		}		
+		}
 
 		template<FloatOrDouble T>
 		[[nodiscard]] static constexpr T Sqrt(T x) noexcept {
@@ -131,74 +144,75 @@ namespace Xna {
 				return std::tan(x);
 		}
 
-	private:
-		template<typename T> static constexpr T internalSqrt(T x) noexcept {
-			if (x <= T(0))
-				return T(0);
-
-			if (x != x) // NaN check
-				return T(0);
-
-			T result = x;
-
-			for (size_t i = 0; i < 25; ++i)
-				result = (result + x / result) / T(2);
-
-			return result;
+		template<FloatOrDouble T>
+		[[nodiscard]] static constexpr T Acos(T x) noexcept {
+			if (std::is_constant_evaluated())
+				return internalAcos(x);
+			else
+				return std::acos(x);
 		}
 
-		template<typename T> static constexpr T internalAbs(T x) noexcept {
-			if (x != x) // NaN check
+	private:
+		//Replaces an angle-reduction `while` loop with an O(1) reduction, to avoid hitting the compiler's iteration limit for large angles.
+		template<typename T>
+		static constexpr T reduceAngle(T x) noexcept {
+			constexpr T pi = static_cast<T>(PI);
+			constexpr T twoPi = static_cast<T>(PI * 2.0);
+
+			x -= static_cast<long long>(x / twoPi) * twoPi;
+			if (x > pi)
+				x -= twoPi;
+			else if (x < -pi)
+				x += twoPi;
+
+			return x;
+		}
+
+		//It seeks to perform scale normalization, ensuring maximum precision for both float and double types.
+		template<typename T>
+		static constexpr T internalSqrt(T x) noexcept {
+			if (x <= T(0) || x != x)
+				return T(0);
+
+			T scale = T(1);
+			while (x > T(1)) {
+				x *= T(0.25);
+				scale *= T(2);
+			}
+			while (x < T(0.25)) {
+				x *= T(4);
+				scale *= T(0.5);
+			}
+
+			T result = x;
+			for (size_t i = 0; i < 10; ++i)
+				result = (result + x / result) * T(0.5);
+
+			return result * scale;
+		}
+
+		template<typename T>
+		static constexpr T internalAbs(T x) noexcept {
+			if (x != x)
 				return T(0);
 
 			return x < T(0) ? -x : x;
 		}
 
-		template <typename T> static constexpr T internalSin(T x) noexcept {
-			// contrato forte
-			if (x != x) // NaN check
+		template<typename T>
+		static constexpr T internalSin(T x) noexcept {
+			if (x != x)
 				return T(0);
 
-			const auto pi = static_cast<T>(PI);
+			x = reduceAngle(x);
 
-			while (x > pi) x -= pi * 2;
-			while (x < -pi) x += pi * 2;
-
-			T term = x;        // primeiro termo
+			T term = x;
 			T sum = x;
-			T x2 = x * x;
+			const T x2 = x * x;
 
 			// Série de Taylor: sin(x) = x - x^3/3! + x^5/5! - ...
-			for (size_t i = 1; i <= 10; ++i)
-			{
-				term *= -x2 / ((2 * i) * (2 * i + 1));
-				sum += term;
-			}
-
-			return sum;
-		}
-
-		template <typename T> static constexpr T internalCos(T x)
-		{
-			// contrato forte: evita NaN em constexpr
-			if (x != x)
-				return 1.0;
-
-			const auto pi = static_cast<T>(PI);
-
-			while (x > pi) x -= pi * 2;
-			while (x < -pi) x += pi * 2;
-
-
-			T term = 1.0;  // primeiro termo
-			T sum = 1.0;
-			T x2 = x * x;
-
-			// Série de Taylor:
-			// cos(x) = 1 - x^2/2! + x^4/4! - ...
-			for (size_t i = 1; i <= 10; ++i)
-			{
-				term *= -x2 / ((2 * i - 1) * (2 * i));
+			for (size_t i = 1; i <= 10; ++i) {
+				term *= -x2 / static_cast<T>((2 * i) * (2 * i + 1));
 				sum += term;
 			}
 
@@ -206,39 +220,46 @@ namespace Xna {
 		}
 
 		template<typename T>
-		static constexpr void internalSinCos(T x, T& sinOut, T& cosOut) noexcept
-		{
-			// contrato forte
+		static constexpr T internalCos(T x) noexcept {
 			if (x != x)
-			{
+				return T(1.0);
+
+			x = reduceAngle(x);
+
+			T term = T(1.0);
+			T sum = T(1.0);
+			const T x2 = x * x;
+
+			// Série de Taylor: cos(x) = 1 - x^2/2! + x^4/4! - ...
+			for (size_t i = 1; i <= 10; ++i) {
+				term *= -x2 / static_cast<T>((2 * i - 1) * (2 * i));
+				sum += term;
+			}
+
+			return sum;
+		}
+
+		template<typename T>
+		static constexpr void internalSinCos(T x, T& sinOut, T& cosOut) noexcept {
+			if (x != x) {
 				sinOut = T(0);
 				cosOut = T(1);
 				return;
 			}
 
-			const T pi = static_cast<T>(PI);
+			x = reduceAngle(x);
 
-			// redução de argumento
-			while (x > pi)  x -= pi * 2;
-			while (x < -pi) x += pi * 2;
-
-			T x2 = x * x;
-
-			// primeiros termos
+			const T x2 = x * x;
 			T sinTerm = x;
 			T cosTerm = T(1);
-
 			T sinSum = x;
 			T cosSum = T(1);
 
-			for (size_t i = 1; i <= 10; ++i)
-			{
-				// sin: -(x²)/((2i)(2i+1))
-				sinTerm *= -x2 / ((2 * i) * (2 * i + 1));
+			for (size_t i = 1; i <= 10; ++i) {
+				sinTerm *= -x2 / static_cast<T>((2 * i) * (2 * i + 1));
 				sinSum += sinTerm;
 
-				// cos: -(x²)/((2i-1)(2i))
-				cosTerm *= -x2 / ((2 * i - 1) * (2 * i));
+				cosTerm *= -x2 / static_cast<T>((2 * i - 1) * (2 * i));
 				cosSum += cosTerm;
 			}
 
@@ -246,22 +267,58 @@ namespace Xna {
 			cosOut = cosSum;
 		}
 
-		template <typename T>
-		static constexpr T internalTan(T x) noexcept
-		{
-			T s, c;
+		template<typename T>
+		static constexpr T internalTan(T x) noexcept {
+			T s{}, c{};
 			internalSinCos(x, s, c);
 
 			constexpr T epsilon = T(1e-12);
 
 			if (c > -epsilon && c < epsilon)
-				return (s >= 0)
+				return (s >= T(0))
 				? std::numeric_limits<T>::infinity()
 				: -std::numeric_limits<T>::infinity();
 
 			return s / c;
 		}
+
+		template<typename T>
+		static constexpr T internalAsinSeries(T y) noexcept {
+			const T y2 = y * y;
+			T term = y;
+			T sum = y;
+
+			for (size_t i = 1; i <= 20; ++i) {
+				const auto num = static_cast<T>((2 * i - 1) * (2 * i - 1));
+				const auto den = static_cast<T>((2 * i) * (2 * i + 1));
+				term *= y2 * (num / den);
+				sum += term;
+			}
+
+			return sum;
+		}
+
+		template<typename T>
+		static constexpr T internalAcos(T x) noexcept {
+			if (x != x || x >= T(1))
+				return T(0);
+			if (x <= T(-1))
+				return static_cast<T>(PI);
+
+			const bool isNegative = x < T(0);
+			const T ax = isNegative ? -x : x;
+			constexpr T halfPi = static_cast<T>(PI * 0.5);
+
+			T result{};
+			if (ax > T(0.5)) {
+				const T y = internalSqrt((T(1) - ax) * T(0.5));
+				result = T(2) * internalAsinSeries(y);
+			}
+			else {
+				result = halfPi - internalAsinSeries(ax);
+			}
+
+			return isNegative ? (static_cast<T>(PI) - result) : result;
+		}
 	};
 }
-
-#endif
