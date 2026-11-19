@@ -5,6 +5,7 @@
 #include <limits>
 #include <optional>
 #include <span>
+#include <cstddef>
 
 namespace Xna {
 	struct Plane;
@@ -345,7 +346,7 @@ namespace Xna {
 			{
 				auto result = Vector3::Dot(corners[index], plane.Normal);
 
-				if (result + plane.D > 0.0F)
+				if (result + plane.D > 0.0f)
 					num |= 1;
 				else
 					num |= 2;
@@ -592,7 +593,7 @@ namespace Xna {
 		//Creates a new instance of BoundingSphere.
 		constexpr BoundingSphere() noexcept = default;
 		//Creates a new instance of BoundingSphere.
-		constexpr BoundingSphere(Vector3 center, float radius) noexcept : Center(center), Radius(radius < 0 ? 0 : radius) {}
+		constexpr BoundingSphere(Vector3 center, float radius) noexcept : Center(center), Radius(radius < 0.0f ? 0.0f : radius) {}
 
 		[[nodiscard]] constexpr bool operator==(BoundingSphere const& other) const noexcept = default;		
 
@@ -609,6 +610,9 @@ namespace Xna {
 				if (radius2 - radius1 >= num1)
 					return additional;
 			}
+
+			if (num1 <= std::numeric_limits<float>::epsilon())
+				return radius1 >= radius2 ? original : additional;
 
 			Vector3 vector3 = result * (1.0f / num1);
 			const auto num2 = MathHelper::Min(-radius1, num1 - radius2);
@@ -904,10 +908,10 @@ namespace Xna {
 		vector3_2.Y = Normal.Y >= 0.0f ? box.Max.Y : box.Min.Y;
 		vector3_2.Z = Normal.Z >= 0.0f ? box.Max.Z : box.Min.Z;
 
-		if (Normal.X * vector3_1.X + Normal.Y * vector3_1.Y + Normal.Z * vector3_1.Z + D > 0.0F)
+		if (Normal.X * vector3_1.X + Normal.Y * vector3_1.Y + Normal.Z * vector3_1.Z + D > 0.0f)
 			return PlaneIntersectionType::Front;
 
-		return Normal.X * vector3_2.X + Normal.Y * vector3_2.Y + Normal.Z * vector3_2.Z + D < 0.0F
+		return Normal.X * vector3_2.X + Normal.Y * vector3_2.Y + Normal.Z * vector3_2.Z + D < 0.0f
 			? PlaneIntersectionType::Back : PlaneIntersectionType::Intersecting;
 	}
 
@@ -1007,20 +1011,37 @@ namespace Xna {
 			: ContainmentType::Contains;
 	}
 
-	constexpr std::optional<float> BoundingFrustum::Intersects(Ray const& ray) const noexcept{
-		const auto ctype = Contains(ray.Position);
+	constexpr std::optional<float> BoundingFrustum::Intersects(Ray const& ray) const noexcept {
+		float tMin = 0.0f;
+		float tMax = std::numeric_limits<float>::max();
 
-		switch (ctype)
-		{
-		case ContainmentType::Disjoint:
-			return {};
-		case ContainmentType::Contains:
-			return 0.0f;
-		case ContainmentType::Intersects:
-			return {}; //throw new NotImplementedException();
-		default:
-			return {}; //throw new ArgumentOutOfRangeException();
+		for (size_t i = 0; i < PlaneCount; ++i) {
+			const auto& plane = planes[i];
+			const float denom = Vector3::Dot(plane.Normal, ray.Direction);
+			const float dist = plane.DotCoordinate(ray.Position);
+
+			if (MathHelper::Abs(denom) <= std::numeric_limits<float>::epsilon()) {
+				// Ray parallel to the plane: if it lies in the positive half-space (outside), there is no intersection.
+				if (dist > 0.0f)
+					return {};
+			}
+			else {
+				const float t = -dist / denom;
+				if (denom < 0.0f) {
+					// Ray entering the internal half-space of the plane (normals point outward)
+					tMin = MathHelper::Max(tMin, t);
+				}
+				else {
+					// Ray leaving the internal half-space of the plane
+					tMax = MathHelper::Min(tMax, t);
+				}
+
+				if (tMin > tMax)
+					return {};
+			}
 		}
+
+		return tMin;
 	}
 
 	constexpr std::optional<float> BoundingSphere::Intersects(Ray const& ray) const noexcept {
