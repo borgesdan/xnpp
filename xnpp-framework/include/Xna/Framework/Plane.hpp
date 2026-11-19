@@ -102,6 +102,61 @@ namespace Xna {
 		//Checks whether a Plane intersects a bounding volume.
 		constexpr std::optional<float> Intersects(Ray const& ray) const;
 
+		[[nodiscard]] static constexpr Matrix CreateShadow(Vector3 lightDirection, Plane const& plane) noexcept {
+			const auto result = Plane::Normalize(plane);
+			const auto num1 = (result.Normal.X * lightDirection.X + result.Normal.Y * lightDirection.Y + result.Normal.Z * lightDirection.Z);
+			const auto num2 = -result.Normal.X;
+			const auto num3 = -result.Normal.Y;
+			const auto num4 = -result.Normal.Z;
+			const auto num5 = -result.D;
+			Matrix shadow;
+			shadow.M11 = num2 * lightDirection.X + num1;
+			shadow.M21 = num3 * lightDirection.X;
+			shadow.M31 = num4 * lightDirection.X;
+			shadow.M41 = num5 * lightDirection.X;
+			shadow.M12 = num2 * lightDirection.Y;
+			shadow.M22 = num3 * lightDirection.Y + num1;
+			shadow.M32 = num4 * lightDirection.Y;
+			shadow.M42 = num5 * lightDirection.Y;
+			shadow.M13 = num2 * lightDirection.Z;
+			shadow.M23 = num3 * lightDirection.Z;
+			shadow.M33 = num4 * lightDirection.Z + num1;
+			shadow.M43 = num5 * lightDirection.Z;
+			shadow.M14 = 0.0f;
+			shadow.M24 = 0.0f;
+			shadow.M34 = 0.0f;
+			shadow.M44 = num1;
+			return shadow;
+		}
+
+		[[nodiscard]] static constexpr Matrix CreateReflection(Plane value) noexcept {
+			value.Normalize();
+			const auto x = value.Normal.X;
+			const auto y = value.Normal.Y;
+			const auto z = value.Normal.Z;
+			const auto num1 = -2.0f * x;
+			const auto num2 = -2.0f * y;
+			const auto num3 = -2.0f * z;
+			Matrix reflection;
+			reflection.M11 = (num1 * x + 1.0f);
+			reflection.M12 = num2 * x;
+			reflection.M13 = num3 * x;
+			reflection.M14 = 0.0f;
+			reflection.M21 = num1 * y;
+			reflection.M22 = (num2 * y + 1.0f);
+			reflection.M23 = num3 * y;
+			reflection.M24 = 0.0f;
+			reflection.M31 = num1 * z;
+			reflection.M32 = num2 * z;
+			reflection.M33 = (num3 * z + 1.0f);
+			reflection.M34 = 0.0f;
+			reflection.M41 = num1 * value.D;
+			reflection.M42 = num2 * value.D;
+			reflection.M43 = num3 * value.D;
+			reflection.M44 = 1.0f;
+			return reflection;
+		}
+
 		constexpr bool operator==(Plane const& other) const {
 			return Normal == other.Normal && D == other.D;
 		}
@@ -169,62 +224,7 @@ namespace Xna {
 
 	constexpr float Plane::DotNormal(Vector3 const& value) const {
 		return (Normal.X * value.X + Normal.Y * value.Y + Normal.Z * value.Z);
-	}
-
-	constexpr Matrix Matrix::CreateShadow(Vector3 lightDirection, Plane const& plane)  noexcept {
-		const auto result = Plane::Normalize(plane);
-		const auto num1 = (result.Normal.X * lightDirection.X + result.Normal.Y * lightDirection.Y + result.Normal.Z * lightDirection.Z);
-		const auto num2 = -result.Normal.X;
-		const auto num3 = -result.Normal.Y;
-		const auto num4 = -result.Normal.Z;
-		const auto num5 = -result.D;
-		Matrix shadow;
-		shadow.M11 = num2 * lightDirection.X + num1;
-		shadow.M21 = num3 * lightDirection.X;
-		shadow.M31 = num4 * lightDirection.X;
-		shadow.M41 = num5 * lightDirection.X;
-		shadow.M12 = num2 * lightDirection.Y;
-		shadow.M22 = num3 * lightDirection.Y + num1;
-		shadow.M32 = num4 * lightDirection.Y;
-		shadow.M42 = num5 * lightDirection.Y;
-		shadow.M13 = num2 * lightDirection.Z;
-		shadow.M23 = num3 * lightDirection.Z;
-		shadow.M33 = num4 * lightDirection.Z + num1;
-		shadow.M43 = num5 * lightDirection.Z;
-		shadow.M14 = 0.0f;
-		shadow.M24 = 0.0f;
-		shadow.M34 = 0.0f;
-		shadow.M44 = num1;
-		return shadow;
-	}
-
-	constexpr Matrix Matrix::CreateReflection(Plane value) noexcept {
-		value.Normalize();
-		const auto x = value.Normal.X;
-		const auto y = value.Normal.Y;
-		const auto z = value.Normal.Z;
-		const auto num1 = -2.0f * x;
-		const auto num2 = -2.0f * y;
-		const auto num3 = -2.0f * z;
-		Matrix reflection;
-		reflection.M11 = (num1 * x + 1.0f);
-		reflection.M12 = num2 * x;
-		reflection.M13 = num3 * x;
-		reflection.M14 = 0.0f;
-		reflection.M21 = num1 * y;
-		reflection.M22 = (num2 * y + 1.0f);
-		reflection.M23 = num3 * y;
-		reflection.M24 = 0.0f;
-		reflection.M31 = num1 * z;
-		reflection.M32 = num2 * z;
-		reflection.M33 = (num3 * z + 1.0f);
-		reflection.M34 = 0.0f;
-		reflection.M41 = num1 * value.D;
-		reflection.M42 = num2 * value.D;
-		reflection.M43 = num3 * value.D;
-		reflection.M44 = 1.0f;
-		return reflection;
-	}
+	}		
 }
 
 #endif

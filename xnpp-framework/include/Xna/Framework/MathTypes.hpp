@@ -9,7 +9,6 @@
 namespace Xna {
 	struct Matrix;
 	struct Quaternion;
-	struct Plane;
 
 	//////////////////////////////////////////////////////////////////
 	// POINT														//
@@ -1623,8 +1622,7 @@ namespace Xna {
 		[[nodiscard]] static constexpr Matrix CreateFromQuaternion(Quaternion quaternion) noexcept;
 		// Creates a new rotation matrix from a specified yaw, pitch, and roll.
 		[[nodiscard]] static constexpr Matrix CreateFromYawPitchRoll(float yaw, float pitch, float roll) noexcept;
-		[[nodiscard]] static constexpr Matrix CreateShadow(Vector3 lightDirection, Plane const& plane) noexcept;
-		[[nodiscard]] static constexpr Matrix CreateReflection(Plane value) noexcept;
+		
 
 		// Transforms a Matrix by applying a Quaternion rotation.
 		[[nodiscard]] static constexpr Matrix Transform(Matrix const& value, Quaternion rotation) noexcept;
