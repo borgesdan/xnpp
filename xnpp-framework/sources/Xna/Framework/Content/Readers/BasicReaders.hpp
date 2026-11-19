@@ -5,8 +5,7 @@
 #include <Xna/CSharp/IO/BinaryReader.hpp>
 #include <Xna/CSharp/TimeSpan.hpp>
 #include "Xna/Framework/Audio/SoundEffect.hpp"
-#include "Xna/Framework/BoundingBox.hpp"
-#include "Xna/Framework/BoundingSphere.hpp"
+#include "Xna/Framework/Volume.hpp"
 #include "Xna/Framework/Color.hpp"
 #include "Xna/Framework/Content/ContentReader.hpp"
 #include "Xna/Framework/Content/ContentTypeReader.hpp"
@@ -14,14 +13,6 @@
 #include "Xna/Framework/Graphics/Texture2D.hpp"
 #include "Xna/Framework/MathTypes.hpp"
 #include "Xna/Framework/Media/Song.hpp"
-#include "Xna/Framework/Plane.hpp"
-#include "Xna/Framework/MathTypes.hpp"
-#include "Xna/Framework/MathTypes.hpp"
-#include "Xna/Framework/Ray.hpp"
-#include "Xna/Framework/MathTypes.hpp"
-#include "Xna/Framework/MathTypes.hpp"
-#include "Xna/Framework/MathTypes.hpp"
-#include "Xna/Framework/MathTypes.hpp"
 #include "Xna/Framework/Graphics/SpriteFont.hpp"
 #include <any>
 #include <cstdint>

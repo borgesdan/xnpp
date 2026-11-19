@@ -5,7 +5,7 @@
 #include "Xna/Internal/Macros.hpp"
 #include <cstddef>
 #include <Xna/CSharp/Collection.hpp>
-#include "Xna/Framework/BoundingSphere.hpp"
+#include "Xna/Framework/Volume.hpp"
 #include "Buffers.hpp"
 #include "Effects/Effect.hpp"
 #include <string>
