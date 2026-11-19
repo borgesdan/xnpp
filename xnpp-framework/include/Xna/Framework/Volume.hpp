@@ -72,10 +72,18 @@ namespace Xna {
 			const auto num7 = (num2 * num6 - num3 * num5);
 			const auto num8 = (num3 * num4 - num1 * num6);
 			const auto num9 = (num1 * num5 - num2 * num4);
-			const auto num10 = 1.0f / MathHelper::Sqrt(num7 * num7 + num8 * num8 + num9 * num9);
-			Normal.X = num7 * num10;
-			Normal.Y = num8 * num10;
-			Normal.Z = num9 * num10;
+
+			const auto lengthSq = num7 * num7 + num8 * num8 + num9 * num9;
+			if (lengthSq <= std::numeric_limits<float>::epsilon()) {
+				Normal = Vector3{ 0.0f, 0.0f, 0.0f };
+				D = 0.0f;
+				return;
+			}
+
+			const auto invLength = 1.0f / MathHelper::Sqrt(lengthSq);
+			Normal.X = num7 * invLength;
+			Normal.Y = num8 * invLength;
+			Normal.Z = num9 * invLength;
 			D = -(Normal.X * point1.X + Normal.Y * point1.Y + Normal.Z * point1.Z);
 		}
 
@@ -83,8 +91,11 @@ namespace Xna {
 		constexpr void Normalize() noexcept {
 			const auto d = (Normal.X * Normal.X + Normal.Y * Normal.Y + Normal.Z * Normal.Z);
 
-			if (MathHelper::Abs(d - 1.0f) < std::numeric_limits<float>::epsilon())
+			// Se ja esta normalizado (|d - 1| < epsilon) ou se a normal e nula (d <= epsilon), nao divide
+			if (MathHelper::Abs(d - 1.0f) < std::numeric_limits<float>::epsilon() ||
+				d <= std::numeric_limits<float>::epsilon()) {
 				return;
+			}
 
 			const auto num = 1.0f / MathHelper::Sqrt(d);
 
@@ -303,7 +314,13 @@ namespace Xna {
 
 			for (size_t index = 0; index < PlaneCount; ++index)
 			{
-				const auto num = planes[index].Normal.Length();
+				const auto lengthSq = planes[index].Normal.LengthSquared();
+				if (lengthSq <= std::numeric_limits<float>::epsilon()) {
+					planes[index] = Plane{};
+					continue;
+				}
+
+				const auto num = MathHelper::Sqrt(lengthSq);
 				planes[index].Normal = planes[index].Normal / num;
 				planes[index].D /= num;
 			}
@@ -366,8 +383,8 @@ namespace Xna {
 		[[nodiscard]] constexpr ContainmentType Contains(Vector3 point) const noexcept{
 			for (size_t i = 0; i < PlaneCount; ++i) {
 				const auto& plane = planes[i];
-
-				if (((plane.Normal.X * point.X + plane.Normal.Y * point.Y + plane.Normal.Z * point.Z) + plane.D) > static_cast<float>(9.9999997473787516E-06))
+				
+				if (plane.DotCoordinate(point) > 1e-5f)
 					return ContainmentType::Disjoint;
 			}
 
@@ -396,12 +413,20 @@ namespace Xna {
 			InternalRay intersectionLine{};
 			intersectionLine.Direction = Vector3::Cross(p1.Normal, p2.Normal);
 			const auto num = intersectionLine.Direction.LengthSquared();
+
+			if (num <= std::numeric_limits<float>::epsilon())
+				return intersectionLine; // Returns zero ray if the planes are parallel
+
 			intersectionLine.Position = Vector3::Cross(-p1.D * p2.Normal + p2.D * p1.Normal, intersectionLine.Direction) / num;
 			return intersectionLine;
 		}
 
 		static constexpr Vector3 ComputeIntersection(Plane plane, InternalRay const& ray) noexcept {
-			const auto num = (-plane.D - Vector3::Dot(plane.Normal, ray.Position)) / Vector3::Dot(plane.Normal, ray.Direction);
+			const auto denom = Vector3::Dot(plane.Normal, ray.Direction);
+			if (MathHelper::Abs(denom) <= std::numeric_limits<float>::epsilon())
+				return ray.Position; // Avoids division by zero if the ray is parallel to the plane
+
+			const auto num = (-plane.D - Vector3::Dot(plane.Normal, ray.Position)) / denom;
 			return ray.Position + ray.Direction * num;
 		}
 
@@ -1027,7 +1052,7 @@ namespace Xna {
 		float num1 = 0.0f;
 		float num2 = std::numeric_limits<float>::max();
 
-		if (MathHelper::Abs(ray.Direction.X) < 9.9999999747524271E-07)
+		if (MathHelper::Abs(ray.Direction.X) < std::numeric_limits<float>::epsilon())
 		{
 			if (ray.Position.X < Min.X || ray.Position.X > Max.X)
 				return {};
@@ -1048,7 +1073,7 @@ namespace Xna {
 			if (num1 > num2)
 				return {};
 		}
-		if (MathHelper::Abs(ray.Direction.Y) < 9.9999999747524271E-07)
+		if (MathHelper::Abs(ray.Direction.Y) < std::numeric_limits<float>::epsilon())
 		{
 			if (ray.Position.Y < Min.Y || ray.Position.Y > Max.Y)
 				return {};
@@ -1069,7 +1094,7 @@ namespace Xna {
 			if (num1 > num2)
 				return {};
 		}
-		if (MathHelper::Abs(ray.Direction.Z) < 9.9999999747524271E-07)
+		if (MathHelper::Abs(ray.Direction.Z) < std::numeric_limits<float>::epsilon())
 		{
 			if (ray.Position.Z < Min.Z || ray.Position.Z > Max.Z)
 				return {};
@@ -1095,9 +1120,9 @@ namespace Xna {
 
 	//Checks whether a Plane intersects a bounding volume.
 	constexpr std::optional<float> Plane::Intersects(Ray const& ray) const noexcept {
-		const auto num1 = (Normal.X * ray.Direction.X + Normal.Y * ray.Direction.Y + Normal.Z * ray.Direction.Z);
+		const auto num1 = (Normal.X * ray.Direction.X + Normal.Y * ray.Direction.Y + Normal.Z * ray.Direction.Z);		
 
-		if (MathHelper::Abs(num1) < 9.9999997473787516E-06)
+		if (MathHelper::Abs(num1) < 1e-5f)
 			return {};
 
 		const auto num2 = (Normal.X * ray.Position.X + Normal.Y * ray.Position.Y + Normal.Z * ray.Position.Z);
@@ -1105,7 +1130,7 @@ namespace Xna {
 
 		if (num3 < 0.0f)
 		{
-			if (num3 < -9.9999997473787516E-06)
+			if (num3 < -1e-5f)
 				return {};
 			num3 = 0.0f;
 		}
