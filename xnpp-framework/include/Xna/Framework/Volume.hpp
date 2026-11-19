@@ -1,13 +1,10 @@
-#ifndef XNA_FRAMEWORK_PLANE_HPP
-#define XNA_FRAMEWORK_PLANE_HPP
+#pragma once
 
 #include "MathHelper.hpp"
 #include "MathTypes.hpp"
-#include <optional>
-#include <cstddef>
-#include <vector>
-#include <span>
 #include <limits>
+#include <optional>
+#include <span>
 
 namespace Xna {
 	struct Plane;
@@ -86,7 +83,7 @@ namespace Xna {
 		constexpr void Normalize() noexcept {
 			const auto d = (Normal.X * Normal.X + Normal.Y * Normal.Y + Normal.Z * Normal.Z);
 
-			if (MathHelper::Abs(d - 1.0f) < 1.1920928955078125E-07)
+			if (MathHelper::Abs(d - 1.0f) < std::numeric_limits<float>::epsilon())
 				return;
 
 			const auto num = 1.0f / MathHelper::Sqrt(d);
@@ -268,7 +265,7 @@ namespace Xna {
 		[[nodiscard]] constexpr Plane Bottom() const noexcept { return planes[5]; }
 
 		//Gets an array of points that make up the corners of the BoundingFrustum.
-		constexpr void GetCorners(std::span<Vector3, CornerCount> destination) const {
+		constexpr void GetCorners(std::span<Vector3, CornerCount> destination) const noexcept {
 			for (size_t i = 0; i < CornerCount; ++i)
 				destination[i] = corners[i];
 		}
@@ -370,7 +367,7 @@ namespace Xna {
 			for (size_t i = 0; i < PlaneCount; ++i) {
 				const auto& plane = planes[i];
 
-				if ((static_cast<double>(plane.Normal.X * point.X + plane.Normal.Y * point.Y + plane.Normal.Z * point.Z) + plane.D) > 9.9999997473787516E-06)
+				if (((plane.Normal.X * point.X + plane.Normal.Y * point.Y + plane.Normal.Z * point.Z) + plane.D) > static_cast<float>(9.9999997473787516E-06))
 					return ContainmentType::Disjoint;
 			}
 
@@ -388,7 +385,7 @@ namespace Xna {
 		[[nodiscard]] constexpr Vector3 operator[](int index) const noexcept{			
 			if (index < 0)
 				index = 0;
-			else if(index > CornerCount)
+			else if(index >= CornerCount)
 				index = CornerCount - 1;
 
 			return corners[static_cast<size_t>(index)];
@@ -409,8 +406,8 @@ namespace Xna {
 		}
 
 	private:
-		Vector3 corners[8];
-		Plane planes[6];
+		Vector3 corners[8]{};
+		Plane planes[6]{};
 		Xna::Matrix matrix{ Xna::Matrix::Identity() };
 		static constexpr int PlaneCount = 6;
 
@@ -426,9 +423,9 @@ namespace Xna {
 		//Specifies the total number of corners (8) in the BoundingBox.
 		static constexpr int CornerCount = 8;
 
-		//The maximum point the BoundingBox contains.
+		//The minimum point the BoundingBox contains.
 		Vector3 Min{};
-		//The minimum point the BoundingBox contains. 
+		//The maximum point the BoundingBox contains.		 
 		Vector3 Max{};
 
 		//Creates a new instance of BoundingBox.
@@ -475,14 +472,17 @@ namespace Xna {
 		}		
 
 		//Creates the smallest BoundingBox that will contain a group of points.
-		[[nodiscard]] static constexpr BoundingBox CreateFromPoints(std::span<const Vector3> points, size_t size) noexcept {
-			constexpr float floatMinVal = (std::numeric_limits<float>::min)();
-			constexpr float floatMaxVal = (std::numeric_limits<float>::max)();
+		[[nodiscard]] static constexpr BoundingBox CreateFromPoints(std::span<const Vector3> points) noexcept {
+			if (points.empty())
+				return {};
+
+			constexpr float floatLowestVal = std::numeric_limits<float>::lowest();
+			constexpr float floatMaxVal = std::numeric_limits<float>::max();
 			
 			Vector3 result1 = Vector3(floatMaxVal);
-			Vector3 result2 = Vector3(floatMinVal);
+			Vector3 result2 = Vector3(floatLowestVal);
 
-			for (size_t i = 0; i < size; ++i) {
+			for (size_t i = 0; i < points.size(); ++i) {
 				const auto& point = points[i];
 				result1 = Vector3::Min(result1, point);
 				result2 = Vector3::Max(result2, point);
@@ -502,26 +502,13 @@ namespace Xna {
 		}
 
 		//Checks whether the current BoundingBox intersects with another bounding volume.
-		[[nodiscard]] bool Intersects(BoundingFrustum const& frustum) const noexcept {
+		[[nodiscard]] constexpr bool Intersects(BoundingFrustum const& frustum) const noexcept {
 			return frustum.Intersects(*this);
 		}
 
 		//Checks whether the current BoundingBox intersects with another bounding volume.
 		[[nodiscard]] constexpr PlaneIntersectionType Intersects(Plane plane) const noexcept {
-			Vector3 vector3_1;
-			vector3_1.X = plane.Normal.X >= 0.0 ? Min.X : Max.X;
-			vector3_1.Y = plane.Normal.Y >= 0.0 ? Min.Y : Max.Y;
-			vector3_1.Z = plane.Normal.Z >= 0.0 ? Min.Z : Max.Z;
-			Vector3 vector3_2;
-			vector3_2.X = plane.Normal.X >= 0.0 ? Max.X : Min.X;
-			vector3_2.Y = plane.Normal.Y >= 0.0 ? Max.Y : Min.Y;
-			vector3_2.Z = plane.Normal.Z >= 0.0 ? Max.Z : Min.Z;
-			if (plane.Normal.X * vector3_1.X + plane.Normal.Y * vector3_1.Y + plane.Normal.Z * vector3_1.Z + plane.D > 0.0)
-				return PlaneIntersectionType::Front;
-
-			return plane.Normal.X * vector3_2.X + plane.Normal.Y * vector3_2.Y + plane.Normal.Z * vector3_2.Z + plane.D < 0.0
-				? PlaneIntersectionType::Back
-				: PlaneIntersectionType::Intersecting;
+			return plane.Intersects(*this);
 		}
 
 		//Tests whether the BoundingBox overlaps another bounding volume.
@@ -563,14 +550,7 @@ namespace Xna {
 		[[nodiscard]] constexpr bool Intersects(BoundingSphere const& sphere) const noexcept;
 
 		//Tests whether the BoundingBox overlaps another bounding volume.
-		[[nodiscard]] constexpr ContainmentType Contains(BoundingSphere const& sphere) const noexcept;
-
-	private:
-		constexpr void SupportMapping(Vector3 v, Vector3& result) const noexcept {
-			result.X = v.X >= 0.0 ? Max.X : Min.X;
-			result.Y = v.Y >= 0.0 ? Max.Y : Min.Y;
-			result.Z = v.Z >= 0.0 ? Max.Z : Min.Z;
-		}
+		[[nodiscard]] constexpr ContainmentType Contains(BoundingSphere const& sphere) const noexcept;	
 	};
 
 	//////////////////////////////////////////////////////////////////
@@ -624,7 +604,10 @@ namespace Xna {
 		}		
 
 		//Creates a BoundingSphere that can contain a specified list of points.
-		[[nodiscard]] static constexpr BoundingSphere CreateFromPoints(std::span<const Vector3> points, size_t size) noexcept{
+		[[nodiscard]] static constexpr BoundingSphere CreateFromPoints(std::span<const Vector3> points) noexcept{
+			if (points.empty())
+				return {};
+
 			Vector3 current;
 			auto vector3_1 = current = points[0];
 			auto vector3_2 = current;
@@ -633,7 +616,7 @@ namespace Xna {
 			auto vector3_5 = current;
 			auto vector3_6 = current;
 
-			for (size_t i = 0; i < size; ++i) {
+			for (size_t i = 0; i < points.size(); ++i) {
 				const auto& point = points[i];
 
 				if (point.X < vector3_6.X)
@@ -680,7 +663,7 @@ namespace Xna {
 				num1 = result3 * 0.5f;
 			}
 
-			for (size_t i = 0; i < size; ++i) {
+			for (size_t i = 0; i < points.size(); ++i) {
 				const auto& point = points[i];
 
 				Vector3 vector3_7;
@@ -703,7 +686,7 @@ namespace Xna {
 
 		//Creates the smallest BoundingSphere that can contain a specified BoundingFrustum. 
 		[[nodiscard]] static constexpr BoundingSphere CreateFromFrustum(BoundingFrustum const& frustum) noexcept {
-			return BoundingSphere::CreateFromPoints(frustum.corners, frustum.CornerCount);
+			return BoundingSphere::CreateFromPoints(frustum.corners);
 		}
 
 		//Checks whether the current BoundingSphere intersects another bounding volume.
@@ -714,7 +697,7 @@ namespace Xna {
 		}
 
 		//Checks whether the current BoundingSphere intersects another bounding volume.
-		[[nodiscard]] bool Intersects(BoundingFrustum& frustum) const noexcept {
+		[[nodiscard]] constexpr bool Intersects(BoundingFrustum const& frustum) const noexcept {
 			return frustum.Intersects(*this);
 		}
 
@@ -786,7 +769,7 @@ namespace Xna {
 		}
 
 		//Checks whether the current BoundingSphere contains a specified bounding volume.
-		[[nodiscard]] constexpr ContainmentType Contains(BoundingFrustum& frustum) const noexcept {
+		[[nodiscard]] constexpr ContainmentType Contains(BoundingFrustum const& frustum) const noexcept {
 			if (!frustum.Intersects(*this))
 				return ContainmentType::Disjoint;
 
@@ -836,15 +819,7 @@ namespace Xna {
 		}
 
 		//Checks whether the current BoundingSphere intersects another bounding volume.
-		[[nodiscard]] constexpr std::optional<float> Intersects(Ray const& ray) const noexcept;
-
-	private:
-		constexpr void SupportMapping(Vector3 v, Vector3& result) const noexcept {
-			const auto num = Radius / v.Length();
-			result.X = Center.X + v.X * num;
-			result.Y = Center.Y + v.Y * num;
-			result.Z = Center.Z + v.Z * num;
-		}
+		[[nodiscard]] constexpr std::optional<float> Intersects(Ray const& ray) const noexcept;	
 	};
 
 	//////////////////////////////////////////////////////////////////
@@ -856,8 +831,9 @@ namespace Xna {
 		Vector3 Position{};
 		//Unit vector specifying the direction the Ray is pointing.
 		Vector3 Direction{};
+		
 		//Creates a new instance of Ray.
-		constexpr Ray() = default;
+		constexpr Ray() noexcept = default;
 		
 		//Creates a new instance of Ray.
 		constexpr Ray(Vector3 position, Vector3 direction) noexcept : Position(position), Direction(direction) {}
@@ -993,10 +969,147 @@ namespace Xna {
 		if (result2 > radius * radius)
 			return ContainmentType::Disjoint;
 
-		return Min.X + radius > sphere.Center.X || sphere.Center.X > Max.X - radius || Max.X - Min.X <= radius || Min.Y + radius > sphere.Center.Y || sphere.Center.Y > Max.Y - radius || Max.Y - Min.Y <= radius || Min.Z + radius > sphere.Center.Z || sphere.Center.Z > Max.Z - radius || Max.X - Min.X <= radius
+		return Min.X + radius > sphere.Center.X 
+			|| sphere.Center.X > Max.X - radius 
+			|| Max.X - Min.X <= radius 
+			|| Min.Y + radius > sphere.Center.Y 
+			|| sphere.Center.Y > Max.Y - radius 
+			|| Max.Y - Min.Y <= radius 
+			|| Min.Z + radius > sphere.Center.Z 
+			|| sphere.Center.Z > Max.Z - radius 
+			|| Max.Z - Min.Z <= radius
 			? ContainmentType::Intersects
 			: ContainmentType::Contains;
 	}
-}
 
-#endif
+	constexpr std::optional<float> BoundingFrustum::Intersects(Ray const& ray) const noexcept{
+		const auto ctype = Contains(ray.Position);
+
+		switch (ctype)
+		{
+		case ContainmentType::Disjoint:
+			return {};
+		case ContainmentType::Contains:
+			return 0.0f;
+		case ContainmentType::Intersects:
+			return {}; //throw new NotImplementedException();
+		default:
+			return {}; //throw new ArgumentOutOfRangeException();
+		}
+	}
+
+	constexpr std::optional<float> BoundingSphere::Intersects(Ray const& ray) const noexcept {
+		const auto num1 = Center.X - ray.Position.X;
+		const auto num2 = Center.Y - ray.Position.Y;
+		const auto num3 = Center.Z - ray.Position.Z;
+		const auto num4 = (num1 * num1 + num2 * num2 + num3 * num3);
+		const auto num5 = Radius * Radius;
+
+		if (num4 <= num5)
+			return 0.0f;
+
+		const auto num6 = (num1 * ray.Direction.X + num2 * ray.Direction.Y + num3 * ray.Direction.Z);
+
+		if (num6 < 0.0f)
+			return {};
+
+		const auto num7 = num4 - num6 * num6;
+
+		if (num7 > num5)
+			return {};
+
+		const auto num8 = MathHelper::Sqrt(num5 - num7);
+
+		return num6 - num8;
+	}
+
+	constexpr std::optional<float> BoundingBox::Intersects(Ray const& ray) const noexcept {
+		float num1 = 0.0f;
+		float num2 = std::numeric_limits<float>::max();
+
+		if (MathHelper::Abs(ray.Direction.X) < 9.9999999747524271E-07)
+		{
+			if (ray.Position.X < Min.X || ray.Position.X > Max.X)
+				return {};
+		}
+		else
+		{
+			const auto num3 = 1.0f / ray.Direction.X;
+			auto num4 = (Min.X - ray.Position.X) * num3;
+			auto num5 = (Max.X - ray.Position.X) * num3;
+			if (num4 > num5)
+			{
+				float num6 = num4;
+				num4 = num5;
+				num5 = num6;
+			}
+			num1 = MathHelper::Max(num4, num1);
+			num2 = MathHelper::Min(num5, num2);
+			if (num1 > num2)
+				return {};
+		}
+		if (MathHelper::Abs(ray.Direction.Y) < 9.9999999747524271E-07)
+		{
+			if (ray.Position.Y < Min.Y || ray.Position.Y > Max.Y)
+				return {};
+		}
+		else
+		{
+			const auto num7 = 1.0f / ray.Direction.Y;
+			auto num8 = (Min.Y - ray.Position.Y) * num7;
+			auto num9 = (Max.Y - ray.Position.Y) * num7;
+			if (num8 > num9)
+			{
+				float num10 = num8;
+				num8 = num9;
+				num9 = num10;
+			}
+			num1 = MathHelper::Max(num8, num1);
+			num2 = MathHelper::Min(num9, num2);
+			if (num1 > num2)
+				return {};
+		}
+		if (MathHelper::Abs(ray.Direction.Z) < 9.9999999747524271E-07)
+		{
+			if (ray.Position.Z < Min.Z || ray.Position.Z > Max.Z)
+				return {};
+		}
+		else
+		{
+			const auto num11 = 1.0f / ray.Direction.Z;
+			auto num12 = (Min.Z - ray.Position.Z) * num11;
+			auto num13 = (Max.Z - ray.Position.Z) * num11;
+			if (num12 > num13)
+			{
+				float num14 = num12;
+				num12 = num13;
+				num13 = num14;
+			}
+			num1 = MathHelper::Max(num12, num1);
+			const auto num15 = MathHelper::Min(num13, num2);
+			if (num1 > num15)
+				return {};
+		}
+		return num1;
+	}
+
+	//Checks whether a Plane intersects a bounding volume.
+	constexpr std::optional<float> Plane::Intersects(Ray const& ray) const noexcept {
+		const auto num1 = (Normal.X * ray.Direction.X + Normal.Y * ray.Direction.Y + Normal.Z * ray.Direction.Z);
+
+		if (MathHelper::Abs(num1) < 9.9999997473787516E-06)
+			return {};
+
+		const auto num2 = (Normal.X * ray.Position.X + Normal.Y * ray.Position.Y + Normal.Z * ray.Position.Z);
+		auto num3 = (-D - num2) / num1;
+
+		if (num3 < 0.0f)
+		{
+			if (num3 < -9.9999997473787516E-06)
+				return {};
+			num3 = 0.0f;
+		}
+
+		return num3;
+	}
+}
