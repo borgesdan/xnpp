@@ -1,9 +1,10 @@
 {
-  "dependencies": [    
+  "dependencies": [
+    "spdlog",
     "nlohmann-json",
     "stb",
     "pugixml",
-    "freetype",    
+    "freetype",
     "sdl3",
     "libogg",
     "libvorbis",

@@ -38,7 +38,7 @@ set(XNPP_FRAMEWORK_SRC
     "sources/Xna/Framework/Media/MediaQueue.cpp"
     "sources/Xna/Framework/Content/Readers/BasicReaders.cpp" 
     "sources/Xna/Framework/Graphics/Model.cpp"
-)
+ "sources/Xna/Log.cpp")
 
 set(XNPP_PLATFORM_SRC
     "sources/Xna/Platform/Cross/System.cpp" 
@@ -84,10 +84,13 @@ find_package(Ogg CONFIG REQUIRED)
 find_package(Vorbis CONFIG REQUIRED)
 #bgfx
 find_package(bgfx CONFIG REQUIRED)
+#log
+find_package(spdlog CONFIG REQUIRED)
 
 target_link_libraries(xnpp       
     PUBLIC
         xnpp-csharp
+        spdlog::spdlog
     PRIVATE 
         SDL3::SDL3
         Ogg::ogg
