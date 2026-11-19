@@ -128,7 +128,7 @@ namespace Xna {
 		}
 
 		// Creates a Rectangle defining the area where one rectangle overlaps another rectangle.
-		[[nodiscard]] constexpr static Rectangle Intersect(Rectangle const& value1, Rectangle const& value2) noexcept {
+		[[nodiscard]] constexpr static Rectangle Intersect(Rectangle value1, Rectangle value2) noexcept {
 			const auto num1 = value1.Right();
 			const auto num2 = value2.Right();
 			const auto num3 = value1.Bottom();
@@ -151,7 +151,7 @@ namespace Xna {
 		}
 
 		// Creates a new Rectangle that exactly contains two other rectangles.
-		[[nodiscard]] constexpr static Rectangle Union(Rectangle const& value1, Rectangle const& value2) noexcept {
+		[[nodiscard]] constexpr static Rectangle Union(Rectangle value1, Rectangle value2) noexcept {
 			const auto num1 = value1.Right();
 			const auto num2 = value2.Right();
 			const auto num3 = value1.Bottom();
@@ -207,19 +207,19 @@ namespace Xna {
 		[[nodiscard]] constexpr float LengthSquared() const noexcept { return (X * X + Y * Y); }
 
 		// Calculates the distance between two vectors.
-		[[nodiscard]] static constexpr float Distance(Vector2 const& value1, Vector2 const& value2) noexcept {
+		[[nodiscard]] static constexpr float Distance(Vector2 value1, Vector2 value2) noexcept {
 			return MathHelper::Sqrt(DistanceSquared(value1, value2));
 		}
 
 		// Calculates the distance between two vectors squared.
-		[[nodiscard]] static constexpr float DistanceSquared(Vector2 const& value1, Vector2 const& value2) noexcept {
+		[[nodiscard]] static constexpr float DistanceSquared(Vector2 value1, Vector2 value2) noexcept {
 			const auto x = value1.X - value2.X;
 			const auto y = value1.Y - value2.Y;
 			return x * x + y * y;
 		}
 
 		// Calculates the dot product of two vectors.
-		[[nodiscard]] static constexpr float Dot(Vector2 const& value1, Vector2 const& value2) noexcept {
+		[[nodiscard]] static constexpr float Dot(Vector2 value1, Vector2 value2) noexcept {
 			return value1.X * value2.X + value1.Y * value2.Y;
 		}
 
@@ -240,13 +240,13 @@ namespace Xna {
 		}
 
 		// Determines the reflect vector of the given vector and normal.
-		[[nodiscard]] static constexpr Vector2 Reflect(Vector2 const& vector, Vector2 const& normal) noexcept {
+		[[nodiscard]] static constexpr Vector2 Reflect(Vector2 vector, Vector2 normal) noexcept {
 			const auto num = vector.X * normal.X + vector.Y * normal.Y;
 			return { vector.X - 2.0f * num * normal.X, vector.Y - 2.0f * num * normal.Y };
 		}
 
 		// Returns a vector that contains the lowest value from each matching pair of components.
-		[[nodiscard]] static constexpr Vector2 Min(Vector2 const& value1, Vector2 const& value2) noexcept {
+		[[nodiscard]] static constexpr Vector2 Min(Vector2 value1, Vector2 value2) noexcept {
 			return {
 				value1.X < value2.X ? value1.X : value2.X,
 				value1.Y < value2.Y ? value1.Y : value2.Y
@@ -254,7 +254,7 @@ namespace Xna {
 		}
 
 		// Returns a vector that contains the highest value from each matching pair of components.
-		[[nodiscard]] static constexpr Vector2 Max(Vector2 const& value1, Vector2 const& value2) noexcept {
+		[[nodiscard]] static constexpr Vector2 Max(Vector2 value1, Vector2 value2) noexcept {
 			return {
 				value1.X > value2.X ? value1.X : value2.X,
 				value1.Y > value2.Y ? value1.Y : value2.Y
@@ -262,7 +262,7 @@ namespace Xna {
 		}
 
 		// Restricts a value to be within a specified range.
-		[[nodiscard]] static constexpr Vector2 Clamp(Vector2 const& value1, Vector2 const& min, Vector2 const& max) noexcept {
+		[[nodiscard]] static constexpr Vector2 Clamp(Vector2 value1, Vector2 min, Vector2 max) noexcept {
 			const auto maxX = value1.X > max.X ? max.X : value1.X;
 			const auto x = maxX < min.X ? min.X : maxX;
 			const auto maxY = value1.Y > max.Y ? max.Y : value1.Y;
@@ -272,7 +272,7 @@ namespace Xna {
 		}
 
 		// Performs a linear interpolation between two vectors.
-		[[nodiscard]] static constexpr Vector2 Lerp(Vector2 const& value1, Vector2 const& value2, float amount) noexcept {
+		[[nodiscard]] static constexpr Vector2 Lerp(Vector2 value1, Vector2 value2, float amount) noexcept {
 			return {
 				value1.X + (value2.X - value1.X) * amount,
 				value1.Y + (value2.Y - value1.Y) * amount
@@ -280,7 +280,7 @@ namespace Xna {
 		}
 
 		// Returns a Vector2 containing the 2D Cartesian coordinates of a point specified in 2D barycentric coordinates.
-		[[nodiscard]] static constexpr Vector2 Barycentric(Vector2 const& value1, Vector2 const& value2, Vector2 const& value3, float amount1, float amount2) noexcept {
+		[[nodiscard]] static constexpr Vector2 Barycentric(Vector2 value1, Vector2 value2, Vector2 value3, float amount1, float amount2) noexcept {
 			return {
 				value1.X + amount1 * (value2.X - value1.X) + amount2 * (value3.X - value1.X),
 				value1.Y + amount1 * (value2.Y - value1.Y) + amount2 * (value3.Y - value1.Y)
@@ -288,7 +288,7 @@ namespace Xna {
 		}
 
 		// Interpolates between two values using a cubic equation.
-		[[nodiscard]] static constexpr Vector2 SmoothStep(Vector2 const& value1, Vector2 const& value2, float amount) noexcept {
+		[[nodiscard]] static constexpr Vector2 SmoothStep(Vector2 value1, Vector2 value2, float amount) noexcept {
 			amount = amount > 1.0f ? 1.0f : (amount < 0.0f ? 0.0f : amount);
 			amount = amount * amount * (3.0f - 2.0f * amount);
 
@@ -299,7 +299,7 @@ namespace Xna {
 		}
 
 		// Performs a Catmull-Rom interpolation using the specified positions.
-		[[nodiscard]] static constexpr Vector2 CatmullRom(Vector2 const& value1, Vector2 const& value2, Vector2 const& value3, Vector2 const& value4, float amount) noexcept {
+		[[nodiscard]] static constexpr Vector2 CatmullRom(Vector2 value1, Vector2 value2, Vector2 value3, Vector2 value4, float amount) noexcept {
 			const auto am2 = amount * amount;
 			const auto am3 = amount * am2;
 			return {
@@ -309,7 +309,7 @@ namespace Xna {
 		}
 
 		// Performs a Hermite spline interpolation.
-		[[nodiscard]] static constexpr Vector2 Hermite(Vector2 const& value1, Vector2 const& tangent1, Vector2 const& value2, Vector2 const& tangent2, float amount) noexcept {
+		[[nodiscard]] static constexpr Vector2 Hermite(Vector2 value1, Vector2 tangent1, Vector2 value2, Vector2 tangent2, float amount) noexcept {
 			const auto am2 = amount * amount;
 			const auto am3 = amount * am2;
 			const auto num3 = (2.0f * am3 - 3.0f * am2 + 1.0f);
@@ -324,11 +324,11 @@ namespace Xna {
 		}
 
 		// Transforms the vector (x, y, 0, 1) by the specified matrix.
-		[[nodiscard]] static constexpr Vector2 Transform(Vector2 const& position, Matrix const& matrix) noexcept;
+		[[nodiscard]] static constexpr Vector2 Transform(Vector2 position, Matrix const& matrix) noexcept;
 		// Transforms a 2D vector normal by a matrix.
-		[[nodiscard]] static constexpr Vector2 TransformNormal(Vector2 const& normal, Matrix const& matrix) noexcept;
+		[[nodiscard]] static constexpr Vector2 TransformNormal(Vector2 normal, Matrix const& matrix) noexcept;
 		// Transforms a single Vector2 by a specified Quaternion rotation.
-		[[nodiscard]] static constexpr Vector2 Transform(Vector2 const& value, Quaternion const& rotation) noexcept;
+		[[nodiscard]] static constexpr Vector2 Transform(Vector2 value, Quaternion rotation) noexcept;
 
 		static constexpr void Transform(
 			std::span<const Vector2> sourceArray,
@@ -370,37 +370,37 @@ namespace Xna {
 			std::size_t length) noexcept;
 
 		// Returns a vector pointing in the opposite direction.
-		[[nodiscard]] static constexpr Vector2 Negate(Vector2 const& value) noexcept {
+		[[nodiscard]] static constexpr Vector2 Negate(Vector2 value) noexcept {
 			return { -value.X, -value.Y };
 		}
 
 		// Adds two vectors.
-		[[nodiscard]] static constexpr Vector2 Add(Vector2 const& value1, Vector2 const& value2) noexcept {
+		[[nodiscard]] static constexpr Vector2 Add(Vector2 value1, Vector2 value2) noexcept {
 			return { value1.X + value2.X, value1.Y + value2.Y };
 		}
 
 		// Subtracts a vector from a vector.
-		[[nodiscard]] static constexpr Vector2 Subtract(Vector2 const& value1, Vector2 const& value2) noexcept {
+		[[nodiscard]] static constexpr Vector2 Subtract(Vector2 value1, Vector2 value2) noexcept {
 			return { value1.X - value2.X, value1.Y - value2.Y };
 		}
 
 		// Multiplies a vector by another vector.
-		[[nodiscard]] static constexpr Vector2 Multiply(Vector2 const& value1, Vector2 const& value2) noexcept {
+		[[nodiscard]] static constexpr Vector2 Multiply(Vector2 value1, Vector2 value2) noexcept {
 			return { value1.X * value2.X, value1.Y * value2.Y };
 		}
 
 		// Multiplies a vector by a scalar.
-		[[nodiscard]] static constexpr Vector2 Multiply(Vector2 const& value1, float scaleFactor) noexcept {
+		[[nodiscard]] static constexpr Vector2 Multiply(Vector2 value1, float scaleFactor) noexcept {
 			return { value1.X * scaleFactor, value1.Y * scaleFactor };
 		}
 
 		// Divides a vector by another vector.
-		[[nodiscard]] static constexpr Vector2 Divide(Vector2 const& value1, Vector2 const& value2) noexcept {
+		[[nodiscard]] static constexpr Vector2 Divide(Vector2 value1, Vector2 value2) noexcept {
 			return { value1.X / value2.X, value1.Y / value2.Y };
 		}
 
 		// Divides a vector by a scalar.
-		[[nodiscard]] static constexpr Vector2 Divide(Vector2 const& value1, float divider) noexcept {
+		[[nodiscard]] static constexpr Vector2 Divide(Vector2 value1, float divider) noexcept {
 			const auto inv = 1.0f / divider;
 			return { value1.X * inv, value1.Y * inv };
 		}
@@ -409,19 +409,19 @@ namespace Xna {
 			return Negate(*this);
 		}
 
-		constexpr Vector2& operator+=(Vector2 const& other) noexcept {
+		constexpr Vector2& operator+=(Vector2 other) noexcept {
 			X += other.X;
 			Y += other.Y;
 			return *this;
 		}
 
-		constexpr Vector2& operator-=(Vector2 const& other) noexcept {
+		constexpr Vector2& operator-=(Vector2 other) noexcept {
 			X -= other.X;
 			Y -= other.Y;
 			return *this;
 		}
 
-		constexpr Vector2& operator*=(Vector2 const& other) noexcept {
+		constexpr Vector2& operator*=(Vector2 other) noexcept {
 			X *= other.X;
 			Y *= other.Y;
 			return *this;
@@ -433,7 +433,7 @@ namespace Xna {
 			return *this;
 		}
 
-		constexpr Vector2& operator/=(Vector2 const& other) noexcept {
+		constexpr Vector2& operator/=(Vector2 other) noexcept {
 			X /= other.X;
 			Y /= other.Y;
 			return *this;
@@ -446,35 +446,35 @@ namespace Xna {
 			return *this;
 		}
 
-		[[nodiscard]] friend constexpr Vector2 operator+(Vector2 const& value1, Vector2 const& value2) noexcept {
+		[[nodiscard]] friend constexpr Vector2 operator+(Vector2 value1, Vector2 value2) noexcept {
 			return Vector2::Add(value1, value2);
 		}
 
-		[[nodiscard]] friend constexpr Vector2 operator-(Vector2 const& value1, Vector2 const& value2) noexcept {
+		[[nodiscard]] friend constexpr Vector2 operator-(Vector2 value1, Vector2 value2) noexcept {
 			return Vector2::Subtract(value1, value2);
 		}
 
-		[[nodiscard]] friend constexpr Vector2 operator*(Vector2 const& value1, Vector2 const& value2) noexcept {
+		[[nodiscard]] friend constexpr Vector2 operator*(Vector2 value1, Vector2 value2) noexcept {
 			return Vector2::Multiply(value1, value2);
 		}
 
-		[[nodiscard]] friend constexpr Vector2 operator/(Vector2 const& value1, Vector2 const& value2) noexcept {
+		[[nodiscard]] friend constexpr Vector2 operator/(Vector2 value1, Vector2 value2) noexcept {
 			return Vector2::Divide(value1, value2);
 		}
 
-		[[nodiscard]] friend constexpr Vector2 operator*(Vector2 const& value1, float factor) noexcept {
+		[[nodiscard]] friend constexpr Vector2 operator*(Vector2 value1, float factor) noexcept {
 			return Vector2::Multiply(value1, factor);
 		}
 
-		[[nodiscard]] friend constexpr Vector2 operator/(Vector2 const& value1, float divider) noexcept {
+		[[nodiscard]] friend constexpr Vector2 operator/(Vector2 value1, float divider) noexcept {
 			return Vector2::Divide(value1, divider);
 		}
 
-		[[nodiscard]] friend constexpr Vector2 operator*(float factor, Vector2 const& value1) noexcept {
+		[[nodiscard]] friend constexpr Vector2 operator*(float factor, Vector2 value1) noexcept {
 			return Vector2::Multiply(value1, factor);
 		}
 
-		[[nodiscard]] friend constexpr Vector2 operator/(float scalar, Vector2 const& value1) noexcept {
+		[[nodiscard]] friend constexpr Vector2 operator/(float scalar, Vector2 value1) noexcept {
 			return { scalar / value1.X, scalar / value1.Y };
 		}
 
@@ -531,18 +531,18 @@ namespace Xna {
 		// Calculates the length of the vector squared.
 		[[nodiscard]] constexpr float LengthSquared() const noexcept { return (X * X + Y * Y + Z * Z); }
 		// Calculates the distance between two vectors.
-		[[nodiscard]] static constexpr float Distance(Vector3 const& value1, Vector3 const& value2) noexcept {
+		[[nodiscard]] static constexpr float Distance(Vector3 value1, Vector3 value2) noexcept {
 			return MathHelper::Sqrt(DistanceSquared(value1, value2));
 		}
 		// Calculates the distance between two vectors squared.
-		[[nodiscard]] static constexpr float DistanceSquared(Vector3 const& value1, Vector3 const& value2) noexcept {
+		[[nodiscard]] static constexpr float DistanceSquared(Vector3 value1, Vector3 value2) noexcept {
 			const auto x = value1.X - value2.X;
 			const auto y = value1.Y - value2.Y;
 			const auto z = value1.Z - value2.Z;
 			return x * x + y * y + z * z;
 		}
 		// Calculates the dot product of two vectors.
-		[[nodiscard]] static constexpr float Dot(Vector3 const& vector1, Vector3 const& vector2) noexcept {
+		[[nodiscard]] static constexpr float Dot(Vector3 vector1, Vector3 vector2) noexcept {
 			return vector1.X * vector2.X + vector1.Y * vector2.Y + vector1.Z * vector2.Z;
 		}
 
@@ -564,7 +564,7 @@ namespace Xna {
 		}
 
 		// Calculates the cross product of two vectors.
-		[[nodiscard]] static constexpr Vector3 Cross(Vector3 const& vector1, Vector3 const& vector2) noexcept {
+		[[nodiscard]] static constexpr Vector3 Cross(Vector3 vector1, Vector3 vector2) noexcept {
 			return {
 				vector1.Y * vector2.Z - vector1.Z * vector2.Y,
 				vector1.Z * vector2.X - vector1.X * vector2.Z,
@@ -573,7 +573,7 @@ namespace Xna {
 		}
 
 		// Returns the reflection of a vector off a surface that has the specified normal.
-		[[nodiscard]] static constexpr Vector3 Reflect(Vector3 const& vector, Vector3 const& normal) noexcept {
+		[[nodiscard]] static constexpr Vector3 Reflect(Vector3 vector, Vector3 normal) noexcept {
 			const auto num = vector.X * normal.X + vector.Y * normal.Y + vector.Z * normal.Z;
 			return {
 				vector.X - 2.0f * num * normal.X,
@@ -583,7 +583,7 @@ namespace Xna {
 		}
 
 		// Returns a vector that contains the lowest value from each matching pair of components.
-		[[nodiscard]] static constexpr Vector3 Min(Vector3 const& value1, Vector3 const& value2) noexcept {
+		[[nodiscard]] static constexpr Vector3 Min(Vector3 value1, Vector3 value2) noexcept {
 			return {
 				value1.X < value2.X ? value1.X : value2.X,
 				value1.Y < value2.Y ? value1.Y : value2.Y,
@@ -592,7 +592,7 @@ namespace Xna {
 		}
 
 		// Returns a vector that contains the highest value from each matching pair of components.
-		[[nodiscard]] static constexpr Vector3 Max(Vector3 const& value1, Vector3 const& value2) noexcept {
+		[[nodiscard]] static constexpr Vector3 Max(Vector3 value1, Vector3 value2) noexcept {
 			return {
 				value1.X > value2.X ? value1.X : value2.X,
 				value1.Y > value2.Y ? value1.Y : value2.Y,
@@ -601,7 +601,7 @@ namespace Xna {
 		}
 
 		// Restricts a value to be within a specified range.
-		[[nodiscard]] static constexpr Vector3 Clamp(Vector3 const& value1, Vector3 const& min, Vector3 const& max) noexcept {
+		[[nodiscard]] static constexpr Vector3 Clamp(Vector3 value1, Vector3 min, Vector3 max) noexcept {
 			const auto x = value1.X > max.X ? max.X : value1.X;
 			const auto cx = x < min.X ? min.X : x;
 			const auto y = value1.Y > max.Y ? max.Y : value1.Y;
@@ -613,7 +613,7 @@ namespace Xna {
 		}
 
 		// Performs a linear interpolation between two vectors.
-		[[nodiscard]] static constexpr Vector3 Lerp(Vector3 const& value1, Vector3 const& value2, float amount) noexcept {
+		[[nodiscard]] static constexpr Vector3 Lerp(Vector3 value1, Vector3 value2, float amount) noexcept {
 			return {
 				value1.X + (value2.X - value1.X) * amount,
 				value1.Y + (value2.Y - value1.Y) * amount,
@@ -622,7 +622,7 @@ namespace Xna {
 		}
 
 		// Returns a Vector3 containing the 3D Cartesian coordinates of a point specified in Barycentric coordinates.
-		[[nodiscard]] static constexpr Vector3 Barycentric(Vector3 const& value1, Vector3 const& value2, Vector3 const& value3, float amount1, float amount2) noexcept {
+		[[nodiscard]] static constexpr Vector3 Barycentric(Vector3 value1, Vector3 value2, Vector3 value3, float amount1, float amount2) noexcept {
 			return {
 				value1.X + amount1 * (value2.X - value1.X) + amount2 * (value3.X - value1.X),
 				value1.Y + amount1 * (value2.Y - value1.Y) + amount2 * (value3.Y - value1.Y),
@@ -631,7 +631,7 @@ namespace Xna {
 		}
 
 		// Interpolates between two values using a cubic equation.
-		[[nodiscard]] static constexpr Vector3 SmoothStep(Vector3 const& value1, Vector3 const& value2, float amount) noexcept {
+		[[nodiscard]] static constexpr Vector3 SmoothStep(Vector3 value1, Vector3 value2, float amount) noexcept {
 			amount = amount > 1.0f ? 1.0f : (amount < 0.0f ? 0.0f : amount);
 			amount = amount * amount * (3.0f - 2.0f * amount);
 			return {
@@ -642,7 +642,7 @@ namespace Xna {
 		}
 
 		// Performs a Catmull-Rom interpolation using the specified positions.
-		[[nodiscard]] static constexpr Vector3 CatmullRom(Vector3 const& value1, Vector3 const& value2, Vector3 const& value3, Vector3 const& value4, float amount) noexcept {
+		[[nodiscard]] static constexpr Vector3 CatmullRom(Vector3 value1, Vector3 value2, Vector3 value3, Vector3 value4, float amount) noexcept {
 			const auto num1 = amount * amount;
 			const auto num2 = amount * num1;
 			return {
@@ -653,7 +653,7 @@ namespace Xna {
 		}
 
 		// Performs a Hermite spline interpolation.
-		[[nodiscard]] static constexpr Vector3 Hermite(Vector3 const& value1, Vector3 const& tangent1, Vector3 const& value2, Vector3 const& tangent2, float amount) noexcept {
+		[[nodiscard]] static constexpr Vector3 Hermite(Vector3 value1, Vector3 tangent1, Vector3 value2, Vector3 tangent2, float amount) noexcept {
 			const auto num1 = amount * amount;
 			const auto num2 = amount * num1;
 			const auto num3 = 2.0f * num2 - 3.0f * num1 + 1.0f;
@@ -668,11 +668,11 @@ namespace Xna {
 		}
 
 		// Transforms a 3D vector by the given matrix.
-		[[nodiscard]] static constexpr Vector3 Transform(Vector3 const& position, Matrix const& matrix) noexcept;
+		[[nodiscard]] static constexpr Vector3 Transform(Vector3 position, Matrix const& matrix) noexcept;
 		// Transforms a 3D vector normal by a matrix.
-		[[nodiscard]] static constexpr Vector3 TransformNormal(Vector3 const& normal, Matrix const& matrix) noexcept;
+		[[nodiscard]] static constexpr Vector3 TransformNormal(Vector3 normal, Matrix const& matrix) noexcept;
 		// Transforms a Vector3 by a specified Quaternion rotation.
-		[[nodiscard]] static constexpr Vector3 Transform(Vector3 const& value, Quaternion const& rotation) noexcept;
+		[[nodiscard]] static constexpr Vector3 Transform(Vector3 value, Quaternion rotation) noexcept;
 
 		static constexpr void Transform(
 			std::span<const Vector3> sourceArray,
@@ -714,37 +714,37 @@ namespace Xna {
 			std::size_t length) noexcept;
 
 		// Returns a vector pointing in the opposite direction.
-		[[nodiscard]] static constexpr Vector3 Negate(Vector3 const& value) noexcept {
+		[[nodiscard]] static constexpr Vector3 Negate(Vector3 value) noexcept {
 			return { -value.X, -value.Y, -value.Z };
 		}
 
 		// Adds two vectors.
-		[[nodiscard]] static constexpr Vector3 Add(Vector3 const& value1, Vector3 const& value2) noexcept {
+		[[nodiscard]] static constexpr Vector3 Add(Vector3 value1, Vector3 value2) noexcept {
 			return { value1.X + value2.X, value1.Y + value2.Y, value1.Z + value2.Z };
 		}
 
 		// Subtracts a vector from a vector.
-		[[nodiscard]] static constexpr Vector3 Subtract(Vector3 const& value1, Vector3 const& value2) noexcept {
+		[[nodiscard]] static constexpr Vector3 Subtract(Vector3 value1, Vector3 value2) noexcept {
 			return { value1.X - value2.X, value1.Y - value2.Y, value1.Z - value2.Z };
 		}
 
 		// Multiplies a vector by another vector.
-		[[nodiscard]] static constexpr Vector3 Multiply(Vector3 const& value1, Vector3 const& value2) noexcept {
+		[[nodiscard]] static constexpr Vector3 Multiply(Vector3 value1, Vector3 value2) noexcept {
 			return { value1.X * value2.X, value1.Y * value2.Y, value1.Z * value2.Z };
 		}
 
 		// Multiplies a vector by a scalar.
-		[[nodiscard]] static constexpr Vector3 Multiply(Vector3 const& value1, float scaleFactor) noexcept {
+		[[nodiscard]] static constexpr Vector3 Multiply(Vector3 value1, float scaleFactor) noexcept {
 			return { value1.X * scaleFactor, value1.Y * scaleFactor, value1.Z * scaleFactor };
 		}
 
 		// Divides a vector by another vector.
-		[[nodiscard]] static constexpr Vector3 Divide(Vector3 const& value1, Vector3 const& value2) noexcept {
+		[[nodiscard]] static constexpr Vector3 Divide(Vector3 value1, Vector3 value2) noexcept {
 			return { value1.X / value2.X, value1.Y / value2.Y, value1.Z / value2.Z };
 		}
 
 		// Divides a vector by a scalar.
-		[[nodiscard]] static constexpr Vector3 Divide(Vector3 const& value1, float divider) noexcept {
+		[[nodiscard]] static constexpr Vector3 Divide(Vector3 value1, float divider) noexcept {
 			const auto inv = 1.0f / divider;
 			return { value1.X * inv, value1.Y * inv, value1.Z * inv };
 		}
@@ -753,21 +753,21 @@ namespace Xna {
 			return Vector3::Negate(*this);
 		}
 
-		constexpr Vector3& operator+=(Vector3 const& other) noexcept {
+		constexpr Vector3& operator+=(Vector3 other) noexcept {
 			X += other.X;
 			Y += other.Y;
 			Z += other.Z;
 			return *this;
 		}
 
-		constexpr Vector3& operator-=(Vector3 const& other) noexcept {
+		constexpr Vector3& operator-=(Vector3 other) noexcept {
 			X -= other.X;
 			Y -= other.Y;
 			Z -= other.Z;
 			return *this;
 		}
 
-		constexpr Vector3& operator*=(Vector3 const& other) noexcept {
+		constexpr Vector3& operator*=(Vector3 other) noexcept {
 			X *= other.X;
 			Y *= other.Y;
 			Z *= other.Z;
@@ -781,7 +781,7 @@ namespace Xna {
 			return *this;
 		}
 
-		constexpr Vector3& operator/=(Vector3 const& other) noexcept {
+		constexpr Vector3& operator/=(Vector3 other) noexcept {
 			X /= other.X;
 			Y /= other.Y;
 			Z /= other.Z;
@@ -796,35 +796,35 @@ namespace Xna {
 			return *this;
 		}
 
-		[[nodiscard]] friend constexpr Vector3 operator+(Vector3 const& value1, Vector3 const& value2) noexcept {
+		[[nodiscard]] friend constexpr Vector3 operator+(Vector3 value1, Vector3 value2) noexcept {
 			return Vector3::Add(value1, value2);
 		}
 
-		[[nodiscard]] friend constexpr Vector3 operator-(Vector3 const& value1, Vector3 const& value2) noexcept {
+		[[nodiscard]] friend constexpr Vector3 operator-(Vector3 value1, Vector3 value2) noexcept {
 			return Vector3::Subtract(value1, value2);
 		}
 
-		[[nodiscard]] friend constexpr Vector3 operator*(Vector3 const& value1, Vector3 const& value2) noexcept {
+		[[nodiscard]] friend constexpr Vector3 operator*(Vector3 value1, Vector3 value2) noexcept {
 			return Vector3::Multiply(value1, value2);
 		}
 
-		[[nodiscard]] friend constexpr Vector3 operator*(Vector3 const& value, float factor) noexcept {
+		[[nodiscard]] friend constexpr Vector3 operator*(Vector3 value, float factor) noexcept {
 			return Vector3::Multiply(value, factor);
 		}
 
-		[[nodiscard]] friend constexpr Vector3 operator*(float factor, Vector3 const& value) noexcept {
+		[[nodiscard]] friend constexpr Vector3 operator*(float factor, Vector3 value) noexcept {
 			return Vector3::Multiply(value, factor);
 		}
 
-		[[nodiscard]] friend constexpr Vector3 operator/(Vector3 const& value1, Vector3 const& value2) noexcept {
+		[[nodiscard]] friend constexpr Vector3 operator/(Vector3 value1, Vector3 value2) noexcept {
 			return Vector3::Divide(value1, value2);
 		}
 
-		[[nodiscard]] friend constexpr Vector3 operator/(Vector3 const& value, float divider) noexcept {
+		[[nodiscard]] friend constexpr Vector3 operator/(Vector3 value, float divider) noexcept {
 			return Vector3::Divide(value, divider);
 		}
 
-		[[nodiscard]] friend constexpr Vector3 operator/(float scalar, Vector3 const& value) noexcept {
+		[[nodiscard]] friend constexpr Vector3 operator/(float scalar, Vector3 value) noexcept {
 			return { scalar / value.X, scalar / value.Y, scalar / value.Z };
 		}
 
@@ -881,12 +881,12 @@ namespace Xna {
 		}
 
 		// Calculates the distance between two vectors.
-		[[nodiscard]] static constexpr float Distance(Vector4 const& value1, Vector4 const& value2) noexcept {
+		[[nodiscard]] static constexpr float Distance(Vector4 value1, Vector4 value2) noexcept {
 			return MathHelper::Sqrt(DistanceSquared(value1, value2));
 		}
 
 		// Calculates the distance between two vectors squared.
-		[[nodiscard]] static constexpr float DistanceSquared(Vector4 const& value1, Vector4 const& value2) noexcept {
+		[[nodiscard]] static constexpr float DistanceSquared(Vector4 value1, Vector4 value2) noexcept {
 			const auto num1 = value1.X - value2.X;
 			const auto num2 = value1.Y - value2.Y;
 			const auto num3 = value1.Z - value2.Z;
@@ -895,7 +895,7 @@ namespace Xna {
 		}
 
 		// Calculates the dot product of two vectors.
-		[[nodiscard]] static constexpr float Dot(Vector4 const& vector1, Vector4 const& vector2) noexcept {
+		[[nodiscard]] static constexpr float Dot(Vector4 vector1, Vector4 vector2) noexcept {
 			return vector1.X * vector2.X + vector1.Y * vector2.Y + vector1.Z * vector2.Z + vector1.W * vector2.W;
 		}
 
@@ -918,7 +918,7 @@ namespace Xna {
 		}
 
 		// Returns a vector that contains the lowest value from each matching pair of components.
-		[[nodiscard]] static constexpr Vector4 Min(Vector4 const& value1, Vector4 const& value2) noexcept {
+		[[nodiscard]] static constexpr Vector4 Min(Vector4 value1, Vector4 value2) noexcept {
 			return {
 				value1.X < value2.X ? value1.X : value2.X,
 				value1.Y < value2.Y ? value1.Y : value2.Y,
@@ -928,7 +928,7 @@ namespace Xna {
 		}
 
 		// Returns a vector that contains the highest value from each matching pair of components.
-		[[nodiscard]] static constexpr Vector4 Max(Vector4 const& value1, Vector4 const& value2) noexcept {
+		[[nodiscard]] static constexpr Vector4 Max(Vector4 value1, Vector4 value2) noexcept {
 			return {
 				value1.X > value2.X ? value1.X : value2.X,
 				value1.Y > value2.Y ? value1.Y : value2.Y,
@@ -938,7 +938,7 @@ namespace Xna {
 		}
 
 		// Restricts a value to be within a specified range.
-		[[nodiscard]] static constexpr Vector4 Clamp(Vector4 const& value1, Vector4 const& min, Vector4 const& max) noexcept {
+		[[nodiscard]] static constexpr Vector4 Clamp(Vector4 value1, Vector4 min, Vector4 max) noexcept {
 			const auto num1 = value1.X > max.X ? max.X : value1.X;
 			const auto num2 = num1 < min.X ? min.X : num1;
 			const auto num3 = value1.Y > max.Y ? max.Y : value1.Y;
@@ -951,7 +951,7 @@ namespace Xna {
 		}
 
 		// Performs a linear interpolation between two vectors.
-		[[nodiscard]] static constexpr Vector4 Lerp(Vector4 const& value1, Vector4 const& value2, float amount) noexcept {
+		[[nodiscard]] static constexpr Vector4 Lerp(Vector4 value1, Vector4 value2, float amount) noexcept {
 			return {
 				value1.X + (value2.X - value1.X) * amount,
 				value1.Y + (value2.Y - value1.Y) * amount,
@@ -961,7 +961,7 @@ namespace Xna {
 		}
 
 		// Returns a Vector4 containing the 4D Cartesian coordinates of a point specified in barycentric coordinates.
-		[[nodiscard]] static constexpr Vector4 Barycentric(Vector4 const& value1, Vector4 const& value2, Vector4 const& value3, float amount1, float amount2) noexcept {
+		[[nodiscard]] static constexpr Vector4 Barycentric(Vector4 value1, Vector4 value2, Vector4 value3, float amount1, float amount2) noexcept {
 			return {
 				value1.X + amount1 * (value2.X - value1.X) + amount2 * (value3.X - value1.X),
 				value1.Y + amount1 * (value2.Y - value1.Y) + amount2 * (value3.Y - value1.Y),
@@ -971,7 +971,7 @@ namespace Xna {
 		}
 
 		// Interpolates between two values using a cubic equation.
-		[[nodiscard]] static constexpr Vector4 SmoothStep(Vector4 const& value1, Vector4 const& value2, float amount) noexcept {
+		[[nodiscard]] static constexpr Vector4 SmoothStep(Vector4 value1, Vector4 value2, float amount) noexcept {
 			amount = amount > 1.0f ? 1.0f : (amount < 0.0f ? 0.0f : amount);
 			amount = amount * amount * (3.0f - 2.0f * amount);
 			return {
@@ -983,7 +983,7 @@ namespace Xna {
 		}
 
 		// Performs a Catmull-Rom interpolation using the specified positions.
-		[[nodiscard]] static constexpr Vector4 CatmullRom(Vector4 const& value1, Vector4 const& value2, Vector4 const& value3, Vector4 const& value4, float amount) noexcept {
+		[[nodiscard]] static constexpr Vector4 CatmullRom(Vector4 value1, Vector4 value2, Vector4 value3, Vector4 value4, float amount) noexcept {
 			const auto num1 = amount * amount;
 			const auto num2 = amount * num1;
 			return {
@@ -995,7 +995,7 @@ namespace Xna {
 		}
 
 		// Performs a Hermite spline interpolation.
-		[[nodiscard]] static constexpr Vector4 Hermite(Vector4 const& value1, Vector4 const& tangent1, Vector4 const& value2, Vector4 const& tangent2, float amount) noexcept {
+		[[nodiscard]] static constexpr Vector4 Hermite(Vector4 value1, Vector4 tangent1, Vector4 value2, Vector4 tangent2, float amount) noexcept {
 			const auto num1 = amount * amount;
 			const auto num2 = amount * num1;
 			const auto num3 = (2.0f * num2 - 3.0f * num1 + 1.0f);
@@ -1011,15 +1011,15 @@ namespace Xna {
 		}
 
 		// Transforms a Vector2 by the given Matrix.
-		[[nodiscard]] static constexpr Vector4 Transform(Vector2 const& position, Matrix const& matrix) noexcept;
+		[[nodiscard]] static constexpr Vector4 Transform(Vector2 position, Matrix const& matrix) noexcept;
 		// Transforms a Vector3 by the given Matrix.
-		[[nodiscard]] static constexpr Vector4 Transform(Vector3 const& position, Matrix const& matrix) noexcept;
+		[[nodiscard]] static constexpr Vector4 Transform(Vector3 position, Matrix const& matrix) noexcept;
 		// Transforms a Vector4 by the specified Matrix.
-		[[nodiscard]] static constexpr Vector4 Transform(Vector4 const& vector, Matrix const& matrix) noexcept;
+		[[nodiscard]] static constexpr Vector4 Transform(Vector4 vector, Matrix const& matrix) noexcept;
 		// Transforms a Vector2 by a specified Quaternion into a Vector4.
-		[[nodiscard]] static constexpr Vector4 Transform(Vector2 const& value, Quaternion const& rotation) noexcept;
+		[[nodiscard]] static constexpr Vector4 Transform(Vector2 value, Quaternion rotation) noexcept;
 		// Transforms a Vector3 by a specified Quaternion into a Vector4.
-		[[nodiscard]] static constexpr Vector4 Transform(Vector3 const& value, Quaternion const& rotation) noexcept;
+		[[nodiscard]] static constexpr Vector4 Transform(Vector3 value, Quaternion rotation) noexcept;
 
 		static constexpr void Transform(
 			std::span<const Vector4> sourceArray,
@@ -1048,37 +1048,37 @@ namespace Xna {
 			std::size_t length) noexcept;
 
 		// Returns a vector pointing in the opposite direction.
-		[[nodiscard]] static constexpr Vector4 Negate(Vector4 const& value) noexcept {
+		[[nodiscard]] static constexpr Vector4 Negate(Vector4 value) noexcept {
 			return { -value.X, -value.Y, -value.Z, -value.W };
 		}
 
 		// Adds two vectors.
-		[[nodiscard]] static constexpr Vector4 Add(Vector4 const& value1, Vector4 const& value2) noexcept {
+		[[nodiscard]] static constexpr Vector4 Add(Vector4 value1, Vector4 value2) noexcept {
 			return { value1.X + value2.X, value1.Y + value2.Y, value1.Z + value2.Z, value1.W + value2.W };
 		}
 
 		// Subtracts a vector from a vector.
-		[[nodiscard]] static constexpr Vector4 Subtract(Vector4 const& value1, Vector4 const& value2) noexcept {
+		[[nodiscard]] static constexpr Vector4 Subtract(Vector4 value1, Vector4 value2) noexcept {
 			return { value1.X - value2.X, value1.Y - value2.Y, value1.Z - value2.Z, value1.W - value2.W };
 		}
 
 		// Multiplies a vector by another vector.
-		[[nodiscard]] static constexpr Vector4 Multiply(Vector4 const& value1, Vector4 const& value2) noexcept {
+		[[nodiscard]] static constexpr Vector4 Multiply(Vector4 value1, Vector4 value2) noexcept {
 			return { value1.X * value2.X, value1.Y * value2.Y, value1.Z * value2.Z, value1.W * value2.W };
 		}
 
 		// Multiplies a vector by a scalar.
-		[[nodiscard]] static constexpr Vector4 Multiply(Vector4 const& value1, float scaleFactor) noexcept {
+		[[nodiscard]] static constexpr Vector4 Multiply(Vector4 value1, float scaleFactor) noexcept {
 			return { value1.X * scaleFactor, value1.Y * scaleFactor, value1.Z * scaleFactor, value1.W * scaleFactor };
 		}
 
 		// Divides a vector by another vector.
-		[[nodiscard]] static constexpr Vector4 Divide(Vector4 const& value1, Vector4 const& value2) noexcept {
+		[[nodiscard]] static constexpr Vector4 Divide(Vector4 value1, Vector4 value2) noexcept {
 			return { value1.X / value2.X, value1.Y / value2.Y, value1.Z / value2.Z, value1.W / value2.W };
 		}
 
 		// Divides a vector by a scalar.
-		[[nodiscard]] static constexpr Vector4 Divide(Vector4 const& value1, float divider) noexcept {
+		[[nodiscard]] static constexpr Vector4 Divide(Vector4 value1, float divider) noexcept {
 			const auto inv = 1.0f / divider;
 			return { value1.X * inv, value1.Y * inv, value1.Z * inv, value1.W * inv };
 		}
@@ -1087,7 +1087,7 @@ namespace Xna {
 			return Vector4::Negate(*this);
 		}
 
-		constexpr Vector4& operator+=(Vector4 const& other) noexcept {
+		constexpr Vector4& operator+=(Vector4 other) noexcept {
 			X += other.X;
 			Y += other.Y;
 			Z += other.Z;
@@ -1095,7 +1095,7 @@ namespace Xna {
 			return *this;
 		}
 
-		constexpr Vector4& operator-=(Vector4 const& other) noexcept {
+		constexpr Vector4& operator-=(Vector4 other) noexcept {
 			X -= other.X;
 			Y -= other.Y;
 			Z -= other.Z;
@@ -1103,7 +1103,7 @@ namespace Xna {
 			return *this;
 		}
 
-		constexpr Vector4& operator*=(Vector4 const& other) noexcept {
+		constexpr Vector4& operator*=(Vector4 other) noexcept {
 			X *= other.X;
 			Y *= other.Y;
 			Z *= other.Z;
@@ -1119,7 +1119,7 @@ namespace Xna {
 			return *this;
 		}
 
-		constexpr Vector4& operator/=(Vector4 const& other) noexcept {
+		constexpr Vector4& operator/=(Vector4 other) noexcept {
 			X /= other.X;
 			Y /= other.Y;
 			Z /= other.Z;
@@ -1136,35 +1136,35 @@ namespace Xna {
 			return *this;
 		}
 
-		[[nodiscard]] friend constexpr Vector4 operator+(Vector4 const& value1, Vector4 const& value2) noexcept {
+		[[nodiscard]] friend constexpr Vector4 operator+(Vector4 value1, Vector4 value2) noexcept {
 			return Vector4::Add(value1, value2);
 		}
 
-		[[nodiscard]] friend constexpr Vector4 operator-(Vector4 const& value1, Vector4 const& value2) noexcept {
+		[[nodiscard]] friend constexpr Vector4 operator-(Vector4 value1, Vector4 value2) noexcept {
 			return Vector4::Subtract(value1, value2);
 		}
 
-		[[nodiscard]] friend constexpr Vector4 operator*(Vector4 const& value1, Vector4 const& value2) noexcept {
+		[[nodiscard]] friend constexpr Vector4 operator*(Vector4 value1, Vector4 value2) noexcept {
 			return Vector4::Multiply(value1, value2);
 		}
 
-		[[nodiscard]] friend constexpr Vector4 operator*(Vector4 const& value, float factor) noexcept {
+		[[nodiscard]] friend constexpr Vector4 operator*(Vector4 value, float factor) noexcept {
 			return Vector4::Multiply(value, factor);
 		}
 
-		[[nodiscard]] friend constexpr Vector4 operator*(float factor, Vector4 const& value) noexcept {
+		[[nodiscard]] friend constexpr Vector4 operator*(float factor, Vector4 value) noexcept {
 			return Vector4::Multiply(value, factor);
 		}
 
-		[[nodiscard]] friend constexpr Vector4 operator/(Vector4 const& value1, Vector4 const& value2) noexcept {
+		[[nodiscard]] friend constexpr Vector4 operator/(Vector4 value1, Vector4 value2) noexcept {
 			return Vector4::Divide(value1, value2);
 		}
 
-		[[nodiscard]] friend constexpr Vector4 operator/(Vector4 const& value, float divider) noexcept {
+		[[nodiscard]] friend constexpr Vector4 operator/(Vector4 value, float divider) noexcept {
 			return Vector4::Divide(value, divider);
 		}
 
-		[[nodiscard]] friend constexpr Vector4 operator/(float scalar, Vector4 const& value) noexcept {
+		[[nodiscard]] friend constexpr Vector4 operator/(float scalar, Vector4 value) noexcept {
 			return { scalar / value.X, scalar / value.Y, scalar / value.Z, scalar / value.W };
 		}
 
@@ -1243,56 +1243,56 @@ namespace Xna {
 		[[nodiscard]] constexpr Vector3 Translation() const noexcept { return Vector3(M41, M42, M43); }
 
 		// Sets the up vector of the Matrix.
-		constexpr void Up(Vector3 const& value) noexcept {
+		constexpr void Up(Vector3 value) noexcept {
 			M21 = value.X;
 			M22 = value.Y;
 			M23 = value.Z;
 		}
 
 		// Sets the down vector of the Matrix.
-		constexpr void Down(Vector3 const& value) noexcept {
+		constexpr void Down(Vector3 value) noexcept {
 			M21 = -value.X;
 			M22 = -value.Y;
 			M23 = -value.Z;
 		}
 
 		// Sets the right vector of the Matrix.
-		constexpr void Right(Vector3 const& value) noexcept {
+		constexpr void Right(Vector3 value) noexcept {
 			M11 = value.X;
 			M12 = value.Y;
 			M13 = value.Z;
 		}
 
 		// Sets the left vector of the Matrix.
-		constexpr void Left(Vector3 const& value) noexcept {
+		constexpr void Left(Vector3 value) noexcept {
 			M11 = -value.X;
 			M12 = -value.Y;
 			M13 = -value.Z;
 		}
 
 		// Sets the forward vector of the Matrix.
-		constexpr void Forward(Vector3 const& value) noexcept {
+		constexpr void Forward(Vector3 value) noexcept {
 			M31 = -value.X;
 			M32 = -value.Y;
 			M33 = -value.Z;
 		}
 
 		// Sets the backward vector of the Matrix.
-		constexpr void Backward(Vector3 const& value) noexcept {
+		constexpr void Backward(Vector3 value) noexcept {
 			M31 = value.X;
 			M32 = value.Y;
 			M33 = value.Z;
 		}
 
 		// Sets the translation vector of the Matrix.
-		constexpr void Translation(Vector3 const& value) noexcept {
+		constexpr void Translation(Vector3 value) noexcept {
 			M41 = value.X;
 			M42 = value.Y;
 			M43 = value.Z;
 		}
 
 		// Creates a spherical billboard that rotates around a specified object position.
-		[[nodiscard]] static constexpr Matrix CreateBillboard(Vector3 const& objectPosition, Vector3 const& cameraPosition, Vector3 const& cameraUpVector, const Vector3* cameraForwardVector) noexcept {
+		[[nodiscard]] static constexpr Matrix CreateBillboard(Vector3 objectPosition, Vector3 cameraPosition, Vector3 cameraUpVector, const Vector3* cameraForwardVector) noexcept {
 			Vector3 result1;
 			result1.X = objectPosition.X - cameraPosition.X;
 			result1.Y = objectPosition.Y - cameraPosition.Y;
@@ -1330,9 +1330,9 @@ namespace Xna {
 
 		// Creates a cylindrical billboard that rotates around a specified axis.
 		[[nodiscard]] static constexpr Matrix CreateConstrainedBillboard(
-			Vector3 const& objectPosition,
-			Vector3 const& cameraPosition,
-			Vector3 const& rotateAxis,
+			Vector3 objectPosition,
+			Vector3 cameraPosition,
+			Vector3 rotateAxis,
 			const Vector3* cameraForwardVector,
 			const Vector3* objectForwardVector) noexcept {
 			Vector3 result1;
@@ -1392,7 +1392,7 @@ namespace Xna {
 		}
 
 		// Creates a translation Matrix.
-		[[nodiscard]] static constexpr Matrix CreateTranslation(Vector3 const& position) noexcept {
+		[[nodiscard]] static constexpr Matrix CreateTranslation(Vector3 position) noexcept {
 			return CreateTranslation(position.X, position.Y, position.Z);
 		}
 
@@ -1420,7 +1420,7 @@ namespace Xna {
 		}
 
 		// Creates a scaling Matrix.
-		[[nodiscard]] static constexpr Matrix CreateScale(Vector3 const& scales) noexcept {
+		[[nodiscard]] static constexpr Matrix CreateScale(Vector3 scales) noexcept {
 			return CreateScale(scales.X, scales.Y, scales.Z);
 		}
 
@@ -1472,7 +1472,7 @@ namespace Xna {
 		}
 
 		// Creates a new Matrix that rotates around an arbitrary vector.
-		[[nodiscard]] static constexpr Matrix CreateFromAxisAngle(Vector3 const& axis, float angle) noexcept {
+		[[nodiscard]] static constexpr Matrix CreateFromAxisAngle(Vector3 axis, float angle) noexcept {
 			const auto x = axis.X;
 			const auto y = axis.Y;
 			const auto z = axis.Z;
@@ -1575,7 +1575,7 @@ namespace Xna {
 
 		// Creates a view matrix.
 		[[nodiscard]] static constexpr Matrix CreateLookAt(
-			Vector3 const& cameraPosition, Vector3 const& cameraTarget, Vector3 const& cameraUpVector) noexcept {
+			Vector3 cameraPosition, Vector3 cameraTarget, Vector3 cameraUpVector) noexcept {
 			const auto vector3_1 = Vector3::Normalize(cameraPosition - cameraTarget);
 			const auto vector3_2 = Vector3::Normalize(Vector3::Cross(cameraUpVector, vector3_1));
 			const auto vector1 = Vector3::Cross(vector3_1, vector3_2);
@@ -1598,7 +1598,7 @@ namespace Xna {
 
 		// Creates a world matrix.
 		[[nodiscard]] static constexpr Matrix CreateWorld(
-			Vector3 const& position, Vector3 const& forward, Vector3 const& up) noexcept {
+			Vector3 position, Vector3 forward, Vector3 up) noexcept {
 			const auto vector3_1 = Vector3::Normalize(-forward);
 			const auto vector2 = Vector3::Normalize(Vector3::Cross(up, vector3_1));
 			const auto vector3_2 = Vector3::Cross(vector3_1, vector2);
@@ -1620,14 +1620,14 @@ namespace Xna {
 		}
 
 		// Creates a rotation Matrix from a Quaternion.
-		[[nodiscard]] static constexpr Matrix CreateFromQuaternion(Quaternion const& quaternion) noexcept;
+		[[nodiscard]] static constexpr Matrix CreateFromQuaternion(Quaternion quaternion) noexcept;
 		// Creates a new rotation matrix from a specified yaw, pitch, and roll.
 		[[nodiscard]] static constexpr Matrix CreateFromYawPitchRoll(float yaw, float pitch, float roll) noexcept;
-		[[nodiscard]] static constexpr Matrix CreateShadow(Vector3 const& lightDirection, Plane const& plane) noexcept;
+		[[nodiscard]] static constexpr Matrix CreateShadow(Vector3 lightDirection, Plane const& plane) noexcept;
 		[[nodiscard]] static constexpr Matrix CreateReflection(Plane value) noexcept;
 
 		// Transforms a Matrix by applying a Quaternion rotation.
-		[[nodiscard]] static constexpr Matrix Transform(Matrix const& value, Quaternion const& rotation) noexcept;
+		[[nodiscard]] static constexpr Matrix Transform(Matrix const& value, Quaternion rotation) noexcept;
 
 		// Transposes the rows and columns of a matrix.
 		[[nodiscard]] static constexpr Matrix Transpose(Matrix const& matrix) noexcept {
@@ -2037,12 +2037,12 @@ namespace Xna {
 		}
 
 		// Calculates the conjugate of a Quaternion.
-		[[nodiscard]] static constexpr Quaternion Conjugate(Quaternion const& value) noexcept {
+		[[nodiscard]] static constexpr Quaternion Conjugate(Quaternion value) noexcept {
 			return { -value.X, -value.Y, -value.Z, value.W };
 		}
 
 		// Returns the inverse of a Quaternion.
-		[[nodiscard]] static constexpr Quaternion Inverse(Quaternion const& quaternion) noexcept {
+		[[nodiscard]] static constexpr Quaternion Inverse(Quaternion quaternion) noexcept {
 			const auto lenSq = quaternion.LengthSquared();
 			if (lenSq <= 0.0f)
 				return {};
@@ -2057,7 +2057,7 @@ namespace Xna {
 		}
 
 		// Creates a Quaternion from a vector and an angle to rotate about the vector.
-		[[nodiscard]] static constexpr Quaternion CreateFromAxisAngle(Vector3 const& axis, float angle) noexcept {
+		[[nodiscard]] static constexpr Quaternion CreateFromAxisAngle(Vector3 axis, float angle) noexcept {
 			const auto halfAngle = angle * 0.5f;
 			const auto s = MathHelper::Sin(halfAngle);
 			const auto c = MathHelper::Cos(halfAngle);
@@ -2125,12 +2125,12 @@ namespace Xna {
 		}
 
 		// Calculates the dot product of two Quaternions.
-		[[nodiscard]] static constexpr float Dot(Quaternion const& quaternion1, Quaternion const& quaternion2) noexcept {
+		[[nodiscard]] static constexpr float Dot(Quaternion quaternion1, Quaternion quaternion2) noexcept {
 			return quaternion1.X * quaternion2.X + quaternion1.Y * quaternion2.Y + quaternion1.Z * quaternion2.Z + quaternion1.W * quaternion2.W;
 		}
 
 		// Interpolates between two quaternions, using spherical linear interpolation.
-		[[nodiscard]] static constexpr Quaternion Slerp(Quaternion const& quaternion1, Quaternion const& quaternion2, float amount) noexcept {
+		[[nodiscard]] static constexpr Quaternion Slerp(Quaternion quaternion1, Quaternion quaternion2, float amount) noexcept {
 			auto cosOmega = Dot(quaternion1, quaternion2);
 			bool flip = false;
 
@@ -2163,7 +2163,7 @@ namespace Xna {
 		}
 
 		// Linearly interpolates between two quaternions.
-		[[nodiscard]] static constexpr Quaternion Lerp(Quaternion const& quaternion1, Quaternion const& quaternion2, float amount) noexcept {
+		[[nodiscard]] static constexpr Quaternion Lerp(Quaternion quaternion1, Quaternion quaternion2, float amount) noexcept {
 			const auto invAmount = 1.0f - amount;
 			Quaternion quaternion;
 
@@ -2185,7 +2185,7 @@ namespace Xna {
 		}
 
 		// Concatenates two Quaternions; the result represents the first rotation followed by the second rotation.
-		[[nodiscard]] static constexpr Quaternion Concatenate(Quaternion const& value1, Quaternion const& value2) noexcept {
+		[[nodiscard]] static constexpr Quaternion Concatenate(Quaternion value1, Quaternion value2) noexcept {
 			const auto x1 = value2.X;
 			const auto y1 = value2.Y;
 			const auto z1 = value2.Z;
@@ -2207,12 +2207,12 @@ namespace Xna {
 		}
 
 		// Flips the sign of each component of the quaternion.
-		[[nodiscard]] static constexpr Quaternion Negate(Quaternion const& quaternion) noexcept {
+		[[nodiscard]] static constexpr Quaternion Negate(Quaternion quaternion) noexcept {
 			return { -quaternion.X, -quaternion.Y, -quaternion.Z, -quaternion.W };
 		}
 
 		// Adds two Quaternions.
-		[[nodiscard]] static constexpr Quaternion Add(Quaternion const& quaternion1, Quaternion const& quaternion2) noexcept {
+		[[nodiscard]] static constexpr Quaternion Add(Quaternion quaternion1, Quaternion quaternion2) noexcept {
 			return {
 				quaternion1.X + quaternion2.X,
 				quaternion1.Y + quaternion2.Y,
@@ -2222,7 +2222,7 @@ namespace Xna {
 		}
 
 		// Subtracts a quaternion from another quaternion.
-		[[nodiscard]] static constexpr Quaternion Subtract(Quaternion const& quaternion1, Quaternion const& quaternion2) noexcept {
+		[[nodiscard]] static constexpr Quaternion Subtract(Quaternion quaternion1, Quaternion quaternion2) noexcept {
 			return {
 				quaternion1.X - quaternion2.X,
 				quaternion1.Y - quaternion2.Y,
@@ -2232,7 +2232,7 @@ namespace Xna {
 		}
 
 		// Multiplies a quaternion by another quaternion.
-		[[nodiscard]] static constexpr Quaternion Multiply(Quaternion const& quaternion1, Quaternion const& quaternion2) noexcept {
+		[[nodiscard]] static constexpr Quaternion Multiply(Quaternion quaternion1, Quaternion quaternion2) noexcept {
 			const auto x1 = quaternion1.X;
 			const auto y1 = quaternion1.Y;
 			const auto z1 = quaternion1.Z;
@@ -2254,7 +2254,7 @@ namespace Xna {
 		}
 
 		// Multiplies a quaternion by a scalar.
-		[[nodiscard]] static constexpr Quaternion Multiply(Quaternion const& quaternion1, float scaleFactor) noexcept {
+		[[nodiscard]] static constexpr Quaternion Multiply(Quaternion quaternion1, float scaleFactor) noexcept {
 			return {
 				quaternion1.X * scaleFactor,
 				quaternion1.Y * scaleFactor,
@@ -2264,7 +2264,7 @@ namespace Xna {
 		}
 
 		// Divides a Quaternion by another Quaternion.
-		[[nodiscard]] static constexpr Quaternion Divide(Quaternion const& quaternion1, Quaternion const& quaternion2) noexcept {
+		[[nodiscard]] static constexpr Quaternion Divide(Quaternion quaternion1, Quaternion quaternion2) noexcept {
 			const auto x = quaternion1.X;
 			const auto y = quaternion1.Y;
 			const auto z = quaternion1.Z;
@@ -2290,7 +2290,7 @@ namespace Xna {
 			return Quaternion::Negate(*this);
 		}
 
-		constexpr Quaternion& operator+=(Quaternion const& other) noexcept {
+		constexpr Quaternion& operator+=(Quaternion other) noexcept {
 			X += other.X;
 			Y += other.Y;
 			Z += other.Z;
@@ -2298,7 +2298,7 @@ namespace Xna {
 			return *this;
 		}
 
-		constexpr Quaternion& operator-=(Quaternion const& other) noexcept {
+		constexpr Quaternion& operator-=(Quaternion other) noexcept {
 			X -= other.X;
 			Y -= other.Y;
 			Z -= other.Z;
@@ -2306,7 +2306,7 @@ namespace Xna {
 			return *this;
 		}
 
-		constexpr Quaternion& operator*=(Quaternion const& other) noexcept {
+		constexpr Quaternion& operator*=(Quaternion other) noexcept {
 			*this = Multiply(*this, other);
 			return *this;
 		}
@@ -2319,32 +2319,32 @@ namespace Xna {
 			return *this;
 		}
 
-		constexpr Quaternion& operator/=(Quaternion const& other) noexcept {
+		constexpr Quaternion& operator/=(Quaternion other) noexcept {
 			*this = Divide(*this, other);
 			return *this;
 		}
 
-		[[nodiscard]] constexpr friend Quaternion operator+(Quaternion const& q1, Quaternion const& q2) noexcept {
+		[[nodiscard]] constexpr friend Quaternion operator+(Quaternion q1, Quaternion q2) noexcept {
 			return Quaternion::Add(q1, q2);
 		}
 
-		[[nodiscard]] constexpr friend Quaternion operator-(Quaternion const& q1, Quaternion const& q2) noexcept {
+		[[nodiscard]] constexpr friend Quaternion operator-(Quaternion q1, Quaternion q2) noexcept {
 			return Quaternion::Subtract(q1, q2);
 		}
 
-		[[nodiscard]] constexpr friend Quaternion operator*(Quaternion const& q1, Quaternion const& q2) noexcept {
+		[[nodiscard]] constexpr friend Quaternion operator*(Quaternion q1, Quaternion q2) noexcept {
 			return Quaternion::Multiply(q1, q2);
 		}
 
-		[[nodiscard]] constexpr friend Quaternion operator/(Quaternion const& q1, Quaternion const& q2) noexcept {
+		[[nodiscard]] constexpr friend Quaternion operator/(Quaternion q1, Quaternion q2) noexcept {
 			return Quaternion::Divide(q1, q2);
 		}
 
-		[[nodiscard]] constexpr friend Quaternion operator*(Quaternion const& q1, float scaleValue) noexcept {
+		[[nodiscard]] constexpr friend Quaternion operator*(Quaternion q1, float scaleValue) noexcept {
 			return Quaternion::Multiply(q1, scaleValue);
 		}
 
-		[[nodiscard]] constexpr friend Quaternion operator*(float scaleValue, Quaternion const& q1) noexcept {
+		[[nodiscard]] constexpr friend Quaternion operator*(float scaleValue, Quaternion q1) noexcept {
 			return Quaternion::Multiply(q1, scaleValue);
 		}
 
@@ -2355,19 +2355,19 @@ namespace Xna {
 	// IMPLS														//
 	//////////////////////////////////////////////////////////////////
 
-	constexpr Vector2 Vector2::Transform(Vector2 const& position, Matrix const& matrix) noexcept {
+	constexpr Vector2 Vector2::Transform(Vector2 position, Matrix const& matrix) noexcept {
 		const auto posx = (position.X * matrix.M11 + position.Y * matrix.M21) + matrix.M41;
 		const auto posy = (position.X * matrix.M12 + position.Y * matrix.M22) + matrix.M42;
 		return { posx, posy };
 	}
 
-	constexpr Vector2 Vector2::TransformNormal(Vector2 const& normal, Matrix const& matrix) noexcept {
+	constexpr Vector2 Vector2::TransformNormal(Vector2 normal, Matrix const& matrix) noexcept {
 		const auto posx = normal.X * matrix.M11 + normal.Y * matrix.M21;
 		const auto posy = normal.X * matrix.M12 + normal.Y * matrix.M22;
 		return { posx, posy };
 	}
 
-	constexpr Vector2 Vector2::Transform(Vector2 const& value, Quaternion const& rotation) noexcept {
+	constexpr Vector2 Vector2::Transform(Vector2 value, Quaternion rotation) noexcept {
 		const auto num1 = rotation.X + rotation.X;
 		const auto num2 = rotation.Y + rotation.Y;
 		const auto num3 = rotation.Z + rotation.Z;
@@ -2383,21 +2383,21 @@ namespace Xna {
 		};
 	}
 
-	constexpr Vector3 Vector3::Transform(Vector3 const& position, Matrix const& matrix) noexcept {
+	constexpr Vector3 Vector3::Transform(Vector3 position, Matrix const& matrix) noexcept {
 		const auto num1 = (position.X * matrix.M11 + position.Y * matrix.M21 + position.Z * matrix.M31) + matrix.M41;
 		const auto num2 = (position.X * matrix.M12 + position.Y * matrix.M22 + position.Z * matrix.M32) + matrix.M42;
 		const auto num3 = (position.X * matrix.M13 + position.Y * matrix.M23 + position.Z * matrix.M33) + matrix.M43;
 		return { num1, num2, num3 };
 	}
 
-	constexpr Vector3 Vector3::TransformNormal(Vector3 const& normal, Matrix const& matrix) noexcept {
+	constexpr Vector3 Vector3::TransformNormal(Vector3 normal, Matrix const& matrix) noexcept {
 		const auto num1 = normal.X * matrix.M11 + normal.Y * matrix.M21 + normal.Z * matrix.M31;
 		const auto num2 = normal.X * matrix.M12 + normal.Y * matrix.M22 + normal.Z * matrix.M32;
 		const auto num3 = normal.X * matrix.M13 + normal.Y * matrix.M23 + normal.Z * matrix.M33;
 		return { num1, num2, num3 };
 	}
 
-	constexpr Vector4 Vector4::Transform(Vector2 const& position, Matrix const& matrix) noexcept {
+	constexpr Vector4 Vector4::Transform(Vector2 position, Matrix const& matrix) noexcept {
 		const auto num1 = (position.X * matrix.M11 + position.Y * matrix.M21) + matrix.M41;
 		const auto num2 = (position.X * matrix.M12 + position.Y * matrix.M22) + matrix.M42;
 		const auto num3 = (position.X * matrix.M13 + position.Y * matrix.M23) + matrix.M43;
@@ -2405,7 +2405,7 @@ namespace Xna {
 		return { num1, num2, num3, num4 };
 	}
 
-	constexpr Vector4 Vector4::Transform(Vector3 const& position, Matrix const& matrix) noexcept {
+	constexpr Vector4 Vector4::Transform(Vector3 position, Matrix const& matrix) noexcept {
 		const auto num1 = (position.X * matrix.M11 + position.Y * matrix.M21 + position.Z * matrix.M31) + matrix.M41;
 		const auto num2 = (position.X * matrix.M12 + position.Y * matrix.M22 + position.Z * matrix.M32) + matrix.M42;
 		const auto num3 = (position.X * matrix.M13 + position.Y * matrix.M23 + position.Z * matrix.M33) + matrix.M43;
@@ -2413,7 +2413,7 @@ namespace Xna {
 		return { num1, num2, num3, num4 };
 	}
 
-	constexpr Vector4 Vector4::Transform(Vector4 const& vector, Matrix const& matrix) noexcept {
+	constexpr Vector4 Vector4::Transform(Vector4 vector, Matrix const& matrix) noexcept {
 		const auto num1 = (vector.X * matrix.M11 + vector.Y * matrix.M21 + vector.Z * matrix.M31 + vector.W * matrix.M41);
 		const auto num2 = (vector.X * matrix.M12 + vector.Y * matrix.M22 + vector.Z * matrix.M32 + vector.W * matrix.M42);
 		const auto num3 = (vector.X * matrix.M13 + vector.Y * matrix.M23 + vector.Z * matrix.M33 + vector.W * matrix.M43);
@@ -2654,7 +2654,7 @@ namespace Xna {
 		}
 	}
 
-	constexpr Vector3 Vector3::Transform(Vector3 const& value, Quaternion const& rotation) noexcept {
+	constexpr Vector3 Vector3::Transform(Vector3 value, Quaternion rotation) noexcept {
 		const auto num1 = rotation.X + rotation.X;
 		const auto num2 = rotation.Y + rotation.Y;
 		const auto num3 = rotation.Z + rotation.Z;
@@ -2674,7 +2674,7 @@ namespace Xna {
 		};
 	}
 
-	constexpr Vector4 Vector4::Transform(Vector2 const& value, Quaternion const& rotation) noexcept {
+	constexpr Vector4 Vector4::Transform(Vector2 value, Quaternion rotation) noexcept {
 		const auto num1 = rotation.X + rotation.X;
 		const auto num2 = rotation.Y + rotation.Y;
 		const auto num3 = rotation.Z + rotation.Z;
@@ -2695,7 +2695,7 @@ namespace Xna {
 		};
 	}
 
-	constexpr Vector4 Vector4::Transform(Vector3 const& value, Quaternion const& rotation) noexcept {
+	constexpr Vector4 Vector4::Transform(Vector3 value, Quaternion rotation) noexcept {
 		const auto num1 = rotation.X + rotation.X;
 		const auto num2 = rotation.Y + rotation.Y;
 		const auto num3 = rotation.Z + rotation.Z;
@@ -2716,7 +2716,7 @@ namespace Xna {
 		};
 	}
 
-	constexpr Matrix Matrix::CreateFromQuaternion(Quaternion const& quaternion) noexcept {
+	constexpr Matrix Matrix::CreateFromQuaternion(Quaternion quaternion) noexcept {
 		const auto num1 = quaternion.X * quaternion.X;
 		const auto num2 = quaternion.Y * quaternion.Y;
 		const auto num3 = quaternion.Z * quaternion.Z;
@@ -2740,7 +2740,7 @@ namespace Xna {
 		return fromQuaternion;
 	}
 
-	constexpr Matrix Matrix::Transform(Matrix const& value, Quaternion const& rotation) noexcept {
+	constexpr Matrix Matrix::Transform(Matrix const& value, Quaternion rotation) noexcept {
 		const auto num1 = rotation.X + rotation.X;
 		const auto num2 = rotation.Y + rotation.Y;
 		const auto num3 = rotation.Z + rotation.Z;

@@ -171,7 +171,7 @@ namespace Xna {
 		return (Normal.X * value.X + Normal.Y * value.Y + Normal.Z * value.Z);
 	}
 
-	constexpr Matrix Matrix::CreateShadow(Vector3 const& lightDirection, Plane const& plane)  noexcept {
+	constexpr Matrix Matrix::CreateShadow(Vector3 lightDirection, Plane const& plane)  noexcept {
 		const auto result = Plane::Normalize(plane);
 		const auto num1 = (result.Normal.X * lightDirection.X + result.Normal.Y * lightDirection.Y + result.Normal.Z * lightDirection.Z);
 		const auto num2 = -result.Normal.X;
