@@ -17,8 +17,8 @@ namespace Xna {
 		}
 
 		XNPP_API void SubmitBuffer(std::vector<uint8_t> const& buffer, size_t offset, size_t count);
-		XNPP_API CSharp::TimeSpan GetSampleDuration(size_t sizeInBytes);
-		XNPP_API size_t GetSampleSizeInBytes(CSharp::TimeSpan duration);
+		XNPP_API TimeSpan GetSampleDuration(size_t sizeInBytes);
+		XNPP_API size_t GetSampleSizeInBytes(TimeSpan duration);
 
 		inline bool IsLooped() const override { return false; }
 		inline void IsLooped(bool value) override { CSharp::InvalidOperationException("InvalidCall"); }

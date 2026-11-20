@@ -85,7 +85,7 @@ namespace Xna {
 		static void GetVisualizationData(VisualizationData& visualizationData){}
 
 		//Gets the play position within the currently playing song.		
-		static CSharp::TimeSpan PlayPosition() { return queue.PlayPosition(); }
+		static TimeSpan PlayPosition() { return queue.PlayPosition(); }
 
 		//Raised when the active song changes due to active playback or due to explicit calls to the MoveNext or MovePrevious methods.
 		CSharp::Event<CSharp::EventArgs> ActiveSongChanged() { return activeSongChanged; }

@@ -36,7 +36,7 @@ namespace Xna {
 		//Gets the Artist of the Song.
 		XNPP_API Xna::Artist Artist() const;
 		//Gets the duration of the Song.
-		XNPP_API CSharp::TimeSpan Duration() const;
+		XNPP_API TimeSpan Duration() const;
 		//Gets a value that indicates whether the song has been rated by the user.
 		bool IsRated() const { return Rating() > 0; }
 		//Gets the user's rating for the Song.		
@@ -65,7 +65,7 @@ namespace Xna {
 			std::optional<Xna::Artist> artist;
 			std::optional<Xna::Album> album;
 			std::optional<Xna::Genre> genre = Genre::Empty();
-			CSharp::TimeSpan duration = CSharp::TimeSpan::Zero();
+			TimeSpan duration = TimeSpan::Zero();
 			std::filesystem::path fileName;
 			int32_t rating{ 0 };
 			int32_t trackNumber{ 0 };

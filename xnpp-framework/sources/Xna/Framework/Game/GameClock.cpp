@@ -4,8 +4,8 @@
 
 namespace Xna {
 	void GameClock::Reset() {
-		currentTimeBase = CSharp::TimeSpan::Zero();
-		currentTimeOffset = CSharp::TimeSpan::Zero();
+		currentTimeBase = TimeSpan::Zero();
+		currentTimeOffset = TimeSpan::Zero();
 		baseRealTime = GameClock::Counter();
 		lastRealTimeValid = false;
 	}
@@ -33,7 +33,7 @@ namespace Xna {
 			catch (std::exception& ex)
 			{
 				baseRealTime = counter;
-				currentTimeOffset = CSharp::TimeSpan::Zero();
+				currentTimeOffset = TimeSpan::Zero();
 			}
 		}
 
@@ -43,7 +43,7 @@ namespace Xna {
 		}
 		catch (std::exception& ex)
 		{
-			elapsedTime = CSharp::TimeSpan::Zero();
+			elapsedTime = TimeSpan::Zero();
 		}
 		try
 		{
@@ -53,7 +53,7 @@ namespace Xna {
 		}
 		catch (std::exception& ex)
 		{
-			elapsedAdjustedTime = CSharp::TimeSpan::Zero();
+			elapsedAdjustedTime = TimeSpan::Zero();
 		}
 		lastRealTime = counter;
 	}
@@ -81,7 +81,7 @@ namespace Xna {
 		return static_cast<int64_t>(Platform::System::GetClockFrequency());
 	}
 
-	CSharp::TimeSpan GameClock::CounterToTimeSpan(int64_t delta) {
-		return CSharp::TimeSpan::FromTicks((delta * 10000000) / GameClock::Frequency());
+	TimeSpan GameClock::CounterToTimeSpan(int64_t delta) {
+		return TimeSpan::FromTicks((delta * 10000000) / GameClock::Frequency());
 	}
 }

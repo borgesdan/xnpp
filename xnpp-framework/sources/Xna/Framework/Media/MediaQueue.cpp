@@ -74,8 +74,8 @@ namespace Xna {
 		return (*impl->songCollection)[index];
 	}
 
-	CSharp::TimeSpan MediaQueue::PlayPosition() const {
+	TimeSpan MediaQueue::PlayPosition() const {
 		const auto position = Platform::IMediaPlayer::GetInstance().GetPlayPosition();
-		return CSharp::TimeSpan(0, 0, 0, 0, position);
+		return TimeSpan(0, 0, 0, 0, position);
 	}
 }

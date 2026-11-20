@@ -11,7 +11,7 @@ namespace Xna {
 		Create(wavFile.Format()->RawBuffer, *wavFile.Data(), 0, wavFile.Data()->size(), wavFile.LoopStart(), wavFile.LoopLength(), wavFile.Duration());
 	}
 
-	void SoundEffect::Create(std::vector<uint8_t> const& format, std::vector<uint8_t> const& data, size_t offset, size_t count, size_t loopStart, size_t loopLength, CSharp::TimeSpan const& duration) {
+	void SoundEffect::Create(std::vector<uint8_t> const& format, std::vector<uint8_t> const& data, size_t offset, size_t count, size_t loopStart, size_t loopLength, TimeSpan const& duration) {
 		impl = std::make_shared<Implementation>();
 
 		impl->loopInfo.Start = loopStart;
@@ -134,14 +134,14 @@ namespace Xna {
 		}
 	}
 
-	int SoundEffect::GetSampleSizeInBytes(CSharp::TimeSpan const& duration, int32_t sampleRate, AudioChannels channels) {
+	int SoundEffect::GetSampleSizeInBytes(TimeSpan const& duration, int32_t sampleRate, AudioChannels channels) {
 		if (duration.TotalMilliseconds() < 0.0 || duration.TotalMilliseconds() > static_cast<double>(std::numeric_limits<int32_t>::max()))
 			throw CSharp::ArgumentOutOfRangeException("duration");
 		if (sampleRate < 8000 || sampleRate > 48000)
 			throw CSharp::ArgumentOutOfRangeException("sampleRate");
 		if (channels < AudioChannels::Mono || channels > AudioChannels::Stereo)
 			throw CSharp::ArgumentOutOfRangeException("channels");
-		if (duration == CSharp::TimeSpan::Zero())
+		if (duration == TimeSpan::Zero())
 			return 0;
 
 		return AudioHelper::GetSampleSizeInBytes(duration, sampleRate, channels);

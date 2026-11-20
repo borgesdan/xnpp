@@ -7,7 +7,7 @@ namespace Xna {
 		impl->rating = 0;
 		impl->trackNumber = 0;		
 		impl->fileName = filename;
-		impl->duration = CSharp::TimeSpan(0, 0, 0, 0, duration);		
+		impl->duration = TimeSpan(0, 0, 0, 0, duration);		
 	}
 
 	Xna::Album Song::Album() const {
@@ -22,7 +22,7 @@ namespace Xna {
 		return impl->artist.value_or(Xna::Artist::Empty());
 	}
 
-	CSharp::TimeSpan Song::Duration() const {
+	TimeSpan Song::Duration() const {
 		return impl->duration;
 	}
 

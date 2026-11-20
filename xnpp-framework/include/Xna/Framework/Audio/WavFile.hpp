@@ -35,7 +35,7 @@ namespace Xna {
         constexpr int32_t LoopStart() const { return loop.Start; }
         constexpr int32_t LoopLength() const { return loop.Length; }
         constexpr int32_t SampleLength() const { return buffer->size() / format->BlockAlign; }
-        constexpr CSharp::TimeSpan Duration() const { return format->DurationFromSize(buffer->size()); }
+        constexpr TimeSpan Duration() const { return format->DurationFromSize(buffer->size()); }
 
     private:
         XNPP_API WavFile(std::shared_ptr<CSharp::Stream> const& source);

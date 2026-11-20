@@ -32,9 +32,9 @@ namespace Xna {
 		//Gets the current GraphicsDevice.
 		XNPP_API Xna::GraphicsDevice GraphicsDevice() const;
 		//Gets or sets the time to sleep when the game is inactive.
-		XNPP_API CSharp::TimeSpan InactiveSleepTime() const;
+		XNPP_API TimeSpan InactiveSleepTime() const;
 		//Gets or sets the time to sleep when the game is inactive.
-		XNPP_API void InactiveSleepTime(CSharp::TimeSpan const& value);
+		XNPP_API void InactiveSleepTime(TimeSpan const& value);
 		//Indicates whether the game is currently the active application.
 		XNPP_API bool IsActive() const;
 		//Gets or sets a value indicating whether to use fixed time steps.
@@ -52,9 +52,9 @@ namespace Xna {
 		//Gets the GameServiceContainer holding all the service providers attached to the Game.
 		XNPP_API GameServiceContainer Services() const;
 		//Gets or sets the target time between calls to Update when IsFixedTimeStep is true.
-		XNPP_API CSharp::TimeSpan TargetElapsedTime() const;
+		XNPP_API TimeSpan TargetElapsedTime() const;
 		//Gets or sets the target time between calls to Update when IsFixedTimeStep is true.
-		XNPP_API void TargetElapsedTime(CSharp::TimeSpan const& value);
+		XNPP_API void TargetElapsedTime(TimeSpan const& value);
 		//Gets the underlying operating system window.
 		XNPP_API std::optional<GameWindow> Window() const;
 

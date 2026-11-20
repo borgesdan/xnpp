@@ -17,11 +17,11 @@ namespace Xna {
             return (value % static_cast<int32_t>(BlockAlign)) == 0;
         }
 
-        constexpr CSharp::TimeSpan DurationFromSize(int32_t sizeInBytes) const {
-            return CSharp::TimeSpan::FromMilliseconds(static_cast<double>(sizeInBytes / BlockAlign) * 1000.0 / static_cast<double>(SampleRate));
+        constexpr TimeSpan DurationFromSize(int32_t sizeInBytes) const {
+            return TimeSpan::FromMilliseconds(static_cast<double>(sizeInBytes / BlockAlign) * 1000.0 / static_cast<double>(SampleRate));
         }
 
-        constexpr int32_t SizeFromDuration(CSharp::TimeSpan const& duration) const {
+        constexpr int32_t SizeFromDuration(TimeSpan const& duration) const {
             //TODO: uso de checked e unchecked
             const auto num = static_cast<int32_t>(duration.TotalMilliseconds() * static_cast<double>(SampleRate) / 1000.0);
             return (num + (num % static_cast<int32_t>(Channels)) * static_cast<int32_t>(BlockAlign));

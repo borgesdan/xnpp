@@ -49,12 +49,12 @@ namespace Xna {
 
 		//Returns the size of the audio sample based on duration, sample rate, and audio channels.
 		XNPP_API static int GetSampleSizeInBytes(
-			CSharp::TimeSpan const& duration,
+			TimeSpan const& duration,
 			int32_t sampleRate,
 			AudioChannels channels);
 
 		//Returns the sample duration based on the specified sample size and sample rate.
-		XNPP_API static CSharp::TimeSpan GetSampleDuration(
+		XNPP_API static TimeSpan GetSampleDuration(
 			int32_t sizeInBytes,
 			int32_t sampleRate,
 			AudioChannels channels);
@@ -65,7 +65,7 @@ namespace Xna {
 		inline void Name(std::string const& value) { impl->effectName = value; }
 
 		//Gets or sets the duration of the SoundEffect.
-		inline CSharp::TimeSpan Duration() { return impl->duration; }
+		inline TimeSpan Duration() { return impl->duration; }
 
 		//Gets or sets the master volume that affects all SoundEffectInstance sounds.
 		inline static float MasterVolume() { return currentVolume; }
@@ -99,7 +99,7 @@ namespace Xna {
 		SoundEffect(std::shared_ptr<CSharp::Stream> const& stream);
 
 		inline SoundEffect(std::vector<uint8_t> const& format, std::vector<uint8_t> const& data,
-			int32_t loopStart, int32_t loopLength, CSharp::TimeSpan const& duration) {
+			int32_t loopStart, int32_t loopLength, TimeSpan const& duration) {
 			Create(format, data, 0, data.size(), loopStart, loopLength, duration);
 		}
 
@@ -119,7 +119,7 @@ namespace Xna {
 			size_t count,
 			size_t loopStart,
 			size_t loopLength,
-			CSharp::TimeSpan const& duration);
+			TimeSpan const& duration);
 
 		void ChildDestroyed(std::shared_ptr<SoundEffectInstance> const& child);
 
@@ -139,7 +139,7 @@ namespace Xna {
 	private:
 		struct Implementation {
 			LoopRegion loopInfo{};
-			CSharp::TimeSpan duration;
+			TimeSpan duration;
 			std::string effectName;
 			std::vector<std::weak_ptr<SoundEffectInstance>> children;
 			std::stack<std::shared_ptr<SoundEffectInstance>> instancePool;	

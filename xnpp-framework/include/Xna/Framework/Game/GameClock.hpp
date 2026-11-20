@@ -11,9 +11,9 @@ namespace Xna {
 	public:
 		inline GameClock() { Reset(); }
 
-		constexpr CSharp::TimeSpan CurrentTime() const { return currentTimeBase + currentTimeOffset; }
-		constexpr CSharp::TimeSpan ElapsedTime() const { return elapsedTime; }
-		constexpr CSharp::TimeSpan ElapsedAdjustedTime() const { return elapsedAdjustedTime; }
+		constexpr TimeSpan CurrentTime() const { return currentTimeBase + currentTimeOffset; }
+		constexpr TimeSpan ElapsedTime() const { return elapsedTime; }
+		constexpr TimeSpan ElapsedAdjustedTime() const { return elapsedAdjustedTime; }
 
 		XNPP_API void Reset();
 		XNPP_API void Step();
@@ -23,7 +23,7 @@ namespace Xna {
 		XNPP_API static int64_t Counter();
 		XNPP_API static int64_t Frequency();
 
-		XNPP_API static CSharp::TimeSpan CounterToTimeSpan(int64_t delta);
+		XNPP_API static TimeSpan CounterToTimeSpan(int64_t delta);
 
 	private:
 		int64_t baseRealTime{ 0 };
@@ -32,10 +32,10 @@ namespace Xna {
 		int32_t suspendCount;
 		int64_t suspendStartTime{ 0 };
 		int64_t timeLostToSuspension{ 0 };
-		CSharp::TimeSpan currentTimeOffset;
-		CSharp::TimeSpan currentTimeBase;
-		CSharp::TimeSpan elapsedTime;
-		CSharp::TimeSpan elapsedAdjustedTime;
+		TimeSpan currentTimeOffset;
+		TimeSpan currentTimeBase;
+		TimeSpan elapsedTime;
+		TimeSpan elapsedAdjustedTime;
 	};
 }
 

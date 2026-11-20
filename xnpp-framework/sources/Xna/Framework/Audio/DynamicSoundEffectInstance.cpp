@@ -48,20 +48,20 @@ namespace Xna {
 		throw CSharp::NotSupportedException();
 	}
 
-	CSharp::TimeSpan DynamicSoundEffectInstance::GetSampleDuration(size_t sizeInBytes) {
+	TimeSpan DynamicSoundEffectInstance::GetSampleDuration(size_t sizeInBytes) {
 		if (sizeInBytes < 0)
 			throw CSharp::ArgumentException("InvalidBufferSize");
 
 		return sizeInBytes == 0 
-			? CSharp::TimeSpan::Zero() 
+			? TimeSpan::Zero() 
 			: impl->format->DurationFromSize(sizeInBytes);
 	}
 
-	size_t DynamicSoundEffectInstance::GetSampleSizeInBytes(CSharp::TimeSpan duration) {
+	size_t DynamicSoundEffectInstance::GetSampleSizeInBytes(TimeSpan duration) {
 		if (duration.TotalMilliseconds() < 0.0 || duration.TotalMilliseconds() > static_cast<double>(std::numeric_limits<int32_t>::max()))
 			throw CSharp::ArgumentOutOfRangeException("duration");
 
-		if (duration == CSharp::TimeSpan::Zero())
+		if (duration == TimeSpan::Zero())
 			return 0;
 		
 		return impl->format->SizeFromDuration(duration);

@@ -203,7 +203,7 @@ namespace Xna {
 
 	public:
 		struct Implementation {
-			CSharp::TimeSpan deviceLostSleepTime{ 50 };
+			TimeSpan deviceLostSleepTime{ 50 };
 			Game* game;
 			bool isReallyFullScreen{ false };
 			bool isDeviceDirty{ false };

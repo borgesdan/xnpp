@@ -21,7 +21,7 @@
 #include <Xna/Framework/Game/GameComponentCollection.hpp>
 #include <Xna/Macros/CoreAssert.hpp>
 
-using Xna::CSharp::TimeSpan;
+using Xna::TimeSpan;
 
 namespace Xna {
 	struct Game::Implementation {
@@ -40,11 +40,11 @@ namespace Xna {
 		GameComponentCollection gameComponents;		
 
 		GameClock clock;
-		CSharp::TimeSpan totalGameTime{ CSharp::TimeSpan::Zero() };
-		CSharp::TimeSpan accumulatedElapsedGameTime{ CSharp::TimeSpan::Zero() };
-		CSharp::TimeSpan lastFrameElapsedGameTime{ CSharp::TimeSpan::Zero() };
-		CSharp::TimeSpan targetElapsedTime{ CSharp::TimeSpan::FromTicks(166667L) };
-		CSharp::TimeSpan inactiveSleepTime{ CSharp::TimeSpan::FromMilliseconds(20.0) };
+		TimeSpan totalGameTime{ TimeSpan::Zero() };
+		TimeSpan accumulatedElapsedGameTime{ TimeSpan::Zero() };
+		TimeSpan lastFrameElapsedGameTime{ TimeSpan::Zero() };
+		TimeSpan targetElapsedTime{ TimeSpan::FromTicks(166667L) };
+		TimeSpan inactiveSleepTime{ TimeSpan::FromMilliseconds(20.0) };
 
 		GameServiceContainer gameServices{};
 
@@ -64,7 +64,7 @@ namespace Xna {
 		int32_t updatesSinceRunningSlowly1{ 0 };
 		int32_t updatesSinceRunningSlowly2{ 0 };
 
-		static constexpr CSharp::TimeSpan maximumElapsedTime = CSharp::TimeSpan::FromMilliseconds(500.0);
+		static constexpr TimeSpan maximumElapsedTime = TimeSpan::FromMilliseconds(500.0);
 
 		Xna::GameTime gameTime;
 
@@ -164,7 +164,7 @@ namespace Xna {
 		Initialize();
 		impl->isRun = true;
 		BeginRun();
-		impl->gameTime.ElapsedGameTime(CSharp::TimeSpan::Zero());
+		impl->gameTime.ElapsedGameTime(TimeSpan::Zero());
 		impl->gameTime.TotalGameTime(impl->totalGameTime);
 		impl->isRunnningSlowly = false;
 		Update(impl->gameTime);
@@ -203,11 +203,11 @@ namespace Xna {
 		bool flag = true;
 		auto timeSpan1 = impl->clock.ElapsedAdjustedTime();
 
-		if (timeSpan1 < CSharp::TimeSpan::Zero())
-			timeSpan1 = CSharp::TimeSpan::Zero();
+		if (timeSpan1 < TimeSpan::Zero())
+			timeSpan1 = TimeSpan::Zero();
 
 		if (impl->forceElapsedTimeToZero) {
-			timeSpan1 = CSharp::TimeSpan::Zero();
+			timeSpan1 = TimeSpan::Zero();
 			impl->forceElapsedTimeToZero = false;
 		}
 

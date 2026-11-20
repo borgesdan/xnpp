@@ -23,7 +23,7 @@ namespace Xna {
 
 		AudioContent content;
 		content.ContentItem.Identity.SourceFileName = filename;
-		content.Duration = CSharp::TimeSpan::FromMilliseconds(duration);
+		content.Duration = TimeSpan::FromMilliseconds(duration);
 		content.FileType = fileType;
 
 		return content;

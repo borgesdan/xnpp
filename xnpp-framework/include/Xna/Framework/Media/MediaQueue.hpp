@@ -28,7 +28,7 @@ namespace Xna {
 		XNPP_API void Play(SongCollection const& songs, size_t index);
 		XNPP_API void MoveNext();
 		XNPP_API void MovePrevious();
-		XNPP_API CSharp::TimeSpan PlayPosition() const;
+		XNPP_API TimeSpan PlayPosition() const;
 
 		struct Implementation {
 			std::optional<SongCollection> songCollection;

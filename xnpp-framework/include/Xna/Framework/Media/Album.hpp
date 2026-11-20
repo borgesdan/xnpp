@@ -31,7 +31,7 @@ namespace Xna {
 		
 		//Gets the duration of the Album.
 		//TODO: [!] Not implemented
-		CSharp::TimeSpan Duration() const { return CSharp::TimeSpan::Zero(); }
+		TimeSpan Duration() const { return TimeSpan::Zero(); }
 		
 		//Gets a value indicating whether the Album has associated album art.
 		//TODO: [!] Not implemented

@@ -203,10 +203,10 @@ namespace Xna {
 		Texture2D Read(ContentReader& input, Texture2D& existingInstance) override;
 	};
 
-	struct TimeSpanReader : public ContentTypeReaderT<CSharp::TimeSpan> {
+	struct TimeSpanReader : public ContentTypeReaderT<TimeSpan> {
 	protected:
-		inline CSharp::TimeSpan Read(ContentReader& input, CSharp::TimeSpan& existingInstance) override {
-			return CSharp::TimeSpan::FromTicks(input.ReadInt64());
+		inline TimeSpan Read(ContentReader& input, TimeSpan& existingInstance) override {
+			return TimeSpan::FromTicks(input.ReadInt64());
 		}
 	};
 

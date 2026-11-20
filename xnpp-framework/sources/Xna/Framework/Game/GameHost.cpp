@@ -1,6 +1,7 @@
 #include "Xna/Framework/Game/GameHost.hpp"
 #include "Xna/Framework/Game/Game.hpp"
 #include "Xna/Platform/Platform.hpp"
+#include <Xna/CSharp/Exception.hpp>
 
 namespace Xna {
 	GameHost::GameHost(Game* game) {

@@ -51,11 +51,11 @@ namespace Xna {
         return buffer;
     }
 
-    CSharp::TimeSpan AudioHelper::GetSampleDuration(int32_t sizeInBytes, int32_t sampleRate, AudioChannels channels) {
+    TimeSpan AudioHelper::GetSampleDuration(int32_t sizeInBytes, int32_t sampleRate, AudioChannels channels) {
         return AudioFormat::Create(sampleRate, channels, 16).DurationFromSize(sizeInBytes);
     }
 
-    int32_t AudioHelper::GetSampleSizeInBytes(CSharp::TimeSpan const &duration, int32_t sampleRate, AudioChannels channels) {
+    int32_t AudioHelper::GetSampleSizeInBytes(TimeSpan const &duration, int32_t sampleRate, AudioChannels channels) {
         return AudioFormat::Create(sampleRate, channels, 16).SizeFromDuration(duration);
     }
 }

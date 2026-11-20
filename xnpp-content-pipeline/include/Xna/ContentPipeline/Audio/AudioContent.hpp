@@ -13,7 +13,7 @@
 namespace Xna {
 	struct AudioContent {
 		std::optional<InternalAudioFormat> Format;
-		CSharp::TimeSpan Duration{0};
+		TimeSpan Duration{0};
 		int32_t LoopStart{0};
 		int32_t LoopLength{0};
 		std::vector<uint8_t> Data;

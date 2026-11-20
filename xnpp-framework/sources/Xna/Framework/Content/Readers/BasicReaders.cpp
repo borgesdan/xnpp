@@ -79,7 +79,7 @@ namespace Xna {
 		const auto loopStart = input.ReadInt32();
 		const auto loopLength = input.ReadInt32();
 		const auto num = input.ReadInt32();
-		return SoundEffect(format, data, loopStart, loopLength, CSharp::TimeSpan::FromMilliseconds(static_cast<double>(num)));
+		return SoundEffect(format, data, loopStart, loopLength, TimeSpan::FromMilliseconds(static_cast<double>(num)));
 	}
 
 	Texture2D Texture2DReader::Read(ContentReader& input, Texture2D& existingInstance) {
