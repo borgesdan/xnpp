@@ -84,7 +84,7 @@ namespace Xna {
 			DepthFormat& selectedDepthFormat,
 			int32_t& selectedMultiSampleCount) const;
 
-		XNPP_DECLARE_NULL_IMPL_WRAPPER(GraphicsAdapter, backend);
+		XNPP_NULLABLE_CLASS(GraphicsAdapter, backend);
 
 	private:
 		inline static bool _UseNullDevice = false;

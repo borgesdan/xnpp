@@ -4,7 +4,7 @@
 #include "GameWindow.hpp"
 #include <memory>
 #include <optional>
-#include "_Game.hpp"
+#include "Game.hpp"
 #include <Xna/CSharp/Event.hpp>
 #include "Xna/Macros/Api.hpp"
 

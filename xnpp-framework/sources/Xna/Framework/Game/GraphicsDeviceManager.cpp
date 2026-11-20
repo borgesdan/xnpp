@@ -5,6 +5,8 @@
 #include <Xna/CSharp/Thread.hpp>
 #include <Xna/CSharp/Platform.hpp>
 #include <cmath>
+#include <Xna/Framework/Game/GameWindow.hpp>
+#include <Xna/Framework/Game/GameServiceContainer.hpp>
 
 //Helpers
 namespace Xna {
@@ -385,7 +387,7 @@ namespace Xna {
 	}
 
 	bool GraphicsDeviceManager::EnsureDevicePlatform() {		
-		if (impl->isReallyFullScreen && !impl->game->IsActiveIgnoringGuide())
+		if (impl->isReallyFullScreen)
 			return false;
 
 		switch (impl->device->GraphicsDeviceStatus()) {

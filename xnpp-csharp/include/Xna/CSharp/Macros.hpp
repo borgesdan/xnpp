@@ -1,13 +1,15 @@
 #ifndef XNA_MACROS_HPP
 #define XNA_MACROS_HPP
 
-#define XNPP_DECLARE_NULL_IMPL_WRAPPER(ClassName, Impl) \
+#define XNPP_NULLABLE_CLASS(ClassName, Impl) \
+public: \
     inline ClassName(std::nullptr_t) { Impl = nullptr; } \
     inline bool operator==(ClassName const& other) const noexcept { return Impl == other.Impl; } \
     inline bool operator==(std::nullptr_t) const noexcept { return Impl == nullptr; } \
     inline explicit operator bool() const noexcept { return Impl != nullptr; }
 
-#define XNPP_DECLARE_NULL_IMPL_BASE_WRAPPER(ClassName, BaseClassName, Impl) \
+#define XNPP_NULLABLE_CLASS_WITH_BASE(ClassName, BaseClassName, Impl) \
+public: \
     inline ClassName(std::nullptr_t) : BaseClassName(nullptr) { Impl = nullptr; } \
     inline bool operator==(ClassName const& other) const noexcept { return Impl == other.Impl; } \
     inline bool operator==(std::nullptr_t) const noexcept { return Impl == nullptr; } \

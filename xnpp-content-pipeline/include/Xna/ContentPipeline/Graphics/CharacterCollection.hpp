@@ -50,7 +50,7 @@ namespace Xna {
 			return charList;
 		}
 		
-		XNPP_DECLARE_NULL_IMPL_WRAPPER(CharacterCollection, charsAdded);
+		XNPP_NULLABLE_CLASS(CharacterCollection, charsAdded);
 
 		std::unordered_map<uint32_t, bool>::iterator begin() { return charsAdded->begin(); }
 		std::unordered_map<uint32_t, bool>::iterator end() { return charsAdded->end(); }

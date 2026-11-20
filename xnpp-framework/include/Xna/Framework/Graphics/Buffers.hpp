@@ -77,7 +77,7 @@ namespace Xna {
 			m_backend->GetData(offsetInBytes, data.data(), 0, elementCount, sizeof(T));
 		}
 
-		XNPP_DECLARE_NULL_IMPL_WRAPPER(IndexBuffer, m_backend);
+		XNPP_NULLABLE_CLASS(IndexBuffer, m_backend);
 	protected:
 		std::shared_ptr<Platform::IIndexBuffer> m_backend;	
 	};
@@ -114,7 +114,7 @@ namespace Xna {
 		//Determines if the index buffer data has been lost due to a lost device event.		
 		bool IsContentLost() { return false; }
 
-		XNPP_DECLARE_NULL_IMPL_BASE_WRAPPER(DynamicIndexBuffer, IndexBuffer, m_backend);
+		XNPP_NULLABLE_CLASS_WITH_BASE(DynamicIndexBuffer, IndexBuffer, m_backend);
 	};
 
 	//Represents a list of 3D vertices to be streamed to the graphics device.
@@ -171,7 +171,7 @@ namespace Xna {
 		// 	Defines per-vertex data in a buffer.
 		inline Xna::VertexDeclaration VertexDeclaration() const { return m_backend->GetStats().VertexDeclaration; }
 
-		XNPP_DECLARE_NULL_IMPL_WRAPPER(VertexBuffer, m_backend);
+		XNPP_NULLABLE_CLASS(VertexBuffer, m_backend);
 
 	protected:
 		std::shared_ptr<Platform::IVertexBuffer> m_backend;
@@ -203,7 +203,7 @@ namespace Xna {
 			m_backend->SetData(offsetInBytes, data, startIndex, elementCount, vertexStride, options);
 		}
 
-		XNPP_DECLARE_NULL_IMPL_BASE_WRAPPER(DynamicVertexBuffer, VertexBuffer, m_backend);
+		XNPP_NULLABLE_CLASS_WITH_BASE(DynamicVertexBuffer, VertexBuffer, m_backend);
 	};
 
 	//Binding structure that specifies a vertex buffer and other per-vertex parameters (such as offset and instancing) for a graphics device.

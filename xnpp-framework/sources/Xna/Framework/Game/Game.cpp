@@ -1,16 +1,87 @@
-#include "Xna/Framework/Game/Game.hpp"
-#include <Xna/CSharp/Thread.hpp>
-#include <cmath>
-#include <limits>
+#include <Xna/Framework/Content/ContentManager.hpp>
+#include <Xna/Framework/FrameworkDispatcher.hpp>
+#include <Xna/Framework/Game/DrawableGameComponent.hpp>
+#include <Xna/Framework/Game/Game.hpp>
+#include <Xna/Framework/Game/GameClock.hpp>
+#include <Xna/Framework/Game/GameHost.hpp>
+#include <Xna/Framework/Game/GameServiceContainer.hpp>
+#include <Xna/Framework/Game/GameTime.hpp>
+#include <Xna/Framework/Game/GameWindow.hpp>
+#include <Xna/Framework/Game/GraphicsDeviceManager.hpp>
+#include <Xna/Framework/Game/IGameComponent.hpp>
+#include <Xna/Framework/Game/IGraphicsDeviceManager.hpp>
+#include <Xna/Framework/Game/LaunchParameters.hpp>
+#include <Xna/Framework/Graphics/IGraphicsDeviceService.hpp>
+#include <Xna/Internal/App.hpp>
+#include <Xna/Platform/Platform.hpp>
 #include <exception>
-#include "Xna/Platform/Platform.hpp"
-#include "Xna/Framework/FrameworkDispatcher.hpp"
-#include "Xna/Internal/App.hpp"
+#include <limits>
+#include <vector>
+#include <Xna/CSharp/Thread.hpp>
+#include <Xna/Framework/Game/GameComponentCollection.hpp>
 #include <Xna/Macros/CoreAssert.hpp>
 
 using Xna::CSharp::TimeSpan;
 
 namespace Xna {
+	struct Game::Implementation {
+		//Raised when the game gains focus.
+		CSharp::Event<CSharp::EventArgs> Activated;
+		//Raised when the game loses focus.
+		CSharp::Event<CSharp::EventArgs> Deactivated;
+		//Raised when the game is being disposed.
+		CSharp::Event<CSharp::EventArgs> Disposed;
+		//Raised when the game is exiting.
+		CSharp::Event<CSharp::EventArgs> Exiting;
+
+		friend class Game;
+
+		Xna::LaunchParameters launchParameters;
+		GameComponentCollection gameComponents;
+
+		std::optional<ContentManager> content;
+
+		GameClock clock;
+		CSharp::TimeSpan totalGameTime{ CSharp::TimeSpan::Zero() };
+		CSharp::TimeSpan accumulatedElapsedGameTime{ CSharp::TimeSpan::Zero() };
+		CSharp::TimeSpan lastFrameElapsedGameTime{ CSharp::TimeSpan::Zero() };
+		CSharp::TimeSpan targetElapsedTime{ CSharp::TimeSpan::FromTicks(166667L) };
+		CSharp::TimeSpan inactiveSleepTime{ CSharp::TimeSpan::FromMilliseconds(20.0) };
+
+		GameServiceContainer gameServices{};
+
+		bool isRun{ false };
+		bool isRunnningSlowly{ false };
+		bool doneFirstUpdate{ false };
+		bool doneFirstDraw{ false };
+		bool endRunRequired{ false };
+		bool isActive{ false };
+		bool forceElapsedTimeToZero{ false };
+		bool isFixedTimeStep{ true };
+		bool drawRunningSlowly{ false };
+		bool suppressDraw{ false };
+		bool exitRequest{ false };
+		bool inRun{ false };
+		bool isMouseVisible{ false };
+		int32_t updatesSinceRunningSlowly1{ 0 };
+		int32_t updatesSinceRunningSlowly2{ 0 };
+
+		static constexpr CSharp::TimeSpan maximumElapsedTime = CSharp::TimeSpan::FromMilliseconds(500.0);
+
+		Xna::GameTime gameTime;
+
+		std::shared_ptr<IGraphicsDeviceManager> graphicsDeviceManager;
+		std::shared_ptr<IGraphicsDeviceService> graphicsDeviceService;
+
+		std::optional<GameHost> host;
+
+		std::vector<std::shared_ptr<IGameComponent>> notYetInitialized;
+
+		std::vector<std::shared_ptr<IUpdateable>> updateableComponents;
+		std::vector<std::shared_ptr<IDrawable>> drawableComponents;
+		std::vector<std::shared_ptr<IDrawable>> currentlyDrawingComponents;
+	};
+
 	Game::Game() {
 		Log::Init();
 
