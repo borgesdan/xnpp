@@ -34,7 +34,7 @@ namespace Xna {
 		~GraphicsDeviceManager() override = default;
 
 		//Creates a new GraphicsDeviceManager and registers it to handle the configuration and management of the graphics device for the specified Game.
-		XNPP_API GraphicsDeviceManager(Game const& game);
+		XNPP_API GraphicsDeviceManager(Game* game);
 
 		//Gets the GraphicsDevice associated with the GraphicsDeviceManager.
 		inline std::optional<Xna::GraphicsDevice> GraphicsDevice() const override { return impl->device; }
@@ -204,7 +204,7 @@ namespace Xna {
 	public:
 		struct Implementation {
 			CSharp::TimeSpan deviceLostSleepTime{ 50 };
-			std::optional<Game> game;
+			Game* game;
 			bool isReallyFullScreen{ false };
 			bool isDeviceDirty{ false };
 			bool inDeviceTransition{ false };

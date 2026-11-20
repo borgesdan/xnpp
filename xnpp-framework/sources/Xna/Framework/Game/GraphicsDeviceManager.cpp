@@ -27,8 +27,8 @@ namespace Xna {
 }
 
 namespace Xna {
-	GraphicsDeviceManager::GraphicsDeviceManager(Game const& game) {
-		const auto currentService = game.Services().GetService<IGraphicsDeviceManager>();
+	GraphicsDeviceManager::GraphicsDeviceManager(Game* game) {
+		const auto currentService = game->Services().GetService<IGraphicsDeviceManager>();
 
 		if (currentService != nullptr)
 			throw CSharp::ArgumentException("GraphicsDeviceManagerAlreadyPresent");
@@ -120,7 +120,7 @@ namespace Xna {
 	}
 
 	void GraphicsDeviceManager::ChangeDevice(bool forceCreate) {
-		if (!impl->game.has_value())
+		if (!impl->game)
 			throw CSharp::InvalidOperationException("GraphicsComponentNotAttachedToGame");
 
 		impl->inDeviceTransition = true;
@@ -184,7 +184,7 @@ namespace Xna {
 
 		auto hWnd = pp.DeviceWindowHandle;
 		if (hWnd == 0) {
-			if (!impl->game.has_value())
+			if (!impl->game)
 				throw CSharp::InvalidOperationException("GraphicsComponentNotAttachedToGame");
 
 			hWnd = impl->game->Window()->Handle();

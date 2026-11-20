@@ -11,7 +11,7 @@
 namespace Xna {
 	class GameHost {
 	public:
-		XNPP_API GameHost(Game const& game);
+		XNPP_API GameHost(Game* game);
 
 		XNPP_API GameWindow Window() const;
 		XNPP_API void Run();
@@ -36,7 +36,7 @@ namespace Xna {
 
 	private:
 		struct Implementation {
-			std::optional<Game> game;
+			Xna::Game* game;
 			bool doneRun{ false };
 			bool exitRequested{ false };
 			GameWindow gameWindow{ nullptr };

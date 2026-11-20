@@ -73,7 +73,7 @@ namespace Xna {
 		std::shared_ptr<IGraphicsDeviceManager> graphicsDeviceManager;
 		std::shared_ptr<IGraphicsDeviceService> graphicsDeviceService;
 
-		std::optional<GameHost> host;
+		std::unique_ptr<GameHost> host;
 
 		std::vector<std::shared_ptr<IGameComponent>> notYetInitialized;
 
@@ -84,10 +84,10 @@ namespace Xna {
 
 	Game::Game() {
 		Log::Init();
-
-		FrameworkDispatcher::Update();
-		impl = std::make_shared<Implementation>();
+		
+		impl = std::make_unique<Implementation>();
 		impl->content = ContentManager(impl->gameServices);
+		impl->host = std::make_unique<GameHost>(this);
 		EnsureHost();
 
 		impl->gameComponents.ComponentAdded().Add([this](void* sender, GameComponentCollectionEventArgs const& e) {
@@ -130,6 +130,8 @@ namespace Xna {
 	void Game::Run() {
 		try {
 			XNPP_ENGINE_INFO("Starting game loop.");
+
+			XNPP_ENGINE_INFO("Registering content type readers.");
 			App::RegisterContentTypeReaders();
 
 			XNPP_ENGINE_INFO("Initializing platform system.");
@@ -176,7 +178,7 @@ namespace Xna {
 
 		XNPP_CORE_ASSERT(impl->graphicsDeviceManager != nullptr, "No IGraphicsDeviceManager was found in the GameServiceContainer. Please add one before calling Game::Run().");		
 
-		if (impl->host.has_value())
+		if (impl->host)
 			impl->host->Run();
 		else 
 			XNPP_ENGINE_WARN("No GameHost was found.");
@@ -185,7 +187,7 @@ namespace Xna {
 	}
 
 	void Game::RunOneFrame() const {
-		if (!impl->host.has_value())
+		if (!impl->host)
 			return;
 
 		impl->host->RunOneFrame();
@@ -414,27 +416,23 @@ namespace Xna {
 	}
 
 	void Game::EnsureHost() {
-		if (impl->host.has_value())
-			return;
-
-		impl->host = GameHost(*this);
 		impl->host->Activated().Add([this](void* sender, CSharp::EventArgs const& args) {
-			this->HostActivated(sender, args);
+			HostActivated(sender, args);
 			});
 		impl->host->Deactivated().Add([this](void* sender, CSharp::EventArgs const& args) {
-			this->HostDeactivated(sender, args);
+			HostDeactivated(sender, args);
 			});
 		impl->host->Suspend().Add([this](void* sender, CSharp::EventArgs const& args) {
-			this->HostSuspend(sender, args);
+			HostSuspend(sender, args);
 			});
 		impl->host->Resume().Add([this](void* sender, CSharp::EventArgs const& args) {
-			this->HostResume(sender, args);
+			HostResume(sender, args);
 			});
 		impl->host->Idle().Add([this](void* sender, CSharp::EventArgs const& args) {
-			this->HostIdle(sender, args);
+			HostIdle(sender, args);
 			});
 		impl->host->Exiting().Add([this](void* sender, CSharp::EventArgs const& args) {
-			this->HostExiting(sender, args);
+			HostExiting(sender, args);
 			});
 	}
 
@@ -547,7 +545,7 @@ namespace Xna {
 	}
 
 	std::optional<GameWindow> Game::Window() const {
-		if (impl->host.has_value())
+		if (impl->host)
 			return impl->host->Window();
 
 		return std::nullopt;

@@ -14,7 +14,7 @@ namespace Xna {
 	class GameComponent : public IGameComponent, public IUpdateable {
 	public:		
 		//Initializes a new instance of this class.
-		GameComponent(Xna::Game const& game) {}
+		GameComponent(Xna::Game* game) : game(game) {}
 
 		virtual ~GameComponent() override = default;
 
@@ -27,7 +27,7 @@ namespace Xna {
 		//Indicates the order in which the GameComponent should be updated relative to other GameComponent instances. Lower values are updated first.
 		void UpdateOrder(int32_t value) { updateOrder = value; }
 		//Gets the Game associated with this GameComponent.
-		std::optional<Xna::Game> Game() const { return game; }
+		Xna::Game* Game() const { return game; }
 		//Called when the GameComponent needs to be initialized.
 		virtual void Initialize() override {}
 		//Called when the GameComponent needs to be updated. Override this method with component-specific update code.
@@ -36,7 +36,7 @@ namespace Xna {
 	private:
 		bool enabled{ true };
 		int32_t updateOrder{ 0 };
-		std::optional<Xna::Game> game;
+		Xna::Game* game;
 	};
 }
 

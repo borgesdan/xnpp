@@ -12,7 +12,7 @@ namespace Xna {
 	class DrawableGameComponent : public GameComponent, public IDrawable {
 	public:
 		//Creates a new instance of DrawableGameComponent.
-		DrawableGameComponent(Xna::Game const& game) : GameComponent(game) {
+		DrawableGameComponent(Xna::Game* game) : GameComponent(game) {
 		}
 		
 		virtual ~DrawableGameComponent() override = default;

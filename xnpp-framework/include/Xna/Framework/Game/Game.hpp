@@ -17,8 +17,7 @@ namespace Xna {
 	class GameTime;
 
 	//Provides basic graphics device initialization, game logic, and rendering code.
-	class Game {
-		XNPP_NULLABLE_CLASS(Game, impl);
+	class Game {	
 	public:
 		virtual ~Game();
 		//Initializes a new instance of this class, which provides basic graphics device initialization, game logic, rendering code, and a game loop.
@@ -133,8 +132,8 @@ namespace Xna {
 
 		void InternalRunGame();
 
-	public:
+	private:
 		struct Implementation;
-		std::shared_ptr<Implementation> impl = nullptr;
+		std::unique_ptr<Implementation> impl = nullptr;
 	};
 }

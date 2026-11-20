@@ -3,7 +3,7 @@
 #include "Xna/Platform/Platform.hpp"
 
 namespace Xna {
-	GameHost::GameHost(Game const& game) {
+	GameHost::GameHost(Game* game) {
 		impl = std::make_shared<GameHost::Implementation>();
 		impl->game = game;
 		impl->gameWindow = GameWindow();		
