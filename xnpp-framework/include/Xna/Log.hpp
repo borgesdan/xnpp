@@ -25,9 +25,9 @@ namespace Xna {
 		static void Init();
 
 		//Obtém o ponteiro interno do logger da Engine (Core).
-		inline static std::unique_ptr<Logger>& GetCoreLogger() { return s_CoreLogger; }
+		inline static Logger* GetCoreLogger() { return s_CoreLogger.get(); }
 		// Obtém o ponteiro interno do logger do Jogo (Client)
-		inline static std::unique_ptr<Logger>& GetClientLogger() { return s_ClientLogger; }
+		inline static Logger* GetClientLogger() { return s_ClientLogger.get(); }
 	private:
 		static std::unique_ptr<Logger> s_CoreLogger;
 		static std::unique_ptr<Logger> s_ClientLogger;

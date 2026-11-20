@@ -10,6 +10,7 @@
 #include <cstddef>
 #include <functional>
 #include "Xna/Macros/Api.hpp"
+#include "Xna/Macros/Platform.hpp"
 #include "Xna/Framework/Graphics/Shared.hpp"
 #include "Xna/Framework/Graphics/VertexDeclaration.hpp"
 
@@ -57,7 +58,6 @@ namespace Xna {
 			XNPP_API static size_t GetClockCounter();
 			XNPP_API static size_t GetClockFrequency();
 			XNPP_API static bool MultiMonitorSupport();
-			XNPP_API static void ProcessException(std::string const& exception);
 			XNPP_API static void GetExecutablePath(std::filesystem::path& path);
 		};		
 

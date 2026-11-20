@@ -3,6 +3,7 @@
 #include <SDL3/SDL.h>
 #include "Internal.hpp"
 #include <stdexcept>
+#include <Xna/Macros/CoreAssert.hpp>
 
 #if PLATFORM_WINDOWS
 #define NOMINMAX
@@ -70,15 +71,7 @@ namespace Xna {
 			path = std::filesystem::path(buffer, buffer + count);
 		}		
 #endif
-	}
-
-	void Platform::System::ProcessException(std::string const& exception) {
-#if PLATFORM_WINDOWS
-		MessageBox(nullptr, exception.c_str(), "XN++", MB_OK);		
-#else
-		SDL_Log(exception.c_str());
-#endif
-	}
+	}	
 
 	void Platform::System::Initialize() {
 		Cross::System::Initialize();

@@ -38,7 +38,7 @@ set(XNPP_FRAMEWORK_SRC
     "sources/Xna/Framework/Media/MediaQueue.cpp"
     "sources/Xna/Framework/Content/Readers/BasicReaders.cpp" 
     "sources/Xna/Framework/Graphics/Model.cpp"
- "sources/Xna/Log.cpp")
+    "sources/Xna/Log.cpp")
 
 set(XNPP_PLATFORM_SRC
     "sources/Xna/Platform/Cross/System.cpp" 

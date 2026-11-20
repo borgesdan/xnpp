@@ -6,6 +6,7 @@
 #include "Xna/Platform/Platform.hpp"
 #include "Xna/Framework/FrameworkDispatcher.hpp"
 #include "Xna/Internal/App.hpp"
+#include <Xna/Macros/CoreAssert.hpp>
 
 using Xna::CSharp::TimeSpan;
 
@@ -57,28 +58,34 @@ namespace Xna {
 
 	void Game::Run() {
         try {
+			Log::Init();
+
+			XNPP_ENGINE_INFO("Starting game loop.");
             App::RegisterContentTypeReaders();
 
+			XNPP_ENGINE_INFO("Initializing platform system.");
             Platform::System::Initialize();
+
+			XNPP_ENGINE_INFO("Running game.");
             RunGame(true);            
         }
         catch (std::exception& ex) {
             auto _ex = dynamic_cast<CSharp::Exception*>(&ex);
 
-            std::string message;
+            std::string message = "Game::Run() - Unhandled exception: ";
 
             if (_ex == nullptr) {
-                message = ex.what();
+                message += ex.what();
             }
             else {
 #if DEBUG || _DEBUG
-                message = _ex->FullMessage();
+                message += _ex->FullMessage();
 #else
-                message = _ex->Message();
+                message += _ex->Message();
 #endif
             }
 
-            Platform::System::ProcessException(message);
+			XNPP_ENGINE_CRITICAL(message);
         }        
 
         Platform::System::Dispose();

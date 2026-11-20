@@ -1,16 +1,9 @@
+#include "../Internal.hpp"
+#include "Xna/Platform/Platform.hpp"
 #include <bgfx/bgfx.h>
-#include <bgfx/platform.h>
-#include <bx/bx.h>
-#include <bx/debug.h>
 #include <cstdint>
 #include <stdexcept>
-#include <cstdint>
-#include "SDL3/SDL.h"
-#include "Xna/Platform/Platform.hpp"
-#include "../Internal.hpp"
-
 #include "BgfxGraphics.hpp"
-
 #include "Xna/Framework/Graphics/BlendState.hpp"
 #include "Xna/Framework/Graphics/DepthStencilState.hpp"
 #include "Xna/Framework/Graphics/GraphicsDevice.hpp"
