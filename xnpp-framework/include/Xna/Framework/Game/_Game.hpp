@@ -16,25 +16,11 @@ namespace Xna {
 	class GameWindow;
 	class GameTime;
 
-	//Define o modo de execução do jogo dentro da classe Game.
-	enum class GameRunMode {
-		//Modo de execução do XNA, 
-		//Executa a criação do dispositivo gráfico e uma execução do Initialize(), LoadContent(), Update() e Draw(),
-		//antes da criação da janela.
-		Classic,
-
-		//A janela de jogo é criada primeiramente para depois ocorrer a execução do dispositivo gráfico.
-		//O backend Bgfx necessita que a janela seja criada antes de sua inicialização.
-		//No modo classic LoadContent() é chamado antes da criação da janela e o Bgfx
-		//pode não estar preparado para carregar recursos gráficos.
-		HostFirst
-	};
-
 	//Provides basic graphics device initialization, game logic, and rendering code.
 	class Game {
 	public:
 		//Initializes a new instance of this class, which provides basic graphics device initialization, game logic, rendering code, and a game loop.
-		XNPP_API Game(GameRunMode runMode = GameRunMode::HostFirst);
+		XNPP_API Game();
 
 		//Gets the collection of GameComponents owned by the game.
 		inline GameComponentCollection Components() const;
@@ -125,8 +111,6 @@ namespace Xna {
 		inline bool operator==(std::nullptr_t) const noexcept { return impl == nullptr; }
 		inline explicit operator bool() const noexcept { return impl != nullptr; }
 
-		static GameRunMode CurrentRunMode();
-
 	private:
 		void RunGame(bool useBlockingRun);
 		inline void StartGameLoop() { RunGame(false); }
@@ -159,9 +143,6 @@ namespace Xna {
 		std::shared_ptr<Implementation> impl = nullptr;
 
 		friend class GraphicsDeviceManager;
-
-	private:
-		static GameRunMode RunMode;
 	};
 }
 

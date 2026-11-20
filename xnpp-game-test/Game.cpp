@@ -14,7 +14,7 @@ using namespace Xna;
 class Game1 : public Xna::Game {
 	using base = Xna::Game;
 public:
-	Game1() : Xna::Game(Xna::GameRunMode::HostFirst) {
+	Game1() : Xna::Game() {
 		graphics = Xna::GraphicsDeviceManager(*this);
 		Content().RootDirectory("Content");
 	}
