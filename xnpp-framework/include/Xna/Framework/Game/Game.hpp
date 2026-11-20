@@ -18,17 +18,17 @@ namespace Xna {
 
 	//Provides basic graphics device initialization, game logic, and rendering code.
 	class Game {	
-	public:
-		virtual ~Game();
+	public:		
 		//Initializes a new instance of this class, which provides basic graphics device initialization, game logic, rendering code, and a game loop.
 		XNPP_API Game();
+		XNPP_API virtual ~Game();
 
 		//Gets the collection of GameComponents owned by the game.
-		GameComponentCollection Components() const;
+		XNPP_API GameComponentCollection Components() const;
 		//Gets or sets the current ContentManager.
-		XNPP_API ContentManager Content() const;
+		XNPP_API ContentManager* Content() const;
 		//Gets or sets the current ContentManager.
-		void Content(ContentManager const& value);
+		XNPP_API void Content(std::unique_ptr<ContentManager>& value);
 		//Gets the current GraphicsDevice.
 		XNPP_API Xna::GraphicsDevice GraphicsDevice() const;
 		//Gets or sets the time to sleep when the game is inactive.

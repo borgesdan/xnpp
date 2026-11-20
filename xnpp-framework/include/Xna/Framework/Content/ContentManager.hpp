@@ -1,5 +1,4 @@
-#ifndef XNA_FRAMEWORK_CONTENT_CONTENTMANAGER_HPP
-#define XNA_FRAMEWORK_CONTENT_CONTENTMANAGER_HPP
+#pragma once
 
 #include <memory>
 #include <string>
@@ -34,5 +33,3 @@ namespace Xna {
 		return contentReader.ReadAsset<T>();
 	}
 }
-
-#endif

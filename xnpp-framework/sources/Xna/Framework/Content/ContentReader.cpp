@@ -9,14 +9,14 @@
 using Xna::CSharp::InvalidOperationException;
 
 namespace Xna {
-	ContentReader::ContentReader(Xna::ContentManager& contentManager, std::shared_ptr<CSharp::Stream> const& input, std::filesystem::path const& assetName, int32_t graphicsProfile) : BinaryReader(input, false) {
+	ContentReader::ContentReader(Xna::ContentManager* contentManager, std::shared_ptr<CSharp::Stream> const& input, std::filesystem::path const& assetName, int32_t graphicsProfile) : BinaryReader(input, false) {
 		impl = std::make_shared<Implementation>();
 		impl->contentManager = contentManager;
 		impl->assetName = assetName;
 		impl->graphicsProfile = graphicsProfile;
 	}
 
-	ContentReader ContentReader::Create(Xna::ContentManager& contentManager, std::shared_ptr<CSharp::Stream> const& input, std::filesystem::path const& assetName) {
+	ContentReader ContentReader::Create(Xna::ContentManager* contentManager, std::shared_ptr<CSharp::Stream> const& input, std::filesystem::path const& assetName) {
 
 		int32_t graphicsProfile;
 		PrepareStream(input, assetName, graphicsProfile);

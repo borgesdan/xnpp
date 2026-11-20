@@ -1,5 +1,4 @@
-#ifndef XNA_FRAMEWORK_CONTENT__CONTENTMANAGER_HPP
-#define XNA_FRAMEWORK_CONTENT__CONTENTMANAGER_HPP
+#pragma once
 
 #include <memory>
 #include <Xna/CSharp/IO/FileStream.hpp>
@@ -11,11 +10,9 @@ namespace Xna {
 
 	//The ContentManager is the run-time component which loads managed objects from the binary files produced by the design time content pipeline.
 	class ContentManager {
-	public:
+	public:		
 		//Initializes a new instance of ContentManager.
-		XNPP_API ContentManager(GameServiceContainer const& serviceProvider);
-		//Initializes a new instance of ContentManager.
-		XNPP_API ContentManager(GameServiceContainer const& serviceProvider, std::filesystem::path const& rootDirectory);
+		XNPP_API ContentManager(GameServiceContainer const& serviceProvider, std::filesystem::path const& rootDirectory = "");
 
 		XNPP_API GameServiceContainer ServiceProvider() const;
 
@@ -28,12 +25,7 @@ namespace Xna {
 		virtual void Unload() {}
 
 		//Loads an asset that has been processed by the Content Pipeline.
-		template <typename T> T Load(std::filesystem::path const& assetName);
-
-		inline ContentManager(std::nullptr_t) { impl = nullptr; }
-		inline bool operator==(ContentManager const& other) const noexcept { return impl == other.impl; }
-		inline bool operator==(std::nullptr_t) const noexcept { return impl == nullptr; }
-		inline explicit operator bool() const noexcept { return impl != nullptr; }
+		template <typename T> T Load(std::filesystem::path const& assetName);		
 
 	protected:
 		template <typename T> T ReadAsset(std::filesystem::path const& assetName);
@@ -41,8 +33,6 @@ namespace Xna {
 
 	public:
 		struct Implementation;
-		std::shared_ptr<Implementation> impl;	
+		std::unique_ptr<Implementation> impl;	
 	};
 }
-
-#endif

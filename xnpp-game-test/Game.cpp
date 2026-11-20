@@ -16,7 +16,7 @@ class Game1 : public Xna::Game {
 public:
 	Game1() : Xna::Game() {
 		graphics = Xna::GraphicsDeviceManager(this);
-		Content().RootDirectory("Content");
+		Content()->RootDirectory("Content");
 	}
 
 	void Initialize() override {

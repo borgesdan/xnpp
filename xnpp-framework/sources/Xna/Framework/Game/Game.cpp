@@ -37,9 +37,7 @@ namespace Xna {
 		friend class Game;
 
 		Xna::LaunchParameters launchParameters;
-		GameComponentCollection gameComponents;
-
-		std::optional<ContentManager> content;
+		GameComponentCollection gameComponents;		
 
 		GameClock clock;
 		CSharp::TimeSpan totalGameTime{ CSharp::TimeSpan::Zero() };
@@ -72,22 +70,22 @@ namespace Xna {
 
 		std::shared_ptr<IGraphicsDeviceManager> graphicsDeviceManager;
 		std::shared_ptr<IGraphicsDeviceService> graphicsDeviceService;
-
-		std::unique_ptr<GameHost> host;
-
 		std::vector<std::shared_ptr<IGameComponent>> notYetInitialized;
-
 		std::vector<std::shared_ptr<IUpdateable>> updateableComponents;
 		std::vector<std::shared_ptr<IDrawable>> drawableComponents;
 		std::vector<std::shared_ptr<IDrawable>> currentlyDrawingComponents;
+
+		std::unique_ptr<GameHost> host;
+		std::unique_ptr<ContentManager> content;
 	};
 
 	Game::Game() {
 		Log::Init();
 		
 		impl = std::make_unique<Implementation>();
-		impl->content = ContentManager(impl->gameServices);
+		impl->content = std::make_unique<ContentManager>(impl->gameServices, "");
 		impl->host = std::make_unique<GameHost>(this);
+
 		EnsureHost();
 
 		impl->gameComponents.ComponentAdded().Add([this](void* sender, GameComponentCollectionEventArgs const& e) {
@@ -104,8 +102,8 @@ namespace Xna {
 	}
 
 	GameComponentCollection Game::Components() const { return impl->gameComponents; }
-	ContentManager Game::Content() const { return impl->content.value(); }
-	void Game::Content(ContentManager const& value) { impl->content = value; }
+	ContentManager* Game::Content() const { return impl->content.get(); }
+	void Game::Content(std::unique_ptr<ContentManager>& value) { impl->content = std::move(value); }
 	Xna::LaunchParameters Game::LaunchParameters() const { return impl->launchParameters; }
 	void Game::LaunchParameters(Xna::LaunchParameters const& value) { impl->launchParameters = value; }
 	GameServiceContainer Game::Services() const { return impl->gameServices; }

@@ -1,5 +1,4 @@
-#ifndef XNA_FRAMEWORK_CONTENT_CONTENTREADER_HPP
-#define XNA_FRAMEWORK_CONTENT_CONTENTREADER_HPP
+#pragma once
 
 #include "_ContentManager.hpp"
 #include "ContentTypeReader.hpp"
@@ -23,7 +22,7 @@ namespace Xna {
 	class ContentReader : public CSharp::BinaryReader {
 	public:
 		//Gets the ContentManager associated with the ContentReader.
-		XNPP_API Xna::ContentManager ContentManager() const;
+		inline Xna::ContentManager* ContentManager() const;
 
 		//Gets the name of the asset currently being read by this ContentReader.
 		inline std::filesystem::path AssetName() const;
@@ -116,9 +115,9 @@ namespace Xna {
 		inline explicit operator bool() const noexcept { return impl != nullptr; }
 
 	private:
-		XNPP_API static ContentReader Create(Xna::ContentManager& contentManager, std::shared_ptr<CSharp::Stream> const& input, std::filesystem::path const& assetName);
+		XNPP_API static ContentReader Create(Xna::ContentManager* contentManager, std::shared_ptr<CSharp::Stream> const& input, std::filesystem::path const& assetName);
 
-		XNPP_API ContentReader(Xna::ContentManager& contentManager, std::shared_ptr<CSharp::Stream> const& input, std::filesystem::path const& assetName, int32_t graphicsProfile);
+		XNPP_API ContentReader(Xna::ContentManager* contentManager, std::shared_ptr<CSharp::Stream> const& input, std::filesystem::path const& assetName, int32_t graphicsProfile);
 
 		XNPP_API static void PrepareStream(std::shared_ptr<CSharp::Stream> const& input, std::filesystem::path const& assetName, int32_t& graphicsProfile);
 
@@ -175,7 +174,7 @@ namespace Xna {
 		static constexpr int32_t XnbPrologueSize = 10;
 		static constexpr int32_t XnbCompressedPrologueSize = 14;
 
-		std::optional<Xna::ContentManager> contentManager;
+		Xna::ContentManager* contentManager;
 		std::filesystem::path assetName;
 		std::vector<std::shared_ptr<ContentTypeReader>> typeReaders;
 		int32_t graphicsProfile{ 0 };
@@ -205,13 +204,11 @@ namespace Xna {
 		return InvokeReader<T>(*reader, existingInstance);
 	}
 
-	inline Xna::ContentManager ContentReader::ContentManager() const {
-		return impl->contentManager.value();
+	inline Xna::ContentManager* ContentReader::ContentManager() const {
+		return impl->contentManager;
 	}
 
 	inline std::filesystem::path ContentReader::AssetName() const {
 		return impl->assetName.string();
 	}
 }
-
-#endif
