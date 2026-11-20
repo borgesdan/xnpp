@@ -5,7 +5,7 @@
 #include <memory>
 #include <unordered_map>
 #include "Shared.hpp"
-#include <Xna/Internal/Macros.hpp>
+#include <Xna/Macros/Api.hpp>
 
 namespace Xna {
 	class TimestampCache {

@@ -4,7 +4,7 @@
 #include <memory>
 #include <Xna/CSharp/IO/FileStream.hpp>
 #include "Xna/Framework/Game/GameServiceContainer.hpp"
-#include "Xna/Internal/Macros.hpp"
+#include "Xna/Macros/Api.hpp"
 
 namespace Xna {
 	class ContentReader;

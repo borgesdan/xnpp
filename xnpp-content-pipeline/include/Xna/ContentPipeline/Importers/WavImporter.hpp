@@ -3,7 +3,7 @@
 
 #include "Xna/ContentPipeline/ContentImporter.hpp"
 #include "Xna/ContentPipeline/Audio/AudioContent.hpp"
-#include <Xna/Internal/Macros.hpp>
+#include <Xna/Macros/Api.hpp>
 
 namespace Xna {
 	struct WavImporter : public ContentImporter<AudioContent> {

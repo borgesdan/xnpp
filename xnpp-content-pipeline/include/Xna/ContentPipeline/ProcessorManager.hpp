@@ -7,7 +7,7 @@
 #include <Xna/CSharp/Type.hpp>
 #include "ContentProcessorContext.hpp"
 #include "ContentProcessor.hpp"
-#include <Xna/Internal/Macros.hpp>
+#include <Xna/Macros/Api.hpp>
 
 namespace Xna {
 	class ProcessorManager {

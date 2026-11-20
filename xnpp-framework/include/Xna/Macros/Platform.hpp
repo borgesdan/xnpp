@@ -1,35 +1,4 @@
-#ifndef XNA_MACROS_HPP
-#define XNA_MACROS_HPP
-
-#define XNPP_DECLARE_NULL_IMPL_WRAPPER(ClassName, Impl) \
-    inline ClassName(std::nullptr_t) { Impl = nullptr; } \
-    inline bool operator==(ClassName const& other) const noexcept { return Impl == other.Impl; } \
-    inline bool operator==(std::nullptr_t) const noexcept { return Impl == nullptr; } \
-    inline explicit operator bool() const noexcept { return Impl != nullptr; }
-
-#define XNPP_DECLARE_NULL_IMPL_BASE_WRAPPER(ClassName, BaseClassName, Impl) \
-    inline ClassName(std::nullptr_t) : BaseClassName(nullptr) { Impl = nullptr; } \
-    inline bool operator==(ClassName const& other) const noexcept { return Impl == other.Impl; } \
-    inline bool operator==(std::nullptr_t) const noexcept { return Impl == nullptr; } \
-    inline explicit operator bool() const noexcept { return Impl != nullptr; }
-
-//Export
-#ifdef _WIN32
-#ifdef XNPP_STATIC
-// Se for est·tico, n„o usamos import/export
-#define XNPP_API 
-#else
-// Se for DLL, verificamos se estamos construindo ou consumindo a DLL
-#ifdef XNPP_EXPORT_DLL
-#define XNPP_API __declspec(dllexport)
-#else
-#define XNPP_API __declspec(dllimport)
-#endif
-#endif
-#else
-// Para Linux/Mac, deixamos vazio ou usamos __attribute__((visibility("default"))))
-#define XNPP_API
-#endif
+#pragma once
 
 //OS
 #if defined(_WIN32)
@@ -43,7 +12,7 @@
 #elif defined(__unix__)
 #define PLATFORM_UNIX 1
 #else
-#error "Sistema operacional n„o suportado"
+#error "Sistema operacional n√£o suportado"
 #endif
 #ifndef PLATFORM_WINDOWS
 #define PLATFORM_WINDOWS 0
@@ -71,7 +40,7 @@
 #elif defined(_M_ARM) || defined(__arm__)
 #define ARCH_ARM 1
 #else
-#error "Arquitetura n„o suportada"
+#error "Arquitetura n√£o suportada"
 #endif
 
 #ifndef ARCH_X64
@@ -96,7 +65,7 @@
 #elif defined(__GNUC__)
 #define COMPILER_GCC 1
 #else
-#error "Compilador n„o suportado"
+#error "Compilador n√£o suportado"
 #endif
 
 #ifndef COMPILER_MSVC
@@ -125,6 +94,4 @@
 #define FORCE_INLINE inline __attribute__((always_inline))
 #else
 #define FORCE_INLINE inline
-#endif
-
 #endif

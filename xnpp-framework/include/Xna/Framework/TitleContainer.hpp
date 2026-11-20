@@ -2,7 +2,7 @@
 #define XNA_FRAMEWORK_TITLECONTAINER_HPP
 
 #include <Xna/CSharp/IO/Stream.hpp>
-#include "Xna/Internal/Macros.hpp"
+#include "Xna/Macros/Api.hpp"
 #include <memory>
 #include <filesystem>
 #include <cstddef>

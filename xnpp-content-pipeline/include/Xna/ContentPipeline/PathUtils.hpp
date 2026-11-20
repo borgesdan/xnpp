@@ -3,7 +3,7 @@
 
 #include <filesystem>
 #include "Shared.hpp"
-#include <Xna/Internal/Macros.hpp>
+#include <Xna/Macros/Api.hpp>
 
 namespace Xna {
 	struct PathUtils final {

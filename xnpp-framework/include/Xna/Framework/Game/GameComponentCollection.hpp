@@ -7,7 +7,7 @@
 #include "IGameComponent.hpp"
 #include <Xna/CSharp/Event.hpp>
 #include <Xna/CSharp/Collection.hpp>
-#include "Xna/Internal/Macros.hpp"
+#include "Xna/Macros/Api.hpp"
 
 namespace Xna {
 	struct GameComponentCollectionEventArgs : public CSharp::EventArgs {

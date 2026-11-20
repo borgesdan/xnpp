@@ -6,7 +6,7 @@
 #include "BuildCoordinator.hpp"
 #include "ContentBuildLogger.hpp"
 #include <string>
-#include <Xna/Internal/Macros.hpp>
+#include <Xna/Macros/Api.hpp>
 
 namespace Xna {
 	class XnaContentProcessorContext : public ContentProcessorContext {

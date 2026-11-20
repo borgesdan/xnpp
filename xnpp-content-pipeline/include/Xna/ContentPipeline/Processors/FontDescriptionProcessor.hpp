@@ -4,7 +4,7 @@
 #include "../ContentProcessor.hpp"
 #include "../Graphics/FontDescription.hpp"
 #include "../Graphics/SpriteFontContent.hpp"
-#include <Xna/Internal/Macros.hpp>
+#include <Xna/Macros/Api.hpp>
 
 namespace Xna {
 	struct FontDescriptionProcessor : public ContentProcessor<FontDescription, SpriteFontContent> {

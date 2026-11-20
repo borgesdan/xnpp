@@ -10,12 +10,12 @@
 #include "Effects/Effect.hpp"
 #include "Xna/Framework/MathTypes.hpp"
 #include "Xna/Framework/Color.hpp"
-#include "Xna/Framework/MathTypes.hpp"
+#include "Xna/Macros/Utils.hpp"
 #include "Shared.hpp"
 #include <optional>
 #include <string>
 #include "Xna/Platform/Platform.hpp"
-#include "Xna/Internal/Macros.hpp"
+#include "Xna/Macros/Api.hpp"
 
 namespace Xna {
 	class SpriteFont;

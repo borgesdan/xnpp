@@ -8,7 +8,7 @@
 #include <cstddef>
 #include "Shared.hpp"
 #include "../MathTypes.hpp"
-#include "Xna/Internal/Macros.hpp"
+#include "Xna/Macros/Api.hpp"
 
 namespace Xna {
 	//Describes the display mode. 

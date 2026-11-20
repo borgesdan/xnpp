@@ -15,7 +15,7 @@
 #include <memory>
 #include <tuple>
 #include <vector>
-#include <Xna/Internal/Macros.hpp>
+#include <Xna/Macros/Api.hpp>
 
 namespace Xna {
 	class BuildCoordinator final {

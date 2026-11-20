@@ -7,7 +7,7 @@
 #include <map>
 #include <cstddef>
 #include <Xna/CSharp/Type.hpp>
-#include "Xna/Internal/Macros.hpp"
+#include "Xna/Macros/Api.hpp"
 
 namespace Xna {
 	class ContentTypeReader;

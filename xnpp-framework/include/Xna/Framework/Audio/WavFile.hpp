@@ -10,7 +10,7 @@
 #include "AudioFormat.hpp"
 #include <Xna/CSharp/IO/BinaryReader.hpp>
 #include "LoopRegion.hpp"
-#include "Xna/Internal/Macros.hpp"
+#include "Xna/Macros/Api.hpp"
 
 namespace Xna {
     class WavFile final {

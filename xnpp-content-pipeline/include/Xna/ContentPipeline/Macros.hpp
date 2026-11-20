@@ -1,5 +1,4 @@
-#ifndef XNA_CONTENTPIPELINE_MACROS_HPP
-#define XNA_CONTENTPIPELINE_MACROS_HPP
+#pragma once
 
 #define XNPP_DECLARE_NULL_IMPL_WRAPPER(ClassName, Impl) \
     inline ClassName(std::nullptr_t) { Impl = nullptr; } \
@@ -28,7 +27,4 @@
 #else
 // Para Linux/Mac, deixamos vazio ou usamos __attribute__((visibility("default"))))
 #define XNPP_API
-#endif
-
-
 #endif

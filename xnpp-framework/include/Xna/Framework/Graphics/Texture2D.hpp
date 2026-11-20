@@ -10,7 +10,7 @@
 #include <cstddef>
 #include <Xna/CSharp/IO/Stream.hpp>
 #include "Xna/Platform/Platform.hpp"
-#include "Xna/Internal/Macros.hpp"
+#include "Xna/Macros/Api.hpp"
 
 namespace Xna {
 	//Represents a 2D grid of texels. 

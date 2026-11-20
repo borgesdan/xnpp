@@ -11,13 +11,9 @@
 #include <filesystem>
 #include <cstddef>
 #include "Xna/Framework/MathTypes.hpp"
-#include "Xna/Framework/MathTypes.hpp"
-#include "Xna/Framework/MathTypes.hpp"
-#include "Xna/Framework/MathTypes.hpp"
-#include "Xna/Framework/MathTypes.hpp"
 #include "Xna/Framework/Color.hpp"
 #include "_ContentTypeReaderManager.hpp"
-#include "Xna/Internal/Macros.hpp"
+#include "Xna/Macros/Api.hpp"
 #include "Xna/Internal/Misc.hpp"
 
 namespace Xna {

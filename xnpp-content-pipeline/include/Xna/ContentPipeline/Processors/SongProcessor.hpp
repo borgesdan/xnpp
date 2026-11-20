@@ -5,7 +5,7 @@
 #include "Xna/ContentPipeline/Audio/AudioContent.hpp"
 #include "Xna/ContentPipeline/Audio/SongContent.hpp"
 #include "Xna/ContentPipeline/Audio/Shared.hpp"
-#include <Xna/Internal/Macros.hpp>
+#include <Xna/Macros/Api.hpp>
 
 namespace Xna {
     struct SongProcessor : public ContentProcessor<AudioContent, SongContent> {

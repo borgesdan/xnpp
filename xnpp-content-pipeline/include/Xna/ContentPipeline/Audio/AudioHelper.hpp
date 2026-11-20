@@ -3,7 +3,8 @@
 #include <optional>
 #include "AudioContent.hpp"
 #include "Shared.hpp"
-#include <Xna/Internal/Macros.hpp>
+#include <Xna/Macros/Api.hpp>
+#include <Xna/Macros/Utils.hpp>
 
 namespace Xna {
 	struct AudioHelper final {

@@ -3,7 +3,7 @@
 
 #include "../ContentImporter.hpp"
 #include "../Graphics/FontDescription.hpp"
-#include <Xna/Internal/Macros.hpp>
+#include <Xna/Macros/Api.hpp>
 
 namespace Xna {
 	struct FontDescriptionImporter : public ContentImporter<FontDescription> {

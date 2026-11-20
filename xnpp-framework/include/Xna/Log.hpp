@@ -2,7 +2,7 @@
 
 #include <memory>
 #include <string>
-#include "Internal/Macros.hpp"
+#include "Xna/Macros/Api.hpp"
 
 namespace Xna {
 	struct Logger {

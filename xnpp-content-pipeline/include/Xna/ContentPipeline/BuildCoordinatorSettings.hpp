@@ -5,7 +5,7 @@
 #include <string>
 #include <Xna/Framework/Content/Pipeline/Shared.hpp>
 #include <Xna/Framework/Graphics/Shared.hpp>
-#include <Xna/Internal/Macros.hpp>
+#include <Xna/Macros/Api.hpp>
 
 namespace Xna {
 	struct BuildCoordinatorSettings final {

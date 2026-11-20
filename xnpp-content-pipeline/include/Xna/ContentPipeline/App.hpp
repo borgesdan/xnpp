@@ -6,7 +6,7 @@
 #include "Xna/ContentPipeline/ContentImporter.hpp"
 #include "Xna/ContentPipeline/ImporterManager.hpp"
 #include "Xna/ContentPipeline/Serialization/Compiler/ContentTypeWriter.hpp"
-#include "Xna/Internal/Macros.hpp"
+#include "Xna/Macros/Api.hpp"
 
 namespace Xna {
 	//Class responsible for runtime operations related to the game executable.

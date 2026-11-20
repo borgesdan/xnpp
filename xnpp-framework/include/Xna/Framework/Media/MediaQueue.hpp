@@ -6,7 +6,7 @@
 #include <memory>
 #include <cstddef>
 #include <Xna/CSharp/TimeSpan.hpp>
-#include "Xna/Internal/Macros.hpp"
+#include "Xna/Macros/Api.hpp"
 
 namespace Xna {	
 	//Provides methods and properties to access and control the queue of playing songs.

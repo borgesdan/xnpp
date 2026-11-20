@@ -7,7 +7,7 @@
 #include <cstddef>
 #include <functional>
 #include "NamedValueDictionary.hpp"
-#include <Xna/Internal/Macros.hpp>
+#include <Xna/Macros/Api.hpp>
 
 namespace Xna {
 	class OpaqueDataDictionary : public NamedValueDictionary<std::any> {

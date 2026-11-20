@@ -9,7 +9,7 @@
 #include <limits>
 #include <Xna/CSharp/Exception.hpp>
 #include <Xna/Framework/Color.hpp>
-#include <Xna/Internal/Macros.hpp>
+#include <Xna/Macros/Api.hpp>
 
 namespace Xna {
     struct TextureProcessorUtils final {

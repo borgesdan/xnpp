@@ -2,7 +2,8 @@
 #define XNA_FRAMEWORK_GRAPHICS_MODEL_HPP
 
 #include "Xna/Framework/MathTypes.hpp"
-#include "Xna/Internal/Macros.hpp"
+#include "Xna/Macros/Api.hpp"
+#include "Xna/Macros/Utils.hpp"
 #include <cstddef>
 #include <Xna/CSharp/Collection.hpp>
 #include "Xna/Framework/Volume.hpp"

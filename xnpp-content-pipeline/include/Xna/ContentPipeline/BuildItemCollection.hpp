@@ -11,7 +11,7 @@
 #include <utility>
 #include <cstddef>
 #include <Xna/CSharp/Collection.hpp>
-#include <Xna/Internal/Macros.hpp>
+#include <Xna/Macros/Api.hpp>
 
 namespace Xna {
 	class BuildItemCollection final : public CSharp::Collection<BuildItem> {

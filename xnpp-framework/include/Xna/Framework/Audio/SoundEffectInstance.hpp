@@ -9,7 +9,7 @@
 #include "AudioListener.hpp"
 #include "SoundEffect.hpp"
 #include "Xna/Platform/Platform.hpp"
-#include "Xna/Internal/Macros.hpp"
+#include "Xna/Macros/Api.hpp"
 
 namespace Xna {
 

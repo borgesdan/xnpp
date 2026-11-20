@@ -4,7 +4,7 @@
 #include "SoundEffectInstance.hpp"
 #include "AudioFormat.hpp"
 #include "Xna/Platform/Platform.hpp"
-#include "Xna/Internal/Macros.hpp"
+#include "Xna/Macros/Api.hpp"
 #include <cstddef>
 
 namespace Xna {

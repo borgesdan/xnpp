@@ -3,7 +3,7 @@
 
 #include <cstdint>
 #include "Shared.hpp"
-#include "Xna/Internal/Macros.hpp"
+#include "Xna/Macros/Api.hpp"
 
 namespace Xna {
 	//Represents the state of a mouse input device, including mouse cursor position and buttons pressed.

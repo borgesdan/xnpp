@@ -6,7 +6,7 @@
 #include <memory>
 #include "DisplayMode.hpp"
 #include "Xna/Platform/Platform.hpp"
-#include "Xna/Internal/Macros.hpp"
+#include "Xna/Macros/Utils.hpp"
 
 namespace Xna {
 	//Provides methods to retrieve and manipulate graphics adapters.

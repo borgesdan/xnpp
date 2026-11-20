@@ -3,7 +3,7 @@
 
 #include "Shared.hpp"
 #include "Xna/Framework/MathTypes.hpp"
-#include "Xna/Internal/Macros.hpp"
+#include "Xna/Macros/Api.hpp"
 
 namespace Xna {
 	//Specifies the game controller associated with a player.

@@ -4,7 +4,8 @@
 #include <unordered_map>
 #include <memory>
 #include <cstdint>
-#include <Xna/Internal/Macros.hpp>
+#include <Xna/Macros/Api.hpp>
+#include <Xna/Macros/Utils.hpp>
 #include <cstddef>
 
 namespace Xna {

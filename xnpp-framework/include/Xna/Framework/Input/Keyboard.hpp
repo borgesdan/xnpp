@@ -3,7 +3,7 @@
 
 #include <cstdint>
 #include "Shared.hpp"
-#include "Xna/Internal/Macros.hpp"
+#include "Xna/Macros/Api.hpp"
 
 namespace Xna {
 	//Identifies the state of a keyboard key. 

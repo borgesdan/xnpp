@@ -5,7 +5,7 @@
 #include <bit>
 #include "Xna/Framework/Audio/Shared.hpp"
 #include <Xna/CSharp/TimeSpan.hpp>
-#include "Xna/Internal/Macros.hpp"
+#include "Xna/Macros/Api.hpp"
 
 namespace Xna {
 	struct AudioHelper final {

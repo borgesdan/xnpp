@@ -6,7 +6,7 @@
 #include <span>
 #include <Xna/Framework/Audio/AudioFormat.hpp>
 #include "WaveFormatEx.hpp"
-#include <Xna/Internal/Macros.hpp>
+#include <Xna/Macros/Api.hpp>
 
 namespace Xna {
 	struct InternalAudioFormat {

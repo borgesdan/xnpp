@@ -6,7 +6,7 @@
 #include <memory>
 #include <optional>
 #include <cstddef>
-#include <Xna/Internal/Macros.hpp>
+#include <Xna/Macros/Api.hpp>
 
 namespace Xna {
 	class MipmapChainCollection : public CSharp::Collection<MipmapChain> {

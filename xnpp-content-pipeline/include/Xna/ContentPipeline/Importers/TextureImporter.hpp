@@ -5,7 +5,7 @@
 #include "../Graphics/TextureContent.hpp"
 #include "../Graphics/Texture2DContent.hpp"
 #include <memory>
-#include <Xna/Internal/Macros.hpp>
+#include <Xna/Macros/Api.hpp>
 
 namespace Xna {
 	struct Texture2DImporter : public ContentImporter<Texture2DContent> {

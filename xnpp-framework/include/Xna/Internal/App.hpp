@@ -3,7 +3,7 @@
 
 #include "Xna/Internal/TypeRegistry.hpp"
 #include "Xna/Framework/Content/ContentTypeReader.hpp"
-#include "Macros.hpp"
+#include "Xna/Macros/Api.hpp"
 
 namespace Xna {
 	//Class responsible for runtime operations related to the game executable.

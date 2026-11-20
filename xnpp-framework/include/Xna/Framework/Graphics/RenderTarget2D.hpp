@@ -4,7 +4,7 @@
 #include "Texture2D.hpp"
 #include "Xna/Platform/Platform.hpp"
 #include "IDynamicGraphicsResource.hpp"
-#include "Xna/Internal/Macros.hpp"
+#include "Xna/Macros/Api.hpp"
 #include <cstddef>
 
 namespace Xna {

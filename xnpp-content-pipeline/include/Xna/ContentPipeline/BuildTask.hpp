@@ -5,7 +5,7 @@
 #include <filesystem>
 #include "ContentBuildLogger.hpp"
 #include "BuildContent.hpp"
-#include <Xna/Internal/Macros.hpp>
+#include <Xna/Macros/Api.hpp>
 
 namespace Xna {
 	struct BuildTask {

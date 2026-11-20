@@ -3,7 +3,7 @@
 
 #include <Xna/CSharp/TimeSpan.hpp>
 #include <cstdint>
-#include "Xna/Internal/Macros.hpp"
+#include "Xna/Macros/Api.hpp"
 
 namespace Xna {
 	//Internal game clock

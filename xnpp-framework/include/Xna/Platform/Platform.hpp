@@ -9,7 +9,7 @@
 #include <filesystem>
 #include <cstddef>
 #include <functional>
-#include "Xna/Internal/Macros.hpp"
+#include "Xna/Macros/Api.hpp"
 #include "Xna/Framework/Graphics/Shared.hpp"
 #include "Xna/Framework/Graphics/VertexDeclaration.hpp"
 

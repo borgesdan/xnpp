@@ -4,7 +4,7 @@
 #include "Xna/ContentPipeline/Audio/SoundEffectContent.hpp"
 #include "Xna/ContentPipeline/Serialization/Compiler/BuiltinTypeWriter.hpp"
 #include <Xna/CSharp/Exception.hpp>
-#include <Xna/Internal/Macros.hpp>
+#include <Xna/Macros/Api.hpp>
 
 namespace Xna {
 	struct SoundEffectWriter : public BuiltinTypeWriter<SoundEffectContent> {

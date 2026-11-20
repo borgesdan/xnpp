@@ -1,4 +1,4 @@
-﻿#include "Xna/Internal/Macros.hpp"
+﻿#include "Xna/Macros/Api.hpp"
 
 #include <bgfx/bgfx.h>
 #include <bgfx/platform.h>

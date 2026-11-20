@@ -6,7 +6,8 @@
 #include <cstddef>
 #include "GraphicsDevice.hpp"
 #include "Shared.hpp"
-#include "Xna/Internal/Macros.hpp"
+#include "Xna/Macros/Api.hpp"
+#include "Xna/Macros/Utils.hpp"
 #include "Xna/Platform/Platform.hpp"
 #include <Xna/Framework/Graphics/VertexElement.hpp>
 #include <Xna/Framework/Graphics/VertexDeclaration.hpp>
