@@ -112,8 +112,7 @@ namespace Xna {
 		inline explicit operator bool() const noexcept { return impl != nullptr; }
 
 	private:
-		void RunGame(bool useBlockingRun);
-		inline void StartGameLoop() { RunGame(false); }
+		void RunGame();
 		bool ShouldExit();
 		void DrawFrame();
 		void Paint();

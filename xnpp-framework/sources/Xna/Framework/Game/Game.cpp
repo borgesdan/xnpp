@@ -12,6 +12,8 @@ using Xna::CSharp::TimeSpan;
 
 namespace Xna {
 	Game::Game() {
+		Log::Init();
+
 		FrameworkDispatcher::Update();
 		impl = std::make_shared<Implementation>();
 		impl->content = ContentManager(impl->gameServices);
@@ -52,8 +54,6 @@ namespace Xna {
 
 	void Game::Run() {
 		try {
-			Log::Init();
-
 			XNPP_ENGINE_INFO("Starting game loop.");
 			App::RegisterContentTypeReaders();
 
@@ -61,7 +61,7 @@ namespace Xna {
 			Platform::System::Initialize();
 
 			XNPP_ENGINE_INFO("Running game.");
-			RunGame(true);
+			RunGame();
 		}
 		catch (std::exception& ex) {
 			auto _ex = dynamic_cast<CSharp::Exception*>(&ex);
@@ -96,19 +96,13 @@ namespace Xna {
 		impl->doneFirstUpdate = true;
 	}
 
-	void Game::RunGame(bool useBlockingRun) {
-		if (useBlockingRun) {
-			if (impl->host.has_value())
-				impl->host->Run();
+	void Game::RunGame() {
+		impl->graphicsDeviceManager = impl->gameServices.GetService<IGraphicsDeviceManager>();		
 
-			EndRun();
-		}
-		else {
-			if (impl->host.has_value())
-				impl->host->StartGameLoop();
+		if (impl->host.has_value())
+			impl->host->Run();
 
-			impl->endRunRequired = true;
-		}
+		EndRun();
 	}
 
 	void Game::RunOneFrame() {
