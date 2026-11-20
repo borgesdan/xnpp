@@ -19,6 +19,7 @@ namespace Xna {
 	//Provides basic graphics device initialization, game logic, and rendering code.
 	class Game {
 	public:
+		virtual ~Game() = default;
 		//Initializes a new instance of this class, which provides basic graphics device initialization, game logic, rendering code, and a game loop.
 		XNPP_API Game();
 
@@ -64,9 +65,9 @@ namespace Xna {
 		//Call this method to initialize the game, begin running the game loop, and start processing events for the game.
 		XNPP_API void Run();
 		//Run the game through what would happen in a single tick of the game clock; this method is designed for debugging only.
-		XNPP_API void RunOneFrame();
+		XNPP_API void RunOneFrame() const;
 		//Prevents calls to Draw until the next Update.
-		XNPP_API void SuppressDraw();
+		XNPP_API void SuppressDraw() const;
 		//Updates the game's clock and calls Update and Draw.
 		XNPP_API void Tick();
 

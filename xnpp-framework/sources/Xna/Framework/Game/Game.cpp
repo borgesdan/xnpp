@@ -28,6 +28,10 @@ namespace Xna {
 			});
 	}
 
+	Game::~Game() {
+		Log::Shutdown();
+	}
+
 	GameComponentCollection Game::Components() const { return impl->gameComponents; }
 	ContentManager Game::Content() const { return impl->content.value(); }
 	void Game::Content(ContentManager const& value) { impl->content = value; }
@@ -103,12 +107,14 @@ namespace Xna {
 
 		if (impl->host.has_value())
 			impl->host->Run();
+		else 
+			XNPP_ENGINE_WARN("No GameHost was found.");
 
 		EndRun();
 	}
 
-	void Game::RunOneFrame() {
-		if (impl->host.has_value())
+	void Game::RunOneFrame() const {
+		if (!impl->host.has_value())
 			return;
 
 		impl->host->RunOneFrame();
@@ -232,7 +238,7 @@ namespace Xna {
 		DrawFrame();
 	}
 
-	void Game::SuppressDraw() {
+	void Game::SuppressDraw() const {
 		impl->suppressDraw = true;
 	}
 
