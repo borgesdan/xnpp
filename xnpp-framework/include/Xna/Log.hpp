@@ -1,56 +1,91 @@
 #pragma once
 
-#include <memory>
+#include <format>
 #include <string>
+#include <string_view>
+#include <utility>
 #include "Xna/Macros/Api.hpp"
 #include "Xna/Macros/Utils.hpp"
 
 namespace Xna {
+	enum class LogLevel {
+		Trace,
+		Info,
+		Warn,
+		Error,
+		Critical
+	};
+
 	struct Logger {
 		virtual ~Logger() = default;
-		virtual void Trace(std::string_view message) = 0;
-		virtual void Info(std::string_view message) = 0;
-		virtual void Warn(std::string_view message) = 0;
-		virtual void Error(std::string_view message) = 0;
-		virtual void Critical(std::string_view message) = 0;
-	 };
 
-	// Sistema de log que deve ser integrado e utilizado em toda a extensão do projeto, substituindo o assert padrão.
-	// Contém Core (mensagens internas da engine) e Client (mensagens do jogo sendo desenvolvido nela).
-	class XNPP_API Log
-	{		
-	public:
+		// Overloads for plain text (without parsing of curly braces {})
+		void Trace(std::string_view message) { LogMessage(LogLevel::Trace, message); }
+		void Info(std::string_view message) { LogMessage(LogLevel::Info, message); }
+		void Warn(std::string_view message) { LogMessage(LogLevel::Warn, message); }
+		void Error(std::string_view message) { LogMessage(LogLevel::Error, message); }
+		void Critical(std::string_view message) { LogMessage(LogLevel::Critical, message); }
+
+		// Overloads for formatted strings (with parsing of curly braces {}) - C++20
+		template <typename... Args>
+			requires (sizeof...(Args) > 0)
+		void Trace(std::format_string<Args...> fmt, Args&&... args) {
+			LogMessage(LogLevel::Trace, std::format(fmt, std::forward<Args>(args)...));
+		}
+
+		template <typename... Args>
+			requires (sizeof...(Args) > 0)
+		void Info(std::format_string<Args...> fmt, Args&&... args) {
+			LogMessage(LogLevel::Info, std::format(fmt, std::forward<Args>(args)...));
+		}
+
+		template <typename... Args>
+			requires (sizeof...(Args) > 0)
+		void Warn(std::format_string<Args...> fmt, Args&&... args) {
+			LogMessage(LogLevel::Warn, std::format(fmt, std::forward<Args>(args)...));
+		}
+
+		template <typename... Args>
+			requires (sizeof...(Args) > 0)
+		void Error(std::format_string<Args...> fmt, Args&&... args) {
+			LogMessage(LogLevel::Error, std::format(fmt, std::forward<Args>(args)...));
+		}
+
+		template <typename... Args>
+			requires (sizeof...(Args) > 0)
+		void Critical(std::format_string<Args...> fmt, Args&&... args) {
+			LogMessage(LogLevel::Critical, std::format(fmt, std::forward<Args>(args)...));
+		}
+
+	protected:
+		virtual void LogMessage(LogLevel level, std::string_view message) = 0;
+	};
+
+	class XNPP_API Log {
 		XNPP_STATIC_CLASS(Log)
-		//Chamado no início do bloco 'main' da aplicação
+	public:
 		static void Init();
+		static void Shutdown();
 
-		//Obtém o ponteiro interno do logger da Engine (Core).
-		inline static Logger* GetCoreLogger() { return s_CoreLogger.get(); }
-		// Obtém o ponteiro interno do logger do Jogo (Client)
-		inline static Logger* GetClientLogger() { return s_ClientLogger.get(); }
-	private:
-		static std::unique_ptr<Logger> s_CoreLogger;
-		static std::unique_ptr<Logger> s_ClientLogger;
-		static bool s_isInitialized;
+		[[nodiscard]] static Logger* GetCoreLogger() noexcept;
+		[[nodiscard]] static Logger* GetClientLogger() noexcept;
 	};
 }
 
 // ========================================================================
 // Macros para uso interno da Engine (Core)
 // ========================================================================
-#define XNPP_ENGINE_TRACE(...)    Xna::Log::GetCoreLogger()->Trace(__VA_ARGS__)
-#define XNPP_ENGINE_INFO(...)     Xna::Log::GetCoreLogger()->Info(__VA_ARGS__)
-#define XNPP_ENGINE_WARN(...)     Xna::Log::GetCoreLogger()->Warn(__VA_ARGS__)
-#define XNPP_ENGINE_ERROR(...)    Xna::Log::GetCoreLogger()->Error(__VA_ARGS__)
-#define XNPP_ENGINE_CRITICAL(...) Xna::Log::GetCoreLogger()->Critical(__VA_ARGS__)
+#define XNPP_ENGINE_TRACE(...)    ::Xna::Log::GetCoreLogger()->Trace(__VA_ARGS__)
+#define XNPP_ENGINE_INFO(...)     ::Xna::Log::GetCoreLogger()->Info(__VA_ARGS__)
+#define XNPP_ENGINE_WARN(...)     ::Xna::Log::GetCoreLogger()->Warn(__VA_ARGS__)
+#define XNPP_ENGINE_ERROR(...)    ::Xna::Log::GetCoreLogger()->Error(__VA_ARGS__)
+#define XNPP_ENGINE_CRITICAL(...) ::Xna::Log::GetCoreLogger()->Critical(__VA_ARGS__)
 
 // ========================================================================
 // Macros para uso do Jogo (Client)
 // ========================================================================
-#define XNPP_CLIENT_TRACE(...)    Xna::Log::GetClientLogger()->Trace(__VA_ARGS__)
-#define XNPP_CLIENT_INFO(...)     Xna::Log::GetClientLogger()->Info(__VA_ARGS__)
-#define XNPP_CLIENT_WARN(...)     Xna::Log::GetClientLogger()->Warn(__VA_ARGS__)
-#define XNPP_CLIENT_ERROR(...)    Xna::Log::GetClientLogger()->Error(__VA_ARGS__)
-#define XNPP_CLIENT_CRITICAL(...) Xna::Log::GetClientLogger()->Critical(__VA_ARGS__)
-
-
+#define XNPP_CLIENT_TRACE(...)    ::Xna::Log::GetClientLogger()->Trace(__VA_ARGS__)
+#define XNPP_CLIENT_INFO(...)     ::Xna::Log::GetClientLogger()->Info(__VA_ARGS__)
+#define XNPP_CLIENT_WARN(...)     ::Xna::Log::GetClientLogger()->Warn(__VA_ARGS__)
+#define XNPP_CLIENT_ERROR(...)    ::Xna::Log::GetClientLogger()->Error(__VA_ARGS__)
+#define XNPP_CLIENT_CRITICAL(...) ::Xna::Log::GetClientLogger()->Critical(__VA_ARGS__)

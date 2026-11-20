@@ -13,6 +13,7 @@
     inline explicit operator bool() const noexcept { return Impl != nullptr; }
 
 #define XNPP_STATIC_CLASS(ClassName) \
+public: \
     ClassName() = delete; \
     ClassName(ClassName const&) = delete; \
     ClassName(ClassName&&) = delete; \

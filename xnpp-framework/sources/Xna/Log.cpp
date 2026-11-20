@@ -1,60 +1,85 @@
 #include <Xna/Log.hpp>
+#include <cstdio>
+#include <memory>
 #include <spdlog/sinks/stdout_color_sinks.h>
 #include <spdlog/spdlog.h>
 
 namespace Xna {
-    struct InternalLogger : public Logger 
-    {
-		~InternalLogger() override = default;
+	namespace {
+		// Emergency logger if an Assert fires before Log::Init()
+		struct FallbackLogger final : public Logger {
+		protected:
+			void LogMessage(LogLevel level, std::string_view message) override {
+				const char* tag = "LOG";
+				switch (level) {
+				case LogLevel::Trace:    tag = "TRACE"; break;
+				case LogLevel::Info:     tag = "INFO"; break;
+				case LogLevel::Warn:     tag = "WARN"; break;
+				case LogLevel::Error:    tag = "ERROR"; break;
+				case LogLevel::Critical: tag = "CRITICAL"; break;
+				}
+				std::fprintf(stderr, "[UNINITIALIZED %s] %.*s\n",
+					tag, static_cast<int>(message.size()), message.data());
+			}
+		};
 
-		InternalLogger(std::shared_ptr<spdlog::logger> const& logger) : logger(logger) {}
+		class SpdlogAdapter final : public Logger {
+		public:
+			explicit SpdlogAdapter(std::shared_ptr<spdlog::logger> logger)
+				: m_Logger(std::move(logger)) {}
 
-        void Trace(std::string_view message) override {
-            logger->trace(message);
-        }
+		protected:
+			void LogMessage(LogLevel level, std::string_view message) override {
+				switch (level) {
+				case LogLevel::Trace:    m_Logger->trace(message); break;
+				case LogLevel::Info:     m_Logger->info(message); break;
+				case LogLevel::Warn:     m_Logger->warn(message); break;
+				case LogLevel::Error:    m_Logger->error(message); break;
+				case LogLevel::Critical: m_Logger->critical(message); break;
+				}
+			}
 
-        void Info(std::string_view message) override {
-            logger->info(message);
-        }
-        void Warn(std::string_view message) override {
-            logger->warn(message);
-        }
-        void Error(std::string_view message) override {
-            logger->error(message);
-        }
-        void Critical(std::string_view message) override {
-            logger->critical(message);
-        }
+		private:
+			std::shared_ptr<spdlog::logger> m_Logger;
+		};
 
-        std::shared_ptr<spdlog::logger> logger;
-    };
+		FallbackLogger s_FallbackLogger;
+		std::unique_ptr<Logger> s_CoreLogger;
+		std::unique_ptr<Logger> s_ClientLogger;
+		bool s_IsInitialized = false;
+	}
 
-    std::unique_ptr<Logger> Log::s_CoreLogger;
-    std::unique_ptr<Logger> Log::s_ClientLogger;
-    bool Log::s_isInitialized = false;
+	void Log::Init() {
+		if (s_IsInitialized) {
+			XNPP_ENGINE_WARN("Log has already been initialized. Ignoring redundant call.");
+			return;
+		}
 
-    void Log::Init()
-    {
-        if (s_isInitialized) {
-            XNPP_ENGINE_WARN("Log já foi inicializado. Ignorando chamada redundante.");
-            return;
-        }
+		spdlog::set_pattern("%^[%T] %n: %v%$");
 
-        // Define o padrão visual da mensagem. 
-        // %^ e %$ controlam o bloco de cores
-        // %T é a hora, %n é o nome do logger, %v é a mensagem atual
-        spdlog::set_pattern("%^[%T] %n: %v%$");
+		auto coreSpd = spdlog::stdout_color_mt("ENGINE");
+		coreSpd->set_level(spdlog::level::trace);
+		s_CoreLogger = std::make_unique<SpdlogAdapter>(std::move(coreSpd));
 
-        // Inicializa o logger do Core (Engine)
-        auto coreLogger = std::make_unique<InternalLogger>(spdlog::stdout_color_mt("ENGINE"));
-		coreLogger->logger->set_level(spdlog::level::trace);
-		s_CoreLogger = std::move(coreLogger);
+		auto clientSpd = spdlog::stdout_color_mt("APP");
+		clientSpd->set_level(spdlog::level::trace);
+		s_ClientLogger = std::make_unique<SpdlogAdapter>(std::move(clientSpd));
 
-        // Inicializa o logger do Client (Jogo/App)
-        auto clientLogger = std::make_unique<InternalLogger>(spdlog::stdout_color_mt("APP"));
-        clientLogger->logger->set_level(spdlog::level::trace);
-        s_ClientLogger = std::move(clientLogger);
+		s_IsInitialized = true;
+	}
 
-        s_isInitialized = true;
-    }
+	void Log::Shutdown() {
+		s_CoreLogger.reset();
+		s_ClientLogger.reset();
+		spdlog::shutdown();
+		s_IsInitialized = false;
+	}
+
+	Logger* Log::GetCoreLogger() noexcept {
+		return s_CoreLogger ? s_CoreLogger.get() : &s_FallbackLogger;
+	}
+
+	Logger* Log::GetClientLogger() noexcept {
+		return s_ClientLogger ? s_ClientLogger.get() : &s_FallbackLogger;
+	}
 }

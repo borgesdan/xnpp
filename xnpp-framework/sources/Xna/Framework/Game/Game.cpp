@@ -97,7 +97,15 @@ namespace Xna {
 	}
 
 	void Game::RunGame() {
-		impl->graphicsDeviceManager = impl->gameServices.GetService<IGraphicsDeviceManager>();		
+		impl->graphicsDeviceManager = impl->gameServices.GetService<IGraphicsDeviceManager>();
+
+		XNPP_CORE_ASSERT(impl->graphicsDeviceManager != nullptr, "No IGraphicsDeviceManager was found in the GameServiceContainer. Please add one before calling Game::Run().");
+
+		do {
+			if (!(impl->graphicsDeviceManager != nullptr)) {
+				Xna::Log::GetCoreLogger()->Critical("Falha de Asserção: {0}", "No IGraphicsDeviceManager was found in the GameServiceContainer. Please add one before calling Game::Run()."); __debugbreak();
+			}
+		} while (false);
 
 		if (impl->host.has_value())
 			impl->host->Run();
