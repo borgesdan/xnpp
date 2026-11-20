@@ -11,3 +11,10 @@
     inline bool operator==(ClassName const& other) const noexcept { return Impl == other.Impl; } \
     inline bool operator==(std::nullptr_t) const noexcept { return Impl == nullptr; } \
     inline explicit operator bool() const noexcept { return Impl != nullptr; }
+
+#define XNPP_STATIC_CLASS(ClassName) \
+    ClassName() = delete; \
+    ClassName(ClassName const&) = delete; \
+    ClassName(ClassName&&) = delete; \
+    ClassName& operator=(ClassName const&) = delete; \
+    ClassName& operator=(ClassName&&) = delete;

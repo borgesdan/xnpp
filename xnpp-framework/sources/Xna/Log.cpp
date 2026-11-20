@@ -5,6 +5,8 @@
 namespace Xna {
     struct InternalLogger : public Logger 
     {
+		~InternalLogger() override = default;
+
 		InternalLogger(std::shared_ptr<spdlog::logger> const& logger) : logger(logger) {}
 
         void Trace(std::string_view message) override {

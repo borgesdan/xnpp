@@ -3,6 +3,7 @@
 #include <memory>
 #include <string>
 #include "Xna/Macros/Api.hpp"
+#include "Xna/Macros/Utils.hpp"
 
 namespace Xna {
 	struct Logger {
@@ -17,8 +18,9 @@ namespace Xna {
 	// Sistema de log que deve ser integrado e utilizado em toda a extensão do projeto, substituindo o assert padrão.
 	// Contém Core (mensagens internas da engine) e Client (mensagens do jogo sendo desenvolvido nela).
 	class XNPP_API Log
-	{
+	{		
 	public:
+		XNPP_STATIC_CLASS(Log)
 		//Chamado no início do bloco 'main' da aplicação
 		static void Init();
 
