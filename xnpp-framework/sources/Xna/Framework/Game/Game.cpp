@@ -100,9 +100,9 @@ namespace Xna {
 		Log::Shutdown();
 	}
 
-	GameComponentCollection Game::Components() const { return impl->gameComponents; }
-	ContentManager* Game::Content() const { return impl->content.get(); }	
-	GameServiceContainer Game::Services() const { return impl->gameServices; }
+	GameComponentCollection Game::Components() const noexcept { return impl->gameComponents; }
+	ContentManager* Game::Content() const noexcept { return impl->content.get(); }	
+	GameServiceContainer Game::Services() const noexcept { return impl->gameServices; }
 
 	CSharp::Event<CSharp::EventArgs> Game::Activated() const { return impl->Activated; }
 	CSharp::Event<CSharp::EventArgs> Game::Deactivated() const { return impl->Deactivated; }
@@ -504,18 +504,18 @@ namespace Xna {
 		return impl->exitRequest;
 	}
 
-	TimeSpan Game::InactiveSleepTime() const { return impl->inactiveSleepTime; }
+	TimeSpan Game::InactiveSleepTime() const noexcept { return impl->inactiveSleepTime; }
 
-	void Game::InactiveSleepTime(TimeSpan value) {
+	void Game::InactiveSleepTime(TimeSpan value) noexcept {
 		if (!(value < TimeSpan::Zero()))
 			impl->inactiveSleepTime = TimeSpan::Zero();
 		else
 			impl->inactiveSleepTime = value;
 	}
 
-	bool Game::IsMouseVisible() const { return impl->isMouseVisible; }
+	bool Game::IsMouseVisible() const noexcept { return impl->isMouseVisible; }
 
-	void Game::IsMouseVisible(bool value) {
+	void Game::IsMouseVisible(bool value) noexcept {
 		impl->isMouseVisible = value;
 
 		if (!Window())
@@ -524,36 +524,36 @@ namespace Xna {
 		Window()->IsMouseVisible(value);
 	}
 
-	TimeSpan Game::TargetElapsedTime() const { return impl->targetElapsedTime; }
+	TimeSpan Game::TargetElapsedTime() const noexcept { return impl->targetElapsedTime; }
 
-	void Game::TargetElapsedTime(TimeSpan value) {
+	void Game::TargetElapsedTime(TimeSpan value) noexcept {
 		if (!(value <= TimeSpan::Zero()))
 			throw CSharp::ArgumentOutOfRangeException();
 
 		impl->targetElapsedTime = value;
 	}
 
-	bool Game::IsFixedTimeStep() const {
+	bool Game::IsFixedTimeStep() const noexcept {
 		return impl->isFixedTimeStep;
 	}
 
-	void Game::IsFixedTimeStep(bool value) {
+	void Game::IsFixedTimeStep(bool value) noexcept {
 		impl->isFixedTimeStep = value;
 	}
 
-	GameWindow* Game::Window() const {
+	GameWindow* Game::Window() const noexcept {
 		if (impl->host)
 			return impl->host->Window();
 
 		return nullptr;
 	}
 
-	bool Game::IsActive() const {
+	bool Game::IsActive() const noexcept {
 		//TODO:
 		return true;
 	}
 
-	Xna::GraphicsDevice* Game::GraphicsDevice() const {
+	Xna::GraphicsDevice* Game::GraphicsDevice() const noexcept {
 		if (impl->graphicsDeviceService == nullptr)
 			impl->graphicsDeviceService = Services().GetService<IGraphicsDeviceService>();
 

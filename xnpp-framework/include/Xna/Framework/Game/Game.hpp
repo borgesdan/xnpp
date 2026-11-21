@@ -23,33 +23,33 @@ namespace Xna {
 		XNPP_API virtual ~Game();
 
 		//Gets the collection of GameComponents owned by the game.
-		XNPP_API [[nodiscard]] GameComponentCollection Components() const;
+		XNPP_API [[nodiscard]] GameComponentCollection Components() const noexcept;
 		//Gets the current ContentManager.
-		XNPP_API [[nodiscard]] ContentManager* Content() const;
+		XNPP_API [[nodiscard]] ContentManager* Content() const noexcept;
 		//Gets the current GraphicsDevice.
-		XNPP_API [[nodiscard]] Xna::GraphicsDevice* GraphicsDevice() const;
+		XNPP_API [[nodiscard]] Xna::GraphicsDevice* GraphicsDevice() const noexcept;
 		//Gets or sets the time to sleep when the game is inactive.
-		XNPP_API [[nodiscard]] TimeSpan InactiveSleepTime() const;
+		XNPP_API [[nodiscard]] TimeSpan InactiveSleepTime() const noexcept;
 		//Gets or sets the time to sleep when the game is inactive.
-		XNPP_API void InactiveSleepTime(TimeSpan value);
+		XNPP_API void InactiveSleepTime(TimeSpan value) noexcept;
 		//Indicates whether the game is currently the active application.
-		XNPP_API bool IsActive() const;
+		XNPP_API [[nodiscard]] bool IsActive() const noexcept;
 		//Gets or sets a value indicating whether to use fixed time steps.
-		XNPP_API bool IsFixedTimeStep() const;
+		XNPP_API [[nodiscard]] bool IsFixedTimeStep() const noexcept;
 		//Gets or sets a value indicating whether to use fixed time steps.
-		XNPP_API void IsFixedTimeStep(bool value);
+		XNPP_API void IsFixedTimeStep(bool value) noexcept;
 		//Gets or sets a value indicating whether the mouse cursor should be visible.
-		XNPP_API bool IsMouseVisible() const;
+		XNPP_API [[nodiscard]] bool IsMouseVisible() const noexcept;
 		//Gets or sets a value indicating whether the mouse cursor should be visible.
-		XNPP_API void IsMouseVisible(bool value);
+		XNPP_API void IsMouseVisible(bool value) noexcept;
 		//Gets the GameServiceContainer holding all the service providers attached to the Game.
-		XNPP_API [[nodiscard]] GameServiceContainer Services() const;
+		XNPP_API [[nodiscard]] GameServiceContainer Services() const noexcept;
 		//Gets or sets the target time between calls to Update when IsFixedTimeStep is true.
-		XNPP_API [[nodiscard]] TimeSpan TargetElapsedTime() const;
+		XNPP_API [[nodiscard]] TimeSpan TargetElapsedTime() const noexcept;
 		//Gets or sets the target time between calls to Update when IsFixedTimeStep is true.
-		XNPP_API void TargetElapsedTime(TimeSpan value);
+		XNPP_API void TargetElapsedTime(TimeSpan value) noexcept;
 		//Gets the underlying operating system window.
-		XNPP_API [[nodiscard]] GameWindow* Window() const;
+		XNPP_API [[nodiscard]] GameWindow* Window() const noexcept;
 
 		//Exits the game.
 		XNPP_API void Exit();

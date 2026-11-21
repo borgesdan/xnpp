@@ -1,5 +1,4 @@
-#ifndef XNA_FRAMEWORK_GAME_GAMESERVICECONTAINTER_HPP
-#define XNA_FRAMEWORK_GAME_GAMESERVICECONTAINTER_HPP
+#pragma once
 
 #include <optional>
 #include <vector>
@@ -90,5 +89,3 @@ namespace Xna {
 		std::shared_ptr<std::vector<std::shared_ptr<IGameServiceItem>>> items;
 	};
 }
-
-#endif
