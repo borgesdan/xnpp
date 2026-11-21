@@ -96,6 +96,7 @@ namespace Xna {
 	}
 
 	Game::~Game() {
+		XNPP_ENGINE_INFO("Shutting down game.");
 		Log::Shutdown();
 	}
 
@@ -552,17 +553,14 @@ namespace Xna {
 		return true;
 	}
 
-	Xna::GraphicsDevice Game::GraphicsDevice() const {
+	Xna::GraphicsDevice* Game::GraphicsDevice() const {
 		if (impl->graphicsDeviceService == nullptr)
 			impl->graphicsDeviceService = Services().GetService<IGraphicsDeviceService>();
 
-		if (impl->graphicsDeviceService == nullptr)
-			throw CSharp::InvalidOperationException("IGraphicsDeviceService is null.");
+		XNPP_CORE_ASSERT(impl->graphicsDeviceService != nullptr, "IGraphicsDeviceService is null.");		
+		XNPP_CORE_ASSERT(impl->graphicsDeviceService->GraphicsDevice() != nullptr, "GraphicsDevice is null.");
 
-		if (!impl->graphicsDeviceService->GraphicsDevice().has_value())
-			throw CSharp::InvalidOperationException("GraphicsDevice is null.");
-
-		return impl->graphicsDeviceService->GraphicsDevice().value();
+		return impl->graphicsDeviceService->GraphicsDevice();
 	}
 
 	void Game::GameComponentAdded(void* sender, GameComponentCollectionEventArgs e) {

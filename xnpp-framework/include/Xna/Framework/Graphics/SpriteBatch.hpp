@@ -23,7 +23,7 @@ namespace Xna {
 	class SpriteBatch {
 	public:
 		//Initializes a new instance of the class, which enables a group of sprites to be drawn using the same settings.
-		XNPP_API SpriteBatch(GraphicsDevice const& graphicsDevice);
+		XNPP_API SpriteBatch(GraphicsDevice* graphicsDevice);
 
 		//Begins a sprite batch operation using the specified sort, blend, sampler, depth stencil, rasterizer state objects, plus a custom effect and a 2D transformation matrix.
 		//Passing null for any of the state objects selects the default default state objects (BlendState.AlphaBlend, DepthStencilState.None, RasterizerState.CullCounterClockwise, SamplerState.LinearClamp). 

@@ -27,7 +27,7 @@ namespace Xna {
 		//Gets the current ContentManager.
 		XNPP_API [[nodiscard]] ContentManager* Content() const;
 		//Gets the current GraphicsDevice.
-		XNPP_API [[nodiscard]] Xna::GraphicsDevice GraphicsDevice() const;
+		XNPP_API [[nodiscard]] Xna::GraphicsDevice* GraphicsDevice() const;
 		//Gets or sets the time to sleep when the game is inactive.
 		XNPP_API [[nodiscard]] TimeSpan InactiveSleepTime() const;
 		//Gets or sets the time to sleep when the game is inactive.

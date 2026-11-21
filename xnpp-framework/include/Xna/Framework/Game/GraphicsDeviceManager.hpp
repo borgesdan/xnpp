@@ -37,7 +37,7 @@ namespace Xna {
 		XNPP_API GraphicsDeviceManager(Game* game);
 
 		//Gets the GraphicsDevice associated with the GraphicsDeviceManager.
-		inline std::optional<Xna::GraphicsDevice> GraphicsDevice() const override { return impl->device; }
+		inline Xna::GraphicsDevice* GraphicsDevice() const override { return impl->device.get(); }
 
 		//Gets the graphics profile, which determines the graphics feature set.
 		inline Xna::GraphicsProfile GraphicsProfile() const { return impl->graphicsProfile; }
@@ -208,7 +208,7 @@ namespace Xna {
 			bool isReallyFullScreen{ false };
 			bool isDeviceDirty{ false };
 			bool inDeviceTransition{ false };
-			std::optional<Xna::GraphicsDevice> device;
+			std::unique_ptr<Xna::GraphicsDevice> device;
 			bool synchronizeWithVerticalRetrace{ true };
 			bool isFullScreen{ false };
 			Xna::GraphicsProfile graphicsProfile{};
@@ -234,9 +234,9 @@ namespace Xna {
 	};
 
 	struct GraphicsDeviceInformationComparer {
-		std::optional<GraphicsDeviceManager> graphics;
+		GraphicsDeviceManager* graphics;
 
-		GraphicsDeviceInformationComparer(GraphicsDeviceManager const& graphicsComponent) : graphics(graphicsComponent){}
+		GraphicsDeviceInformationComparer(GraphicsDeviceManager* graphicsComponent) : graphics(graphicsComponent){}
 
 		XNPP_API bool operator()(GraphicsDeviceInformation const& d1, GraphicsDeviceInformation const& d2) const;
 

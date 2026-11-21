@@ -493,7 +493,7 @@ namespace Xna {
 		static constexpr uint16_t kMaxIndices = kMaxSprites * 6;
 	};
 
-	std::unique_ptr<Platform::ISpriteBatch> Platform::ISpriteBatch::Create(GraphicsDevice const& device) {
+	std::unique_ptr<Platform::ISpriteBatch> Platform::ISpriteBatch::Create(GraphicsDevice* device) {
 		//O backend padrão com bgfx não necessita do GraphicsDevice
 		return std::make_unique<BgfxSpriteBatch>();
 	}

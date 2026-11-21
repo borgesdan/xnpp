@@ -1,8 +1,6 @@
-#ifndef XNA_FRAMEWORK_GRAPHICS_IGRAPHICSDEVICESERVICE_HPP
-#define XNA_FRAMEWORK_GRAPHICS_IGRAPHICSDEVICESERVICE_HPP
+#pragma once
 
 #include <Xna/CSharp/Event.hpp>
-#include <optional>
 
 namespace Xna {
     class GraphicsDevice;
@@ -13,7 +11,7 @@ namespace Xna {
         virtual ~IGraphicsDeviceService() = default;
 
         //Retrieves a graphcs device.
-        virtual std::optional<Xna::GraphicsDevice> GraphicsDevice() const = 0;
+        virtual Xna::GraphicsDevice* GraphicsDevice() const = 0;
 
         //The event that occurs when a graphics device is created.
         virtual CSharp::Event<CSharp::EventArgs> DeviceCreated() const = 0;
@@ -25,5 +23,3 @@ namespace Xna {
         virtual CSharp::Event<CSharp::EventArgs> DeviceDisposing() const = 0;
 	};
 }
-
-#endif

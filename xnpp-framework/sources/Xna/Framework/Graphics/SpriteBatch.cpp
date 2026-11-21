@@ -10,7 +10,7 @@ namespace Xna {
 			layerDepth = 1;
 	}
 
-	SpriteBatch::SpriteBatch(GraphicsDevice const& device) {
+	SpriteBatch::SpriteBatch(GraphicsDevice* device) {
 		backend = Platform::ISpriteBatch::Create(device);
 	}
 

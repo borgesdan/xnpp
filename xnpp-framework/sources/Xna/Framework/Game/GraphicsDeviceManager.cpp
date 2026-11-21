@@ -53,7 +53,7 @@ namespace Xna {
 	}
 
 	void GraphicsDeviceManager::ApplyChanges() {
-		if (impl->device.has_value() && !impl->isDeviceDirty)
+		if (impl->device && !impl->isDeviceDirty)
 			return;
 
 		ChangeDevice(false);
@@ -91,16 +91,16 @@ namespace Xna {
 	}
 
 	bool GraphicsDeviceManager::EnsureDevice() {
-		return impl->device.has_value() && EnsureDevicePlatform();
+		return impl->device && EnsureDevicePlatform();
 	}
 
 	void GraphicsDeviceManager::CreateDevice(GraphicsDeviceInformation& newInfo) {
-		impl->device = std::nullopt;
+		impl->device = nullptr;
 		OnPreparingDeviceSettings(this, PreparingDeviceSettingsEventArgs(newInfo));		
 		MassagePresentParameters(newInfo.PresentationParameters());
 
 		ValidateGraphicsDeviceInformation(newInfo);
-		impl->device = Xna::GraphicsDevice(newInfo.Adapter(), newInfo.GraphicsProfile(), newInfo.PresentationParameters());
+		impl->device = std::make_unique<Xna::GraphicsDevice>(newInfo.Adapter(), newInfo.GraphicsProfile(), newInfo.PresentationParameters());
 		
 		impl->device->DeviceResetting().Add([this](void* sender, CSharp::EventArgs const& args) {
 			HandleDeviceResetting(sender, args);
@@ -135,7 +135,7 @@ namespace Xna {
 		flag1 = true;
 		bool flag2 = true;
 
-		if (!forceCreate && impl->device.has_value()) {
+		if (!forceCreate && impl->device) {
 			OnPreparingDeviceSettings(this, PreparingDeviceSettingsEventArgs(bestDevice));
 
 			if (CanResetDevice(bestDevice)) {
@@ -279,7 +279,7 @@ namespace Xna {
 	}
 
 	void GraphicsDeviceManager::RankDevicesPlatform(std::vector<GraphicsDeviceInformation>& foundDevices) {		
-		std::sort(foundDevices.begin(), foundDevices.end(), GraphicsDeviceInformationComparer(*this));
+		std::sort(foundDevices.begin(), foundDevices.end(), GraphicsDeviceInformationComparer(this));
 	}
 
 	GraphicsDeviceInformation GraphicsDeviceManager::FindBestPlatformDevice(bool anySuitableDevice) {
