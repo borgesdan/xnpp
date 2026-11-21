@@ -20,7 +20,7 @@ namespace Xna {
 	public:
 		//Initializes a new instance of this class, which provides basic graphics device initialization, game logic, rendering code, and a game loop.
 		XNPP_API Game();
-		XNPP_API virtual ~Game();
+		XNPP_API virtual ~Game();		
 
 		//Gets the collection of GameComponents owned by the game.
 		XNPP_API [[nodiscard]] GameComponentCollection Components() const noexcept;
@@ -43,7 +43,7 @@ namespace Xna {
 		//Gets or sets a value indicating whether the mouse cursor should be visible.
 		XNPP_API void IsMouseVisible(bool value) noexcept;
 		//Gets the GameServiceContainer holding all the service providers attached to the Game.
-		XNPP_API [[nodiscard]] GameServiceContainer Services() const noexcept;
+		XNPP_API [[nodiscard]] GameServiceContainer* Services() const noexcept;
 		//Gets or sets the target time between calls to Update when IsFixedTimeStep is true.
 		XNPP_API [[nodiscard]] TimeSpan TargetElapsedTime() const noexcept;
 		//Gets or sets the target time between calls to Update when IsFixedTimeStep is true.
@@ -74,22 +74,24 @@ namespace Xna {
 		XNPP_API [[nodiscard]] CSharp::Event<CSharp::EventArgs> Exiting() const;
 
 	protected:
+		//A function called when the game starts, before the game loop begins, for the preliminary initialization of the game's logical resources.
+		XNPP_API virtual void OnStartRun();
 		//Starts the drawing of a frame. This method is followed by calls to Draw and EndDraw.
 		XNPP_API virtual bool BeginDraw();
 		//Called after all components are initialized but before the first update in the game loop.
-		XNPP_API virtual void BeginRun() {}
+		virtual void BeginRun() {};
 		//Called when the game determines it is time to draw a frame.
 		XNPP_API virtual void Draw(GameTime& gameTime);
 		//Ends the drawing of a frame. This method is preceeded by calls to Draw and BeginDraw.
 		XNPP_API virtual void EndDraw();
 		//Called after the game loop has stopped running before exiting.
-		XNPP_API virtual void EndRun() {}
+		virtual void EndRun() {}
 		//Called after the Game and GraphicsDevice are created, but before LoadContent.
 		XNPP_API virtual void Initialize();
 		//Called when graphics resources need to be loaded.
-		XNPP_API virtual void LoadContent() {}
+		virtual void LoadContent() {}
 		//Called when graphics resources need to be unloaded. Override this method to unload any game-specific graphics resources.
-		XNPP_API virtual void UnloadContent() {}
+		virtual void UnloadContent() {}
 		//Called when the game has determined that game logic needs to be processed.
 		XNPP_API virtual void Update(GameTime& gameTime);
 

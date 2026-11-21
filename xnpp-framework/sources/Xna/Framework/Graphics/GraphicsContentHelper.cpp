@@ -7,7 +7,7 @@
 
 namespace Xna {
 	GraphicsDevice GraphicsContentHelper::GraphicsDeviceFromContentReader(ContentReader& contentReader) {
-        auto iGraphicsDevice =  contentReader.ContentManager()->ServiceProvider().GetService<IGraphicsDeviceService>();
+        auto iGraphicsDevice =  contentReader.ContentManager()->ServiceProvider()->GetService<IGraphicsDeviceService>();
 
         if (!iGraphicsDevice)
             throw CSharp::InvalidOperationException("NoGraphicsDeviceContent");

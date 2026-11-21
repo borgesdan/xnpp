@@ -14,7 +14,7 @@ namespace Xna {
 		std::filesystem::path rootDirectory;
 		std::filesystem::path fullRootDirectory;
 		bool isRootDirectoryAbsolute{ false };
-		GameServiceContainer serviceProvider;
+		GameServiceContainer* serviceProvider;
 		std::shared_ptr<std::vector<uint8_t>> byteBuffer;
 	};	
 

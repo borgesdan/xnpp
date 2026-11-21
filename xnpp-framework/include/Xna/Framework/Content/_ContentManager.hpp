@@ -12,9 +12,9 @@ namespace Xna {
 	class ContentManager {
 	public:		
 		//Initializes a new instance of ContentManager.
-		XNPP_API ContentManager(GameServiceContainer const& serviceProvider, std::filesystem::path const& rootDirectory = "");
+		XNPP_API ContentManager(GameServiceContainer* serviceProvider, std::filesystem::path const& rootDirectory = "");
 
-		XNPP_API GameServiceContainer ServiceProvider() const;
+		XNPP_API GameServiceContainer* ServiceProvider() const;
 
 		//Gets or sets the root directory associated with this ContentManager.
 		XNPP_API std::filesystem::path RootDirectory() const;

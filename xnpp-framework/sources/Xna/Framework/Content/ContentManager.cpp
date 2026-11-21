@@ -4,13 +4,13 @@
 #include <Xna/CSharp/Path.hpp>
 
 namespace Xna {
-	ContentManager::ContentManager(GameServiceContainer const& serviceProvider, std::filesystem::path const& rootDirectory) {
+	ContentManager::ContentManager(GameServiceContainer* serviceProvider, std::filesystem::path const& rootDirectory) {
 		impl = std::make_unique<ContentManager::Implementation>();
 		RootDirectory(rootDirectory);
 		impl->serviceProvider = serviceProvider;	
 	}
 
-	GameServiceContainer ContentManager::ServiceProvider() const {
+	GameServiceContainer* ContentManager::ServiceProvider() const {
 		return impl->serviceProvider;
 	}
 

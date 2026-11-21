@@ -4,6 +4,7 @@
 #include <algorithm>
 #include <Xna/CSharp/Thread.hpp>
 #include <Xna/CSharp/Platform.hpp>
+#include <Xna/Macros/CoreAssert.hpp>
 #include <cmath>
 #include <Xna/Framework/Game/GameWindow.hpp>
 #include <Xna/Framework/Game/GameServiceContainer.hpp>
@@ -28,28 +29,35 @@ namespace Xna {
 
 namespace Xna {
 	GraphicsDeviceManager::GraphicsDeviceManager(Game* game) {
-		const auto currentService = game->Services().GetService<IGraphicsDeviceManager>();
+		const auto currentService = game->Services()->GetService<IGraphicsDeviceManager>();
 
-		if (currentService != nullptr)
-			throw CSharp::ArgumentException("GraphicsDeviceManagerAlreadyPresent");
+		XNPP_CORE_ASSERT(currentService == nullptr, "There is already a GraphicsDeviceManager registered with the game service.");		
 
 		impl = std::make_shared<Implementation>();
 		impl->game = game;
-		impl->game->Services().AddService<IGraphicsDeviceManager, GraphicsDeviceManager>(*this);
-		impl->game->Services().AddService<IGraphicsDeviceService, GraphicsDeviceManager>(*this);
+		impl->graphicsProfile = ReadDefaultGraphicsProfile();
+	}
+
+	void GraphicsDeviceManager::Initialize() {
+		if (impl->isInitialized)
+			return;
+
 		impl->game->Window()->ClientSizeChanged().Add([this](void* sender, CSharp::EventArgs const& e) {
 			GameWindowClientSizeChanged(sender, e);
 			});
-		
+
 		impl->game->Window()->ScreenDeviceNameChanged().Add([this](void* sender, CSharp::EventArgs const& e) {
 			GameWindowScreenDeviceNameChanged(sender, e);
 			});
 
 		impl->game->Window()->OrientationChanged().Add([this](void* sender, CSharp::EventArgs const& e) {
 			GameWindowOrientationChanged(sender, e);
-			});
+			});		
 
-		impl->graphicsProfile = ReadDefaultGraphicsProfile();
+		impl->game->Services()->AddService<IGraphicsDeviceManager, GraphicsDeviceManager>(this);
+		impl->game->Services()->AddService<IGraphicsDeviceService, GraphicsDeviceManager>(this);
+
+		impl->isInitialized = true;
 	}
 
 	void GraphicsDeviceManager::ApplyChanges() {

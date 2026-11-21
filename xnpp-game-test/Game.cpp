@@ -19,7 +19,14 @@ public:
 		Content()->RootDirectory("Content");
 	}
 
+	void OnStartRun() override {
+		graphics.Initialize();
+
+		base::OnStartRun();
+	}
+
 	void Initialize() override {
+
 		base::Initialize();
 	}
 
@@ -38,8 +45,8 @@ public:
 	}
 
 private:
-	Xna::GraphicsDeviceManager graphics = nullptr;
 	Xna::SpriteBatch spriteBatch = nullptr;
+	Xna::GraphicsDeviceManager graphics = nullptr;
 };
 
 

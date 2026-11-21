@@ -35,6 +35,7 @@ namespace Xna {
 
 		//Creates a new GraphicsDeviceManager and registers it to handle the configuration and management of the graphics device for the specified Game.
 		XNPP_API GraphicsDeviceManager(Game* game);
+		XNPP_API void Initialize() override;
 
 		//Gets the GraphicsDevice associated with the GraphicsDeviceManager.
 		inline Xna::GraphicsDevice* GraphicsDevice() const override { return impl->device.get(); }
@@ -228,6 +229,7 @@ namespace Xna {
 			CSharp::Event<CSharp::EventArgs> deviceDisposing;
 			CSharp::Event<PreparingDeviceSettingsEventArgs> preparingDeviceSettings;
 			bool beginDrawOk{ false };
+			bool isInitialized{ false };
 		};
 
 		std::shared_ptr<Implementation> impl;		

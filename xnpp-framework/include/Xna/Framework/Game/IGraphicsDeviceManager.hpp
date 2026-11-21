@@ -6,6 +6,7 @@ namespace Xna {
 	class IGraphicsDeviceManager {
 	public:
 		virtual ~IGraphicsDeviceManager() = default;
+		virtual void Initialize() = 0;
 		//Called to ensure that the device manager has created a valid device.
 		virtual void CreateDevice() = 0;
 		//Starts the drawing of a frame.

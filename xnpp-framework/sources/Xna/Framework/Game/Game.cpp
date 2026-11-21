@@ -42,9 +42,7 @@ namespace Xna {
 		TimeSpan accumulatedElapsedGameTime{ TimeSpan::Zero() };
 		TimeSpan lastFrameElapsedGameTime{ TimeSpan::Zero() };
 		TimeSpan targetElapsedTime{ TimeSpan::FromTicks(166667L) };
-		TimeSpan inactiveSleepTime{ TimeSpan::FromMilliseconds(20.0) };
-
-		GameServiceContainer gameServices{};
+		TimeSpan inactiveSleepTime{ TimeSpan::FromMilliseconds(20.0) };		
 
 		bool isRun{ false };
 		bool isRunnningSlowly{ false };
@@ -66,24 +64,35 @@ namespace Xna {
 
 		Xna::GameTime gameTime;
 
-		std::shared_ptr<IGraphicsDeviceManager> graphicsDeviceManager;
-		std::shared_ptr<IGraphicsDeviceService> graphicsDeviceService;
 		std::vector<std::shared_ptr<IGameComponent>> notYetInitialized;
 		std::vector<std::shared_ptr<IUpdateable>> updateableComponents;
 		std::vector<std::shared_ptr<IDrawable>> drawableComponents;
 		std::vector<std::shared_ptr<IDrawable>> currentlyDrawingComponents;
 
+		IGraphicsDeviceManager* graphicsDeviceManager;
+		IGraphicsDeviceService* graphicsDeviceService;
+
 		std::unique_ptr<GameHost> host;
 		std::unique_ptr<ContentManager> content;
+		std::unique_ptr<GameServiceContainer> gameServices;
 	};
 
 	Game::Game() {
 		Log::Init();
 		
 		impl = std::make_unique<Implementation>();
-		impl->content = std::make_unique<ContentManager>(impl->gameServices, "");
-		impl->host = std::make_unique<GameHost>(this);
+		impl->gameServices = std::make_unique<GameServiceContainer>();
+		impl->content = std::make_unique<ContentManager>(impl->gameServices.get());
+		impl->host = std::make_unique<GameHost>(this);		
+	}
 
+	Game::~Game() {
+		XNPP_ENGINE_INFO("Shutting down game.");
+		Log::Shutdown();
+	}
+
+	void Game::OnStartRun()
+	{
 		EnsureHost();
 
 		impl->gameComponents.ComponentAdded().Add([this](void* sender, GameComponentCollectionEventArgs const& e) {
@@ -95,14 +104,9 @@ namespace Xna {
 			});
 	}
 
-	Game::~Game() {
-		XNPP_ENGINE_INFO("Shutting down game.");
-		Log::Shutdown();
-	}
-
 	GameComponentCollection Game::Components() const noexcept { return impl->gameComponents; }
 	ContentManager* Game::Content() const noexcept { return impl->content.get(); }	
-	GameServiceContainer Game::Services() const noexcept { return impl->gameServices; }
+	GameServiceContainer* Game::Services() const noexcept { return impl->gameServices.get(); }
 
 	CSharp::Event<CSharp::EventArgs> Game::Activated() const { return impl->Activated; }
 	CSharp::Event<CSharp::EventArgs> Game::Deactivated() const { return impl->Deactivated; }
@@ -130,6 +134,9 @@ namespace Xna {
 
 			XNPP_ENGINE_INFO("Initializing platform system.");
 			Platform::System::Initialize();
+
+			XNPP_ENGINE_INFO("Initialization of the game's logical resources before the loop.");
+			OnStartRun();
 
 			XNPP_ENGINE_INFO("Running game.");
 			RunGame();
@@ -168,9 +175,9 @@ namespace Xna {
 	}
 
 	void Game::RunGame() {
-		impl->graphicsDeviceManager = impl->gameServices.GetService<IGraphicsDeviceManager>();
+		impl->graphicsDeviceManager = impl->gameServices->GetService<IGraphicsDeviceManager>();
 
-		XNPP_CORE_ASSERT(impl->graphicsDeviceManager != nullptr, "No IGraphicsDeviceManager was found in the GameServiceContainer. Please add one before calling Game::Run().");		
+		XNPP_CORE_ASSERT(impl->graphicsDeviceManager != nullptr, "No IGraphicsDeviceManager was found in the GameServiceContainer. Please add one before calling Game::Run().");				
 
 		if (impl->host)
 			impl->host->Run();
@@ -468,7 +475,7 @@ namespace Xna {
 	}
 
 	void Game::HookDeviceEvents() {
-		impl->graphicsDeviceService = Services().GetService<IGraphicsDeviceService>();
+		impl->graphicsDeviceService = Services()->GetService<IGraphicsDeviceService>();
 
 		if (impl->graphicsDeviceService == nullptr)
 			return;
@@ -555,7 +562,7 @@ namespace Xna {
 
 	Xna::GraphicsDevice* Game::GraphicsDevice() const noexcept {
 		if (impl->graphicsDeviceService == nullptr)
-			impl->graphicsDeviceService = Services().GetService<IGraphicsDeviceService>();
+			impl->graphicsDeviceService = Services()->GetService<IGraphicsDeviceService>();
 
 		XNPP_CORE_ASSERT(impl->graphicsDeviceService != nullptr, "IGraphicsDeviceService is null.");		
 		XNPP_CORE_ASSERT(impl->graphicsDeviceService->GraphicsDevice() != nullptr, "GraphicsDevice is null.");
