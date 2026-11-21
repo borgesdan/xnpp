@@ -13,7 +13,7 @@ namespace Xna {
 	public:
 		XNPP_API GameHost(Game* game);
 
-		XNPP_API GameWindow Window() const;
+		XNPP_API GameWindow* Window() const;
 		XNPP_API void Run();
 		XNPP_API void RunOneFrame();
 		XNPP_API void StartGameLoop();

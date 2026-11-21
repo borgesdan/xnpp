@@ -41,7 +41,7 @@ namespace Xna {
 		impl->Exiting.Invoke(this, CSharp::EventArgs::Empty());
 	}
 
-	GameWindow GameHost::Window() const { return impl->gameWindow; }
+	GameWindow* GameHost::Window() const { return &impl->gameWindow; }
 
 	void GameHost::Run() {
 		if (impl->doneRun)

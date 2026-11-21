@@ -504,7 +504,8 @@ namespace Xna {
 	}
 
 	TimeSpan Game::InactiveSleepTime() const { return impl->inactiveSleepTime; }
-	void Game::InactiveSleepTime(TimeSpan const& value) {
+
+	void Game::InactiveSleepTime(TimeSpan value) {
 		if (!(value < TimeSpan::Zero()))
 			impl->inactiveSleepTime = TimeSpan::Zero();
 		else
@@ -512,17 +513,19 @@ namespace Xna {
 	}
 
 	bool Game::IsMouseVisible() const { return impl->isMouseVisible; }
+
 	void Game::IsMouseVisible(bool value) {
 		impl->isMouseVisible = value;
 
-		if (!Window().has_value())
+		if (!Window())
 			return;
 
 		Window()->IsMouseVisible(value);
 	}
 
 	TimeSpan Game::TargetElapsedTime() const { return impl->targetElapsedTime; }
-	void Game::TargetElapsedTime(TimeSpan const& value) {
+
+	void Game::TargetElapsedTime(TimeSpan value) {
 		if (!(value <= TimeSpan::Zero()))
 			throw CSharp::ArgumentOutOfRangeException();
 
@@ -537,11 +540,11 @@ namespace Xna {
 		impl->isFixedTimeStep = value;
 	}
 
-	std::optional<GameWindow> Game::Window() const {
+	GameWindow* Game::Window() const {
 		if (impl->host)
 			return impl->host->Window();
 
-		return std::nullopt;
+		return nullptr;
 	}
 
 	bool Game::IsActive() const {

@@ -23,15 +23,15 @@ namespace Xna {
 		XNPP_API virtual ~Game();
 
 		//Gets the collection of GameComponents owned by the game.
-		XNPP_API GameComponentCollection Components() const;
+		XNPP_API [[nodiscard]] GameComponentCollection Components() const;
 		//Gets the current ContentManager.
-		XNPP_API ContentManager* Content() const;
+		XNPP_API [[nodiscard]] ContentManager* Content() const;
 		//Gets the current GraphicsDevice.
-		XNPP_API Xna::GraphicsDevice GraphicsDevice() const;
+		XNPP_API [[nodiscard]] Xna::GraphicsDevice GraphicsDevice() const;
 		//Gets or sets the time to sleep when the game is inactive.
-		XNPP_API TimeSpan InactiveSleepTime() const;
+		XNPP_API [[nodiscard]] TimeSpan InactiveSleepTime() const;
 		//Gets or sets the time to sleep when the game is inactive.
-		XNPP_API void InactiveSleepTime(TimeSpan const& value);
+		XNPP_API void InactiveSleepTime(TimeSpan value);
 		//Indicates whether the game is currently the active application.
 		XNPP_API bool IsActive() const;
 		//Gets or sets a value indicating whether to use fixed time steps.
@@ -43,13 +43,13 @@ namespace Xna {
 		//Gets or sets a value indicating whether the mouse cursor should be visible.
 		XNPP_API void IsMouseVisible(bool value);
 		//Gets the GameServiceContainer holding all the service providers attached to the Game.
-		XNPP_API GameServiceContainer Services() const;
+		XNPP_API [[nodiscard]] GameServiceContainer Services() const;
 		//Gets or sets the target time between calls to Update when IsFixedTimeStep is true.
-		XNPP_API TimeSpan TargetElapsedTime() const;
+		XNPP_API [[nodiscard]] TimeSpan TargetElapsedTime() const;
 		//Gets or sets the target time between calls to Update when IsFixedTimeStep is true.
-		XNPP_API void TargetElapsedTime(TimeSpan const& value);
+		XNPP_API void TargetElapsedTime(TimeSpan value);
 		//Gets the underlying operating system window.
-		XNPP_API std::optional<GameWindow> Window() const;
+		XNPP_API [[nodiscard]] GameWindow* Window() const;
 
 		//Exits the game.
 		XNPP_API void Exit();
@@ -65,13 +65,13 @@ namespace Xna {
 		XNPP_API void Tick();
 
 		//Raised when the game gains focus.
-		XNPP_API CSharp::Event<CSharp::EventArgs> Activated() const;
+		XNPP_API [[nodiscard]] CSharp::Event<CSharp::EventArgs> Activated() const;
 		//Raised when the game loses focus.
-		XNPP_API CSharp::Event<CSharp::EventArgs> Deactivated() const;
+		XNPP_API [[nodiscard]] CSharp::Event<CSharp::EventArgs> Deactivated() const;
 		//Raised when the game is being disposed.
-		XNPP_API CSharp::Event<CSharp::EventArgs> Disposed() const;
+		XNPP_API [[nodiscard]] CSharp::Event<CSharp::EventArgs> Disposed() const;
 		//Raised when the game is exiting.
-		XNPP_API CSharp::Event<CSharp::EventArgs> Exiting() const;
+		XNPP_API [[nodiscard]] CSharp::Event<CSharp::EventArgs> Exiting() const;
 
 	protected:
 		//Starts the drawing of a frame. This method is followed by calls to Draw and EndDraw.
