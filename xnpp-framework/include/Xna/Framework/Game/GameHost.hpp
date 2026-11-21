@@ -19,12 +19,12 @@ namespace Xna {
 		XNPP_API void StartGameLoop();
 		XNPP_API void Exit();
 
-		XNPP_API CSharp::Event<CSharp::EventArgs> Suspend() const;
-		XNPP_API CSharp::Event<CSharp::EventArgs> Resume() const;
-		XNPP_API CSharp::Event<CSharp::EventArgs> Activated() const;
-		XNPP_API CSharp::Event<CSharp::EventArgs> Deactivated() const;
-		XNPP_API CSharp::Event<CSharp::EventArgs> Idle() const;
-		XNPP_API CSharp::Event<CSharp::EventArgs> Exiting() const;
+		XNPP_API IEvent<EventArgs>& Suspend() const;
+		XNPP_API IEvent<EventArgs>& Resume() const;
+		XNPP_API IEvent<EventArgs>& Activated() const;
+		XNPP_API IEvent<EventArgs>& Deactivated() const;
+		XNPP_API IEvent<EventArgs>& Idle() const;
+		XNPP_API IEvent<EventArgs>& Exiting() const;
 
 	protected:
 		XNPP_API void OnSuspend();
@@ -41,12 +41,12 @@ namespace Xna {
 			bool exitRequested{ false };
 			GameWindow gameWindow{ nullptr };
 
-			CSharp::Event<CSharp::EventArgs> Suspend;
-			CSharp::Event<CSharp::EventArgs> Resume;
-			CSharp::Event<CSharp::EventArgs> Activated;
-			CSharp::Event<CSharp::EventArgs> Deactivated;
-			CSharp::Event<CSharp::EventArgs> Idle;
-			CSharp::Event<CSharp::EventArgs> Exiting;
+			Event<EventArgs> Suspend;
+			Event<EventArgs> Resume;
+			Event<EventArgs> Activated;
+			Event<EventArgs> Deactivated;
+			Event<EventArgs> Idle;
+			Event<EventArgs> Exiting;
 		};
 		
 		std::shared_ptr<Implementation> impl;

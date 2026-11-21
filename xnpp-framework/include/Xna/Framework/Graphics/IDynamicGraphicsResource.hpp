@@ -1,5 +1,4 @@
-#ifndef XNA_FRAMEWORK_GRAPHICS_IDYNAMICGRAPHICSRESOURCE_HPP
-#define XNA_FRAMEWORK_GRAPHICS_IDYNAMICGRAPHICSRESOURCE_HPP
+#pragma once
 
 #include <Xna/CSharp/Event.hpp>
 
@@ -8,10 +7,8 @@ namespace Xna {
 	struct IDynamicGraphicsResource {
 	public:
 		virtual ~IDynamicGraphicsResource() = default;
-		virtual CSharp::Event<CSharp::EventArgs> ContentLost() const = 0;
+		virtual IEvent<EventArgs>& ContentLost() const = 0;
 		virtual bool IsContentLost() const = 0;
 		virtual void SetContentLost(bool IsContentLost) = 0;
 	};
 }
-
-#endif

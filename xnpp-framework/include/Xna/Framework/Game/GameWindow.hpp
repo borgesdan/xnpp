@@ -31,9 +31,9 @@ namespace Xna {
 		//Specifies whether to allow the user to resize the game window.
 		XNPP_API void AllowUserResizing(bool value);
 
-		CSharp::Event<CSharp::EventArgs> ScreenDeviceNameChanged() { return impl->ScreenDeviceNameChanged; }
-		CSharp::Event<CSharp::EventArgs> ClientSizeChanged() { return impl->ClientSizeChanged; }
-		CSharp::Event<CSharp::EventArgs> OrientationChanged() { return impl->OrientationChanged; }
+		IEvent<EventArgs>& ScreenDeviceNameChanged() { return impl->ScreenDeviceNameChanged; }
+		IEvent<EventArgs>& ClientSizeChanged() { return impl->ClientSizeChanged; }
+		IEvent<EventArgs>& OrientationChanged() { return impl->OrientationChanged; }
 
 		inline GameWindow(std::nullptr_t) { impl = nullptr; }
 		inline bool operator==(GameWindow const& other) const noexcept { return impl == other.impl; }
@@ -79,11 +79,11 @@ namespace Xna {
 
 		static std::string DeviceNameFromScreen(CSharp::Screen const& screen);
 
-		CSharp::Event<CSharp::EventArgs> Activated() { return impl->Activated; }
-		CSharp::Event<CSharp::EventArgs> Deactivated() { return impl->Deactivated; }
-		CSharp::Event<CSharp::EventArgs> Paint() { return impl->Paint; }
-		CSharp::Event<CSharp::EventArgs> Suspend() { return impl->Suspend; }
-		CSharp::Event<CSharp::EventArgs> Resume() { return impl->Resume; }
+		Event<EventArgs>& Activated() { return impl->Activated; }
+		Event<EventArgs>& Deactivated() { return impl->Deactivated; }
+		Event<EventArgs>& Paint() { return impl->Paint; }
+		Event<EventArgs>& Suspend() { return impl->Suspend; }
+		Event<EventArgs>& Resume() { return impl->Resume; }
 
 		inline GameWindow() { impl = std::make_shared<GameWindow::Implementation>(); }
 
@@ -99,14 +99,14 @@ namespace Xna {
 			int32_t height{ 480 };
 			Style style{ Style::Windowed };
 
-			CSharp::Event<CSharp::EventArgs> ScreenDeviceNameChanged;
-			CSharp::Event<CSharp::EventArgs> ClientSizeChanged;
-			CSharp::Event<CSharp::EventArgs> OrientationChanged;
-			CSharp::Event<CSharp::EventArgs> Activated;
-			CSharp::Event<CSharp::EventArgs> Deactivated;
-			CSharp::Event<CSharp::EventArgs> Paint;
-			CSharp::Event<CSharp::EventArgs> Suspend;
-			CSharp::Event<CSharp::EventArgs> Resume;
+			Event<EventArgs> ScreenDeviceNameChanged;
+			Event<EventArgs> ClientSizeChanged;
+			Event<EventArgs> OrientationChanged;
+			Event<EventArgs> Activated;
+			Event<EventArgs> Deactivated;
+			Event<EventArgs> Paint;
+			Event<EventArgs> Suspend;
+			Event<EventArgs> Resume;
 		};
 		std::shared_ptr<Implementation> impl = nullptr;	
 

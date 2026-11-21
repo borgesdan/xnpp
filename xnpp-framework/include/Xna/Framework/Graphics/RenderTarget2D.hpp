@@ -70,7 +70,7 @@ namespace Xna {
 			DepthFormat depthStencilFormat{};
 			size_t multiSampleCount{ 0 };
 			Xna::RenderTargetUsage usage{};
-			CSharp::Event<CSharp::EventArgs> contentLost;
+			Event<EventArgs> contentLost;
 		};
 
 		std::shared_ptr<Implementation> impl;	
@@ -80,7 +80,7 @@ namespace Xna {
 		//IDynamicGraphicsResource
 		//
 
-		virtual CSharp::Event<CSharp::EventArgs> ContentLost() const override {
+		virtual IEvent<EventArgs>& ContentLost() const override {
 			return impl->contentLost;
 		}
 		

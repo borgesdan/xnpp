@@ -20,7 +20,7 @@ namespace Xna {
 	public:
 		//Initializes a new instance of this class, which provides basic graphics device initialization, game logic, rendering code, and a game loop.
 		XNPP_API Game();
-		XNPP_API virtual ~Game();		
+		XNPP_API virtual ~Game();
 
 		//Gets the collection of GameComponents owned by the game.
 		XNPP_API [[nodiscard]] GameComponentCollection Components() const noexcept;
@@ -65,13 +65,13 @@ namespace Xna {
 		XNPP_API void Tick();
 
 		//Raised when the game gains focus.
-		XNPP_API [[nodiscard]] CSharp::Event<CSharp::EventArgs> Activated() const;
+		XNPP_API [[nodiscard]] IEvent<EventArgs>& Activated() const;
 		//Raised when the game loses focus.
-		XNPP_API [[nodiscard]] CSharp::Event<CSharp::EventArgs> Deactivated() const;
+		XNPP_API [[nodiscard]] IEvent<EventArgs>& Deactivated() const;
 		//Raised when the game is being disposed.
-		XNPP_API [[nodiscard]] CSharp::Event<CSharp::EventArgs> Disposed() const;
+		XNPP_API [[nodiscard]] IEvent<EventArgs>& Disposed() const;
 		//Raised when the game is exiting.
-		XNPP_API [[nodiscard]] CSharp::Event<CSharp::EventArgs> Exiting() const;
+		XNPP_API [[nodiscard]] IEvent<EventArgs>& Exiting() const;
 
 	protected:
 		//A function called when the game starts, before the game loop begins, for the preliminary initialization of the game's logical resources.
@@ -96,11 +96,11 @@ namespace Xna {
 		XNPP_API virtual void Update(GameTime& gameTime);
 
 		//Raises the Activated event. Override this method to add code to handle when the game gains focus.
-		XNPP_API virtual void OnActivated(void* sender, CSharp::EventArgs args);
+		XNPP_API virtual void OnActivated(void* sender, EventArgs args);
 		//Raises the Deactivated event. Override this method to add code to handle when the game loses focus.
-		XNPP_API virtual void OnDeactivated(void* sender, CSharp::EventArgs args);
+		XNPP_API virtual void OnDeactivated(void* sender, EventArgs args);
 		//Raises an Exiting event. Override this method to add code to handle when the game is exiting.
-		XNPP_API virtual void OnExiting(void* sender, CSharp::EventArgs args);
+		XNPP_API virtual void OnExiting(void* sender, EventArgs args);
 
 	private:
 		void RunGame();
@@ -111,17 +111,15 @@ namespace Xna {
 		void HookDeviceEvents();
 		void UnhookDeviceEvents();
 
-		void HostSuspend(void* sender, CSharp::EventArgs const& e);
-		void HostResume(void* sender, CSharp::EventArgs const& e);
-		void HostExiting(void* sender, CSharp::EventArgs const& e);
-		void HostIdle(void* sender, CSharp::EventArgs const& e);
-		void HostDeactivated(void* sender, CSharp::EventArgs const& e);
-		void HostActivated(void* sender, CSharp::EventArgs const& e);
-
-		void DeviceResetting(void* sender, CSharp::EventArgs const& e);
-		void DeviceReset(void* sender, CSharp::EventArgs const& e);
-		void DeviceCreated(void* sender, CSharp::EventArgs const& e);
-
+		void HostSuspend(void* sender, EventArgs e);
+		void HostResume(void* sender, EventArgs e);
+		void HostExiting(void* sender, EventArgs e);
+		void HostIdle(void* sender, EventArgs e);
+		void HostDeactivated(void* sender, EventArgs e);
+		void HostActivated(void* sender, EventArgs e);
+		void DeviceResetting(void* sender, EventArgs e);
+		void DeviceReset(void* sender, EventArgs e);
+		void DeviceCreated(void* sender, EventArgs e);
 		void GameComponentAdded(void* sender, GameComponentCollectionEventArgs e);
 		void GameComponentRemoved(void* sender, GameComponentCollectionEventArgs e);
 

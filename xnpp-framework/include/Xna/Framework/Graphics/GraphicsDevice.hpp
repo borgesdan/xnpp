@@ -18,10 +18,10 @@
 
 namespace Xna {
 	struct GraphicsDevice::Implementation {
-		CSharp::Event<CSharp::EventArgs> deviceResetting;
-		CSharp::Event<CSharp::EventArgs> deviceReset;
-		CSharp::Event<CSharp::EventArgs> deviceLost;
-		CSharp::Event<CSharp::EventArgs> disposing;
+		Event<EventArgs> deviceResetting;
+		Event<EventArgs> deviceReset;
+		Event<EventArgs> deviceLost;
+		Event<EventArgs> disposing;
 
 		Xna::PresentationParameters presentationParameters{};
 		Xna::GraphicsProfile graphicsProfile{};
@@ -69,10 +69,10 @@ namespace Xna {
 	inline std::vector<VertexBufferBinding> GraphicsDevice::GetVertexBuffers() { return std::vector<VertexBufferBinding>(); } // TODO
 	inline TextureCollection GraphicsDevice::Textures() const { return TextureCollection(); } //TODO
 
-	inline CSharp::Event<CSharp::EventArgs> GraphicsDevice::DeviceResetting() { return impl->deviceResetting; }
-	inline CSharp::Event<CSharp::EventArgs> GraphicsDevice::DeviceReset() { return impl->deviceReset; }
-	inline CSharp::Event<CSharp::EventArgs> GraphicsDevice::DeviceLost() { return impl->deviceLost; }
-	inline CSharp::Event<CSharp::EventArgs> GraphicsDevice::Disposing() { return impl->disposing; }
+	inline IEvent<EventArgs>& GraphicsDevice::DeviceResetting() { return impl->deviceResetting; }
+	inline IEvent<EventArgs>& GraphicsDevice::DeviceReset() { return impl->deviceReset; }
+	inline IEvent<EventArgs>& GraphicsDevice::DeviceLost() { return impl->deviceLost; }
+	inline IEvent<EventArgs>& GraphicsDevice::Disposing() { return impl->disposing; }
 
 	inline Platform::IGraphicsDevice& GraphicsDevice::GetBackend() {
 		return *impl->backend.get();

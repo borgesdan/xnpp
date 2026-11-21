@@ -19,30 +19,26 @@
 #include <Xna/CSharp/Thread.hpp>
 #include <Xna/Framework/Game/GameComponentCollection.hpp>
 #include <Xna/Macros/CoreAssert.hpp>
+#include <Xna/CSharp/Exception.hpp>
 
 using Xna::TimeSpan;
 
 namespace Xna {
 	struct Game::Implementation {
-		//Raised when the game gains focus.
-		CSharp::Event<CSharp::EventArgs> Activated;
-		//Raised when the game loses focus.
-		CSharp::Event<CSharp::EventArgs> Deactivated;
-		//Raised when the game is being disposed.
-		CSharp::Event<CSharp::EventArgs> Disposed;
-		//Raised when the game is exiting.
-		CSharp::Event<CSharp::EventArgs> Exiting;
+		//Eventos
+		Event<EventArgs> Activated;
+		Event<EventArgs> Deactivated;
+		Event<EventArgs> Disposed;
+		Event<EventArgs> Exiting;
 
-		friend class Game;
-		
-		GameComponentCollection gameComponents;		
+		GameComponentCollection gameComponents;
 
 		GameClock clock;
 		TimeSpan totalGameTime{ TimeSpan::Zero() };
 		TimeSpan accumulatedElapsedGameTime{ TimeSpan::Zero() };
 		TimeSpan lastFrameElapsedGameTime{ TimeSpan::Zero() };
 		TimeSpan targetElapsedTime{ TimeSpan::FromTicks(166667L) };
-		TimeSpan inactiveSleepTime{ TimeSpan::FromMilliseconds(20.0) };		
+		TimeSpan inactiveSleepTime{ TimeSpan::FromMilliseconds(20.0) };
 
 		bool isRun{ false };
 		bool isRunnningSlowly{ false };
@@ -69,6 +65,7 @@ namespace Xna {
 		std::vector<std::shared_ptr<IDrawable>> drawableComponents;
 		std::vector<std::shared_ptr<IDrawable>> currentlyDrawingComponents;
 
+		// Ponteiros observadores
 		IGraphicsDeviceManager* graphicsDeviceManager;
 		IGraphicsDeviceService* graphicsDeviceService;
 
@@ -79,11 +76,11 @@ namespace Xna {
 
 	Game::Game() {
 		Log::Init();
-		
+
 		impl = std::make_unique<Implementation>();
 		impl->gameServices = std::make_unique<GameServiceContainer>();
 		impl->content = std::make_unique<ContentManager>(impl->gameServices.get());
-		impl->host = std::make_unique<GameHost>(this);		
+		impl->host = std::make_unique<GameHost>(this);
 	}
 
 	Game::~Game() {
@@ -105,25 +102,17 @@ namespace Xna {
 	}
 
 	GameComponentCollection Game::Components() const noexcept { return impl->gameComponents; }
-	ContentManager* Game::Content() const noexcept { return impl->content.get(); }	
+	ContentManager* Game::Content() const noexcept { return impl->content.get(); }
 	GameServiceContainer* Game::Services() const noexcept { return impl->gameServices.get(); }
 
-	CSharp::Event<CSharp::EventArgs> Game::Activated() const { return impl->Activated; }
-	CSharp::Event<CSharp::EventArgs> Game::Deactivated() const { return impl->Deactivated; }
-	CSharp::Event<CSharp::EventArgs> Game::Disposed() const { return impl->Disposed; }
-	CSharp::Event<CSharp::EventArgs> Game::Exiting() const { return impl->Exiting; }
+	IEvent<EventArgs>& Game::Activated() const { return impl->Activated; }
+	IEvent<EventArgs>& Game::Deactivated() const { return impl->Deactivated; }
+	IEvent<EventArgs>& Game::Disposed() const { return impl->Disposed; }
+	IEvent<EventArgs>& Game::Exiting() const { return impl->Exiting; }
 
-	void Game::OnActivated(void* sender, CSharp::EventArgs args) {
-		impl->Activated.Invoke(this, args);
-	}
-
-	void Game::OnDeactivated(void* sender, CSharp::EventArgs args) {
-		impl->Deactivated.Invoke(this, args);
-	}
-
-	void Game::OnExiting(void* sender, CSharp::EventArgs args) {
-		impl->Exiting.Invoke(this, args);
-	}
+	void Game::OnActivated(void* sender, EventArgs args) { impl->Activated.Invoke(this, args); }
+	void Game::OnDeactivated(void* sender, EventArgs args) { impl->Deactivated.Invoke(this, args); }
+	void Game::OnExiting(void* sender, EventArgs args) { impl->Exiting.Invoke(this, args); }
 
 	void Game::Run() {
 		try {
@@ -177,11 +166,11 @@ namespace Xna {
 	void Game::RunGame() {
 		impl->graphicsDeviceManager = impl->gameServices->GetService<IGraphicsDeviceManager>();
 
-		XNPP_CORE_ASSERT(impl->graphicsDeviceManager != nullptr, "No IGraphicsDeviceManager was found in the GameServiceContainer. Please add one before calling Game::Run().");				
+		XNPP_CORE_ASSERT(impl->graphicsDeviceManager != nullptr, "No IGraphicsDeviceManager was found in the GameServiceContainer. Please add one before calling Game::Run().");
 
 		if (impl->host)
 			impl->host->Run();
-		else 
+		else
 			XNPP_ENGINE_WARN("No GameHost was found.");
 
 		EndRun();
@@ -312,9 +301,7 @@ namespace Xna {
 		DrawFrame();
 	}
 
-	void Game::SuppressDraw() const {
-		impl->suppressDraw = true;
-	}
+	void Game::SuppressDraw() const { impl->suppressDraw = true; }
 
 	void Game::Exit() {
 		impl->exitRequest = true;
@@ -337,9 +324,7 @@ namespace Xna {
 		}
 
 		impl->doneFirstUpdate = true;
-
-		//Movido para o Tick()
-		//FrameworkDispatcher::Update();
+		
 		Platform::System::Update();
 	}
 
@@ -417,51 +402,51 @@ namespace Xna {
 	}
 
 	void Game::EnsureHost() {
-		impl->host->Activated().Add([this](void* sender, CSharp::EventArgs const& args) {
+		impl->host->Activated().Add([this](void* sender, EventArgs args) {
 			HostActivated(sender, args);
 			});
-		impl->host->Deactivated().Add([this](void* sender, CSharp::EventArgs const& args) {
+		impl->host->Deactivated().Add([this](void* sender, EventArgs args) {
 			HostDeactivated(sender, args);
 			});
-		impl->host->Suspend().Add([this](void* sender, CSharp::EventArgs const& args) {
+		impl->host->Suspend().Add([this](void* sender, EventArgs args) {
 			HostSuspend(sender, args);
 			});
-		impl->host->Resume().Add([this](void* sender, CSharp::EventArgs const& args) {
+		impl->host->Resume().Add([this](void* sender, EventArgs args) {
 			HostResume(sender, args);
 			});
-		impl->host->Idle().Add([this](void* sender, CSharp::EventArgs const& args) {
+		impl->host->Idle().Add([this](void* sender, EventArgs args) {
 			HostIdle(sender, args);
 			});
-		impl->host->Exiting().Add([this](void* sender, CSharp::EventArgs const& args) {
+		impl->host->Exiting().Add([this](void* sender, EventArgs args) {
 			HostExiting(sender, args);
 			});
 	}
 
-	void Game::HostSuspend(void* sender, CSharp::EventArgs const& e) {
+	void Game::HostSuspend(void* sender, EventArgs e) {
 		impl->clock.Suspend();
 	}
 
-	void Game::HostResume(void* sender, CSharp::EventArgs const& e) {
+	void Game::HostResume(void* sender, EventArgs e) {
 		impl->clock.Resume();
 	}
 
-	void Game::HostExiting(void* sender, CSharp::EventArgs const& e) {
-		OnExiting(sender, CSharp::EventArgs::Empty());
+	void Game::HostExiting(void* sender, EventArgs e) {
+		OnExiting(sender, EventArgs::Empty());
 	}
 
-	void Game::HostIdle(void* sender, CSharp::EventArgs const& e) {
+	void Game::HostIdle(void* sender, EventArgs e) {
 		Tick();
 	}
 
-	void Game::HostDeactivated(void* sender, CSharp::EventArgs const& e) {
+	void Game::HostDeactivated(void* sender, EventArgs e) {
 		if (!impl->isActive)
 			return;
 
 		impl->isActive = false;
-		OnDeactivated(this, CSharp::EventArgs::Empty());
+		OnDeactivated(this, EventArgs::Empty());
 	}
 
-	void Game::HostActivated(void* sender, CSharp::EventArgs const& e) {
+	void Game::HostActivated(void* sender, EventArgs e) {
 		if (impl->isActive)
 			return;
 
@@ -471,7 +456,7 @@ namespace Xna {
 		InternalRunGame();
 
 		impl->isActive = true;
-		OnActivated(this, CSharp::EventArgs::Empty());
+		OnActivated(this, EventArgs::Empty());
 	}
 
 	void Game::HookDeviceEvents() {
@@ -480,13 +465,13 @@ namespace Xna {
 		if (impl->graphicsDeviceService == nullptr)
 			return;
 
-		impl->graphicsDeviceService->DeviceCreated().Add([this](void* sender, CSharp::EventArgs const& args) {
+		impl->graphicsDeviceService->DeviceCreated().Add([this](void* sender, EventArgs const& args) {
 			DeviceCreated(sender, args);
 			});
-		impl->graphicsDeviceService->DeviceResetting().Add([this](void* sender, CSharp::EventArgs const& args) {
+		impl->graphicsDeviceService->DeviceResetting().Add([this](void* sender, EventArgs const& args) {
 			DeviceResetting(sender, args);
 			});
-		impl->graphicsDeviceService->DeviceReset().Add([this](void* sender, CSharp::EventArgs const& args) {
+		impl->graphicsDeviceService->DeviceReset().Add([this](void* sender, EventArgs const& args) {
 			DeviceReset(sender, args);
 			});
 	}
@@ -495,15 +480,15 @@ namespace Xna {
 		//TODO::
 	}
 
-	void Game::DeviceResetting(void* sender, CSharp::EventArgs const& e) {
+	void Game::DeviceResetting(void* sender, EventArgs e) {
 
 	}
 
-	void Game::DeviceReset(void* sender, CSharp::EventArgs const& e) {
+	void Game::DeviceReset(void* sender, EventArgs e) {
 
 	}
 
-	void Game::DeviceCreated(void* sender, CSharp::EventArgs const& e) {
+	void Game::DeviceCreated(void* sender, EventArgs e) {
 		LoadContent();
 	}
 
@@ -564,7 +549,7 @@ namespace Xna {
 		if (impl->graphicsDeviceService == nullptr)
 			impl->graphicsDeviceService = Services()->GetService<IGraphicsDeviceService>();
 
-		XNPP_CORE_ASSERT(impl->graphicsDeviceService != nullptr, "IGraphicsDeviceService is null.");		
+		XNPP_CORE_ASSERT(impl->graphicsDeviceService != nullptr, "IGraphicsDeviceService is null.");
 		XNPP_CORE_ASSERT(impl->graphicsDeviceService->GraphicsDevice() != nullptr, "GraphicsDevice is null.");
 
 		return impl->graphicsDeviceService->GraphicsDevice();

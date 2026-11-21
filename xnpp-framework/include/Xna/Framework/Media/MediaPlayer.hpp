@@ -88,9 +88,9 @@ namespace Xna {
 		static TimeSpan PlayPosition() { return queue.PlayPosition(); }
 
 		//Raised when the active song changes due to active playback or due to explicit calls to the MoveNext or MovePrevious methods.
-		CSharp::Event<CSharp::EventArgs> ActiveSongChanged() { return activeSongChanged; }
+		IEvent<EventArgs>& ActiveSongChanged() { return activeSongChanged; }
 		//Raised when the media player play state changes.
-		CSharp::Event<CSharp::EventArgs> MediaStateChanged() { return mediaStateChanged; }
+		IEvent<EventArgs>& MediaStateChanged() { return mediaStateChanged; }
 
 	
 		MediaPlayer() = delete;
@@ -98,8 +98,8 @@ namespace Xna {
 		MediaPlayer(MediaPlayer&&) = delete;
 
 	private:
-		XNPP_API static void OnActiveSongChanged(CSharp::EventArgs const& args);
-		XNPP_API static void OnMediaStateChanged(CSharp::EventArgs const& args);
+		XNPP_API static void OnActiveSongChanged(EventArgs const& args);
+		XNPP_API static void OnMediaStateChanged(EventArgs const& args);
 
 		static inline MediaState state = MediaState::Stopped;
 		static inline MediaQueue queue = MediaQueue();
@@ -107,8 +107,8 @@ namespace Xna {
 		static inline bool isMuted{ false };
 		static inline bool isRepeating{ false };
 
-		static inline CSharp::Event<CSharp::EventArgs> activeSongChanged = CSharp::Event<CSharp::EventArgs>();
-		static inline CSharp::Event<CSharp::EventArgs> mediaStateChanged = CSharp::Event<CSharp::EventArgs>();
+		static inline Event<EventArgs> activeSongChanged = Event<EventArgs>();
+		static inline Event<EventArgs> mediaStateChanged = Event<EventArgs>();
 
 		friend class MediaEngineNotify;
 	};

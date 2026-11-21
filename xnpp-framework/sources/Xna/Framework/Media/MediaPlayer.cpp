@@ -69,11 +69,11 @@ namespace Xna {
 		Platform::IMediaPlayer::GetInstance().SetIsRepeating(value);
 	}
 
-	void MediaPlayer::OnActiveSongChanged(CSharp::EventArgs const& args) {
+	void MediaPlayer::OnActiveSongChanged(EventArgs const& args) {
 		activeSongChanged.Invoke(nullptr, args);
 	}
 
-	void MediaPlayer::OnMediaStateChanged(CSharp::EventArgs const& args) {
+	void MediaPlayer::OnMediaStateChanged(EventArgs const& args) {
 		mediaStateChanged.Invoke(nullptr, args);
 	}
 }

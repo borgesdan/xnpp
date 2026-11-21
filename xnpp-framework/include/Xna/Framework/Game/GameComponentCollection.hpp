@@ -10,11 +10,11 @@
 #include "Xna/Macros/Api.hpp"
 
 namespace Xna {
-	struct GameComponentCollectionEventArgs : public CSharp::EventArgs {
+	struct GameComponentCollectionEventArgs : public EventArgs {
 	public:
-		inline std::shared_ptr<IGameComponent> GameComponent() const { return gameComponent; }
+		std::shared_ptr<IGameComponent> GameComponent() const { return gameComponent; }
 
-		inline GameComponentCollectionEventArgs(std::shared_ptr<IGameComponent> gameComponent):
+		GameComponentCollectionEventArgs(std::shared_ptr<IGameComponent> gameComponent):
 			gameComponent(gameComponent){ }
 
 	private:
@@ -30,8 +30,8 @@ namespace Xna {
 
 		~GameComponentCollection() override = default;
 
-		inline CSharp::Event<GameComponentCollectionEventArgs> ComponentAdded() const { return impl->componentAdded; }
-		inline CSharp::Event<GameComponentCollectionEventArgs> ComponentRemoved() const { return impl->componentRemoved; }		
+		IEvent<GameComponentCollectionEventArgs>& ComponentAdded() const { return impl->componentAdded; }
+		IEvent<GameComponentCollectionEventArgs>& ComponentRemoved() const { return impl->componentRemoved; }		
 
 		inline GameComponentCollection(std::nullptr_t) { impl = nullptr; }
 		inline bool operator==(GameComponentCollection const& other) const noexcept { return impl == other.impl; }
@@ -49,8 +49,8 @@ namespace Xna {
 		XNPP_API void OnComponentRemoved(GameComponentCollectionEventArgs const& eventArgs);
 
 		struct Implementation {
-			CSharp::Event<GameComponentCollectionEventArgs> componentAdded;
-			CSharp::Event<GameComponentCollectionEventArgs> componentRemoved;
+			Event<GameComponentCollectionEventArgs> componentAdded;
+			Event<GameComponentCollectionEventArgs> componentRemoved;
 		};
 
 		std::shared_ptr<Implementation> impl;

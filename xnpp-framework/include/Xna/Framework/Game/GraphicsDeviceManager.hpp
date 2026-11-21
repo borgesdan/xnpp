@@ -18,7 +18,7 @@
 namespace Xna {
 	class Game;
 
-	struct PreparingDeviceSettingsEventArgs : public CSharp::EventArgs {
+	struct PreparingDeviceSettingsEventArgs : public EventArgs {
 		PreparingDeviceSettingsEventArgs(GraphicsDeviceInformation const& graphicsDeviceInformation)
 			: graphicsDeviceInformation(graphicsDeviceInformation)
 		{
@@ -129,25 +129,11 @@ namespace Xna {
 		//Toggles between full screen and windowed mode.
 		XNPP_API void ToggleFullScreen();
 
-		inline CSharp::Event<CSharp::EventArgs> DeviceCreated() const override {
-			return impl->deviceCreated;
-		}
-
-		inline CSharp::Event<CSharp::EventArgs> DeviceResetting() const override {
-			return impl->deviceResetting;
-		}
-
-		inline CSharp::Event<CSharp::EventArgs> DeviceReset() const override {
-			return impl->deviceReset;
-		}
-
-		inline CSharp::Event<CSharp::EventArgs> DeviceDisposing() const override {
-			return impl->deviceDisposing;
-		}
-
-		inline CSharp::Event<PreparingDeviceSettingsEventArgs> PreparingDeviceSettings() const {
-			return impl->preparingDeviceSettings;
-		}
+		inline IEvent<EventArgs>& DeviceCreated() const override { return impl->deviceCreated; }
+		inline IEvent<EventArgs>& DeviceResetting() const override { return impl->deviceResetting; }
+		inline IEvent<EventArgs>& DeviceReset() const override { return impl->deviceReset; }
+		inline IEvent<EventArgs>& DeviceDisposing() const override { return impl->deviceDisposing; }
+		inline IEvent<PreparingDeviceSettingsEventArgs>& PreparingDeviceSettings() const { return impl->preparingDeviceSettings; }
 
 		//Specifies the default minimum back-buffer height.
 		static constexpr int DefaultBackBufferHeight = 480;
@@ -167,16 +153,16 @@ namespace Xna {
 		//Ranks the given list of devices that satisfy the given preferences.
 		XNPP_API void RankDevices(std::vector<GraphicsDeviceInformation>& foundDevices);
 
-		XNPP_API void OnDeviceCreated(void* sender, CSharp::EventArgs const& e);
-		XNPP_API void OnDeviceDisposing(void* sender, CSharp::EventArgs const& e);
-		XNPP_API void OnDeviceReset(void* sender, CSharp::EventArgs const& e);
-		XNPP_API void OnDeviceResetting(void* sender, CSharp::EventArgs const& e);
+		XNPP_API void OnDeviceCreated(void* sender, EventArgs const& e);
+		XNPP_API void OnDeviceDisposing(void* sender, EventArgs const& e);
+		XNPP_API void OnDeviceReset(void* sender, EventArgs const& e);
+		XNPP_API void OnDeviceResetting(void* sender, EventArgs const& e);
 		XNPP_API void OnPreparingDeviceSettings(void* sender, PreparingDeviceSettingsEventArgs const& e);
 
 	private:
-		void GameWindowScreenDeviceNameChanged(void* sender, CSharp::EventArgs const& e);
-		void GameWindowClientSizeChanged(void* sender, CSharp::EventArgs const& e);
-		void GameWindowOrientationChanged(void* sender, CSharp::EventArgs const& e);
+		void GameWindowScreenDeviceNameChanged(void* sender, EventArgs const& e);
+		void GameWindowClientSizeChanged(void* sender, EventArgs const& e);
+		void GameWindowOrientationChanged(void* sender, EventArgs const& e);
 
 		bool EnsureDevice();
 		void CreateDevice(GraphicsDeviceInformation& newInfo);
@@ -184,10 +170,10 @@ namespace Xna {
 		void MassagePresentParameters(PresentationParameters& pp);
 		static void ConfigureTouchInput(PresentationParameters const& pp);
 
-		void HandleDisposing(void* sender, CSharp::EventArgs const& e);
-		void HandleDeviceLost(void* sender, CSharp::EventArgs const& e);
-		void HandleDeviceReset(void* sender, CSharp::EventArgs const& e);
-		void HandleDeviceResetting(void* sender, CSharp::EventArgs const& e);
+		void HandleDisposing(void* sender, EventArgs const& e);
+		void HandleDeviceLost(void* sender, EventArgs const& e);
+		void HandleDeviceReset(void* sender, EventArgs const& e);
+		void HandleDeviceResetting(void* sender, EventArgs const& e);
 		Xna::GraphicsProfile ReadDefaultGraphicsProfile();
 		void RankDevicesPlatform(std::vector<GraphicsDeviceInformation>& foundDevices);
 		GraphicsDeviceInformation FindBestPlatformDevice(bool anySuitableDevice);
@@ -223,11 +209,11 @@ namespace Xna {
 			int32_t resizedBackBufferWidth{ 0 };
 			int32_t resizedBackBufferHeight{ 0 };
 			bool useResizedBackBuffer{ false };
-			CSharp::Event<CSharp::EventArgs> deviceCreated;
-			CSharp::Event<CSharp::EventArgs> deviceResetting;
-			CSharp::Event<CSharp::EventArgs> deviceReset;
-			CSharp::Event<CSharp::EventArgs> deviceDisposing;
-			CSharp::Event<PreparingDeviceSettingsEventArgs> preparingDeviceSettings;
+			Event<EventArgs> deviceCreated;
+			Event<EventArgs> deviceResetting;
+			Event<EventArgs> deviceReset;
+			Event<EventArgs> deviceDisposing;
+			Event<PreparingDeviceSettingsEventArgs> preparingDeviceSettings;
 			bool beginDrawOk{ false };
 			bool isInitialized{ false };
 		};

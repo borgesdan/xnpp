@@ -12,7 +12,7 @@ add_library(${PROJECT_NAME}
     source/Windows/Forms/Screen.cpp
     source/Windows/Forms/SystemInformation.cpp
     source/BitConverter.cpp
-    source/Event.cpp
+    
     source/Type.cpp
     source/Platform.cpp
 )

@@ -42,15 +42,15 @@ namespace Xna {
 		if (impl->isInitialized)
 			return;
 
-		impl->game->Window()->ClientSizeChanged().Add([this](void* sender, CSharp::EventArgs const& e) {
+		impl->game->Window()->ClientSizeChanged().Add([this](void* sender, EventArgs const& e) {
 			GameWindowClientSizeChanged(sender, e);
 			});
 
-		impl->game->Window()->ScreenDeviceNameChanged().Add([this](void* sender, CSharp::EventArgs const& e) {
+		impl->game->Window()->ScreenDeviceNameChanged().Add([this](void* sender, EventArgs const& e) {
 			GameWindowScreenDeviceNameChanged(sender, e);
 			});
 
-		impl->game->Window()->OrientationChanged().Add([this](void* sender, CSharp::EventArgs const& e) {
+		impl->game->Window()->OrientationChanged().Add([this](void* sender, EventArgs const& e) {
 			GameWindowOrientationChanged(sender, e);
 			});		
 
@@ -75,13 +75,13 @@ namespace Xna {
 		ChangeDevice(false);
 	}
 
-	void GraphicsDeviceManager::GameWindowScreenDeviceNameChanged(void* sender, CSharp::EventArgs const& e) {
+	void GraphicsDeviceManager::GameWindowScreenDeviceNameChanged(void* sender, EventArgs const& e) {
 		if (impl->inDeviceTransition)
 			return;
 		ChangeDevice(false);
 	}
 
-	void GraphicsDeviceManager::GameWindowClientSizeChanged(void* sender, CSharp::EventArgs const& e) {
+	void GraphicsDeviceManager::GameWindowClientSizeChanged(void* sender, EventArgs const& e) {
 		if (impl->inDeviceTransition || impl->game->Window()->ClientBounds().Height == 0 && impl->game->Window()->ClientBounds().Width == 0)
 			return;
 
@@ -91,7 +91,7 @@ namespace Xna {
 		
 		ChangeDevice(false);
 	}
-	void GraphicsDeviceManager::GameWindowOrientationChanged(void* sender, CSharp::EventArgs const& e) {
+	void GraphicsDeviceManager::GameWindowOrientationChanged(void* sender, EventArgs const& e) {
 		if (impl->inDeviceTransition || impl->game->Window()->ClientBounds().Height == 0 && impl->game->Window()->ClientBounds().Width == 0 || impl->game->Window()->CurrentOrientation() == impl->currentWindowOrientation)
 			return;
 		
@@ -110,21 +110,21 @@ namespace Xna {
 		ValidateGraphicsDeviceInformation(newInfo);
 		impl->device = std::make_unique<Xna::GraphicsDevice>(newInfo.Adapter(), newInfo.GraphicsProfile(), newInfo.PresentationParameters());
 		
-		impl->device->DeviceResetting().Add([this](void* sender, CSharp::EventArgs const& args) {
+		impl->device->DeviceResetting().Add([this](void* sender, EventArgs const& args) {
 			HandleDeviceResetting(sender, args);
 			});
-		impl->device->DeviceReset().Add([this](void* sender, CSharp::EventArgs const& args) {
+		impl->device->DeviceReset().Add([this](void* sender, EventArgs const& args) {
 			HandleDeviceReset(sender, args);
 			});
-		impl->device->DeviceLost().Add([this](void* sender, CSharp::EventArgs const& args) {
+		impl->device->DeviceLost().Add([this](void* sender, EventArgs const& args) {
 			HandleDeviceLost(sender, args);
 			});
-		impl->device->Disposing().Add([this](void* sender, CSharp::EventArgs const& args) {
+		impl->device->Disposing().Add([this](void* sender, EventArgs const& args) {
 			HandleDisposing(sender, args);
 			});
 
 		ConfigureTouchInput(newInfo.PresentationParameters());
-		OnDeviceCreated(this, CSharp::EventArgs::Empty());
+		OnDeviceCreated(this, EventArgs::Empty());
 	}
 
 	void GraphicsDeviceManager::ChangeDevice(bool forceCreate) {
@@ -229,32 +229,32 @@ namespace Xna {
 		RankDevicesPlatform(foundDevices);
 	}
 
-	void GraphicsDeviceManager::HandleDisposing(void* sender, CSharp::EventArgs  const& e) {
-		OnDeviceDisposing(this, CSharp::EventArgs::Empty());
+	void GraphicsDeviceManager::HandleDisposing(void* sender, EventArgs  const& e) {
+		OnDeviceDisposing(this, EventArgs::Empty());
 	}
 
-	void GraphicsDeviceManager::HandleDeviceLost(void* sender, CSharp::EventArgs const& e) {}
+	void GraphicsDeviceManager::HandleDeviceLost(void* sender, EventArgs const& e) {}
 
-	void GraphicsDeviceManager::HandleDeviceReset(void* sender, CSharp::EventArgs const& e) {
-		OnDeviceReset(this, CSharp::EventArgs::Empty());
+	void GraphicsDeviceManager::HandleDeviceReset(void* sender, EventArgs const& e) {
+		OnDeviceReset(this, EventArgs::Empty());
 	}
-	void GraphicsDeviceManager::HandleDeviceResetting(void* sender, CSharp::EventArgs const& e) {
-		OnDeviceResetting(this, CSharp::EventArgs::Empty());
+	void GraphicsDeviceManager::HandleDeviceResetting(void* sender, EventArgs const& e) {
+		OnDeviceResetting(this, EventArgs::Empty());
 	}
 
-	void GraphicsDeviceManager::OnDeviceCreated(void* sender, CSharp::EventArgs const& e) {
+	void GraphicsDeviceManager::OnDeviceCreated(void* sender, EventArgs const& e) {
 		impl->deviceCreated.Invoke(sender, e);
 	}
 
-	void GraphicsDeviceManager::OnDeviceDisposing(void* sender, CSharp::EventArgs const& e) {
+	void GraphicsDeviceManager::OnDeviceDisposing(void* sender, EventArgs const& e) {
 		impl->deviceDisposing.Invoke(sender, e);
 	}
 
-	void GraphicsDeviceManager::OnDeviceReset(void* sender, CSharp::EventArgs  const& e) {
+	void GraphicsDeviceManager::OnDeviceReset(void* sender, EventArgs  const& e) {
 		impl->deviceReset.Invoke(sender, e);
 	}
 
-	void GraphicsDeviceManager::OnDeviceResetting(void* sender, CSharp::EventArgs  const& e) {
+	void GraphicsDeviceManager::OnDeviceResetting(void* sender, EventArgs  const& e) {
 		impl->deviceResetting.Invoke(sender, e);
 	}
 

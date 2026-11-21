@@ -14,12 +14,12 @@ namespace Xna {
         virtual Xna::GraphicsDevice* GraphicsDevice() const = 0;
 
         //The event that occurs when a graphics device is created.
-        virtual CSharp::Event<CSharp::EventArgs> DeviceCreated() const = 0;
+        virtual IEvent<EventArgs>& DeviceCreated() const = 0;
         //The event that occurs when a graphics device is in the process of resetting.
-        virtual CSharp::Event<CSharp::EventArgs> DeviceResetting() const = 0;
+        virtual IEvent<EventArgs>& DeviceResetting() const = 0;
         //The event that occurs when a graphics device is reset.
-        virtual CSharp::Event<CSharp::EventArgs> DeviceReset() const = 0;
+        virtual IEvent<EventArgs>& DeviceReset() const = 0;
         //The event that occurs when a graphics device is disposing.
-        virtual CSharp::Event<CSharp::EventArgs> DeviceDisposing() const = 0;
+        virtual IEvent<EventArgs>& DeviceDisposing() const = 0;
 	};
 }

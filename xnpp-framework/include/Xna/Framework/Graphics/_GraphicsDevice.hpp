@@ -163,10 +163,10 @@ namespace Xna {
 			return Xna::GraphicsDeviceStatus::Normal;
 		}
 
-		inline Xna::CSharp::Event<CSharp::EventArgs> DeviceResetting();
-		inline CSharp::Event<CSharp::EventArgs> DeviceReset();
-		inline CSharp::Event<CSharp::EventArgs> DeviceLost();
-		inline CSharp::Event<CSharp::EventArgs> Disposing();
+		IEvent<EventArgs>& DeviceResetting();
+		IEvent<EventArgs>& DeviceReset();
+		IEvent<EventArgs>& DeviceLost();
+		IEvent<EventArgs>& Disposing();
 
 		inline GraphicsDevice(std::nullptr_t) { impl = nullptr; }
 		inline bool operator==(GraphicsDevice const& other) const noexcept { return impl == other.impl; }
