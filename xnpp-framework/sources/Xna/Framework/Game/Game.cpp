@@ -156,8 +156,8 @@ namespace Xna {
 		Initialize();
 		impl->isRun = true;
 		BeginRun();
-		impl->gameTime.ElapsedGameTime(TimeSpan::Zero());
-		impl->gameTime.TotalGameTime(impl->totalGameTime);
+		impl->gameTime.ElapsedGameTime = TimeSpan::Zero();
+		impl->gameTime.TotalGameTime = impl->totalGameTime;
 		impl->isRunnningSlowly = false;
 		Update(impl->gameTime);
 		impl->doneFirstUpdate = true;
@@ -251,9 +251,9 @@ namespace Xna {
 				--num;
 				try
 				{
-					impl->gameTime.ElapsedGameTime(targetElapsedTime);
-					impl->gameTime.TotalGameTime(impl->totalGameTime);
-					impl->gameTime.IsRunningSlowly(impl->drawRunningSlowly);
+					impl->gameTime.ElapsedGameTime = targetElapsedTime;
+					impl->gameTime.TotalGameTime = impl->totalGameTime;
+					impl->gameTime.IsRunningSlowly = impl->drawRunningSlowly;
 					Update(impl->gameTime);
 
 					flag &= impl->suppressDraw;
@@ -279,9 +279,9 @@ namespace Xna {
 				try
 				{
 					impl->lastFrameElapsedGameTime = timeSpan2;
-					impl->gameTime.ElapsedGameTime(impl->lastFrameElapsedGameTime);
-					impl->gameTime.TotalGameTime(impl->totalGameTime);
-					impl->gameTime.IsRunningSlowly(false);
+					impl->gameTime.ElapsedGameTime = impl->lastFrameElapsedGameTime;
+					impl->gameTime.TotalGameTime = impl->totalGameTime;
+					impl->gameTime.IsRunningSlowly = false;
 					Update(impl->gameTime);
 					flag &= impl->suppressDraw;
 					impl->suppressDraw = false;
@@ -387,9 +387,9 @@ namespace Xna {
 			if (ShouldExit() || !impl->doneFirstUpdate || (Window()->IsMinimized)() || !BeginDraw())
 				return;
 
-			impl->gameTime.TotalGameTime(impl->totalGameTime);
-			impl->gameTime.ElapsedGameTime(impl->lastFrameElapsedGameTime);
-			impl->gameTime.IsRunningSlowly(impl->drawRunningSlowly);
+			impl->gameTime.TotalGameTime = impl->totalGameTime;
+			impl->gameTime.ElapsedGameTime = impl->lastFrameElapsedGameTime;
+			impl->gameTime.IsRunningSlowly = impl->drawRunningSlowly;
 			Draw(impl->gameTime);
 			EndDraw();
 			impl->doneFirstDraw = true;

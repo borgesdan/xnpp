@@ -1,61 +1,35 @@
-#ifndef XNA_FRAMEWORK_GAME_GAMETIME_HPP
-#define XNA_FRAMEWORK_GAME_GAMETIME_HPP
+#pragma once
 
 #include <Xna/CSharp/TimeSpan.hpp>
 
 namespace Xna {
-	class GameTime {
-	public:
+	struct GameTime {
 		//Creates a new instance of GameTime.
-		GameTime() = default;
+		GameTime() noexcept = default;
 		//Creates a new instance of GameTime.
 		GameTime(TimeSpan const& totalRealTime,
 			TimeSpan const& elapsedRealTime,
 			TimeSpan const& totalGameTime,
 			TimeSpan const& elapsedGameTime) 
-			: totalRealTime(totalRealTime), elapsedRealTime(elapsedRealTime), totalGameTime(totalGameTime), elapsedGameTime(elapsedGameTime) {}
+			noexcept : TotalRealTime(totalRealTime), ElapsedRealTime(elapsedRealTime), TotalGameTime(totalGameTime), ElapsedGameTime(elapsedGameTime) {}
 		//Creates a new instance of GameTime.
 		GameTime(TimeSpan const& totalRealTime,
 			TimeSpan const& elapsedRealTime,
 			TimeSpan const& totalGameTime,
 			TimeSpan const& elapsedGameTime,
 			bool isRunningSlowly) 
-			: totalRealTime(totalRealTime), elapsedRealTime(elapsedRealTime), totalGameTime(totalGameTime), elapsedGameTime(elapsedGameTime), isRunningSlowly(isRunningSlowly) {}
+			noexcept : TotalRealTime(totalRealTime), ElapsedRealTime(elapsedRealTime), TotalGameTime(totalGameTime), ElapsedGameTime(elapsedGameTime), IsRunningSlowly(isRunningSlowly) {}
 
 		//The amount of elapsed game time since the last update.
-		TimeSpan ElapsedGameTime() const { return elapsedGameTime; }
-		//The amount of elapsed game time since the last update.
-		void ElapsedGameTime(TimeSpan const& value) { elapsedGameTime = value; }
-
+		TimeSpan ElapsedGameTime{};
 		//The amount of elapsed real time (wall clock) since the last frame.
-		TimeSpan ElapsedRealTime() const { return elapsedRealTime; }
-		//The amount of elapsed real time (wall clock) since the last frame.
-		void ElapsedRealTime(TimeSpan const& value) { elapsedRealTime = value; }
-
+		TimeSpan ElapsedRealTime{};
 		//Gets a value indicating that the game loop is taking longer than its TargetElapsedTime. 
 		//In this case, the game loop can be considered to be running too slowly and should do something to "catch up."
-		bool IsRunningSlowly() const { return isRunningSlowly; }
-		//Gets a value indicating that the game loop is taking longer than its TargetElapsedTime. 
-		//In this case, the game loop can be considered to be running too slowly and should do something to "catch up."
-		void IsRunningSlowly(bool value) { isRunningSlowly = value; }
-
+		bool IsRunningSlowly { false };
 		//The amount of game time since the start of the game.
-		TimeSpan TotalGameTime() const { return totalGameTime; }
-		//The amount of game time since the start of the game.
-		void TotalGameTime(TimeSpan const& value) { totalGameTime = value; }
-
+		TimeSpan TotalGameTime{};
 		//The amount of real time (wall clock) since the start of the game.
-		TimeSpan TotalRealTime() const { return totalRealTime; }
-		//The amount of real time (wall clock) since the start of the game.
-		void TotalRealTime(TimeSpan const& value) { totalRealTime = value; }
-
-	private:
-		TimeSpan totalRealTime{};
-		TimeSpan elapsedRealTime{};
-		TimeSpan totalGameTime{};
-		TimeSpan elapsedGameTime{};
-		bool isRunningSlowly{ false };
+		TimeSpan TotalRealTime{};
 	};
 }
-
-#endif
