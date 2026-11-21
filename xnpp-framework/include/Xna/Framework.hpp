@@ -8,16 +8,9 @@
 #include "Framework/Shared.hpp"
 
 //Game
-#include "Framework/Game/DrawableGameComponent.hpp"
 #include "Framework/Game/Game.hpp"
-#include "Framework/Game/GameComponent.hpp"
-#include "Framework/Game/GameComponentCollection.hpp"
 #include "Framework/Game/GameServiceContainer.hpp"
-#include "Framework/Game/GameTime.hpp"
 #include "Framework/Game/GameWindow.hpp"
 #include "Framework/Game/GraphicsDeviceInformation.hpp"
 #include "Framework/Game/GraphicsDeviceManager.hpp"
-#include "Framework/Game/IDrawable.hpp"
-#include "Framework/Game/IGameComponent.hpp"
 #include "Framework/Game/IGraphicsDeviceManager.hpp"
-#include "Framework/Game/IUpdateable.hpp"

@@ -1,14 +1,11 @@
 #include <Xna/Framework/Content/ContentManager.hpp>
 #include <Xna/Framework/FrameworkDispatcher.hpp>
-#include <Xna/Framework/Game/DrawableGameComponent.hpp>
 #include <Xna/Framework/Game/Game.hpp>
 #include <Xna/Framework/Game/GameClock.hpp>
 #include <Xna/Framework/Game/GameHost.hpp>
 #include <Xna/Framework/Game/GameServiceContainer.hpp>
-#include <Xna/Framework/Game/GameTime.hpp>
 #include <Xna/Framework/Game/GameWindow.hpp>
 #include <Xna/Framework/Game/GraphicsDeviceManager.hpp>
-#include <Xna/Framework/Game/IGameComponent.hpp>
 #include <Xna/Framework/Game/IGraphicsDeviceManager.hpp>
 #include <Xna/Framework/Graphics/IGraphicsDeviceService.hpp>
 #include <Xna/Internal/App.hpp>
@@ -17,7 +14,6 @@
 #include <limits>
 #include <vector>
 #include <Xna/CSharp/Thread.hpp>
-#include <Xna/Framework/Game/GameComponentCollection.hpp>
 #include <Xna/Macros/CoreAssert.hpp>
 #include <Xna/CSharp/Exception.hpp>
 
