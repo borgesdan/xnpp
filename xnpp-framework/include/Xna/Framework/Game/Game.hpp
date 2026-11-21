@@ -25,10 +25,8 @@ namespace Xna {
 
 		//Gets the collection of GameComponents owned by the game.
 		XNPP_API GameComponentCollection Components() const;
-		//Gets or sets the current ContentManager.
-		XNPP_API ContentManager* Content() const;
-		//Gets or sets the current ContentManager.
-		XNPP_API void Content(std::unique_ptr<ContentManager>& value);
+		//Gets the current ContentManager.
+		XNPP_API ContentManager* Content() const;		
 		//Gets the current GraphicsDevice.
 		XNPP_API Xna::GraphicsDevice GraphicsDevice() const;
 		//Gets or sets the time to sleep when the game is inactive.

@@ -103,7 +103,6 @@ namespace Xna {
 
 	GameComponentCollection Game::Components() const { return impl->gameComponents; }
 	ContentManager* Game::Content() const { return impl->content.get(); }
-	void Game::Content(std::unique_ptr<ContentManager>& value) { impl->content = std::move(value); }
 	Xna::LaunchParameters Game::LaunchParameters() const { return impl->launchParameters; }
 	void Game::LaunchParameters(Xna::LaunchParameters const& value) { impl->launchParameters = value; }
 	GameServiceContainer Game::Services() const { return impl->gameServices; }
