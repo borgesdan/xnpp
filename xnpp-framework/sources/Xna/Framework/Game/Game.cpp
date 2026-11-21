@@ -1,7 +1,6 @@
 #include <Xna/Framework/Content/ContentManager.hpp>
 #include <Xna/Framework/FrameworkDispatcher.hpp>
 #include <Xna/Framework/Game/Game.hpp>
-#include <Xna/Framework/Game/GameClock.hpp>
 #include <Xna/Framework/Game/GameHost.hpp>
 #include <Xna/Framework/Game/GameServiceContainer.hpp>
 #include <Xna/Framework/Game/GameWindow.hpp>

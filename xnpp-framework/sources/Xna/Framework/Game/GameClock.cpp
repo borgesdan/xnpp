@@ -1,4 +1,4 @@
-#include "Xna/Framework/Game/GameClock.hpp"
+#include "Xna/Framework/Game/Game.hpp"
 #include "Xna/Platform/Platform.hpp"
 #include <exception>
 
