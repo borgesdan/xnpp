@@ -10,7 +10,6 @@
 #include <Xna/Framework/Game/GraphicsDeviceManager.hpp>
 #include <Xna/Framework/Game/IGameComponent.hpp>
 #include <Xna/Framework/Game/IGraphicsDeviceManager.hpp>
-#include <Xna/Framework/Game/LaunchParameters.hpp>
 #include <Xna/Framework/Graphics/IGraphicsDeviceService.hpp>
 #include <Xna/Internal/App.hpp>
 #include <Xna/Platform/Platform.hpp>
@@ -35,8 +34,7 @@ namespace Xna {
 		CSharp::Event<CSharp::EventArgs> Exiting;
 
 		friend class Game;
-
-		Xna::LaunchParameters launchParameters;
+		
 		GameComponentCollection gameComponents;		
 
 		GameClock clock;
@@ -102,9 +100,7 @@ namespace Xna {
 	}
 
 	GameComponentCollection Game::Components() const { return impl->gameComponents; }
-	ContentManager* Game::Content() const { return impl->content.get(); }
-	Xna::LaunchParameters Game::LaunchParameters() const { return impl->launchParameters; }
-	void Game::LaunchParameters(Xna::LaunchParameters const& value) { impl->launchParameters = value; }
+	ContentManager* Game::Content() const { return impl->content.get(); }	
 	GameServiceContainer Game::Services() const { return impl->gameServices; }
 
 	CSharp::Event<CSharp::EventArgs> Game::Activated() const { return impl->Activated; }

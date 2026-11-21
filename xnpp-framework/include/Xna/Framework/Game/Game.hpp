@@ -11,14 +11,13 @@ namespace Xna {
 	class GameComponentCollection;
 	class ContentManager;
 	class GraphicsDevice;
-	class LaunchParameters;
 	class GameServiceContainer;
 	class GameWindow;
 	class GameTime;
 
 	//Provides basic graphics device initialization, game logic, and rendering code.
-	class Game {	
-	public:		
+	class Game {
+	public:
 		//Initializes a new instance of this class, which provides basic graphics device initialization, game logic, rendering code, and a game loop.
 		XNPP_API Game();
 		XNPP_API virtual ~Game();
@@ -26,7 +25,7 @@ namespace Xna {
 		//Gets the collection of GameComponents owned by the game.
 		XNPP_API GameComponentCollection Components() const;
 		//Gets the current ContentManager.
-		XNPP_API ContentManager* Content() const;		
+		XNPP_API ContentManager* Content() const;
 		//Gets the current GraphicsDevice.
 		XNPP_API Xna::GraphicsDevice GraphicsDevice() const;
 		//Gets or sets the time to sleep when the game is inactive.
@@ -43,10 +42,6 @@ namespace Xna {
 		XNPP_API bool IsMouseVisible() const;
 		//Gets or sets a value indicating whether the mouse cursor should be visible.
 		XNPP_API void IsMouseVisible(bool value);
-		//Gets the start up parameters in LaunchParameters.
-		XNPP_API Xna::LaunchParameters LaunchParameters() const;
-		//Gets the start up parameters in LaunchParameters.
-		XNPP_API void LaunchParameters(Xna::LaunchParameters const& value);
 		//Gets the GameServiceContainer holding all the service providers attached to the Game.
 		XNPP_API GameServiceContainer Services() const;
 		//Gets or sets the target time between calls to Update when IsFixedTimeStep is true.

@@ -21,4 +21,3 @@
 #include "Framework/Game/IGameComponent.hpp"
 #include "Framework/Game/IGraphicsDeviceManager.hpp"
 #include "Framework/Game/IUpdateable.hpp"
-#include "Framework/Game/LaunchParameters.hpp"
