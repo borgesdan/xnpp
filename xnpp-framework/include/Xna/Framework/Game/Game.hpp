@@ -5,6 +5,8 @@
 #include <cstddef>
 #include <cstdint>
 #include <memory>
+#include <chrono>
+#include <cstdint>
 #include <Xna/CSharp/Collection.hpp>
 #include <Xna/CSharp/Event.hpp>
 #include <Xna/CSharp/TimeSpan.hpp>
@@ -23,7 +25,7 @@ namespace Xna {
 
 	struct GameClock {
 	public:
-		inline GameClock() { Reset(); }
+		GameClock() { Reset(); }
 
 		constexpr TimeSpan CurrentTime() const { return currentTimeBase + currentTimeOffset; }
 		constexpr TimeSpan ElapsedTime() const { return elapsedTime; }
@@ -40,16 +42,18 @@ namespace Xna {
 		XNPP_API static TimeSpan CounterToTimeSpan(int64_t delta);
 
 	private:
+		static bool TryCounterToTimeSpan(int64_t delta, TimeSpan& outTimeSpan) noexcept;
+
 		int64_t baseRealTime{ 0 };
 		int64_t lastRealTime{ 0 };
 		bool lastRealTimeValid{ false };
-		int32_t suspendCount;
+		int32_t suspendCount{ 0 };
 		int64_t suspendStartTime{ 0 };
 		int64_t timeLostToSuspension{ 0 };
-		TimeSpan currentTimeOffset;
-		TimeSpan currentTimeBase;
-		TimeSpan elapsedTime;
-		TimeSpan elapsedAdjustedTime;
+		TimeSpan currentTimeOffset{};
+		TimeSpan currentTimeBase{};
+		TimeSpan elapsedTime{};
+		TimeSpan elapsedAdjustedTime{};
 	};
 
 	//////////////////////////////////////////////////////////////////
