@@ -27,19 +27,19 @@ namespace Xna {
 	public:
 		GameClock() { Reset(); }
 
-		constexpr TimeSpan CurrentTime() const { return currentTimeBase + currentTimeOffset; }
-		constexpr TimeSpan ElapsedTime() const { return elapsedTime; }
-		constexpr TimeSpan ElapsedAdjustedTime() const { return elapsedAdjustedTime; }
+		[[nodiscard]] constexpr TimeSpan CurrentTime() const noexcept { return currentTimeBase + currentTimeOffset; }
+		[[nodiscard]] constexpr TimeSpan ElapsedTime() const noexcept { return elapsedTime; }
+		[[nodiscard]] constexpr TimeSpan ElapsedAdjustedTime() const noexcept { return elapsedAdjustedTime; }
 
-		XNPP_API void Reset();
-		XNPP_API void Step();
-		XNPP_API void Suspend();
-		XNPP_API void Resume();
+		XNPP_API void Reset() noexcept;
+		XNPP_API void Step() noexcept;
+		XNPP_API void Suspend() noexcept;
+		XNPP_API void Resume() noexcept;
 
-		XNPP_API static int64_t Counter();
-		XNPP_API static int64_t Frequency();
+		XNPP_API [[nodiscard]]  static int64_t Counter() noexcept;
+		XNPP_API [[nodiscard]] static int64_t Frequency() noexcept;
 
-		XNPP_API static TimeSpan CounterToTimeSpan(int64_t delta);
+		XNPP_API [[nodiscard]] static TimeSpan CounterToTimeSpan(int64_t delta) noexcept;
 
 	private:
 		static bool TryCounterToTimeSpan(int64_t delta, TimeSpan& outTimeSpan) noexcept;

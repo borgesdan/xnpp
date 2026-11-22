@@ -6,14 +6,14 @@ namespace Xna {
 		constexpr int64_t TicksPerSecond = 10000000; // 1 tick = 100 nanossegundos (padrão XNA/.NET)
 	}
 
-	void GameClock::Reset() {
+	void GameClock::Reset() noexcept {
 		currentTimeBase = TimeSpan::Zero();
 		currentTimeOffset = TimeSpan::Zero();
 		baseRealTime = GameClock::Counter();
 		lastRealTimeValid = false;
 	}
 
-	void GameClock::Step() {
+	void GameClock::Step() noexcept {
 		const int64_t counter = GameClock::Counter();
 		if (!lastRealTimeValid) {
 			lastRealTime = counter;
@@ -45,14 +45,14 @@ namespace Xna {
 		lastRealTime = counter;
 	}
 
-	void GameClock::Suspend() {
+	void GameClock::Suspend() noexcept {
 		++suspendCount;
 		if (suspendCount != 1)
 			return;
 		suspendStartTime = GameClock::Counter();
 	}
 
-	void GameClock::Resume() {
+	void GameClock::Resume() noexcept {
 		--suspendCount;
 		if (suspendCount > 0)
 			return;
@@ -60,12 +60,12 @@ namespace Xna {
 		suspendStartTime = 0;
 	}
 
-	int64_t GameClock::Counter() {
+	int64_t GameClock::Counter() noexcept {
 		using Clock = std::chrono::steady_clock;
 		return static_cast<int64_t>(Clock::now().time_since_epoch().count());
 	}
 
-	int64_t GameClock::Frequency() {
+	int64_t GameClock::Frequency() noexcept {
 		using Period = std::chrono::steady_clock::period;
 		return static_cast<int64_t>(Period::den / Period::num);
 	}
@@ -111,7 +111,7 @@ namespace Xna {
 		return true;
 	}
 
-	TimeSpan GameClock::CounterToTimeSpan(int64_t delta) {
+	TimeSpan GameClock::CounterToTimeSpan(int64_t delta) noexcept {
 		TimeSpan result{};
 		if (TryCounterToTimeSpan(delta, result)) {
 			return result;
