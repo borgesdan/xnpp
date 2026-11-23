@@ -1,12 +1,10 @@
 #pragma once
 
-#include <Xna/Framework/Game/GameWindow.hpp>
 #include <SDL3/SDL.h>
+#include <Xna/Framework/Game/GameWindow.hpp>
 
 namespace Xna {
-
-
-	struct SdlGameWindow final : public IGameWindow {
+	struct SdlGameWindow final : public GameWindow {
 		SDL_Window* window;
 
 		intptr_t Handle() const noexcept override { return reinterpret_cast<intptr_t>(window); }

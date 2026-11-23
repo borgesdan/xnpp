@@ -1,20 +1,16 @@
-#ifndef XNA_FRAMEWORK_GAME_GAMEHOST_HPP
-#define XNA_FRAMEWORK_GAME_GAMEHOST_HPP
+#pragma once
 
-#include "GameWindow.hpp"
-#include <memory>
-#include <optional>
-#include "Game.hpp"
-#include <Xna/CSharp/Event.hpp>
+#include "Xna/Framework/Game/GameWindow.hpp"
 #include "Xna/Macros/Api.hpp"
 #include "Xna/Macros/CoreAssert.hpp"
+#include <Xna/CSharp/Event.hpp>
 
 namespace Xna {
-	class IGameHost {
+	class GameHost {
 	public:
-		virtual ~IGameHost() = default;
+		virtual ~GameHost() = default;
 		virtual void Tick() = 0;
-		virtual IGameWindow* Window() const noexcept = 0;
+		virtual GameWindow* Window() const noexcept = 0;
 		virtual void Run() {
 			XNPP_CORE_ASSERT(!doneRun, "A função Run já foi chamada anteriormente.");	
 			XNPP_ENGINE_INFO("Executando Host.");
@@ -65,5 +61,3 @@ namespace Xna {
 		bool doneRun{ false };
 	};
 }
-
-#endif

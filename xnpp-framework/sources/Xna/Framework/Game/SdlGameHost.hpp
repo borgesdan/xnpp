@@ -1,10 +1,10 @@
 #pragma once
+#include "SdlGameWindow.hpp"
+#include <memory>
 #include <SDL3/SDL.h>
 #include <Xna/Framework/Game/GameHost.hpp>
-#include <Xna/Macros/CoreAssert.hpp>
 #include <Xna/Framework/Game/GameWindow.hpp>
-#include <memory>
-#include "SdlGameWindow.hpp"
+#include <Xna/Macros/CoreAssert.hpp>
 
 namespace Xna {
 	struct GamepadPlayer {
@@ -17,7 +17,7 @@ namespace Xna {
 		Uint16 right_rumble{ 0 };
 	};
 
-	struct SdlGameHost final : public IGameHost {
+	struct SdlGameHost final : public GameHost {
 		SdlGameHost() {
 			gameWindow = std::make_unique<SdlGameWindow>();
 		}
@@ -25,8 +25,8 @@ namespace Xna {
 		~SdlGameHost() override = default;
 
 		void Tick() override;
-		IGameWindow* Window() const noexcept override { return gameWindow.get(); }
+		GameWindow* Window() const noexcept override { return gameWindow.get(); }
 
-		std::unique_ptr<IGameWindow> gameWindow{nullptr};
+		std::unique_ptr<GameWindow> gameWindow{nullptr};
 	};
 }

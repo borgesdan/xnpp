@@ -2,7 +2,7 @@
 #include <Xna/Macros/CoreAssert.hpp>
 
 namespace Xna {
-	using base = IGameWindow;
+	using base = GameWindow;
 
 	static SDL_WindowFlags ConvertStyleToSdlWindowFlags(GameWindowStyle style) {
 		switch (style)

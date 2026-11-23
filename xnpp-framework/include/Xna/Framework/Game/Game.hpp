@@ -2,10 +2,10 @@
 
 #include "Xna/Macros/Api.hpp"
 #include "Xna/Macros/Utils.hpp"
+#include <chrono>
 #include <cstddef>
 #include <cstdint>
 #include <memory>
-#include <chrono>
 #include <Xna/CSharp/Collection.hpp>
 #include <Xna/CSharp/Event.hpp>
 #include <Xna/CSharp/TimeSpan.hpp>
@@ -14,7 +14,7 @@ namespace Xna {
 	class ContentManager;
 	class GraphicsDevice;
 	class GameServiceContainer;
-	class IGameWindow;
+	class GameWindow;
 
 	class Game;
 
@@ -290,7 +290,7 @@ namespace Xna {
 		//Gets or sets the target time between calls to Update when IsFixedTimeStep is true.
 		XNPP_API void TargetElapsedTime(TimeSpan value) noexcept;
 		//Gets the underlying operating system window.
-		XNPP_API [[nodiscard]] IGameWindow* Window() const noexcept;
+		XNPP_API [[nodiscard]] GameWindow* Window() const noexcept;
 
 		//Exits the game.
 		XNPP_API void Exit();

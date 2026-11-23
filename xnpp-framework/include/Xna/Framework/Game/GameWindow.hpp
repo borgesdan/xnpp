@@ -1,36 +1,35 @@
 #pragma once
 
-#include <string>
-#include <memory>
-#include <cstdint>
-#include <Xna/CSharp/Windows/Forms/Screen.hpp>
-#include <Xna/CSharp/Event.hpp>
-#include "Xna/Framework/Graphics/GraphicsAdapter.hpp"
 #include "Xna/Framework/MathTypes.hpp"
-#include "Xna/Framework/Shared.hpp"
 #include "Xna/Platform/Platform.hpp"
+#include <cstdint>
+#include <string>
+#include <Xna/CSharp/Event.hpp>
 
 namespace Xna {
+	//Defines the display orientation.
+	enum class DisplayOrientation
+	{
+		//The default orientation.
+		Default = 0,
+		//The display is rotated counterclockwise into a landscape orientation. Width is greater than height.
+		LandscapeLeft = 1,
+		//The display is rotated clockwise into a landscape orientation. Width is greater than height.
+		LandscapeRight = 2,
+		//The display is rotated as portrait, where height is greater than width.
+		Portrait = 4,
+	};
+	
 	enum class GameWindowStyle {
 		Fullscreen,
 		Windowed,
 		Borderless,
 	};
 
-	struct Screen {	
-		intptr_t _hmonitor{ 0 };
-		Rectangle _bounds{};
-		Rectangle _workingArea{};
-		bool _primary{ false };
-		std::string _deviceName;
-		int32_t _bitDepth{ 0 };
-		int32_t _currentDesktopChangedCount{ -1 };
-	};
-
-	class IGameWindow {
+	class GameWindow {
 	public:
-		IGameWindow() = default;
-		virtual ~IGameWindow() = default;
+		GameWindow() = default;
+		virtual ~GameWindow() = default;
 
 		//Gets and sets the title of the system window.
 		virtual void Title(std::string_view value) { title = value; }

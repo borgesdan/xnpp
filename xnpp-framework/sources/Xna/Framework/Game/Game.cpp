@@ -65,7 +65,7 @@ namespace Xna {
 		IGraphicsDeviceManager* graphicsDeviceManager;
 		IGraphicsDeviceService* graphicsDeviceService;
 
-		std::unique_ptr<IGameHost> host;
+		std::unique_ptr<GameHost> host;
 		std::unique_ptr<ContentManager> content;
 		std::unique_ptr<GameServiceContainer> gameServices;
 	};
@@ -518,7 +518,7 @@ namespace Xna {
 		impl->isFixedTimeStep = value;
 	}
 
-	IGameWindow* Game::Window() const noexcept {
+	GameWindow* Game::Window() const noexcept {
 		if (impl->host)
 			return impl->host->Window();
 

@@ -1,5 +1,4 @@
-#ifndef XNA_FRAMEWORK_GAME_GRAPHICSDEVICEMANAGER_HPP
-#define XNA_FRAMEWORK_GAME_GRAPHICSDEVICEMANAGER_HPP
+#pragma once
 
 #include "GraphicsDeviceInformation.hpp"
 #include "IGraphicsDeviceManager.hpp"
@@ -14,6 +13,7 @@
 #include <cstdint>
 #include <memory>
 #include <optional>
+#include "Xna/Framework/Game/GameWindow.hpp"
 
 namespace Xna {
 	class Game;
@@ -252,5 +252,3 @@ namespace Xna {
 		}
 	};
 }
-
-#endif
