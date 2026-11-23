@@ -15,6 +15,7 @@
 #include <Xna/CSharp/Thread.hpp>
 #include <Xna/Macros/CoreAssert.hpp>
 #include <Xna/CSharp/Exception.hpp>
+#include "SdlGameHost.hpp"
 
 using Xna::TimeSpan;
 
@@ -64,7 +65,7 @@ namespace Xna {
 		IGraphicsDeviceManager* graphicsDeviceManager;
 		IGraphicsDeviceService* graphicsDeviceService;
 
-		std::unique_ptr<GameHost> host;
+		std::unique_ptr<IGameHost> host;
 		std::unique_ptr<ContentManager> content;
 		std::unique_ptr<GameServiceContainer> gameServices;
 	};
@@ -75,7 +76,7 @@ namespace Xna {
 		impl = std::make_unique<Implementation>();
 		impl->gameServices = std::make_unique<GameServiceContainer>();
 		impl->content = std::make_unique<ContentManager>(impl->gameServices.get());
-		impl->host = std::make_unique<GameHost>(this);
+		impl->host = std::make_unique<SdlGameHost>();
 	}
 
 	Game::~Game() {
@@ -498,18 +499,7 @@ namespace Xna {
 			impl->inactiveSleepTime = TimeSpan::Zero();
 		else
 			impl->inactiveSleepTime = value;
-	}
-
-	bool Game::IsMouseVisible() const noexcept { return impl->isMouseVisible; }
-
-	void Game::IsMouseVisible(bool value) noexcept {
-		impl->isMouseVisible = value;
-
-		if (!Window())
-			return;
-
-		Window()->IsMouseVisible(value);
-	}
+	}	
 
 	TimeSpan Game::TargetElapsedTime() const noexcept { return impl->targetElapsedTime; }
 
@@ -528,7 +518,7 @@ namespace Xna {
 		impl->isFixedTimeStep = value;
 	}
 
-	GameWindow* Game::Window() const noexcept {
+	IGameWindow* Game::Window() const noexcept {
 		if (impl->host)
 			return impl->host->Window();
 

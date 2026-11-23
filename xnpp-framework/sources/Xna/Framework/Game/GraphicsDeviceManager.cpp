@@ -132,7 +132,6 @@ namespace Xna {
 			throw CSharp::InvalidOperationException("GraphicsComponentNotAttachedToGame");
 
 		impl->inDeviceTransition = true;
-		std::string screenDeviceName = impl->game->Window()->ScreenDeviceName();
 		auto clientWidth = impl->game->Window()->ClientBounds().Width;
 		int clientHeight = impl->game->Window()->ClientBounds().Height;
 		bool flag1 = false;
@@ -164,8 +163,7 @@ namespace Xna {
 		if (flag2)
 			CreateDevice(bestDevice);
 
-		auto& presentationParameters = impl->device->PresentationParameters();
-		screenDeviceName = impl->device->Adapter().DeviceName();
+		auto& presentationParameters = impl->device->PresentationParameters();		
 		impl->isReallyFullScreen = presentationParameters.IsFullScreen;
 
 		if (presentationParameters.BackBufferWidth != 0)
@@ -174,10 +172,7 @@ namespace Xna {
 		if (presentationParameters.BackBufferHeight != 0)
 			clientHeight = presentationParameters.BackBufferHeight;
 
-		impl->isDeviceDirty = false;
-
-		if (flag1)
-			impl->game->Window()->EndScreenDeviceChange(screenDeviceName, clientWidth, clientHeight);
+		impl->isDeviceDirty = false;		
 
 		impl->currentWindowOrientation = impl->game->Window()->CurrentOrientation();
 		impl->inDeviceTransition = false;
@@ -316,12 +311,6 @@ namespace Xna {
 		auto adapters = GraphicsAdapter::Adapters();
 
 		for (auto& adapter : adapters) {
-			if (!anySuitableDevice)
-			{
-				if (!IsWindowOnAdapter(handle, *adapter))
-					continue;
-			}
-
 			if (adapter->IsProfileSupported(impl->graphicsProfile))
 			{
 				auto baseDeviceInfo = GraphicsDeviceInformation();
@@ -385,14 +374,7 @@ namespace Xna {
 			return;
 
 		foundDevices.push_back(deviceInformation);
-	}
-
-	bool GraphicsDeviceManager::IsWindowOnAdapter(intptr_t windowHandle, GraphicsAdapter const& adapter) {
-		const auto screenFromAdapter = GameWindow::ScreenFromAdapter(adapter);
-		const auto screenFromHandle = GameWindow::ScreenFromHandle(windowHandle);
-		
-		return screenFromAdapter == screenFromHandle;
-	}
+	}	
 
 	bool GraphicsDeviceManager::EnsureDevicePlatform() {		
 		if (impl->isReallyFullScreen)

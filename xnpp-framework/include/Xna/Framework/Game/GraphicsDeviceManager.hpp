@@ -179,7 +179,6 @@ namespace Xna {
 		GraphicsDeviceInformation FindBestPlatformDevice(bool anySuitableDevice);
 		void AddDevices(bool anySuitableDevice, std::vector<GraphicsDeviceInformation>& foundDevices);
 		void AddDevices(GraphicsAdapter const& adapter, DisplayMode const& mode, GraphicsDeviceInformation const& baseDeviceInfo, std::vector<GraphicsDeviceInformation>& foundDevices);
-		bool IsWindowOnAdapter(intptr_t windowHandle, GraphicsAdapter const& adapter);
 		bool EnsureDevicePlatform();
 		void ValidateGraphicsDeviceInformation(GraphicsDeviceInformation const& devInfo);
 

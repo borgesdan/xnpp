@@ -17,10 +17,6 @@
 
 namespace Xna {
 	void Cross::System::Initialize() {
-		if (!SDL_Init(SDL_INIT_VIDEO)) {
-			throw std::runtime_error(SDL_GetError());
-		}
-
 		if (!SDL_Init(SDL_INIT_GAMEPAD)) {
 			throw std::runtime_error(SDL_GetError());
 		}

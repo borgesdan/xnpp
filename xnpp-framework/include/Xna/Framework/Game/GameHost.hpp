@@ -7,53 +7,63 @@
 #include "Game.hpp"
 #include <Xna/CSharp/Event.hpp>
 #include "Xna/Macros/Api.hpp"
+#include "Xna/Macros/CoreAssert.hpp"
 
 namespace Xna {
-	class GameHost {
+	class IGameHost {
 	public:
-		XNPP_API GameHost(Game* game);
+		virtual ~IGameHost() = default;
+		virtual void Tick() = 0;
+		virtual IGameWindow* Window() const noexcept = 0;
+		virtual void Run() {
+			XNPP_CORE_ASSERT(!doneRun, "A função Run já foi chamada anteriormente.");	
+			XNPP_ENGINE_INFO("Executando Host.");
 
-		XNPP_API GameWindow* Window() const;
-		XNPP_API void Run();
-		XNPP_API void RunOneFrame();
-		XNPP_API void StartGameLoop();
-		XNPP_API void Exit();
+			Window()->Activated().Add([this](void* sender, EventArgs args) { OnActivated();	});
+			Window()->Deactivated().Add([this](void* sender, EventArgs args) { OnDeactivated(); });
 
-		XNPP_API IEvent<EventArgs>& Suspend() const;
-		XNPP_API IEvent<EventArgs>& Resume() const;
-		XNPP_API IEvent<EventArgs>& Activated() const;
-		XNPP_API IEvent<EventArgs>& Deactivated() const;
-		XNPP_API IEvent<EventArgs>& Idle() const;
-		XNPP_API IEvent<EventArgs>& Exiting() const;
+			Window()->Create();
+
+			Tick();
+
+			doneRun = true;
+			OnExiting();
+		}
+		
+		virtual void RunOneFrame() {
+			Window()->Tick();
+			OnIdle();
+		}
+
+		virtual void StartGameLoop() {}
+		virtual void Exit() noexcept { exitRequested = true; }
+
+		virtual IEvent<EventArgs>& Suspend() noexcept { return suspend; }
+		virtual IEvent<EventArgs>& Resume() noexcept { return resume; }
+		virtual IEvent<EventArgs>& Activated() noexcept { return activated; }
+		virtual IEvent<EventArgs>& Deactivated() noexcept { return deactivated; }
+		virtual IEvent<EventArgs>& Idle() noexcept { return idle; }
+		virtual IEvent<EventArgs>& Exiting() noexcept { return exiting; }
 
 	protected:
-		XNPP_API void OnSuspend();
-		XNPP_API void OnResume();
-		XNPP_API void OnActivated();
-		XNPP_API void OnDeactivated();
-		XNPP_API void OnIdle();
-		XNPP_API void OnExiting();
+		virtual void OnSuspend() { suspend.Invoke(this, EventArgs::Empty()); }
+		virtual void OnResume() { resume.Invoke(this, EventArgs::Empty()); }
+		virtual void OnActivated() { activated.Invoke(this, EventArgs::Empty()); }
+		virtual void OnDeactivated() { deactivated.Invoke(this, EventArgs::Empty()); }
+		virtual void OnIdle() { idle.Invoke(this, EventArgs::Empty()); }
+		virtual void OnExiting() { exiting.Invoke(this, EventArgs::Empty()); }
+		[[nodiscard]] bool ExitRequested() const noexcept { return exitRequested; }
 
 	private:
-		struct Implementation {
-			Xna::Game* game;
-			bool doneRun{ false };
-			bool exitRequested{ false };
-			GameWindow gameWindow{ nullptr };
-
-			Event<EventArgs> Suspend;
-			Event<EventArgs> Resume;
-			Event<EventArgs> Activated;
-			Event<EventArgs> Deactivated;
-			Event<EventArgs> Idle;
-			Event<EventArgs> Exiting;
-		};
-		
-		std::shared_ptr<Implementation> impl;
-
-		friend struct Platform::Host;
+		Event<EventArgs> suspend;
+		Event<EventArgs> resume;
+		Event<EventArgs> activated;
+		Event<EventArgs> deactivated;
+		Event<EventArgs> idle;
+		Event<EventArgs> exiting;
+		bool exitRequested{ false };
+		bool doneRun{ false };
 	};
-
 }
 
 #endif

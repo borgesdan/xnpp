@@ -6,7 +6,6 @@
 #include <cstdint>
 #include <memory>
 #include <chrono>
-#include <cstdint>
 #include <Xna/CSharp/Collection.hpp>
 #include <Xna/CSharp/Event.hpp>
 #include <Xna/CSharp/TimeSpan.hpp>
@@ -15,7 +14,7 @@ namespace Xna {
 	class ContentManager;
 	class GraphicsDevice;
 	class GameServiceContainer;
-	class GameWindow;
+	class IGameWindow;
 
 	class Game;
 
@@ -25,7 +24,7 @@ namespace Xna {
 
 	struct GameClock {
 	public:
-		GameClock() { Reset(); }
+		GameClock() noexcept { Reset(); }
 
 		[[nodiscard]] constexpr TimeSpan CurrentTime() const noexcept { return currentTimeBase + currentTimeOffset; }
 		[[nodiscard]] constexpr TimeSpan ElapsedTime() const noexcept { return elapsedTime; }
@@ -43,11 +42,11 @@ namespace Xna {
 
 	private:
 		static bool TryCounterToTimeSpan(int64_t delta, TimeSpan& outTimeSpan) noexcept;
-
-		int64_t baseRealTime{ 0 };
-		int64_t lastRealTime{ 0 };
+		
 		bool lastRealTimeValid{ false };
 		int32_t suspendCount{ 0 };
+		int64_t baseRealTime{ 0 };
+		int64_t lastRealTime{ 0 };
 		int64_t suspendStartTime{ 0 };
 		int64_t timeLostToSuspension{ 0 };
 		TimeSpan currentTimeOffset{};
@@ -283,11 +282,7 @@ namespace Xna {
 		//Gets or sets a value indicating whether to use fixed time steps.
 		XNPP_API [[nodiscard]] bool IsFixedTimeStep() const noexcept;
 		//Gets or sets a value indicating whether to use fixed time steps.
-		XNPP_API void IsFixedTimeStep(bool value) noexcept;
-		//Gets or sets a value indicating whether the mouse cursor should be visible.
-		XNPP_API [[nodiscard]] bool IsMouseVisible() const noexcept;
-		//Gets or sets a value indicating whether the mouse cursor should be visible.
-		XNPP_API void IsMouseVisible(bool value) noexcept;
+		XNPP_API void IsFixedTimeStep(bool value) noexcept;		
 		//Gets the GameServiceContainer holding all the service providers attached to the Game.
 		XNPP_API [[nodiscard]] GameServiceContainer* Services() const noexcept;
 		//Gets or sets the target time between calls to Update when IsFixedTimeStep is true.
@@ -295,7 +290,7 @@ namespace Xna {
 		//Gets or sets the target time between calls to Update when IsFixedTimeStep is true.
 		XNPP_API void TargetElapsedTime(TimeSpan value) noexcept;
 		//Gets the underlying operating system window.
-		XNPP_API [[nodiscard]] GameWindow* Window() const noexcept;
+		XNPP_API [[nodiscard]] IGameWindow* Window() const noexcept;
 
 		//Exits the game.
 		XNPP_API void Exit();

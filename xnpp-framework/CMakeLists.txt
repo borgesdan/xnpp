@@ -4,10 +4,8 @@ set(PROJECT_INCLUDES_DIR "${CMAKE_CURRENT_SOURCE_DIR}/include")
 set(XNPP_FRAMEWORK_SRC  
     "sources/Xna/Framework/FrameworkDispatcher.cpp"       
     "sources/Xna/Framework/PackUtils.cpp"
-    "sources/Xna/Framework/TitleContainer.cpp"   
-    "sources/Xna/Framework/Game/GameWindow.cpp"
+    "sources/Xna/Framework/TitleContainer.cpp"
     "sources/Xna/Framework/Game/Game.cpp"
-    "sources/Xna/Framework/Game/GameHost.cpp"
     "sources/Xna/Framework/Game/GameClock.cpp"
     "sources/Xna/Framework/Game/GraphicsDeviceManager.cpp"
     "sources/Xna/Framework/Game/GameComponentCollection.cpp"
@@ -38,12 +36,10 @@ set(XNPP_FRAMEWORK_SRC
     "sources/Xna/Framework/Media/MediaQueue.cpp"
     "sources/Xna/Framework/Content/Readers/BasicReaders.cpp" 
     "sources/Xna/Framework/Graphics/Model.cpp"
-    "sources/Xna/Log.cpp")
+    "sources/Xna/Log.cpp" "sources/Xna/Framework/Game/SdlGameHost.cpp" "sources/Xna/Framework/Game/SdlGameWindow.cpp")
 
 set(XNPP_PLATFORM_SRC
     "sources/Xna/Platform/Cross/System.cpp" 
-    "sources/Xna/Platform/Cross/GameWindow.cpp"
-    "sources/Xna/Platform/Cross/GameHost.cpp"
     "sources/Xna/Platform/Cross/Input.cpp" 
     "sources/Xna/Platform/Cross/Audio.cpp"
     "sources/Xna/Platform/Cross/Graphics/Device.cpp"

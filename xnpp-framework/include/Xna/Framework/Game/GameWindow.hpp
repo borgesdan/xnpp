@@ -1,8 +1,8 @@
-#ifndef XNA_FRAMEWORK_GAME_GAMEWINDOW_HPP
-#define XNA_FRAMEWORK_GAME_GAMEWINDOW_HPP
+#pragma once
 
 #include <string>
 #include <memory>
+#include <cstdint>
 #include <Xna/CSharp/Windows/Forms/Screen.hpp>
 #include <Xna/CSharp/Event.hpp>
 #include "Xna/Framework/Graphics/GraphicsAdapter.hpp"
@@ -11,110 +11,109 @@
 #include "Xna/Platform/Platform.hpp"
 
 namespace Xna {
-	class GameWindow {
+	enum class GameWindowStyle {
+		Fullscreen,
+		Windowed,
+		Borderless,
+	};
+
+	struct Screen {	
+		intptr_t _hmonitor{ 0 };
+		Rectangle _bounds{};
+		Rectangle _workingArea{};
+		bool _primary{ false };
+		std::string _deviceName;
+		int32_t _bitDepth{ 0 };
+		int32_t _currentDesktopChangedCount{ -1 };
+	};
+
+	class IGameWindow {
 	public:
+		IGameWindow() = default;
+		virtual ~IGameWindow() = default;
+
 		//Gets and sets the title of the system window.
-		XNPP_API void Title(std::string const& value);
+		virtual void Title(std::string_view value) { title = value; }
 		//The screen dimensions of the game window's client rectangle.
-		inline Rectangle ClientBounds() const { return Platform::Window::ClientBounds(*this); }
-		//Gets the current display orientation, which reflects the physical orientation of the phone in the user's hand.
-		inline DisplayOrientation CurrentOrientation() const { return impl->displayOrientation; }
+		virtual Rectangle ClientBounds() const = 0;
 		//Gets the handle to the system window.
-		inline intptr_t Handle() const { return impl->handle; }
-		//Gets the device name of the screen the window is currently in.
-		XNPP_API std::string ScreenDeviceName() const;
+		virtual intptr_t Handle() const noexcept = 0;
+		//Specifies whether to allow the user to resize the game window.
+		virtual void AllowUserResizing(bool value) { allowUserResizing = value; }
+		//Gets or sets a value indicating whether the mouse cursor should be visible.
+		virtual void IsMouseVisible(bool value) { isMouseVisible = value; }
+		//Define que a janela deve ser minimizada
+		virtual void IsMinimized(bool value) { isMinimized = value; }
+
+
+		//Gets the current display orientation, which reflects the physical orientation of the phone in the user's hand.
+		DisplayOrientation CurrentOrientation() const noexcept { return displayOrientation; }
 		//Gets and sets the title of the system window.
-		inline std::string Title() const { return impl->title; }
-
+		const std::string& Title() const noexcept { return title; }
 		//Specifies whether to allow the user to resize the game window.
-		bool AllowUserResizing() const { return impl->allowUserResizing; }
-		//Specifies whether to allow the user to resize the game window.
-		XNPP_API void AllowUserResizing(bool value);
+		bool AllowUserResizing() const { return allowUserResizing; }		
 
-		IEvent<EventArgs>& ScreenDeviceNameChanged() { return impl->ScreenDeviceNameChanged; }
-		IEvent<EventArgs>& ClientSizeChanged() { return impl->ClientSizeChanged; }
-		IEvent<EventArgs>& OrientationChanged() { return impl->OrientationChanged; }
+		IEvent<EventArgs>& ScreenDeviceNameChanged() { return screenDeviceNameChanged; }
+		IEvent<EventArgs>& ClientSizeChanged() { return clientSizeChanged; }
+		IEvent<EventArgs>& OrientationChanged() { return orientationChanged; }
+		IEvent<EventArgs>& Activated() { return activated; }
+		IEvent<EventArgs>& Deactivated() { return deactivated; }
+		IEvent<EventArgs>& Paint() { return paint; }
+		IEvent<EventArgs>& Suspend() { return suspend; }
+		IEvent<EventArgs>& Resume() { return resume; }
 
-		inline GameWindow(std::nullptr_t) { impl = nullptr; }
-		inline bool operator==(GameWindow const& other) const noexcept { return impl == other.impl; }
-		inline bool operator==(std::nullptr_t) const noexcept { return impl == nullptr; }
-		inline explicit operator bool() const noexcept { return impl != nullptr; }
+		virtual void Tick() {}
 
-		enum class Style {
-			Fullscreen,
-			Windowed,
-			Borderless,
-		};
+		virtual void Close() { deactivated.Invoke(this, EventArgs::Empty()); }
+		virtual void Create() { activated.Invoke(this, EventArgs::Empty()); }
 
-	protected:
-		virtual void SetSupportedOrientations(DisplayOrientation orientations) {};
+		constexpr int32_t Width() const noexcept { return width; }
+		constexpr int32_t Height() const noexcept { return height; }
+		constexpr GameWindowStyle GetStyle() const noexcept { return style; }
+		//Gets or sets a value indicating whether the mouse cursor should be visible.
+		constexpr bool IsMouseVisible() const noexcept { return isMouseVisible; }
+		constexpr bool IsMinimized() const { return isMinimized; }
 
-	private:
-		bool IsMouseVisible() const { return impl->isMouseVisible; }
-		void IsMouseVisible(bool value);
-		bool (IsMinimized)() const { return Platform::Window::WindowIsMinimized(*this); }
-		void (IsMinimized)(bool value) { Platform::Window::MinimizeWindow(*this, value); }
+		virtual void SetSupportedOrientations(DisplayOrientation orientations) { displayOrientation = orientations; }
+		constexpr void BeginScreenDeviceChange(bool willBeFullScreen) { style = willBeFullScreen ? GameWindowStyle::Fullscreen : GameWindowStyle::Windowed; }
 
-		inline void BeginScreenDeviceChange(bool willBeFullScreen) { 
-			impl->style = willBeFullScreen ? Style::Fullscreen : Style::Windowed;
-		}
-
-		inline void EndScreenDeviceChange(std::string const& screenDeviceName) {
+		void EndScreenDeviceChange(std::string_view screenDeviceName) {
 			const auto clientBounds = ClientBounds();
 			EndScreenDeviceChange(screenDeviceName, clientBounds.Width, clientBounds.Height);
 		}
 
-		inline void EndScreenDeviceChange(std::string const& screenDeviceName, int32_t clientWidth, int32_t clientHeight) { 
-			impl->height = clientHeight;
-			impl->width = clientWidth;
-			Platform::Window::Update(*this);
-		}
+		void EndScreenDeviceChange(std::string_view screenDeviceName, int32_t clientWidth, int32_t clientHeight) {
+			height = clientHeight;
+			width = clientWidth;
 
-		void Close();
-		void Tick() {}
-		void Create();
+			Update();
+			ClientSizeChanged();
+		}		
 
-		static std::optional<CSharp::Screen> ScreenFromAdapter(GraphicsAdapter const& adapter);
-		static std::optional<CSharp::Screen> ScreenFromHandle(intptr_t windowHandle);
-
-		static std::string DeviceNameFromScreen(CSharp::Screen const& screen);
-
-		Event<EventArgs>& Activated() { return impl->Activated; }
-		Event<EventArgs>& Deactivated() { return impl->Deactivated; }
-		Event<EventArgs>& Paint() { return impl->Paint; }
-		Event<EventArgs>& Suspend() { return impl->Suspend; }
-		Event<EventArgs>& Resume() { return impl->Resume; }
-
-		inline GameWindow() { impl = std::make_shared<GameWindow::Implementation>(); }
+	protected:
+		virtual void Update() = 0;
 
 	private:
-		struct Implementation {
-			std::string title{ "XN++ Game" };
-			std::string screenDeviceName;
-			intptr_t handle{ 0 };
-			DisplayOrientation displayOrientation{ DisplayOrientation::Default };
-			bool allowUserResizing{ false };
-			bool isMouseVisible{ false };
-			int32_t width{ 800 };
-			int32_t height{ 480 };
-			Style style{ Style::Windowed };
+		bool allowUserResizing{ false };
+		bool isMouseVisible{ false };
+		bool isMinimized{ false };
 
-			Event<EventArgs> ScreenDeviceNameChanged;
-			Event<EventArgs> ClientSizeChanged;
-			Event<EventArgs> OrientationChanged;
-			Event<EventArgs> Activated;
-			Event<EventArgs> Deactivated;
-			Event<EventArgs> Paint;
-			Event<EventArgs> Suspend;
-			Event<EventArgs> Resume;
-		};
-		std::shared_ptr<Implementation> impl = nullptr;	
+		DisplayOrientation displayOrientation{ DisplayOrientation::Default };
 
-		friend class Game;
-		friend class GameHost;
-		friend class GraphicsDeviceManager;		
-		friend struct Platform::Window;
-		friend struct Platform::Host;
+		int32_t width{ 800 };
+		int32_t height{ 600 };
+
+		GameWindowStyle style{ GameWindowStyle::Windowed };
+
+		std::string title{ "Super XNPP Game" };
+
+		Event<EventArgs> screenDeviceNameChanged;
+		Event<EventArgs> clientSizeChanged;
+		Event<EventArgs> orientationChanged;
+		Event<EventArgs> activated;
+		Event<EventArgs> deactivated;
+		Event<EventArgs> paint;
+		Event<EventArgs> suspend;
+		Event<EventArgs> resume;
 	};
 }
-#endif
