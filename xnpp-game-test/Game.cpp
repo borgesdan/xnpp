@@ -47,6 +47,11 @@ public:
 
 	void Draw(Xna::GameTime& gameTime) override {
 		graphics.GraphicsDevice()->Clear(Colors::CornflowerBlue);
+
+		spriteBatch.Begin();
+		spriteBatch.Draw(blocks, Vector2::Zero(), Color::White());
+		spriteBatch.End();
+
 		base::Draw(gameTime);
 	}
 
