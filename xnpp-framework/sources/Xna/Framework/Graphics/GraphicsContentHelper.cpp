@@ -1,8 +1,7 @@
 #include "GraphicsContentHelper.hpp"
 #include "Xna/Framework/Graphics/GraphicsDevice.hpp"
 #include "Xna/Framework/Graphics/IGraphicsDeviceService.hpp"
-#include "Xna/Framework/Content/ContentReader.hpp"
-
+#include "Xna/Framework/Content/ContentManager.hpp"
 #include <Xna/CSharp/Exception.hpp>
 
 namespace Xna {
@@ -18,7 +17,7 @@ namespace Xna {
             throw CSharp::InvalidOperationException("NoGraphicsDeviceContent");
 
         const auto deviceProfile = graphicsDevice->GraphicsProfile();
-        const auto graphicsProfile = static_cast<GraphicsProfile>(contentReader.impl->graphicsProfile);
+        const auto graphicsProfile = static_cast<GraphicsProfile>(contentReader.GraphicsProfile());
         
         if (!GraphicsContentHelper::IsProfileCompatible(deviceProfile, graphicsProfile))
             throw CSharp::InvalidOperationException("BadXnbGraphicsProfile");

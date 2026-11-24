@@ -4,39 +4,38 @@
 #include <Xna/CSharp/Path.hpp>
 
 namespace Xna {
-	ContentManager::ContentManager(GameServiceContainer* serviceProvider, std::filesystem::path const& rootDirectory) {
-		impl = std::make_unique<ContentManager::Implementation>();
+	ContentManager::ContentManager(GameServiceContainer* serviceProvider, std::filesystem::path const& rootDirectory) {		
 		RootDirectory(rootDirectory);
-		impl->serviceProvider = serviceProvider;	
+		serviceProvider = serviceProvider;	
 	}
 
 	GameServiceContainer* ContentManager::ServiceProvider() const {
-		return impl->serviceProvider;
+		return serviceProvider;
 	}
 
 	std::filesystem::path ContentManager::RootDirectory() const {
-		return impl->rootDirectory;
+		return rootDirectory;
 	}
 
 	void ContentManager::RootDirectory(std::filesystem::path const& value) {
-		impl->rootDirectory = value;
-		impl->fullRootDirectory = value;
-		impl->isRootDirectoryAbsolute = TitleContainer::IsPathAbsolute(value);
+		rootDirectory = value;
+		fullRootDirectory = value;
+		isRootDirectoryAbsolute = TitleContainer::IsPathAbsolute(value);
 
-		if (!impl->isRootDirectoryAbsolute)
+		if (!isRootDirectoryAbsolute)
 			return;
 
-		impl->fullRootDirectory = CSharp::Path::Combine(TitleLocation::Path(), value);
+		fullRootDirectory = CSharp::Path::Combine(TitleLocation::Path(), value);
 	}
 
 	std::unique_ptr<CSharp::Stream> ContentManager::OpenStream(std::filesystem::path const& assetName) {
 		auto asset = assetName;
 		asset.replace_extension(".xnb");
-		auto path = CSharp::Path::Combine(impl->fullRootDirectory, asset);
+		auto path = CSharp::Path::Combine(fullRootDirectory, asset);
 
 		auto cleanPath = TitleContainer::GetCleanPath(path);
 
-		if (impl->isRootDirectoryAbsolute)
+		if (isRootDirectoryAbsolute)
 		{
 			auto stream = new CSharp::FileStream(cleanPath, CSharp::FileMode::Open, CSharp::FileAccess::Read);
 			return std::unique_ptr<CSharp::FileStream>(stream);

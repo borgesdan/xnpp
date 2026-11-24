@@ -1,6 +1,4 @@
-#include "Xna/Framework/Content/ContentReader.hpp"
 #include <Xna/CSharp/Exception.hpp>
-#include "Xna/Framework/Content/ContentTypeReaderManager.hpp"
 #include "Xna/Framework/Content/ContentManager.hpp"
 #include <Xna/CSharp/Path.hpp>
 #include "../TitleLocation.hpp"
@@ -9,11 +7,10 @@
 using Xna::CSharp::InvalidOperationException;
 
 namespace Xna {
-	ContentReader::ContentReader(Xna::ContentManager* contentManager, std::shared_ptr<CSharp::Stream> const& input, std::filesystem::path const& assetName, int32_t graphicsProfile) : BinaryReader(input, false) {
-		impl = std::make_shared<Implementation>();
-		impl->contentManager = contentManager;
-		impl->assetName = assetName;
-		impl->graphicsProfile = graphicsProfile;
+	ContentReader::ContentReader(Xna::ContentManager* contentManager, std::shared_ptr<CSharp::Stream> const& input, std::filesystem::path const& assetName, int32_t graphicsProfile) : BinaryReader(input, false) {		
+		this->contentManager = contentManager;
+		this->assetName = assetName;
+		this->graphicsProfile = graphicsProfile;
 	}
 
 	ContentReader ContentReader::Create(Xna::ContentManager* contentManager, std::shared_ptr<CSharp::Stream> const& input, std::filesystem::path const& assetName) {
@@ -69,7 +66,7 @@ namespace Xna {
 
 	int32_t ContentReader::ReadHeader() {
 		const auto encodedInt = Read7BitEncodedInt();
-		impl->typeReaders = ContentTypeReaderManager::ReadTypeManifest(encodedInt, *this);
+		typeReaders = ContentTypeReaderManager::ReadTypeManifest(encodedInt, *this);
 
 		const auto length = Read7BitEncodedInt();
 
@@ -81,7 +78,7 @@ namespace Xna {
 	}
 
 	std::shared_ptr<std::vector<uint8_t>> ContentReader::ReadByteBuffer(size_t size) {
-		auto& buffer = impl->contentManager->impl->byteBuffer;
+		auto& buffer = contentManager->byteBuffer;
 		
 		if (buffer == nullptr) 
 			buffer = std::make_shared<std::vector<uint8_t>>(size);
@@ -161,7 +158,7 @@ namespace Xna {
 
 	std::filesystem::path ContentReader::GetPathToReference(std::filesystem::path const& referenceName) {
 		// 1. Criamos um objeto path a partir da string assetName
-		std::filesystem::path pAsset(impl->assetName);
+		std::filesystem::path pAsset(assetName);
 
 		// 2. p.parent_path() extrai tudo até a última barra (o diretório)
 		// 3. O operador / faz o papel do Path.Combine do C#
@@ -174,7 +171,7 @@ namespace Xna {
 	std::filesystem::path ContentReader::GetAbsolutePathToReference(std::filesystem::path const& referenceName) {
 		auto reference = referenceName;
 		reference = GetPathToReference(referenceName);
-		reference = CSharp::Path::Combine(impl->contentManager->impl->fullRootDirectory, reference);
+		reference = CSharp::Path::Combine(contentManager->fullRootDirectory, reference);
 
 		auto location = TitleLocation::Path();
 		location.remove_filename();

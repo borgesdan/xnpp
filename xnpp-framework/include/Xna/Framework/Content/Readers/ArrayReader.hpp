@@ -1,8 +1,7 @@
 #ifndef XNA_CONTENT_READERS_ARRAYREADER_HPP
 #define XNA_CONTENT_READERS_ARRAYREADER_HPP
 
-#include "../ContentTypeReader.hpp"
-#include "../ContentReader.hpp"
+#include "../ContentManager.hpp"
 #include <vector>
 #include <cstddef>
 

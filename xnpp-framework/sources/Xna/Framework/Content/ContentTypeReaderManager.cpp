@@ -1,17 +1,8 @@
-#include "Xna/Framework/Content/ContentTypeReaderManager.hpp"
 #include <Xna/CSharp/Exception.hpp>
-#include "Xna/Framework/Content/ContentTypeReader.hpp"
+#include "Xna/Framework/Content/ContentManager.hpp"
 #include "Xna/Internal/App.hpp"
 
 namespace Xna {
-	struct ContentTypeReaderManager::Implementation {
-		std::optional<ContentReader> contentReader;
-
-		static inline auto nameToReader = std::map<std::string, std::shared_ptr<ContentTypeReader>>();
-		static inline auto targetTypeToReader = std::map<CSharp::Type, std::shared_ptr<ContentTypeReader>>();
-		static inline auto readerTypeToReader = std::map<CSharp::Type, std::shared_ptr<ContentTypeReader>>();
-	};
-
 	struct ContentTypeReaderParser {
 		static inline CSharp::Type* Parse(std::string const& csharpTypeName) {
 			auto sub = csharpTypeName.substr(0, csharpTypeName.find(","));
@@ -24,9 +15,8 @@ namespace Xna {
 		}
 	};
 
-	ContentTypeReaderManager::ContentTypeReaderManager(ContentReader const& contentReader) {
-		impl = std::make_shared<ContentTypeReaderManager::Implementation>();
-		impl->contentReader = contentReader;
+	ContentTypeReaderManager::ContentTypeReaderManager(ContentReader const& contentReader) {		
+		this->contentReader = contentReader;
 	}
 
 	std::vector<std::shared_ptr<ContentTypeReader>> ContentTypeReaderManager::ReadTypeManifest(size_t typeCount, ContentReader& contentReader) {
@@ -54,14 +44,14 @@ namespace Xna {
 	}
 
 	std::shared_ptr<ContentTypeReader> ContentTypeReaderManager::GetTypeReader(CSharp::Type const& targetType) {
-		return GetTypeReader(targetType, *impl->contentReader);
+		return GetTypeReader(targetType, *contentReader);
 	}
 
 	std::shared_ptr<ContentTypeReader> ContentTypeReaderManager::GetTypeReader(std::string const& readerTypeName, ContentReader const& contentReader,
 		std::vector<std::shared_ptr<ContentTypeReader>>& newTypeReaders) {
-		auto finded = Implementation::nameToReader.find(readerTypeName);
+		auto finded = nameToReader.find(readerTypeName);
 
-		if (finded != Implementation::nameToReader.end())
+		if (finded != nameToReader.end())
 			return finded->second;
 
 		std::shared_ptr<ContentTypeReader> reader;
@@ -85,11 +75,11 @@ namespace Xna {
 			throw CSharp::InvalidOperationException("TypeReader type not founded.");
 		}
 
-		auto finded = Implementation::readerTypeToReader.find(*type);
+		auto finded = readerTypeToReader.find(*type);
 
-		if (finded != Implementation::readerTypeToReader.end())
+		if (finded != readerTypeToReader.end())
 		{
-			Implementation::nameToReader.emplace(readerTypeName, reader );
+			nameToReader.emplace(readerTypeName, reader );
 			return false;
 		}
 		
@@ -111,14 +101,14 @@ namespace Xna {
 		const auto targetType = reader->TargetType();
 
 		if (targetType != CSharp::Type::Empty()) {
-			if (Implementation::targetTypeToReader.find(targetType) != Implementation::targetTypeToReader.end())
+			if (targetTypeToReader.find(targetType) != targetTypeToReader.end())
 				return; //TODO: throw CSharp::InvalidOperationException("TypeReaderDuplicate");
 
-			Implementation::targetTypeToReader.emplace(targetType, reader);
+			targetTypeToReader.emplace(targetType, reader);
 		}
 		
-		Implementation::readerTypeToReader.emplace(reader->GetType(), reader);
-		Implementation::nameToReader.emplace(readerTypeName, reader);
+		readerTypeToReader.emplace(reader->GetType(), reader);
+		nameToReader.emplace(readerTypeName, reader);
 	}
 
 	void ContentTypeReaderManager::RoolbackAddReaders(std::vector<ContentTypeReader> const& newTypeReaders) {
@@ -126,9 +116,9 @@ namespace Xna {
 			return;
 
 		for (auto& newTypeReader : newTypeReaders) {
-			RollbackAddReader<std::string>(Implementation::nameToReader, newTypeReader);
-			RollbackAddReader<CSharp::Type>(Implementation::targetTypeToReader, newTypeReader);
-			RollbackAddReader<CSharp::Type>(Implementation::readerTypeToReader, newTypeReader);
+			RollbackAddReader<std::string>(nameToReader, newTypeReader);
+			RollbackAddReader<CSharp::Type>(targetTypeToReader, newTypeReader);
+			RollbackAddReader<CSharp::Type>(readerTypeToReader, newTypeReader);
 		}
 	}
 
@@ -136,9 +126,9 @@ namespace Xna {
 		if (targetType == CSharp::Type::Empty())
 			throw CSharp::ArgumentException("targetType");
 
-		auto find = Implementation::targetTypeToReader.find(targetType);
+		auto find = targetTypeToReader.find(targetType);
 
-		if (find == Implementation::targetTypeToReader.end()) {
+		if (find == targetTypeToReader.end()) {
 			auto& activator = App::GetContentTypeReaderActivator();
 			auto& registries = activator.GetRegistries();
 
@@ -157,6 +147,6 @@ namespace Xna {
 	}
 
 	bool ContentTypeReaderManager::ContainsTypeReader(CSharp::Type const& targetType) {
-		return Implementation::targetTypeToReader.contains(targetType);
+		return targetTypeToReader.contains(targetType);
 	}
 }

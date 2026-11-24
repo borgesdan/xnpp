@@ -1,8 +1,7 @@
 #ifndef XNA_CONTENT_READERS_DICTIONARYREADER_HPP
 #define XNA_CONTENT_READERS_DICTIONARYREADER_HPP
 
-#include "../ContentTypeReader.hpp"
-#include "../ContentReader.hpp"
+#include "../ContentManager.hpp"
 #include <unordered_map>
 
 namespace Xna {

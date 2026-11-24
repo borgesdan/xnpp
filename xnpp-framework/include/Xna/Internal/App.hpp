@@ -2,7 +2,7 @@
 #define XNA_APP_HPP
 
 #include "Xna/Internal/TypeRegistry.hpp"
-#include "Xna/Framework/Content/ContentTypeReader.hpp"
+#include "Xna/Framework/Content/ContentManager.hpp"
 #include "Xna/Macros/Api.hpp"
 
 namespace Xna {

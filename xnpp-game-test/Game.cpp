@@ -35,6 +35,9 @@ public:
 
 	void LoadContent() override {
 		spriteBatch = Xna::SpriteBatch(GraphicsDevice());
+
+		blocks = Content()->Load<Texture2D>("blocks");
+
 		base::LoadContent();
 	}
 
@@ -50,6 +53,8 @@ public:
 private:
 	Xna::SpriteBatch spriteBatch = nullptr;
 	Xna::GraphicsDeviceManager graphics = nullptr;
+
+	Texture2D blocks{nullptr};
 };
 
 

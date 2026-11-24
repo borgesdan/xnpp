@@ -1,8 +1,7 @@
 #ifndef XNA_CONTENT_READERS_LISTREADER_HPP
 #define XNA_CONTENT_READERS_LISTREADER_HPP
 
-#include "../ContentTypeReader.hpp"
-#include "../ContentReader.hpp"
+#include "../ContentManager.hpp"
 #include <vector>
 
 namespace Xna {

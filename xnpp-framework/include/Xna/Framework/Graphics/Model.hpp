@@ -13,7 +13,7 @@
 #include <vector>
 #include <memory>
 #include <optional>
-#include "Xna/Framework/Content/ContentReader.hpp"
+#include "Xna/Framework/Content/ContentManager.hpp"
 
 namespace Xna {
 	class ModelBoneCollection;
