@@ -8,9 +8,7 @@ add_library(${PROJECT_NAME}
     source/IO/BinaryWriter.cpp
     source/IO/FileStream.cpp
     source/IO/MemoryStream.cpp
-    source/IO/Stream.cpp
-    source/Windows/Forms/Screen.cpp
-    source/Windows/Forms/SystemInformation.cpp
+    source/IO/Stream.cpp    
     source/BitConverter.cpp
     
     source/Type.cpp
