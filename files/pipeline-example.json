@@ -1,0 +1,67 @@
+{
+
+  "ItemGroups": {
+    "CompileItems": [
+      {
+        "Include": "Sprites\\Gem.png",
+        "Name": "Gem",
+        "Importer": "TextureImporter",
+        "Processor": "TextureProcessor"
+      },
+      {
+        "Include": "Sprites\\MonsterA\\Idle.png",
+        "Name": "Idle",
+        "Importer": "TextureImporter",
+        "Processor": "TextureProcessor"
+      },
+      {
+        "Include": "Tiles\\BlockA0.png",
+        "Name": "BlockA0",
+        "Importer": "TextureImporter",
+        "Processor": "TextureProcessor"
+      },
+      {
+        "Include": "Sounds\\ExitReached.wav",
+        "Name": "ExitReached",
+        "Importer": "WavImporter",
+        "Processor": "SoundEffectProcessor"
+      },
+      {
+        "Include": "Sounds\\GemCollected.wma",
+        "Name": "GemCollected",
+        "Importer": "WmaImporter",
+        "Processor": "SoundEffectProcessor"
+      },
+      {
+        "Include": "Sounds\\Music.ogg",
+        "Name": "Music",
+        "Importer": "OggImporter",
+        "Processor": "SongProcessor"
+      },
+      {
+        "Include": "Fonts\\Hud.spritefont",
+        "Name": "Hud",
+        "Importer": "FontDescriptionImporter",
+        "Processor": "FontDescriptionProcessor"
+      }
+    ],
+    "NoneItems": [
+      {
+        "Include": "Levels\\0.txt",
+        "Name": "0",
+        "CopyToOutputDirectory": "PreserveNewest"
+      },
+      {
+        "Include": "Levels\\2.txt",
+        "Name": "2",
+        "CopyToOutputDirectory": "PreserveNewest"
+      },
+      {
+        "Include": "Levels\\1.txt",
+        "Name": "1",
+        "CopyToOutputDirectory": "PreserveNewest"
+      }
+    ]
+  }
+
+}
