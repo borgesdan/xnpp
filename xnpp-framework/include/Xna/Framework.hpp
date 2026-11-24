@@ -5,7 +5,6 @@
 #include "Framework/IPackedVector.hpp"
 #include "Framework/MathHelper.hpp"
 #include "Framework/MathTypes.hpp"
-#include "Framework/Shared.hpp"
 
 //Game
 #include "Framework/Game/Game.hpp"

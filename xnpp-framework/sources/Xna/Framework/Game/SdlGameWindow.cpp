@@ -58,8 +58,9 @@ namespace Xna {
 		result = SDL_Init(SDL_INIT_VIDEO);
 		XNPP_CORE_ASSERT(result, SDL_GetError());
 
+		const auto& title = base::Title();
 		auto handle = SDL_CreateWindow(
-			"",
+			title.c_str(),
 			Width(),
 			Height(),
 			ConvertStyleToSdlWindowFlags(GetStyle())
@@ -71,6 +72,8 @@ namespace Xna {
 		XNPP_CORE_ASSERT(result, SDL_GetError());
 
 		window = handle;
+
+		XNPP_ENGINE_INFO("Window created successfully.");
 		base::Create();
 	}
 
@@ -117,5 +120,9 @@ namespace Xna {
 			result = SDL_SetWindowPosition(window, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED);
 
 		XNPP_CORE_ASSERT(result, SDL_GetError());
+
+		UpdateSize(w, h);
+
+		XNPP_ENGINE_INFO("Window updated.");
 	}
 }

@@ -1,7 +1,6 @@
 #pragma once
 
 #include "MathHelper.hpp"
-#include "Shared.hpp"
 #include <algorithm>
 #include <cstddef>
 #include <cstdint>

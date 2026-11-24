@@ -19,7 +19,7 @@ namespace Xna {
 		//The display is rotated as portrait, where height is greater than width.
 		Portrait = 4,
 	};
-	
+
 	enum class GameWindowStyle {
 		Fullscreen,
 		Windowed,
@@ -28,69 +28,76 @@ namespace Xna {
 
 	class GameWindow {
 	public:
-		GameWindow() = default;
 		virtual ~GameWindow() = default;
+
+		//
+		// Funções que devem ser sobrecarregadas
+		//
 
 		//Gets and sets the title of the system window.
 		virtual void Title(std::string_view value) { title = value; }
-		//The screen dimensions of the game window's client rectangle.
-		virtual Rectangle ClientBounds() const = 0;
-		//Gets the handle to the system window.
-		virtual intptr_t Handle() const noexcept = 0;
 		//Specifies whether to allow the user to resize the game window.
 		virtual void AllowUserResizing(bool value) { allowUserResizing = value; }
 		//Gets or sets a value indicating whether the mouse cursor should be visible.
 		virtual void IsMouseVisible(bool value) { isMouseVisible = value; }
-		//Define que a janela deve ser minimizada
+		//Gets or sets whether the window should be minimized
 		virtual void IsMinimized(bool value) { isMinimized = value; }
 
+		//
+		// Funções virtuais puras que devem ser implementadas pela classe derivada
+		//
 
+	public:
+		//The screen dimensions of the game window's client rectangle.
+		[[nodiscard]] virtual Rectangle ClientBounds() const = 0;
+		//Gets the handle to the system window.
+		[[nodiscard]] virtual intptr_t Handle() const noexcept = 0;
+	protected:
+		//Atualização da janela, aplica mudança de estilo, tamanho e outras características).
+		virtual void Update() = 0;
+
+	public:
 		//Gets the current display orientation, which reflects the physical orientation of the phone in the user's hand.
-		DisplayOrientation CurrentOrientation() const noexcept { return displayOrientation; }
+		[[nodiscard]] DisplayOrientation CurrentOrientation() const noexcept { return displayOrientation; }
 		//Gets and sets the title of the system window.
-		const std::string& Title() const noexcept { return title; }
+		[[nodiscard]] const std::string& Title() const noexcept { return title; }
 		//Specifies whether to allow the user to resize the game window.
-		bool AllowUserResizing() const { return allowUserResizing; }		
+		[[nodiscard]] bool AllowUserResizing() const { return allowUserResizing; }
+		//Gets or sets a value indicating whether the mouse cursor should be visible.
+		[[nodiscard]] constexpr bool IsMouseVisible() const noexcept { return isMouseVisible; }
+		//Gets or sets whether the window should be minimized.
+		[[nodiscard]] constexpr bool IsMinimized() const { return isMinimized; }		
+		[[nodiscard]] constexpr int32_t Width() const noexcept { return width; }
+		[[nodiscard]] constexpr int32_t Height() const noexcept { return height; }
+		[[nodiscard]] constexpr GameWindowStyle GetStyle() const noexcept { return style; }
 
-		IEvent<EventArgs>& ScreenDeviceNameChanged() { return screenDeviceNameChanged; }
-		IEvent<EventArgs>& ClientSizeChanged() { return clientSizeChanged; }
-		IEvent<EventArgs>& OrientationChanged() { return orientationChanged; }
-		IEvent<EventArgs>& Activated() { return activated; }
-		IEvent<EventArgs>& Deactivated() { return deactivated; }
-		IEvent<EventArgs>& Paint() { return paint; }
-		IEvent<EventArgs>& Suspend() { return suspend; }
-		IEvent<EventArgs>& Resume() { return resume; }
+		[[nodiscard]] IEvent<EventArgs>& ScreenDeviceNameChanged() noexcept { return screenDeviceNameChanged; }
+		[[nodiscard]] IEvent<EventArgs>& ClientSizeChanged() noexcept { return clientSizeChanged; }
+		[[nodiscard]] IEvent<EventArgs>& OrientationChanged() noexcept { return orientationChanged; }
+		[[nodiscard]] IEvent<EventArgs>& Activated() noexcept { return activated; }
+		[[nodiscard]] IEvent<EventArgs>& Deactivated() noexcept { return deactivated; }
+		[[nodiscard]] IEvent<EventArgs>& Paint() noexcept { return paint; }
+		[[nodiscard]] IEvent<EventArgs>& Suspend() noexcept { return suspend; }
+		[[nodiscard]] IEvent<EventArgs>& Resume() noexcept { return resume; }
 
 		virtual void Tick() {}
-
 		virtual void Close() { deactivated.Invoke(this, EventArgs::Empty()); }
 		virtual void Create() { activated.Invoke(this, EventArgs::Empty()); }
 
-		constexpr int32_t Width() const noexcept { return width; }
-		constexpr int32_t Height() const noexcept { return height; }
-		constexpr GameWindowStyle GetStyle() const noexcept { return style; }
-		//Gets or sets a value indicating whether the mouse cursor should be visible.
-		constexpr bool IsMouseVisible() const noexcept { return isMouseVisible; }
-		constexpr bool IsMinimized() const { return isMinimized; }
-
 		virtual void SetSupportedOrientations(DisplayOrientation orientations) { displayOrientation = orientations; }
-		constexpr void BeginScreenDeviceChange(bool willBeFullScreen) { style = willBeFullScreen ? GameWindowStyle::Fullscreen : GameWindowStyle::Windowed; }
+		constexpr void BeginScreenDeviceChange(bool willBeFullScreen) noexcept { style = willBeFullScreen ? GameWindowStyle::Fullscreen : GameWindowStyle::Windowed; }
 
-		void EndScreenDeviceChange(std::string_view screenDeviceName) {
-			const auto clientBounds = ClientBounds();
-			EndScreenDeviceChange(screenDeviceName, clientBounds.Width, clientBounds.Height);
-		}
-
-		void EndScreenDeviceChange(std::string_view screenDeviceName, int32_t clientWidth, int32_t clientHeight) {
-			height = clientHeight;
-			width = clientWidth;
-
+		void EndScreenDeviceChange(int32_t clientWidth, int32_t clientHeight) {
+			UpdateSize(clientWidth, clientHeight);
 			Update();
 			ClientSizeChanged();
-		}		
+		}
 
 	protected:
-		virtual void Update() = 0;
+		void UpdateSize(int32_t w, int32_t h) noexcept {
+			width = w;
+			height = h;
+		}
 
 	private:
 		bool allowUserResizing{ false };

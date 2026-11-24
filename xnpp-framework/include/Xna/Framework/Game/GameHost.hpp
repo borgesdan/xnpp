@@ -34,12 +34,12 @@ namespace Xna {
 		virtual void StartGameLoop() {}
 		virtual void Exit() noexcept { exitRequested = true; }
 
-		virtual IEvent<EventArgs>& Suspend() noexcept { return suspend; }
-		virtual IEvent<EventArgs>& Resume() noexcept { return resume; }
-		virtual IEvent<EventArgs>& Activated() noexcept { return activated; }
-		virtual IEvent<EventArgs>& Deactivated() noexcept { return deactivated; }
-		virtual IEvent<EventArgs>& Idle() noexcept { return idle; }
-		virtual IEvent<EventArgs>& Exiting() noexcept { return exiting; }
+		[[nodiscard]] IEvent<EventArgs>& Suspend() noexcept { return suspend; }
+		[[nodiscard]] IEvent<EventArgs>& Resume() noexcept { return resume; }
+		[[nodiscard]] IEvent<EventArgs>& Activated() noexcept { return activated; }
+		[[nodiscard]] IEvent<EventArgs>& Deactivated() noexcept { return deactivated; }
+		[[nodiscard]] IEvent<EventArgs>& Idle() noexcept { return idle; }
+		[[nodiscard]] IEvent<EventArgs>& Exiting() noexcept { return exiting; }
 
 	protected:
 		virtual void OnSuspend() { suspend.Invoke(this, EventArgs::Empty()); }

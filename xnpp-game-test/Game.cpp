@@ -20,12 +20,15 @@ public:
 	}
 
 	void OnStartRun() override {
-		graphics.Initialize();
+		graphics.Initialize();		
 
 		base::OnStartRun();
 	}
 
 	void Initialize() override {
+		graphics.PreferredBackBufferWidth(1280);
+		graphics.PreferredBackBufferHeight(720);
+		graphics.ApplyChanges(); //TODO: Implementar método Reset do bgfx
 
 		base::Initialize();
 	}

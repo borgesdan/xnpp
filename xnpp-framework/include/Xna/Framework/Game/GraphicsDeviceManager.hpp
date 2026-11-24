@@ -8,7 +8,6 @@
 #include "Xna/Framework/Graphics/GraphicsDevice.hpp"
 #include "Xna/Framework/Graphics/IGraphicsDeviceService.hpp"
 #include "Xna/Framework/Graphics/Shared.hpp"
-#include "Xna/Framework/Shared.hpp"
 #include "Xna/Macros/Api.hpp"
 #include <cstdint>
 #include <memory>

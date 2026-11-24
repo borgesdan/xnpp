@@ -174,6 +174,9 @@ namespace Xna {
 
 		impl->isDeviceDirty = false;		
 
+		if (flag1)
+			impl->game->Window()->EndScreenDeviceChange(clientWidth, clientHeight);
+
 		impl->currentWindowOrientation = impl->game->Window()->CurrentOrientation();
 		impl->inDeviceTransition = false;
 	}
