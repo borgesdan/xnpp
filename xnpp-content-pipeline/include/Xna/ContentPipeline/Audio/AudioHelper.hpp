@@ -14,10 +14,7 @@ namespace Xna {
 		XNPP_API int64_t GetDuration();
 		XNPP_API bool Convert(ConversionFormat conversionFormat, ConversionQuality quality, std::optional<std::filesystem::path> const& targetFileName, AudioContent& audioContent);
 
-		XNPP_NULLABLE_CLASS(AudioHelper, impl);
-
-	private:
-		XNPP_API std::vector<uint8_t> ConvertWmaToWavInMemory();
+		XNPP_NULLABLE_CLASS(AudioHelper, impl);	
 
 	private:
 		struct Implementation;

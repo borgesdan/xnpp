@@ -68,7 +68,6 @@ endif()
 find_package(nlohmann_json CONFIG REQUIRED)
 find_package(pugixml CONFIG REQUIRED)
 find_package(Freetype REQUIRED)
-find_package(FFMPEG REQUIRED)
 
 find_path(STB_INCLUDE_DIR stb_image.h REQUIRED)
 
@@ -79,7 +78,6 @@ target_include_directories(xnpp-content-pipeline
 
     PRIVATE
         ${STB_INCLUDE_DIR}
-        ${FFMPEG_INCLUDE_DIRS}
 )
 
 target_link_libraries(xnpp-content-pipeline

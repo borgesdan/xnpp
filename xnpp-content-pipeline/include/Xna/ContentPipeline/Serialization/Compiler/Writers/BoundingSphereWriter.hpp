@@ -2,7 +2,7 @@
 #define XNA_WRITERS_BOUNDINGSPHEREWRITTER_HPP
 
 #include "../BuiltinTypeWriter.hpp"
-#include <Xna/Framework/BoundingSphere.hpp>
+#include <Xna/Framework/Volume.hpp>
 
 namespace Xna {
 	struct BoundingSphereWriter final : public BuiltinTypeWriter<BoundingSphere> {

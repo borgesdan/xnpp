@@ -2,7 +2,7 @@
 #define XNA_WRITERS_BOUNDINGBOXWRITTER_HPP
 
 #include "../BuiltinTypeWriter.hpp"
-#include <Xna/Framework/BoundingBox.hpp>
+#include <Xna/Framework/Volume.hpp>
 
 namespace Xna {
 	struct BoundingBoxWriter final : public BuiltinTypeWriter<BoundingBox> {

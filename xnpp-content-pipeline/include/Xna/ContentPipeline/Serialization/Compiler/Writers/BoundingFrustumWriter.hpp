@@ -2,7 +2,7 @@
 #define XNA_WRITERS_BOUNDINGFRUSTUMWRITTER_HPP
 
 #include "../BuiltinTypeWriter.hpp"
-#include <Xna/Framework/BoundingFrustum.hpp>
+#include <Xna/Framework/Volume.hpp>
 
 namespace Xna {
 	struct BoundingFrustumWriter final : public BuiltinTypeWriter<BoundingFrustum> {
