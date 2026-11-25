@@ -77,20 +77,17 @@ namespace Xna {
 		return length;
 	}
 
-	std::shared_ptr<std::vector<uint8_t>> ContentReader::ReadByteBuffer(size_t size) {
+	const std::vector<uint8_t>& ContentReader::ReadByteBuffer(size_t size) {
 		auto& buffer = contentManager->byteBuffer;
-		
-		if (buffer == nullptr) 
-			buffer = std::make_shared<std::vector<uint8_t>>(size);
 
-		if (buffer->size() < size) 
-			buffer->resize(size);
+		if (buffer.size() < size) 
+			buffer.resize(size);
 		
 		int32_t num{0};
 		
 		for (size_t index = 0; index < size; index += num)
 		{
-			num = Read(buffer->data(), buffer->size(), index, size - index);
+			num = Read(buffer.data(), buffer.size(), index, size - index);
 			
 			if (num == 0)
 				throw CSharp::InvalidOperationException("BadXnb");
@@ -151,10 +148,6 @@ namespace Xna {
 		quaternion.W = ReadSingle();
 		return quaternion;
 	}
-	Color ContentReader::ReadColor() {
-		const auto value = ReadUInt32();
-		return Color(value);
-	}	
 
 	std::filesystem::path ContentReader::GetPathToReference(std::filesystem::path const& referenceName) {
 		// 1. Criamos um objeto path a partir da string assetName

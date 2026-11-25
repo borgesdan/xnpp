@@ -13,16 +13,19 @@
 #include <vector>
 #include <unordered_map>
 #include <optional>
+#include <bit>
+#include <cstdint>
 #include <Xna/CSharp/IO/BinaryReader.hpp>
 #include <Xna/CSharp/IO/FileStream.hpp>
 #include <Xna/CSharp/Attribute.hpp>
 #include <Xna/CSharp/Type.hpp>
+#include <Xna/Macros/CoreAssert.hpp>
 
 namespace Xna {
 	class ContentReader;
 	class ContentTypeReader;
 	class ContentTypeReaderManager;
-	class ContentReader;	
+	class ContentReader;
 
 	//////////////////////////////////////////////////////////////////
 	// CONTENT MANAGER												//
@@ -30,7 +33,7 @@ namespace Xna {
 
 	//The ContentManager is the run-time component which loads managed objects from the binary files produced by the design time content pipeline.
 	class ContentManager {
-	public:		
+	public:
 		//Initializes a new instance of ContentManager.
 		XNPP_API ContentManager(GameServiceContainer* serviceProvider, std::filesystem::path const& rootDirectory = "");
 
@@ -45,7 +48,9 @@ namespace Xna {
 		virtual void Unload() {}
 
 		//Loads an asset that has been processed by the Content Pipeline.
-		template <typename T> T Load(std::filesystem::path const& assetName) {
+		//TODO: Adicionar o arquivo carregado a um cache
+		//TODO: Adicionar um recarregamento de arquivo, após implementação de cache
+		template <typename T> T Load(std::filesystem::path const& assetName, bool addCache = true, bool reloadFile = false) {
 			if (assetName.empty())
 				throw CSharp::InvalidOperationException("assetName is empty.");
 
@@ -63,28 +68,8 @@ namespace Xna {
 		std::filesystem::path rootDirectory;
 		std::filesystem::path fullRootDirectory;
 		bool isRootDirectoryAbsolute{ false };
-		GameServiceContainer* serviceProvider{nullptr};
-		std::shared_ptr<std::vector<uint8_t>> byteBuffer;
-	};
-
-	//////////////////////////////////////////////////////////////////
-	// ATTRIBUTE													//
-	//////////////////////////////////////////////////////////////////
-
-	struct ContentSerializerAttribute : public CSharp::Attribute {
-		~ContentSerializerAttribute() = default;
-
-		std::string ElementName;
-		bool FlattenContent{ false };
-		bool Optional{ false };
-		bool AllowNull{ true };
-		bool SharedResource{ false };
-		//string.IsNullOrEmpty(this.collectionItemName) ? "Item"
-		std::string CollectionItemName;
-
-		bool HasCollectionItemName() const noexcept {
-			return !CollectionItemName.empty();
-		}
+		GameServiceContainer* serviceProvider{ nullptr };
+		std::vector<uint8_t> byteBuffer;
 	};
 
 	//////////////////////////////////////////////////////////////////
@@ -95,116 +80,116 @@ namespace Xna {
 	class ContentReader : public CSharp::BinaryReader {
 	public:
 		//Gets the ContentManager associated with the ContentReader.
-		inline Xna::ContentManager* ContentManager() const;
+		[[nodiscard]] Xna::ContentManager* ContentManager() const noexcept { return contentManager; }
 
 		//Gets the name of the asset currently being read by this ContentReader.
-		inline std::filesystem::path AssetName() const;
+		[[nodiscard]] const std::filesystem::path& AssetName() const noexcept { return assetName; }
 
 		//Overloaded. Reads a single managed object from the current stream. Can be called recursively.
 		template <typename T>
-		inline T ReadObject() {
-			return ReadObjectInternal<T>(nullptr);
-		}
+		[[nodiscard]] T ReadObject() { return ReadObjectInternal<T>(nullptr); }
 
 		//Overloaded. Reads a single managed object from the current stream. Can be called recursively.
 		template <typename T>
-		T ReadObject(T const& existingInstance) {
-			return ReadObjectInternal<T>(existingInstance);
-		}
+		[[nodiscard]] T ReadObject(T const& existingInstance) { return ReadObjectInternal<T>(existingInstance); }
 
 		//Overloaded. Reads a single managed object from the current stream. Can be called recursively.
 		template <typename T>
-		T ReadObject(ContentTypeReader& reader) {
-			return ReadObjectInternal<T>(reader, nullptr);
-		}
+		[[nodiscard]] T ReadObject(ContentTypeReader& reader) { return ReadObjectInternal<T>(reader, nullptr); }
 
 		//Overloaded. Reads a single managed object from the current stream. Can be called recursively.
 		template <typename T>
-		T ReadObject(ContentTypeReader& reader, T const& existingInstance) {
-			return ReadObjectInternal<T>(reader, existingInstance);
-		}
+		[[nodiscard]] T ReadObject(ContentTypeReader& reader, T const& existingInstance) { return ReadObjectInternal<T>(reader, existingInstance); }
 
 		//Overloaded. Reads a single managed object from the current stream as an instance of the specified type. 
 		//If a base class of the actual object type is specified only data from the base type will be read.
-		template <typename T> T ReadRawObject();
+		template <typename T> 
+		[[nodiscard]] T ReadRawObject();
 
 		//Overloaded. Reads a single managed object from the current stream as an instance of the specified type. 
 		//If a base class of the actual object type is specified only data from the base type will be read.
-		template <typename T> T ReadRawObject(T const& existingInstance);
+		template <typename T> 
+		[[nodiscard]] T ReadRawObject(T const& existingInstance);
 
 		//Overloaded. Reads a single managed object from the current stream as an instance of the specified type. 
 		//If a base class of the actual object type is specified only data from the base type will be read.
 		template <typename T>
-		T ReadRawObject(ContentTypeReader& typeReader) {
-			return InvokeReader<T>(typeReader, nullptr);
-		}
+		[[nodiscard]] T ReadRawObject(ContentTypeReader& typeReader) { return InvokeReader<T>(typeReader, nullptr); }
 
 		//Overloaded. Reads a single managed object from the current stream as an instance of the specified type. 
 		//If a base class of the actual object type is specified only data from the base type will be read.
 		template <typename T>
-		T ReadRawObject(ContentTypeReader& typeReader, T const& existingInstance) {
-			return InvokeReader<T>(typeReader, existingInstance);
-		}
+		[[nodiscard]] T ReadRawObject(ContentTypeReader& typeReader, T const& existingInstance) { return InvokeReader<T>(typeReader, existingInstance); }
 
 		//Reads a link to an external file.
-		template <typename T> T ReadExternalReference();
+		template <typename T>
+		[[nodiscard]] T ReadExternalReference() {
+			const auto referenceName = ReadString();
+			return referenceName.empty() ? T() : contentManager->Load<T>(referenceName);
+		}
 
 		//Reads a Vector2 value from the current stream.
-		XNPP_API Vector2 ReadVector2();
+		XNPP_API [[nodiscard]] Vector2 ReadVector2();
 		//Reads a Vector3 value from the current stream.
-		XNPP_API Vector3 ReadVector3();
+		XNPP_API [[nodiscard]] Vector3 ReadVector3();
 		// 	Reads a Vector4 value from the current stream.
-		XNPP_API Vector4 ReadVector4();
+		XNPP_API [[nodiscard]] Vector4 ReadVector4();
 		//Reads a Matrix value from the currently open stream.
-		XNPP_API Matrix ReadMatrix();
+		XNPP_API [[nodiscard]] Matrix ReadMatrix();
 		//Reads a Quaternion value from the current stream.
-		XNPP_API Quaternion ReadQuaternion();
-		//Reads a Color value from the currently open stream.
-		XNPP_API Color ReadColor();
-
-		//Reads a float value from the currently open stream.
-		float ReadSingle() {
-			const auto int32 = ReadUInt32();
-			return *(float*)&int32;
-		}
-
-		//Reads a float value from the currently open stream.
-		inline double ReadDouble() {
-			const auto int64 = ReadUInt64();
-			return *(double*)&int64;
-		}
-
-		XNPP_API std::shared_ptr<std::vector<uint8_t>> ReadByteBuffer(size_t size);		
-
-		//private:
-
-		XNPP_API static ContentReader Create(Xna::ContentManager* contentManager, std::shared_ptr<CSharp::Stream> const& input, std::filesystem::path const& assetName);
+		XNPP_API [[nodiscard]] Quaternion ReadQuaternion();
 		
-		template <typename T> T ReadAsset() {
+		//Reads a Color value from the currently open stream.
+		[[nodiscard]] Color ReadColor() {
+			const auto value = ReadUInt32();
+			return Color(value);
+		}
+
+		//Reads a float value from the currently open stream.
+		[[nodiscard]] float ReadSingle() {
+			const auto int32 = ReadUInt32();
+			return std::bit_cast<float>(int32);
+		}
+
+		//Reads a float value from the currently open stream.
+		[[nodiscard]] double ReadDouble() {
+			const auto int64 = ReadUInt64();
+			return std::bit_cast<double>(int64);
+		}
+
+		XNPP_API const std::vector<uint8_t>& ReadByteBuffer(size_t size);
+
+		//
+		//Funções internas
+		//
+
+		XNPP_API [[nodiscard]] static ContentReader Create(Xna::ContentManager* contentManager, std::shared_ptr<CSharp::Stream> const& input, std::filesystem::path const& assetName);
+
+		template <typename T>
+		[[nodiscard]] T ReadAsset() {
 			const auto sharedResourceCount = ReadHeader();
 			const auto obj = ReadObject<T>();
 			return obj;
 		}
 	private:
 		XNPP_API ContentReader(Xna::ContentManager* contentManager, std::shared_ptr<CSharp::Stream> const& input, std::filesystem::path const& assetName, int32_t graphicsProfile);
-
-		XNPP_API static void PrepareStream(std::shared_ptr<CSharp::Stream> const& input, std::filesystem::path const& assetName, int32_t& graphicsProfile);
-
-		XNPP_API int32_t ReadHeader();
-
-		template <typename T> T ReadObjectInternal(T* existingInstance);
-
-		template <typename T>
-		T ReadObjectInternal(ContentTypeReader& typeReader, T* existingInstance);
+		XNPP_API [[nodiscard]] static void PrepareStream(std::shared_ptr<CSharp::Stream> const& input, std::filesystem::path const& assetName, int32_t& graphicsProfile);
+		XNPP_API [[nodiscard]] int32_t ReadHeader();
+		
+		template <typename T> 
+		[[nodiscard]] T ReadObjectInternal(T* existingInstance);
 
 		template <typename T>
-		T InvokeReader(ContentTypeReader& reader, T* existingInstance);
+		[[nodiscard]] T ReadObjectInternal(ContentTypeReader& typeReader, T* existingInstance);
+
+		template <typename T>
+		[[nodiscard]] T InvokeReader(ContentTypeReader& reader, T* existingInstance);
 
 	public:
-		XNPP_API std::filesystem::path GetPathToReference(std::filesystem::path const& referenceName);
-		XNPP_API std::filesystem::path GetAbsolutePathToReference(std::filesystem::path const& referenceName);
+		XNPP_API [[nodiscard]] std::filesystem::path GetPathToReference(std::filesystem::path const& referenceName);
+		XNPP_API [[nodiscard]] std::filesystem::path GetAbsolutePathToReference(std::filesystem::path const& referenceName);
 
-		constexpr int32_t GraphicsProfile() const noexcept { return graphicsProfile; }
+		constexpr [[nodiscard]] int32_t GraphicsProfile() const noexcept { return graphicsProfile; }
 
 	public:
 		static constexpr char PlatformLabel = 'w';
@@ -215,7 +200,7 @@ namespace Xna {
 		static constexpr int32_t XnbPrologueSize = 10;
 		static constexpr int32_t XnbCompressedPrologueSize = 14;
 
-		private:
+	private:
 		Xna::ContentManager* contentManager;
 		std::filesystem::path assetName;
 		std::vector<std::shared_ptr<ContentTypeReader>> typeReaders;
@@ -295,7 +280,7 @@ namespace Xna {
 	class ContentTypeReaderManager {
 	public:
 		//Looks up a reader for the specified type.
-		XNPP_API std::shared_ptr<ContentTypeReader> GetTypeReader(CSharp::Type const& targetType);		
+		XNPP_API std::shared_ptr<ContentTypeReader> GetTypeReader(CSharp::Type const& targetType);
 
 	private:
 		static std::vector<std::shared_ptr<ContentTypeReader>> ReadTypeManifest(size_t typeCount, ContentReader& contentReader);
@@ -341,10 +326,7 @@ namespace Xna {
 		return contentReader.ReadAsset<T>();
 	}
 
-	template <typename T> T ContentReader::ReadExternalReference() {
-		const auto referenceName = ReadString();
-		return referenceName.empty() ? T() : contentManager->Load<T>(referenceName);
-	}
+	
 
 	template <typename T>
 	T ContentReader::ReadObjectInternal(T* existingInstance) {
@@ -390,14 +372,6 @@ namespace Xna {
 	template <typename T>
 	T ContentReader::ReadRawObject() {
 		return InvokeReader<T>(ContentTypeReaderManager::GetTypeReader(typeid(T), *this), nullptr);
-	}
-
-	inline Xna::ContentManager* ContentReader::ContentManager() const {
-		return contentManager;
-	}
-
-	inline std::filesystem::path ContentReader::AssetName() const {
-		return assetName.string();
 	}
 
 	template <typename T>

@@ -92,8 +92,8 @@ namespace Xna {
 		for (size_t level = 0; level < num1; ++level)
 		{
 			const auto num2 = input.ReadInt32();
-			auto data = input.ReadByteBuffer(num2);
-			texture2D.SetData(level, std::nullopt, *data, 0, num2);
+			const auto& data = input.ReadByteBuffer(num2);
+			texture2D.SetData(level, std::nullopt, data, 0, num2);
 		}
 
 		return texture2D;
