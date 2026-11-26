@@ -15,11 +15,11 @@
 #include <optional>
 #include <bit>
 #include <cstdint>
-#include <Xna/CSharp/IO/BinaryReader.hpp>
-#include <Xna/CSharp/IO/FileStream.hpp>
+#include <Xna/CSharp/IO.hpp>
 #include <Xna/CSharp/Attribute.hpp>
 #include <Xna/CSharp/Type.hpp>
 #include <Xna/Macros/CoreAssert.hpp>
+#include <Xna/CSharp/Exception.hpp>
 
 namespace Xna {
 	class ContentReader;
@@ -62,7 +62,7 @@ namespace Xna {
 	protected:
 		template <typename T> T ReadAsset(std::filesystem::path const& assetName);
 
-		XNPP_API std::unique_ptr<CSharp::Stream> OpenStream(std::filesystem::path const& assetName);
+		XNPP_API std::unique_ptr<Stream> OpenStream(std::filesystem::path const& assetName);
 
 	public:
 		std::filesystem::path rootDirectory;
@@ -77,7 +77,7 @@ namespace Xna {
 	//////////////////////////////////////////////////////////////////	
 
 	//A worker object that implements most of ContentManager.Load. A new ContentReader is constructed for each asset loaded.
-	class ContentReader : public CSharp::BinaryReader {
+	class ContentReader : public BinaryReader {
 	public:
 		//Gets the ContentManager associated with the ContentReader.
 		[[nodiscard]] Xna::ContentManager* ContentManager() const noexcept { return contentManager; }
@@ -163,7 +163,7 @@ namespace Xna {
 		//Funções internas
 		//
 
-		XNPP_API [[nodiscard]] static ContentReader Create(Xna::ContentManager* contentManager, std::shared_ptr<CSharp::Stream> const& input, std::filesystem::path const& assetName);
+		XNPP_API [[nodiscard]] static ContentReader Create(Xna::ContentManager* contentManager, Stream* input, std::filesystem::path const& assetName);
 
 		template <typename T>
 		[[nodiscard]] T ReadAsset() {
@@ -172,8 +172,8 @@ namespace Xna {
 			return obj;
 		}
 	private:
-		XNPP_API ContentReader(Xna::ContentManager* contentManager, std::shared_ptr<CSharp::Stream> const& input, std::filesystem::path const& assetName, int32_t graphicsProfile);
-		XNPP_API [[nodiscard]] static void PrepareStream(std::shared_ptr<CSharp::Stream> const& input, std::filesystem::path const& assetName, int32_t& graphicsProfile);
+		XNPP_API ContentReader(Xna::ContentManager* contentManager, Stream* input, std::filesystem::path const& assetName, int32_t graphicsProfile);
+		XNPP_API [[nodiscard]] static void PrepareStream(Stream* input, std::filesystem::path const& assetName, int32_t& graphicsProfile);
 		XNPP_API [[nodiscard]] int32_t ReadHeader();
 		
 		template <typename T> 
@@ -285,7 +285,7 @@ namespace Xna {
 	private:
 		static std::vector<std::shared_ptr<ContentTypeReader>> ReadTypeManifest(size_t typeCount, ContentReader& contentReader);
 
-		ContentTypeReaderManager(ContentReader const& contentReader);
+		ContentTypeReaderManager(ContentReader* contentReader);
 
 		static std::shared_ptr<ContentTypeReader> GetTypeReader(std::string const& readerTypeName, ContentReader const& contentReader,
 			std::vector<std::shared_ptr<ContentTypeReader>>& newTypeReaders);
@@ -306,7 +306,7 @@ namespace Xna {
 		static bool ContainsTypeReader(CSharp::Type const& targetType);
 
 	public:
-		std::optional<ContentReader> contentReader;
+		ContentReader* contentReader;
 
 		static inline auto nameToReader = std::map<std::string, std::shared_ptr<ContentTypeReader>>();
 		static inline auto targetTypeToReader = std::map<CSharp::Type, std::shared_ptr<ContentTypeReader>>();
@@ -320,13 +320,11 @@ namespace Xna {
 	//////////////////////////////////////////////////////////////////
 
 	template <typename T> T ContentManager::ReadAsset(std::filesystem::path const& assetName) {
-		std::shared_ptr<CSharp::Stream> input = OpenStream(assetName);
+		std::shared_ptr<Stream> input = OpenStream(assetName);
 
-		auto contentReader = ContentReader::Create(this, input, assetName);
+		auto contentReader = ContentReader::Create(this, input.get(), assetName);
 		return contentReader.ReadAsset<T>();
-	}
-
-	
+	}	
 
 	template <typename T>
 	T ContentReader::ReadObjectInternal(T* existingInstance) {

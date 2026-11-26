@@ -15,7 +15,7 @@ namespace Xna {
 		}
 	};
 
-	ContentTypeReaderManager::ContentTypeReaderManager(ContentReader const& contentReader) {		
+	ContentTypeReaderManager::ContentTypeReaderManager(ContentReader* contentReader) {		
 		this->contentReader = contentReader;
 	}
 
@@ -34,7 +34,7 @@ namespace Xna {
 		}
 
 		if (!newTypeReader.empty()) {
-			auto manager = ContentTypeReaderManager(contentReader);
+			auto manager = ContentTypeReaderManager(&contentReader);
 
 			for (auto& contentTypeReader : newTypeReader)
 				contentTypeReader->Initialize(manager);

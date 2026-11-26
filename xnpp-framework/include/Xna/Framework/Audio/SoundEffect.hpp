@@ -9,7 +9,7 @@
 #include "Shared.hpp"
 #include "LoopRegion.hpp"
 #include <Xna/CSharp/TimeSpan.hpp>
-#include <Xna/CSharp/IO/Stream.hpp>
+#include <Xna/CSharp/IO.hpp>
 #include "Xna/Platform/Platform.hpp"
 #include "Xna/Macros/Api.hpp"
 
@@ -20,7 +20,7 @@ namespace Xna {
 	class SoundEffect final {
 	public:
 		//Creates a SoundEffect object based on the specified data stream.
-		static inline SoundEffect FromStream(std::shared_ptr<CSharp::Stream> const& stream) {
+		static inline SoundEffect FromStream(std::shared_ptr<Stream> const& stream) {
 			return SoundEffect(stream); 
 		}
 		
@@ -96,7 +96,7 @@ namespace Xna {
 		inline explicit operator bool() const noexcept { return impl != nullptr; }
 	
 	private:		
-		SoundEffect(std::shared_ptr<CSharp::Stream> const& stream);
+		SoundEffect(std::shared_ptr<Stream> const& stream);
 
 		inline SoundEffect(std::vector<uint8_t> const& format, std::vector<uint8_t> const& data,
 			int32_t loopStart, int32_t loopLength, TimeSpan const& duration) {

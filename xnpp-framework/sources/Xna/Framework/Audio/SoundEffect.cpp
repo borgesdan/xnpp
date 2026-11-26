@@ -4,9 +4,11 @@
 #include "AudioHelper.hpp"
 #include <limits>
 #include "Xna/Internal/Misc.hpp"
+#include <Xna/CSharp/Exception.hpp>
+
 
 namespace Xna {
-	SoundEffect::SoundEffect(std::shared_ptr<CSharp::Stream> const& stream) {
+	SoundEffect::SoundEffect(std::shared_ptr<Stream> const& stream) {
 		const auto wavFile = WavFile::Open(stream);
 		Create(wavFile.Format()->RawBuffer, *wavFile.Data(), 0, wavFile.Data()->size(), wavFile.LoopStart(), wavFile.LoopLength(), wavFile.Duration());
 	}

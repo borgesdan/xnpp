@@ -13,7 +13,7 @@ namespace Xna {
 		inline void WriteT(ContentWriter& output, const BoundingSphere* value) override {
 			output.Write(value->Center);
 			
-			CSharp::BinaryWriter& output1 = output;
+			BinaryWriter& output1 = output;
 			output1.Write(value->Radius);
 		}
 	};

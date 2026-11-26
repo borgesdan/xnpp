@@ -1,7 +1,7 @@
 #ifndef XNA_FRAMEWORK_TITLECONTAINER_HPP
 #define XNA_FRAMEWORK_TITLECONTAINER_HPP
 
-#include <Xna/CSharp/IO/Stream.hpp>
+#include <Xna/CSharp/IO.hpp>
 #include "Xna/Macros/Api.hpp"
 #include <memory>
 #include <filesystem>
@@ -12,7 +12,7 @@ namespace Xna {
 	struct XNPP_API TitleContainer final {
 	public:
 		//Returns a stream to an existing file in the default title storage location.
-		static std::unique_ptr<CSharp::Stream> OpenStream(std::filesystem::path const& name);
+		static std::unique_ptr<Stream> OpenStream(std::filesystem::path const& name);
 
 		TitleContainer() = delete;
 		TitleContainer(TitleContainer&) = delete;

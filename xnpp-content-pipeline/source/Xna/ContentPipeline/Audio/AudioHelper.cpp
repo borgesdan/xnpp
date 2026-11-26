@@ -3,7 +3,7 @@
 #include "Xna/ContentPipeline/Audio/AudioContent.hpp"
 #include <optional>
 #include <Xna/Framework/Audio/WavFile.hpp>
-#include <Xna/CSharp/IO/MemoryStream.hpp>
+#include <Xna/CSharp/IO.hpp>
 
 namespace Xna {
 #pragma pack(push, 1)
@@ -125,7 +125,7 @@ namespace Xna {
 		//case Xna::ConversionFormat::Pcm:
 		//	if (audioFileType == AudioFileType::Wma) {
 		//		auto vec = ConvertWmaToWavInMemory();
-		//		auto stream = std::make_shared<CSharp::MemoryStream>(vec);
+		//		auto stream = std::make_shared<MemoryStream>(vec);
 		//		
 		//		//Testamos se a conversão foi bem realizada
 		//		auto wavFile = WavFile::Open(stream);

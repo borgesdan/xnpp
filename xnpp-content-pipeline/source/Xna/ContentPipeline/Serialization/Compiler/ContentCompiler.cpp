@@ -19,7 +19,7 @@ namespace Xna {
 	}
 
 	void ContentCompiler::Compile(
-		std::shared_ptr<CSharp::Stream> const& output,
+		std::shared_ptr<Stream> const& output,
 		std::any const& value,
 		TargetPlatform targetPlatform,
 		GraphicsProfile targetProfile,

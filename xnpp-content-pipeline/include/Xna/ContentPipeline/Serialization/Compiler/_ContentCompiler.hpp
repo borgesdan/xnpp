@@ -9,7 +9,7 @@
 #include <string>
 #include <filesystem>
 #include <Xna/CSharp/Type.hpp>
-#include <Xna/CSharp/IO/Stream.hpp>
+#include <Xna/CSharp/IO.hpp>
 #include "ContentTypeWriter.hpp"
 #include <Xna/Framework/Content/Pipeline/Shared.hpp>
 #include <Xna/Framework/Graphics/Shared.hpp>
@@ -26,7 +26,7 @@ namespace Xna {
 	private:
 		ContentCompiler();
 		void Compile(
-			std::shared_ptr<CSharp::Stream> const& output,
+			std::shared_ptr<Stream> const& output,
 			std::any const& value,
 			TargetPlatform targetPlatform,
 			GraphicsProfile targetProfile,

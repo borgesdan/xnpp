@@ -5,7 +5,7 @@
 #include <memory>
 #include <cstdint>
 #include <filesystem>
-#include <Xna/CSharp/IO/BinaryWriter.hpp>
+#include <Xna/CSharp/IO.hpp>
 #include <Xna/CSharp/Type.hpp>
 #include <Xna/Framework/Content/Pipeline/Shared.hpp>
 #include <Xna/Framework/Graphics/Shared.hpp>
@@ -19,16 +19,16 @@ namespace Xna {
 	class ContentTypeWriter;
 	template <typename T> class ExternalReference;
 
-	class ContentWriter : public CSharp::BinaryWriter {
+	class ContentWriter : public BinaryWriter {
 	public:
-		using Base = CSharp::BinaryWriter;
+		using Base = BinaryWriter;
 
 		//Remover
 		ContentWriter() = default;
 
 		ContentWriter(
 			ContentCompiler compiler,
-			std::shared_ptr<CSharp::Stream> output,
+			std::shared_ptr<Stream> output,
 			TargetPlatform targetPlatform,
 			GraphicsProfile targetProfile,
 			bool compressContent,

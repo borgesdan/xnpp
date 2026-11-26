@@ -1,5 +1,5 @@
 #include "Xna/ContentPipeline/BuildCoordinator.hpp"
-#include <Xna/CSharp/IO/FileStream.hpp>
+#include <Xna/CSharp/IO.hpp>
 #include <algorithm>
 #include <format>
 #include <stdexcept>
@@ -208,7 +208,7 @@ namespace Xna {
 
 	void BuildCoordinator::SerializeOutputAsset(BuildItem& item, std::any const& assetData, std::filesystem::path const& outputFilename) {
 		impl->buildLogger.LogMessage(Resources::BuildLogCompiling, item.OutputFilename().string());
-		auto output = std::make_shared<CSharp::FileStream>(outputFilename, CSharp::FileMode::Create);
+		auto output = std::make_shared<FileStream>(outputFilename, FileMode::Create);
 		ContentCompiler().Compile(output, assetData, impl->settings.TargetPlatform, impl->settings.TargetProfile, impl->settings.CompressContent, impl->settings.OutputDirectory, outputFilename);
 		impl->rebuiltFiles.push_back(outputFilename);
 	}

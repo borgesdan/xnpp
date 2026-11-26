@@ -1,12 +1,12 @@
 #include "Xna/ContentPipeline/Importers/WavImporter.hpp"
 #include <Xna/Framework/Audio/WavFile.hpp>
-#include <Xna/CSharp/IO/FileStream.hpp>
+#include <Xna/CSharp/IO.hpp>
 #include <stdexcept>
 
 namespace Xna {
 	AudioContent WavImporter::ImportT(std::filesystem::path const& filename, ContentImporterContext& context) {
 		try {
-			auto stream = std::make_shared<CSharp::FileStream>(filename, CSharp::FileMode::Open);
+			auto stream = std::make_shared<FileStream>(filename, FileMode::Open);
 			auto wavFile = WavFile::Open(stream);
 			AudioContent audioContent;
 			audioContent.Format = InternalAudioFormat(*wavFile.Format());

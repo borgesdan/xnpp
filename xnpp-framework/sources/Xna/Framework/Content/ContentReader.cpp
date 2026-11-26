@@ -7,13 +7,13 @@
 using Xna::CSharp::InvalidOperationException;
 
 namespace Xna {
-	ContentReader::ContentReader(Xna::ContentManager* contentManager, std::shared_ptr<CSharp::Stream> const& input, std::filesystem::path const& assetName, int32_t graphicsProfile) : BinaryReader(input, false) {		
+	ContentReader::ContentReader(Xna::ContentManager* contentManager, Stream* input, std::filesystem::path const& assetName, int32_t graphicsProfile) : BinaryReader(input) {
 		this->contentManager = contentManager;
 		this->assetName = assetName;
 		this->graphicsProfile = graphicsProfile;
 	}
 
-	ContentReader ContentReader::Create(Xna::ContentManager* contentManager, std::shared_ptr<CSharp::Stream> const& input, std::filesystem::path const& assetName) {
+	ContentReader ContentReader::Create(Xna::ContentManager* contentManager, Stream* input, std::filesystem::path const& assetName) {
 
 		int32_t graphicsProfile;
 		PrepareStream(input, assetName, graphicsProfile);
@@ -21,9 +21,9 @@ namespace Xna {
 		return ContentReader(contentManager, input, assetName, graphicsProfile);
 	}
 
-	void ContentReader::PrepareStream(std::shared_ptr<CSharp::Stream> const& input, std::filesystem::path const& assetName, int32_t& graphicsProfile) {
+	void ContentReader::PrepareStream(Stream* input, std::filesystem::path const& assetName, int32_t& graphicsProfile) {
 
-		auto binaryReader = BinaryReader(input, false);
+		auto binaryReader = BinaryReader(input);
 
 		if (binaryReader.ReadByte() != 88 || binaryReader.ReadByte() != 78 || binaryReader.ReadByte() != 66)
 			throw InvalidOperationException("Bad Xnb");
@@ -50,7 +50,10 @@ namespace Xna {
 
 		auto num2 = binaryReader.ReadInt32();
 
-		if (input->CanSeek() && (num2 - 10) > input->Length() - input->Position())
+		const auto inLen = input->Length();
+		const auto inPos = input->Position();
+
+		if (input->CanSeek() && (num2 - 10) > (inLen - inPos))
 			throw InvalidOperationException("Bad Xnb");
 
 		if (!flag)
@@ -87,7 +90,9 @@ namespace Xna {
 		
 		for (size_t index = 0; index < size; index += num)
 		{
-			num = Read(buffer.data(), buffer.size(), index, size - index);
+			auto span = std::span{ buffer }.subspan(index, size - index);
+
+			num = Read(span);
 			
 			if (num == 0)
 				throw CSharp::InvalidOperationException("BadXnb");

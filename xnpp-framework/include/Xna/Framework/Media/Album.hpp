@@ -5,7 +5,7 @@
 #include "Genre.hpp"
 #include <Xna/CSharp/TimeSpan.hpp>
 #include <Xna/CSharp/Collection.hpp>
-#include <Xna/CSharp/IO/Stream.hpp>
+#include <Xna/CSharp/IO.hpp>
 #include <memory>
 
 
@@ -39,11 +39,11 @@ namespace Xna {
 		
 		//Returns the stream that contains the album art image data.
 		//TODO: [!] Not implemented
-		std::unique_ptr<CSharp::Stream> GetAlbumArt() const { return nullptr; }
+		std::unique_ptr<Stream> GetAlbumArt() const { return nullptr; }
 		
 		//Returns the stream that contains the album thumbnail image data.
 		//TODO: [!] Not implemented
-		std::unique_ptr<CSharp::Stream> GetThumbnail() const { return nullptr; }
+		std::unique_ptr<Stream> GetThumbnail() const { return nullptr; }
 
 		constexpr bool operator==(const Album& other) const {
 			return name == other.name;

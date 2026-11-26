@@ -1,48 +1,48 @@
 #include "Xna/Framework/Audio/WavFile.hpp"
 #include <Xna/CSharp/Exception.hpp>
-#include <Xna/CSharp/IO/MemoryStream.hpp>
+#include <Xna/CSharp/IO.hpp>
 #include "AudioHelper.hpp"
 
 namespace Xna {
-    WavFile::WavFile(std::shared_ptr<CSharp::Stream> const &source) {
+    WavFile::WavFile(std::shared_ptr<Stream> const &source) {
         if (source->Length() == 0)
             throw CSharp::ArgumentNullException("WavFile::WavFile");
 
-        reader = CSharp::BinaryReader(source);
+        reader.BaseStream(source.get());
         ParseWavHeader();
 
-        const auto length = reader->BaseStream()->Length();
-        for (size_t position = reader->BaseStream()->Position(); position < length; ) {
+        const auto length = reader.BaseStream()->Length();
+        for (size_t position = reader.BaseStream()->Position(); position < length; ) {
             try {
                 ReadChunk();
             } catch (std::exception& e){
                 break;
             }
 
-            position = reader->BaseStream()->Position();
+            position = reader.BaseStream()->Position();
         }
 
         if (format == std::nullopt || buffer == std::nullopt)
             throw CSharp::ArgumentException("InvalidWaveStream");
 
         ParseLoopRegion();
-        reader->Close();
+        reader.Close();
     }
 
     void WavFile::ParseWavHeader() {
-        const auto num1 = AudioHelper::Byteswap(reader->ReadInt32());
-        const auto num2 = reader->ReadInt32();
-        const auto num3 = AudioHelper::Byteswap(reader->ReadInt32());
-        const auto strLen = reader->BaseStream()->Length() - 8L;
+        const auto num1 = AudioHelper::Byteswap(reader.ReadInt32());
+        const auto num2 = reader.ReadInt32();
+        const auto num3 = AudioHelper::Byteswap(reader.ReadInt32());
+        const auto strLen = reader.BaseStream()->Length() - 8L;
         if (num1 != WavFile::riffId || strLen != num2 || num3 != WavFile::wavId)
             throw CSharp::InvalidOperationException("WavFile::ParseWavHeader");
     }
 
     void WavFile::ReadChunk() {
-        if (reader->BaseStream()->Position() % 2L > 0L)
+        if (reader.BaseStream()->Position() % 2L > 0L)
             throw CSharp::InvalidOperationException();
 
-        const auto id = AudioHelper::Byteswap(reader->ReadInt32());
+        const auto id = AudioHelper::Byteswap(reader.ReadInt32());
 
         if (id == WavFile::fmtId)
             ParseFormat();
@@ -51,26 +51,26 @@ namespace Xna {
             ParseData();
 
         else if (id == WavFile::smplId)
-            smplChunk = WavFile::RiffChunk(id, reader->ReadBytes(reader->ReadInt32()));
+            smplChunk = WavFile::RiffChunk(id, reader.ReadBytes(reader.ReadInt32()));
 
         else if (id == WavFile::wsmpId)
-            wsmpChunk = WavFile::RiffChunk(id, reader->ReadBytes(reader->ReadInt32()));
+            wsmpChunk = WavFile::RiffChunk(id, reader.ReadBytes(reader.ReadInt32()));
         else {
-            const auto value = reader->ReadInt32();
-            reader->ReadBytes(value);
+            const auto value = reader.ReadInt32();
+            reader.ReadBytes(value);
         }            
 
-        if (reader->BaseStream()->Position() % 2L <= 0L)
+        if (reader.BaseStream()->Position() % 2L <= 0L)
             return;
 
-        const auto num = reader->ReadByte();
+        const auto num = reader.ReadByte();
     }
 
     void WavFile::ParseFormat() {
-        const auto count = reader->ReadInt32();
+        const auto count = reader.ReadInt32();
 
         if (count >= 16)
-            format = AudioFormat(reader->ReadBytes(count));
+            format = AudioFormat(reader.ReadBytes(count));
         else
             throw CSharp::InvalidOperationException("WavFile::ParseFormat");
 
@@ -90,13 +90,13 @@ namespace Xna {
         if (format == std::nullopt)
             throw CSharp::InvalidOperationException();
 
-        const auto num = reader->ReadInt32();
+        const auto num = reader.ReadInt32();
 
         if (num < format->BlockAlign)
             throw CSharp::InvalidOperationException();
 
-        buffer = reader->ReadBytes(num - num % format->BlockAlign);
-        if (buffer->size() + reader->ReadBytes(num % format->BlockAlign).size() < num)
+        buffer = reader.ReadBytes(num - num % format->BlockAlign);
+        if (buffer->size() + reader.ReadBytes(num % format->BlockAlign).size() < num)
         {
             buffer = std::nullopt;
             throw CSharp::InvalidOperationException();
@@ -128,8 +128,8 @@ namespace Xna {
 
     void WavFile::ParseWsmpChunk() {
         const auto& data = wsmpChunk->data; //Deixamos wsmpChunk const
-        auto stream = std::make_shared<CSharp::MemoryStream>(data); //copia buffer data
-        auto binaryReader = CSharp::BinaryReader(std::reinterpret_pointer_cast<CSharp::Stream>(stream));
+        auto stream = std::unique_ptr<Stream>(new MemoryStream(data)); //copia buffer data
+        auto binaryReader = BinaryReader(std::move(stream));
 
         binaryReader.ReadBytes(16);
         const auto num1 = binaryReader.ReadInt32();
@@ -159,8 +159,8 @@ namespace Xna {
 
     void WavFile::ParseSmplChunk() {
         const auto& data = smplChunk->data; //Deixamos smplChunk const
-        auto stream = std::make_shared<CSharp::MemoryStream>(data); //copia o buffer
-        auto binaryReader = CSharp::BinaryReader(std::reinterpret_pointer_cast<CSharp::Stream>(stream));
+        auto stream = std::unique_ptr<Stream>( new MemoryStream(data)); //copia o buffer
+        auto binaryReader = BinaryReader(std::move(stream));
 
         binaryReader.ReadBytes(28);
         const auto num1 = binaryReader.ReadInt32();

@@ -4,7 +4,7 @@
 namespace Xna {
 	ContentWriter::ContentWriter(
 		ContentCompiler compiler,
-		std::shared_ptr<CSharp::Stream> output,
+		std::shared_ptr<Stream> output,
 		Xna::TargetPlatform targetPlatform,
 		GraphicsProfile targetProfile,
 		bool compressContent,
@@ -19,9 +19,9 @@ namespace Xna {
 		impl->compressContent = compressContent;
 		impl->rootDirectory = rootDirectory;
 		impl->referenceRelocationPath = referenceRelocationPath;
-		impl->headerData = std::make_shared<CSharp::MemoryStream>();
-		impl->contentData = std::make_shared<CSharp::MemoryStream>();
-		OutStream(impl->contentData);
+		impl->headerData = std::make_shared<MemoryStream>();
+		impl->contentData = std::make_shared<MemoryStream>();
+		OutStream(impl->contentData.get()); //TODO: rever isso aqui
 	}
 
 	std::shared_ptr<ContentTypeWriter> ContentWriter::GetTypeWriter(CSharp::Type const& type, int32_t& typeIndex) {
@@ -60,11 +60,11 @@ namespace Xna {
 
 	void ContentWriter::WriteHeader()
 	{
-		OutStream(impl->headerData);
+		OutStream(impl->headerData.get()); //TODO: rever
 		Write7BitEncodedInt(static_cast<int32_t>(impl->typeWriters.size()));
 
 		for(auto& typeWriter : impl->typeWriters) {
-			BinaryWriter::Write(typeWriter->GetRuntimeReader(impl->targetPlatform));
+			BinaryWriter::Write(typeWriter->GetRuntimeReader(impl->targetPlatform).c_str()); //TODO: rever por que não aceitou string
 			BinaryWriter::Write(typeWriter->TypeVersion());
 		}
 		
@@ -72,7 +72,7 @@ namespace Xna {
 	}
 
 	void ContentWriter::WriteFinalOutput() {
-		OutStream(impl->finalOutput);
+		OutStream(impl->finalOutput.get()); //TODO: rever
 		BinaryWriter::Write(static_cast<uint8_t>(88)); //'X'
 		BinaryWriter::Write(static_cast<uint8_t>(78)); //'N'
 		BinaryWriter::Write(static_cast<uint8_t>(66)); //'B'
@@ -106,8 +106,8 @@ namespace Xna {
 		const auto& headerDataBuffer = impl->headerData->GetBuffer();
 		const auto& contentDataBuffer = impl->contentData->GetBuffer();
 
-		OutStream()->Write(headerDataBuffer.data(), headerDataBuffer.size(), 0, length1);
-		OutStream()->Write(contentDataBuffer.data(), contentDataBuffer.size(), 0, length2);
+		OutStream()->Write(std::span{ headerDataBuffer }.subspan(0, length1));
+		OutStream()->Write(std::span{ headerDataBuffer }.subspan(0, length2));
 	}
 
 	void ContentWriter::WriteCompressedOutput() {

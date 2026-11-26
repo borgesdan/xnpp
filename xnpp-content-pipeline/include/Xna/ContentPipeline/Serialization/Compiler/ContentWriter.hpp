@@ -6,7 +6,7 @@
 #include <unordered_map>
 #include "_ContentWriter.hpp"
 #include <cstddef>
-#include <Xna/CSharp/IO/MemoryStream.hpp>
+#include <Xna/CSharp/IO.hpp>
 #include <Xna/CSharp/Exception.hpp>
 #include <Xna/Internal/Misc.hpp>
 #include "_ContentCompiler.hpp"
@@ -17,9 +17,9 @@
 namespace Xna {
 	struct ContentWriter::Implementation {
 		ContentCompiler compiler{ nullptr };
-		std::shared_ptr<CSharp::Stream> finalOutput;
-		std::shared_ptr<CSharp::MemoryStream> headerData{ nullptr };
-		std::shared_ptr<CSharp::MemoryStream> contentData{ nullptr };
+		std::shared_ptr<Stream> finalOutput;
+		std::shared_ptr<MemoryStream> headerData{ nullptr };
+		std::shared_ptr<MemoryStream> contentData{ nullptr };
 		std::vector<std::shared_ptr<ContentTypeWriter>> typeWriters;
 		Xna::TargetPlatform targetPlatform{ TargetPlatform::Windows };
 		GraphicsProfile targetProfile{ GraphicsProfile::HiDef };

@@ -6,16 +6,16 @@
 #include <optional>
 #include <vector>
 #include <Xna/CSharp/BitConverter.hpp>
-#include <Xna/CSharp/IO/Stream.hpp>
+#include <Xna/CSharp/IO.hpp>
 #include "AudioFormat.hpp"
-#include <Xna/CSharp/IO/BinaryReader.hpp>
+#include <Xna/CSharp/IO.hpp>
 #include "LoopRegion.hpp"
 #include "Xna/Macros/Api.hpp"
 
 namespace Xna {
     class WavFile final {
     public:
-        inline static WavFile Open(std::shared_ptr<CSharp::Stream> const& stream) {
+        inline static WavFile Open(std::shared_ptr<Stream> const& stream) {
             return WavFile(stream);
         }
 
@@ -38,7 +38,7 @@ namespace Xna {
         constexpr TimeSpan Duration() const { return format->DurationFromSize(buffer->size()); }
 
     private:
-        XNPP_API WavFile(std::shared_ptr<CSharp::Stream> const& source);
+        XNPP_API WavFile(std::shared_ptr<Stream> const& source);
 
         struct RiffChunk {
             int32_t id{};
@@ -49,7 +49,7 @@ namespace Xna {
             }
         };
 
-        std::optional<CSharp::BinaryReader> reader;
+        BinaryReader reader;
         std::optional<AudioFormat> format;
         std::optional<std::vector<uint8_t>> buffer;
         std::optional<RiffChunk> smplChunk;

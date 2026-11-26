@@ -11,7 +11,7 @@ namespace Xna {
 		}
 	protected:
 		inline void WriteT(ContentWriter& output, const bool* value) override {
-			CSharp::BinaryWriter& output1 = output;
+			BinaryWriter& output1 = output;
 			output1.Write(*value);
 		}
 	};
@@ -22,7 +22,7 @@ namespace Xna {
 		}
 	protected:
 		inline void WriteT(ContentWriter& output, const uint8_t* value) override {
-			CSharp::BinaryWriter& output1 = output;
+			BinaryWriter& output1 = output;
 			output1.Write(*value);
 		}
 	};
@@ -33,7 +33,7 @@ namespace Xna {
 		}
 	protected:
 		inline void WriteT(ContentWriter& output, const char* value) override {
-			CSharp::BinaryWriter& output1 = output;
+			BinaryWriter& output1 = output;
 			output1.Write(*value);
 		}
 	};
@@ -44,7 +44,7 @@ namespace Xna {
 		}
 	protected:
 		inline void WriteT(ContentWriter& output, const int16_t* value) override {
-			CSharp::BinaryWriter& output1 = output;
+			BinaryWriter& output1 = output;
 			output1.Write(*value);
 		}
 	};
@@ -55,7 +55,7 @@ namespace Xna {
 		}
 	protected:
 		inline void WriteT(ContentWriter& output, const int32_t* value) override {
-			CSharp::BinaryWriter& output1 = output;
+			BinaryWriter& output1 = output;
 			output1.Write(*value);
 		}
 	};
@@ -66,7 +66,7 @@ namespace Xna {
 		}
 	protected:
 		inline void WriteT(ContentWriter& output, const int64_t* value) override {
-			CSharp::BinaryWriter& output1 = output;
+			BinaryWriter& output1 = output;
 			output1.Write(*value);
 		}
 	};
@@ -77,7 +77,7 @@ namespace Xna {
 		}
 	protected:
 		inline void WriteT(ContentWriter& output, const uint16_t* value) override {
-			CSharp::BinaryWriter& output1 = output;
+			BinaryWriter& output1 = output;
 			output1.Write(*value);
 		}
 	};
@@ -88,7 +88,7 @@ namespace Xna {
 		}
 	protected:
 		inline void WriteT(ContentWriter& output, const uint32_t* value) override {
-			CSharp::BinaryWriter& output1 = output;
+			BinaryWriter& output1 = output;
 			output1.Write(*value);
 		}
 	};
@@ -99,7 +99,7 @@ namespace Xna {
 		}
 	protected:
 		inline void WriteT(ContentWriter& output, const uint64_t* value) override {
-			CSharp::BinaryWriter& output1 = output;
+			BinaryWriter& output1 = output;
 			output1.Write(*value);
 		}
 	};

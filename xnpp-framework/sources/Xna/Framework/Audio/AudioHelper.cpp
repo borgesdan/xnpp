@@ -1,15 +1,14 @@
 #include "AudioHelper.hpp"
-#include <Xna/CSharp/IO/MemoryStream.hpp>
-#include <Xna/CSharp/IO/BinaryWriter.hpp>
-#include <Xna/CSharp/IO/BinaryReader.hpp>
+#include <Xna/CSharp/IO.hpp>
 #include "Xna/Framework/Audio/AudioFormat.hpp"
 #include <memory>
 namespace Xna {
     std::vector<uint8_t> AudioHelper::MakeFormat(int32_t sampleRate, AudioChannels channels, int16_t bitDepth) {
         auto buffer = std::vector<uint8_t>(18);
-        auto stream = std::make_shared<CSharp::MemoryStream>(buffer); //Move o buffer
-        auto output = std::dynamic_pointer_cast<CSharp::Stream>(stream);
-        auto binaryWriter = CSharp::BinaryWriter(output);
+        auto stream = std::make_unique<MemoryStream>(buffer); //Move o buffer
+        auto output = dynamic_cast<Stream*>(stream.get());
+        auto binaryWriter = BinaryWriter(output);
+        //TODO:avaliar código
 
         binaryWriter.Write(static_cast<int16_t>(1));
         binaryWriter.Write(static_cast<int16_t>(channels));
@@ -25,16 +24,17 @@ namespace Xna {
     }
 
     std::vector<uint8_t> AudioHelper::LocalizeFormat(std::vector<uint8_t> const &source) {        
-        auto sourceStream = std::make_shared<CSharp::MemoryStream>(source);
-        auto sourceOutput = std::dynamic_pointer_cast<CSharp::Stream>(sourceStream);
-        auto binaryReader = CSharp::BinaryReader(sourceOutput);
+        auto sourceStream = std::make_unique<MemoryStream>(source);
+        auto sourceOutput = dynamic_cast<Stream*>(sourceStream.get());
+        auto binaryReader = BinaryReader(sourceOutput);
+        //TODO:avaliar código
 
         const auto bufferSize = source.size() < 18 ? 18 : source.size();
         auto buffer = std::vector<uint8_t>(bufferSize);
-        auto bufferStream = std::make_shared<CSharp::MemoryStream>(buffer); //Move o buffer
-        auto bufferOutput = std::dynamic_pointer_cast<CSharp::Stream>(bufferStream);
+        auto bufferStream = std::make_unique<MemoryStream>(buffer); //Move o buffer
+        auto bufferOutput = dynamic_cast<Stream*>(bufferStream.get());
 
-        auto binaryWriter = CSharp::BinaryWriter(bufferOutput, true);
+        auto binaryWriter = BinaryWriter(bufferOutput);
 
         binaryWriter.Write(AudioHelper::Byteswap(binaryReader.ReadInt16()));
         binaryWriter.Write(AudioHelper::Byteswap(binaryReader.ReadInt16()));

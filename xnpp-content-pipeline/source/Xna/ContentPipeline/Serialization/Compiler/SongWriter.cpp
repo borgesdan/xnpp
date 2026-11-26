@@ -8,7 +8,7 @@ namespace Xna {
 			throw std::runtime_error("SongContent value is null");
 
 		ContentWriter::Base& output1 = output;
-		output1.Write(value->FileName.string());
+		output1.Write(std::string_view(value->FileName.string()));
 		output.WriteObject<int32_t>(&value->Duration);
 	}
 }

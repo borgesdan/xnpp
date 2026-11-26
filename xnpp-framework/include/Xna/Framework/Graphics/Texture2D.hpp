@@ -8,7 +8,7 @@
 #include <string>
 #include <optional>
 #include <cstddef>
-#include <Xna/CSharp/IO/Stream.hpp>
+#include <Xna/CSharp/IO.hpp>
 #include "Xna/Platform/Platform.hpp"
 #include "Xna/Macros/Api.hpp"
 
@@ -64,14 +64,14 @@ namespace Xna {
 		}
 
 		//Saves texture data as a .jpg.
-		XNPP_API void SaveAsJpeg(CSharp::Stream& stream, size_t width, size_t height);
+		XNPP_API void SaveAsJpeg(Stream& stream, size_t width, size_t height);
 		//Saves texture data as a .png.
-		XNPP_API void SaveAsPng(CSharp::Stream& stream, size_t width, size_t height);
+		XNPP_API void SaveAsPng(Stream& stream, size_t width, size_t height);
 
 		//Loads texture data from a stream. 
-		XNPP_API static Texture2D FromStream(GraphicsDevice const& device, CSharp::Stream& stream) { return FromStream(device, stream, 0, 0, false); }
+		XNPP_API static Texture2D FromStream(GraphicsDevice const& device, Stream& stream) { return FromStream(device, stream, 0, 0, false); }
 		//Loads texture data from a data. 
-		XNPP_API static Texture2D FromStream(GraphicsDevice const& device, CSharp::Stream& stream, size_t width, size_t height, bool zoom);
+		XNPP_API static Texture2D FromStream(GraphicsDevice const& device, Stream& stream, size_t width, size_t height, bool zoom);
 
 		Texture2D() { impl = std::make_shared<Implementation>(); }
 

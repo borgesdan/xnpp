@@ -1,10 +1,11 @@
 #include "TitleLocation.hpp"
-#include <Xna/CSharp/IO/FileStream.hpp>
+#include <Xna/CSharp/IO.hpp>
 #include <Xna/CSharp/Path.hpp>
+#include <Xna/CSharp/Exception.hpp>
 #include "Xna/Framework/TitleContainer.hpp"
 
 namespace Xna {
-	std::unique_ptr<CSharp::Stream> TitleContainer::OpenStream(std::filesystem::path const& name) {
+	std::unique_ptr<Stream> TitleContainer::OpenStream(std::filesystem::path const& name) {
 		if (name.empty())
 			throw CSharp::ArgumentException("name");
 
@@ -18,8 +19,8 @@ namespace Xna {
 		_location.remove_filename();
 		auto fullPath = CSharp::Path::Combine(_location, _name);
 
-		std::unique_ptr<CSharp::FileStream> unique;
-		auto ptr = new CSharp::FileStream(fullPath, CSharp::FileMode::Open);
+		std::unique_ptr<FileStream> unique;
+		auto ptr = new FileStream(fullPath, FileMode::Open);
 		unique.reset(ptr);
 
 		return std::move(unique);

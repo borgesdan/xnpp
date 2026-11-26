@@ -14,16 +14,16 @@ namespace Xna {
 		impl->backend->Initialize(width, height, mipMap, format);
 	}
 
-	Texture2D Texture2D::FromStream(GraphicsDevice const& device, CSharp::Stream& stream, size_t width, size_t height, bool zoom) {
+	Texture2D Texture2D::FromStream(GraphicsDevice const& device, Stream& stream, size_t width, size_t height, bool zoom) {
 		//TODO: não implementado
 		return nullptr;
 	}
 
-	void Texture2D::SaveAsPng(CSharp::Stream& stream, size_t width, size_t height) {
+	void Texture2D::SaveAsPng(Stream& stream, size_t width, size_t height) {
 		//TODO: não implementado
 	}
 
-	void Texture2D::SaveAsJpeg(CSharp::Stream& stream, size_t width, size_t height) {
+	void Texture2D::SaveAsJpeg(Stream& stream, size_t width, size_t height) {
 		//TODO: não implementado
 	}
 	

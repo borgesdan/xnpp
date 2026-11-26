@@ -4,13 +4,7 @@ cmake_minimum_required(VERSION 3.20)
 set(PROJECT_NAME xnpp-csharp)
 
 add_library(${PROJECT_NAME}
-    source/IO/BinaryReader.cpp
-    source/IO/BinaryWriter.cpp
-    source/IO/FileStream.cpp
-    source/IO/MemoryStream.cpp
-    source/IO/Stream.cpp    
-    source/BitConverter.cpp
-    
+    source/BitConverter.cpp    
     source/Type.cpp
     source/Platform.cpp
 )

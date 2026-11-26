@@ -6,6 +6,7 @@
 #include "Xna/Platform/Platform.hpp"
 #include "Xna/Macros/Api.hpp"
 #include <cstddef>
+#include <Xna/CSharp/Exception.hpp>
 
 namespace Xna {
 	class DynamicSoundEffectInstance final : public SoundEffectInstance {

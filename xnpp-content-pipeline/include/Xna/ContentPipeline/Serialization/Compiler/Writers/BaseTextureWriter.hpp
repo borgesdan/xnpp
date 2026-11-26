@@ -50,7 +50,7 @@ namespace Xna {
 			{
 			case TargetPlatform::Windows:
 			case TargetPlatform::Linux:			
-				output1.Write(pixelData.data(), pixelData.size());
+				output1.Write(std::span{ pixelData });
 				break;			
 			default:
 				throw CSharp::NotSupportedException();

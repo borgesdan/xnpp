@@ -1,4 +1,5 @@
 #include "Xna/Framework/Audio/SoundEffectInstance.hpp"
+#include <Xna/CSharp/Exception.hpp>
 
 namespace Xna {
 	SoundEffectInstance::SoundEffectInstance(Xna::SoundEffect const& parentEffect, bool fireAndForget) {

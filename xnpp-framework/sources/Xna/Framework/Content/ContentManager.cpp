@@ -28,7 +28,7 @@ namespace Xna {
 		fullRootDirectory = CSharp::Path::Combine(TitleLocation::Path(), value);
 	}
 
-	std::unique_ptr<CSharp::Stream> ContentManager::OpenStream(std::filesystem::path const& assetName) {
+	std::unique_ptr<Stream> ContentManager::OpenStream(std::filesystem::path const& assetName) {
 		auto asset = assetName;
 		asset.replace_extension(".xnb");
 		auto path = CSharp::Path::Combine(fullRootDirectory, asset);
@@ -37,8 +37,8 @@ namespace Xna {
 
 		if (isRootDirectoryAbsolute)
 		{
-			auto stream = new CSharp::FileStream(cleanPath, CSharp::FileMode::Open, CSharp::FileAccess::Read);
-			return std::unique_ptr<CSharp::FileStream>(stream);
+			auto stream = new FileStream(cleanPath, FileMode::Open);
+			return std::unique_ptr<FileStream>(stream);
 		}
 
 		return TitleContainer::OpenStream(cleanPath);

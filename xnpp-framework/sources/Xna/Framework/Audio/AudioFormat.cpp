@@ -1,6 +1,5 @@
 #include "Xna/Framework/Audio/AudioFormat.hpp"
-#include <Xna/CSharp/IO/BinaryReader.hpp>
-#include <Xna/CSharp/IO/MemoryStream.hpp>
+#include <Xna/CSharp/IO.hpp>
 #include "AudioHelper.hpp"
 
 namespace Xna {
@@ -11,9 +10,10 @@ namespace Xna {
 	AudioFormat::AudioFormat(std::vector<uint8_t> const& buffer) {
         auto _buffer = std::vector<uint8_t>(buffer);
         //Aqui vamos mover o buffer!
-        auto stream = std::make_shared<CSharp::MemoryStream>(_buffer); 
+        //TODO:avaliar código
+        auto stream = std::unique_ptr<Stream>(new MemoryStream(_buffer)); 
 
-        auto binaryReader = CSharp::BinaryReader(reinterpret_pointer_cast<CSharp::Stream>(stream), true);
+        auto binaryReader = BinaryReader(std::move(stream));
         FormatTag = binaryReader.ReadInt16();
         Channels = binaryReader.ReadInt16();
         SampleRate = binaryReader.ReadInt32();
@@ -22,7 +22,7 @@ namespace Xna {
         BitsPerSample = binaryReader.ReadInt16();
         binaryReader.Close();
         
-        _buffer = stream->CloseAndMove(); //Retorna o buffer
+        _buffer = dynamic_cast<MemoryStream*>(stream.get())->CloseAndMove(); //Retorna o buffer
 
         RawBuffer = AudioHelper::LocalizeFormat(_buffer);
 	}
