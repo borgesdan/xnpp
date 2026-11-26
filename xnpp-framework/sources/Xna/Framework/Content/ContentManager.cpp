@@ -11,11 +11,7 @@ namespace Xna {
 
 	GameServiceContainer* ContentManager::ServiceProvider() const {
 		return serviceProvider;
-	}
-
-	std::filesystem::path ContentManager::RootDirectory() const {
-		return rootDirectory;
-	}
+	}	
 
 	void ContentManager::RootDirectory(std::filesystem::path const& value) {
 		rootDirectory = value;

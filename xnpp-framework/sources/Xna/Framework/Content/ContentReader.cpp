@@ -6,63 +6,74 @@
 
 using Xna::CSharp::InvalidOperationException;
 
+static constexpr uint8_t PlatformLabel = static_cast<uint8_t>('w');
+static constexpr uint16_t XnbVersion = 5;
+static constexpr uint16_t XnbCompressedVersion = 32773;
+static constexpr uint16_t XnbVersionProfileMask = 32512;
+static constexpr int32_t XnbVersionProfileShift = 8;
+static constexpr int32_t XnbPrologueSize = 10;
+static constexpr int32_t XnbCompressedPrologueSize = 14;
+
 namespace Xna {
-	ContentReader::ContentReader(Xna::ContentManager* contentManager, Stream* input, std::filesystem::path const& assetName, int32_t graphicsProfile) : BinaryReader(input) {
+	ContentReader::ContentReader(Xna::ContentManager* contentManager, std::unique_ptr<Stream> input, std::filesystem::path const& assetName) : BinaryReader(std::move(input)) {
 		this->contentManager = contentManager;
 		this->assetName = assetName;
-		this->graphicsProfile = graphicsProfile;
 	}
 
-	ContentReader ContentReader::Create(Xna::ContentManager* contentManager, Stream* input, std::filesystem::path const& assetName) {
+	ContentReader ContentReader::Create(Xna::ContentManager* contentManager, std::unique_ptr<Stream> input, std::filesystem::path const& assetName) {
+		PrepareStream(input.get(), assetName);
 
-		int32_t graphicsProfile;
-		PrepareStream(input, assetName, graphicsProfile);
-
-		return ContentReader(contentManager, input, assetName, graphicsProfile);
+		return ContentReader(contentManager, std::move(input), assetName);
 	}
 
-	void ContentReader::PrepareStream(Stream* input, std::filesystem::path const& assetName, int32_t& graphicsProfile) {
+	void ContentReader::PrepareStream(Stream* input, std::filesystem::path const& assetName) {
+		XNPP_CORE_ASSERT(input->CanSeek(), "Invalid cannot seek.");
 
 		auto binaryReader = BinaryReader(input);
 
-		if (binaryReader.ReadByte() != 88 || binaryReader.ReadByte() != 78 || binaryReader.ReadByte() != 66)
-			throw InvalidOperationException("Bad Xnb");
+		const auto x = binaryReader.ReadByte() == 88;
+		const auto n = binaryReader.ReadByte() == 78;
+		const auto b = binaryReader.ReadByte() == 66;
+
+		XNPP_CORE_ASSERT(x && n && b, "Invalid XNB file.");
 
 		int32_t num1 = 0;
+		const auto w = binaryReader.ReadByte() == PlatformLabel;
 
-		if (binaryReader.ReadByte() == 119)
-			num1 = binaryReader.ReadUInt16();
-		else
-			throw InvalidOperationException("Bad Xnb");
+		XNPP_CORE_ASSERT(w, "Invalid XNB file.");
 
-		graphicsProfile = (num1 & 32512) >> 8;
-		bool flag = false;
+		num1 = binaryReader.ReadUInt16();		
+
+		//Descartado
+		auto graphicsProfile = (num1 & XnbVersionProfileMask) >> XnbVersionProfileShift;
+		bool compress = false;
 
 		switch (num1 & -32513)
 		{
-		case 5:
+		case XnbVersion:
 			break;
-		case 32773:
-			flag = true;
+		case XnbCompressedVersion:
+			compress = true;
+			break;
 		default:
-			throw InvalidOperationException("Bad Xnb");
+			XNPP_CORE_ASSERT(false, "Invalid XNB file.");
+			break;
 		}
 
 		auto num2 = binaryReader.ReadInt32();
 
 		const auto inLen = input->Length();
-		const auto inPos = input->Position();
+		const auto inPos = input->Position();		
 
-		if (input->CanSeek() && (num2 - 10) > (inLen - inPos))
-			throw InvalidOperationException("Bad Xnb");
+		XNPP_CORE_ASSERT(!(static_cast<int64_t>(num2 - XnbPrologueSize) > (inLen - inPos)), "Invalid XNB file.");
 
-		if (!flag)
+		if (!compress)
 			return;
 
-		auto compressedTodo = num2 - 14;
+		auto compressedTodo = num2 - XnbCompressedPrologueSize;
 		auto decompressedTodo = binaryReader.ReadInt32();
 
-		throw CSharp::NotSupportedException("DecompressStream is not supported.");
+		XNPP_CORE_ASSERT(false, "Decompress Stream is not supported.");
 		//TODO:
 		//stream = DecompressStream(input, compressedTodo, decompressedTodo);
 	}
@@ -83,17 +94,17 @@ namespace Xna {
 	const std::vector<uint8_t>& ContentReader::ReadByteBuffer(size_t size) {
 		auto& buffer = contentManager->byteBuffer;
 
-		if (buffer.size() < size) 
+		if (buffer.size() < size)
 			buffer.resize(size);
-		
-		int32_t num{0};
-		
+
+		int32_t num{ 0 };
+
 		for (size_t index = 0; index < size; index += num)
 		{
 			auto span = std::span{ buffer }.subspan(index, size - index);
 
 			num = Read(span);
-			
+
 			if (num == 0)
 				throw CSharp::InvalidOperationException("BadXnb");
 		}
@@ -101,7 +112,7 @@ namespace Xna {
 		return buffer;
 	}
 
-	Vector2 ContentReader::ReadVector2(){
+	Vector2 ContentReader::ReadVector2() {
 		Vector2 vector2;
 		vector2.X = ReadSingle();
 		vector2.Y = ReadSingle();
@@ -116,7 +127,7 @@ namespace Xna {
 		return vector3;
 	}
 
-	Vector4 ContentReader::ReadVector4(){
+	Vector4 ContentReader::ReadVector4() {
 		Vector4 vector4;
 		vector4.X = ReadSingle();
 		vector4.Y = ReadSingle();
@@ -125,7 +136,7 @@ namespace Xna {
 		return vector4;
 	}
 
-	Matrix ContentReader::ReadMatrix(){
+	Matrix ContentReader::ReadMatrix() {
 		Matrix matrix;
 		matrix.M11 = ReadSingle();
 		matrix.M12 = ReadSingle();
@@ -145,7 +156,7 @@ namespace Xna {
 		matrix.M44 = ReadSingle();
 		return matrix;
 	}
-	Quaternion ContentReader::ReadQuaternion(){
+	Quaternion ContentReader::ReadQuaternion() {
 		Quaternion quaternion;
 		quaternion.X = ReadSingle();
 		quaternion.Y = ReadSingle();

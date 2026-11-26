@@ -17,7 +17,7 @@ namespace Xna {
             throw CSharp::InvalidOperationException("NoGraphicsDeviceContent");
 
         const auto deviceProfile = graphicsDevice->GraphicsProfile();
-        const auto graphicsProfile = static_cast<GraphicsProfile>(contentReader.GraphicsProfile());
+        const auto graphicsProfile = GraphicsProfile::HiDef; //TODO: Remover
         
         if (!GraphicsContentHelper::IsProfileCompatible(deviceProfile, graphicsProfile))
             throw CSharp::InvalidOperationException("BadXnbGraphicsProfile");

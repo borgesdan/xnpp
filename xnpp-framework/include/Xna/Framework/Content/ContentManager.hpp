@@ -1,25 +1,25 @@
 #pragma once
 
-#include "Xna/Framework/Color.hpp"
-#include "Xna/Framework/Game/GameServiceContainer.hpp"
-#include "Xna/Framework/MathTypes.hpp"
-#include "Xna/Internal/Misc.hpp"
-#include "Xna/Macros/Api.hpp"
 #include <any>
+#include <bit>
 #include <cstddef>
+#include <cstdint>
 #include <filesystem>
 #include <memory>
-#include <string>
-#include <vector>
-#include <unordered_map>
 #include <optional>
-#include <bit>
-#include <cstdint>
-#include <Xna/CSharp/IO.hpp>
+#include <string>
+#include <unordered_map>
+#include <vector>
 #include <Xna/CSharp/Attribute.hpp>
-#include <Xna/CSharp/Type.hpp>
-#include <Xna/Macros/CoreAssert.hpp>
 #include <Xna/CSharp/Exception.hpp>
+#include <Xna/CSharp/IO.hpp>
+#include <Xna/CSharp/Type.hpp>
+#include <Xna/Framework/Color.hpp>
+#include <Xna/Framework/Game/GameServiceContainer.hpp>
+#include <Xna/Framework/MathTypes.hpp>
+#include <Xna/Internal/Misc.hpp>
+#include <Xna/Macros/Api.hpp>
+#include <Xna/Macros/CoreAssert.hpp>
 
 namespace Xna {
 	class ContentReader;
@@ -32,17 +32,17 @@ namespace Xna {
 	//////////////////////////////////////////////////////////////////
 
 	//The ContentManager is the run-time component which loads managed objects from the binary files produced by the design time content pipeline.
-	class ContentManager {
+	class XNPP_API ContentManager {
 	public:
 		//Initializes a new instance of ContentManager.
-		XNPP_API ContentManager(GameServiceContainer* serviceProvider, std::filesystem::path const& rootDirectory = "");
+		ContentManager(GameServiceContainer* serviceProvider, std::filesystem::path const& rootDirectory = "");
 
-		XNPP_API GameServiceContainer* ServiceProvider() const;
+		GameServiceContainer* ServiceProvider() const;
 
 		//Gets or sets the root directory associated with this ContentManager.
-		XNPP_API std::filesystem::path RootDirectory() const;
+		const std::filesystem::path& RootDirectory() const noexcept { return rootDirectory; }
 		//Gets or sets the root directory associated with this ContentManager.
-		XNPP_API void RootDirectory(std::filesystem::path const& value);
+		void RootDirectory(std::filesystem::path const& value);
 
 		//Disposes all data that was loaded by this ContentManager.
 		virtual void Unload() {}
@@ -51,8 +51,7 @@ namespace Xna {
 		//TODO: Adicionar o arquivo carregado a um cache
 		//TODO: Adicionar um recarregamento de arquivo, após implementação de cache
 		template <typename T> T Load(std::filesystem::path const& assetName, bool addCache = true, bool reloadFile = false) {
-			if (assetName.empty())
-				throw CSharp::InvalidOperationException("assetName is empty.");
+			XNPP_CORE_ASSERT(!assetName.empty(), "Asset name is empty.");
 
 			auto obj3 = ReadAsset<T>(assetName);
 
@@ -77,7 +76,7 @@ namespace Xna {
 	//////////////////////////////////////////////////////////////////	
 
 	//A worker object that implements most of ContentManager.Load. A new ContentReader is constructed for each asset loaded.
-	class ContentReader : public BinaryReader {
+	class XNPP_API ContentReader : public BinaryReader {
 	public:
 		//Gets the ContentManager associated with the ContentReader.
 		[[nodiscard]] Xna::ContentManager* ContentManager() const noexcept { return contentManager; }
@@ -129,15 +128,15 @@ namespace Xna {
 		}
 
 		//Reads a Vector2 value from the current stream.
-		XNPP_API [[nodiscard]] Vector2 ReadVector2();
+		[[nodiscard]] Vector2 ReadVector2();
 		//Reads a Vector3 value from the current stream.
-		XNPP_API [[nodiscard]] Vector3 ReadVector3();
+		[[nodiscard]] Vector3 ReadVector3();
 		// 	Reads a Vector4 value from the current stream.
-		XNPP_API [[nodiscard]] Vector4 ReadVector4();
+		[[nodiscard]] Vector4 ReadVector4();
 		//Reads a Matrix value from the currently open stream.
-		XNPP_API [[nodiscard]] Matrix ReadMatrix();
+		[[nodiscard]] Matrix ReadMatrix();
 		//Reads a Quaternion value from the current stream.
-		XNPP_API [[nodiscard]] Quaternion ReadQuaternion();
+		[[nodiscard]] Quaternion ReadQuaternion();
 		
 		//Reads a Color value from the currently open stream.
 		[[nodiscard]] Color ReadColor() {
@@ -157,13 +156,13 @@ namespace Xna {
 			return std::bit_cast<double>(int64);
 		}
 
-		XNPP_API const std::vector<uint8_t>& ReadByteBuffer(size_t size);
+		const std::vector<uint8_t>& ReadByteBuffer(size_t size);
 
 		//
 		//Funções internas
 		//
 
-		XNPP_API [[nodiscard]] static ContentReader Create(Xna::ContentManager* contentManager, Stream* input, std::filesystem::path const& assetName);
+		[[nodiscard]] static ContentReader Create(Xna::ContentManager* contentManager, std::unique_ptr<Stream> input, std::filesystem::path const& assetName);
 
 		template <typename T>
 		[[nodiscard]] T ReadAsset() {
@@ -172,9 +171,9 @@ namespace Xna {
 			return obj;
 		}
 	private:
-		XNPP_API ContentReader(Xna::ContentManager* contentManager, Stream* input, std::filesystem::path const& assetName, int32_t graphicsProfile);
-		XNPP_API [[nodiscard]] static void PrepareStream(Stream* input, std::filesystem::path const& assetName, int32_t& graphicsProfile);
-		XNPP_API [[nodiscard]] int32_t ReadHeader();
+		ContentReader(Xna::ContentManager* contentManager, std::unique_ptr<Stream> input, std::filesystem::path const& assetName);
+		static void PrepareStream(Stream* input, std::filesystem::path const& assetName);
+		[[nodiscard]] int32_t ReadHeader();
 		
 		template <typename T> 
 		[[nodiscard]] T ReadObjectInternal(T* existingInstance);
@@ -186,25 +185,14 @@ namespace Xna {
 		[[nodiscard]] T InvokeReader(ContentTypeReader& reader, T* existingInstance);
 
 	public:
-		XNPP_API [[nodiscard]] std::filesystem::path GetPathToReference(std::filesystem::path const& referenceName);
-		XNPP_API [[nodiscard]] std::filesystem::path GetAbsolutePathToReference(std::filesystem::path const& referenceName);
-
-		constexpr [[nodiscard]] int32_t GraphicsProfile() const noexcept { return graphicsProfile; }
-
-	public:
-		static constexpr char PlatformLabel = 'w';
-		static constexpr uint16_t XnbVersion = 5;
-		static constexpr uint16_t XnbCompressedVersion = 32773;
-		static constexpr uint16_t XnbVersionProfileMask = 32512;
-		static constexpr int32_t XnbVersionProfileShift = 8;
-		static constexpr int32_t XnbPrologueSize = 10;
-		static constexpr int32_t XnbCompressedPrologueSize = 14;
+		[[nodiscard]] std::filesystem::path GetPathToReference(std::filesystem::path const& referenceName);
+		[[nodiscard]] std::filesystem::path GetAbsolutePathToReference(std::filesystem::path const& referenceName);	
+		
 
 	private:
 		Xna::ContentManager* contentManager;
 		std::filesystem::path assetName;
 		std::vector<std::shared_ptr<ContentTypeReader>> typeReaders;
-		int32_t graphicsProfile{ 0 };
 	};
 
 	//////////////////////////////////////////////////////////////////
@@ -320,9 +308,9 @@ namespace Xna {
 	//////////////////////////////////////////////////////////////////
 
 	template <typename T> T ContentManager::ReadAsset(std::filesystem::path const& assetName) {
-		std::shared_ptr<Stream> input = OpenStream(assetName);
+		auto input = OpenStream(assetName);
 
-		auto contentReader = ContentReader::Create(this, input.get(), assetName);
+		auto contentReader = ContentReader::Create(this, std::move(input), assetName);
 		return contentReader.ReadAsset<T>();
 	}	
 
