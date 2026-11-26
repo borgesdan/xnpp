@@ -27,8 +27,8 @@ namespace Xna {
 		}
 
 	private:
-		std::shared_ptr<ContentTypeReader> keyReader;
-		std::shared_ptr<ContentTypeReader> valueReader;
+		ContentTypeReader* keyReader;
+		ContentTypeReader* valueReader;
 	};
 }
 

@@ -14,7 +14,7 @@ namespace Xna {
 	public:
 		inline ProcessorManager() { impl = std::make_shared<Implementation>(); }
 
-		XNPP_API std::shared_ptr<IContentProcessor> GetInstance(std::string& processorName, OpaqueDataDictionary const& parameters, ContentIdentity const& contentIdentity, ContentBuildLogger& buildLogger);
+		XNPP_API IContentProcessor* GetInstance(std::string& processorName, OpaqueDataDictionary const& parameters, ContentIdentity const& contentIdentity, ContentBuildLogger& buildLogger);
 
 		inline ProcessorManager(std::nullptr_t) { impl = nullptr; }
 		inline bool operator==(ProcessorManager const& other) const noexcept { return impl == other.impl; }
@@ -23,7 +23,7 @@ namespace Xna {
 
 	private:
 		XNPP_API static void SetProcessorParameters(
-			std::shared_ptr<IContentProcessor>& processor,
+			IContentProcessor* processor,
 			OpaqueDataDictionary const& parameters,
 			ContentIdentity const& contentIdentity,
 			ContentBuildLogger& buildLogger);

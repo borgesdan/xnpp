@@ -15,7 +15,7 @@ namespace Xna {
 
 	}
 
-	std::shared_ptr<IContentImporter> ImporterManager::GetInstance(std::string const& importerName) {
+	IContentImporter* ImporterManager::GetInstance(std::string const& importerName) {
 		return App::GetImporterRegistry().CreateInstance(importerName);
 	}
 

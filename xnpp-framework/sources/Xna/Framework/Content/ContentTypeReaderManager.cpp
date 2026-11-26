@@ -1,40 +1,41 @@
-#include <Xna/CSharp/Exception.hpp>
 #include "Xna/Framework/Content/ContentManager.hpp"
 #include "Xna/Internal/App.hpp"
+#include <algorithm>
 
 namespace Xna {
+
+	
+
 	struct ContentTypeReaderParser {
-		static inline CSharp::Type* Parse(std::string const& csharpTypeName) {
+		static inline CSharp::Type* Parse(std::string_view csharpTypeName) {
 			auto sub = csharpTypeName.substr(0, csharpTypeName.find(","));
 
-			if (CSharp::Type::NamedTypes().contains(sub)) {
-				return &CSharp::Type::NamedTypes()[sub];
+			if (CSharp::Type::NamedTypes().contains(sub.data())) {
+				return &CSharp::Type::NamedTypes()[sub.data()];
 			}
 
 			return nullptr;
 		}
 	};
 
-	ContentTypeReaderManager::ContentTypeReaderManager(ContentReader* contentReader) {		
-		this->contentReader = contentReader;
-	}
-
-	std::vector<std::shared_ptr<ContentTypeReader>> ContentTypeReaderManager::ReadTypeManifest(size_t typeCount, ContentReader& contentReader) {
-		auto contentTypeReaderArray = std::vector<std::shared_ptr<ContentTypeReader>>(typeCount);
-
-		std::vector<std::shared_ptr<ContentTypeReader>> newTypeReader;
+	std::vector<ContentTypeReader*> ContentTypeReaderManager::ReadTypeManifest(size_t typeCount, ContentReader* contentReader)
+	{
+		auto contentTypeReaderArray = std::vector<ContentTypeReader* >(typeCount);
+		auto newTypeReader = std::vector<ContentTypeReader*>();
 
 		for (size_t index = 0; index < typeCount; ++index) {
-			auto typeReader = GetTypeReader(contentReader.ReadString(), contentReader, newTypeReader);
+			const auto name = contentReader->ReadString();
+			auto typeReader = GetTypeReader(name, contentReader, newTypeReader);
 
-			if (contentReader.ReadInt32() != typeReader->TypeVersion())
-				throw CSharp::InvalidOperationException("Bad xnb type version.");
+			const auto version = contentReader->ReadInt32();
+
+			XNPP_CORE_ASSERT(version == typeReader->TypeVersion(), "Bad xnb type version.");
 
 			contentTypeReaderArray[index] = typeReader;
 		}
 
 		if (!newTypeReader.empty()) {
-			auto manager = ContentTypeReaderManager(&contentReader);
+			auto manager = ContentTypeReaderManager(contentReader);
 
 			for (auto& contentTypeReader : newTypeReader)
 				contentTypeReader->Initialize(manager);
@@ -43,21 +44,22 @@ namespace Xna {
 		return contentTypeReaderArray;
 	}
 
-	std::shared_ptr<ContentTypeReader> ContentTypeReaderManager::GetTypeReader(CSharp::Type const& targetType) {
-		return GetTypeReader(targetType, *contentReader);
-	}
+	ContentTypeReader* ContentTypeReaderManager::GetTypeReader(
+		std::string_view readerTypeName, ContentReader* contentReader,
+		std::vector<ContentTypeReader*>& newTypeReaders)
+	{
+		auto cache = FindCache([readerTypeName](CacheData& d) {
+			return d.name == readerTypeName;
+			});
 
-	std::shared_ptr<ContentTypeReader> ContentTypeReaderManager::GetTypeReader(std::string const& readerTypeName, ContentReader const& contentReader,
-		std::vector<std::shared_ptr<ContentTypeReader>>& newTypeReaders) {
-		auto finded = nameToReader.find(readerTypeName);
+		if (cache)
+			return cache->value;
 
-		if (finded != nameToReader.end())
-			return finded->second;
+		ContentTypeReader* reader = nullptr;
 
-		std::shared_ptr<ContentTypeReader> reader;
-		if (!InstantiateTypeReader(readerTypeName, contentReader, reader))
-			return reader;			
-		
+		if (!InstantiateTypeReader(readerTypeName, contentReader, &reader))
+			return reader;
+
 		AddTypeReader(readerTypeName, contentReader, reader);
 
 		newTypeReaders.push_back(reader);
@@ -65,88 +67,84 @@ namespace Xna {
 		return reader;
 	}
 
-	bool ContentTypeReaderManager::InstantiateTypeReader(std::string const& readerTypeName, ContentReader const& contentReader,
-		std::shared_ptr<ContentTypeReader>& reader) {
+	bool ContentTypeReaderManager::InstantiateTypeReader(
+		std::string_view readerTypeName, ContentReader* contentReader,
+		ContentTypeReader** reader) {
 
-		//const auto type = CSharp::Type::GetType(readerTypeName);
-		const auto type = ContentTypeReaderParser::Parse(readerTypeName);
+		auto type = ContentTypeReaderParser::Parse(readerTypeName);
 
-		if (type == nullptr) {
-			throw CSharp::InvalidOperationException("TypeReader type not founded.");
-		}
+		XNPP_CORE_ASSERT(type, "TypeReader type not founded.");		
 
-		auto finded = readerTypeToReader.find(*type);
+		auto cache = FindCache([&](CacheData& d) {
+			return d.readerType == *type;
+			});		
 
-		if (finded != readerTypeToReader.end())
+		if (cache)
 		{
-			nameToReader.emplace(readerTypeName, reader );
+			cache->name = readerTypeName;
 			return false;
 		}
-		
-		reader = App::GetContentTypeReaderActivator().CreateInstance(*type);
-		//reader = ContentTypeReaderActivator::CreateInstance(*type);
 
-		if (reader == nullptr) {
-			std::string error = "ContentTypeReaderActivator::CreateInstance return a null ContentReader. Type: ";
-			error.append(type->info().name());
-			throw CSharp::InvalidOperationException(error);
-		}			
+		//TODO: corrigir isso
+		*reader = App::GetContentTypeReaderActivator().CreateInstance(*type);
+
+		XNPP_CORE_ASSERT(reader, "ContentTypeReaderActivator::CreateInstance return a null ContentReader. Type: {}", type->info().name());
 
 		return true;
 	}
 
-	void ContentTypeReaderManager::AddTypeReader(std::string const& readerTypeName, ContentReader const& contentReader,
-		std::shared_ptr<ContentTypeReader> const& reader) {
+	void ContentTypeReaderManager::AddTypeReader(
+		std::string_view readerTypeName,
+		ContentReader* contentReader,
+		ContentTypeReader* reader) {
 
 		const auto targetType = reader->TargetType();
 
 		if (targetType != CSharp::Type::Empty()) {
-			if (targetTypeToReader.find(targetType) != targetTypeToReader.end())
-				return; //TODO: throw CSharp::InvalidOperationException("TypeReaderDuplicate");
+			auto cache = FindCache([&](const CacheData& s) {
+				return s.targetType == targetType;
+				});
 
-			targetTypeToReader.emplace(targetType, reader);
+			//Registro duplicado
+			if (cache) return;
 		}
-		
-		readerTypeToReader.emplace(reader->GetType(), reader);
-		nameToReader.emplace(readerTypeName, reader);
-	}
 
-	void ContentTypeReaderManager::RoolbackAddReaders(std::vector<ContentTypeReader> const& newTypeReaders) {
-		if (newTypeReaders.empty())
-			return;
+		CacheData cache;
+		cache.name = readerTypeName;
+		cache.targetType = targetType;
+		cache.readerType = reader->GetType();		
+		cache.value = reader;
 
-		for (auto& newTypeReader : newTypeReaders) {
-			RollbackAddReader<std::string>(nameToReader, newTypeReader);
-			RollbackAddReader<CSharp::Type>(targetTypeToReader, newTypeReader);
-			RollbackAddReader<CSharp::Type>(readerTypeToReader, newTypeReader);
-		}
-	}
+		typeReadersCache.push_back(std::move(cache));
+	}	
 
-	std::shared_ptr<ContentTypeReader> ContentTypeReaderManager::GetTypeReader(CSharp::Type const& targetType, ContentReader const& contentReader) {
-		if (targetType == CSharp::Type::Empty())
-			throw CSharp::ArgumentException("targetType");
+	ContentTypeReader* ContentTypeReaderManager::GetTypeReader(CSharp::Type const& targetType, ContentReader* contentReader) {
 
-		auto find = targetTypeToReader.find(targetType);
+		auto cache = FindCache([&](CacheData& d) {
+			return d.targetType == targetType;
+			});		
 
-		if (find == targetTypeToReader.end()) {
+		if (!cache) {
 			auto& activator = App::GetContentTypeReaderActivator();
 			auto& registries = activator.GetRegistries();
 
 			for (const auto& reg : registries) {
 				if (reg->TargetType() == targetType) {
-					return reg;
+					return reg.get();
 				}
-			}			
+			}
 
-			std::string error("TypeReader not registered: ");
-			error.append(targetType.Name());
-			throw CSharp::InvalidOperationException(error);
+			XNPP_CORE_ASSERT(false, "TypeReader not registered");
 		}
 
-		return find->second;
+		return cache->value;
 	}
 
 	bool ContentTypeReaderManager::ContainsTypeReader(CSharp::Type const& targetType) {
-		return targetTypeToReader.contains(targetType);
+		auto cache = FindCache([&](CacheData& d) {
+			return d.targetType == targetType;
+			});
+
+		return cache != nullptr;
 	}
 }

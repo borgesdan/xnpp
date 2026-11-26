@@ -20,7 +20,7 @@ namespace Xna {
 		}
 
 	private:
-		std::shared_ptr<ContentTypeReader> underlyingTypeReader;
+		ContentTypeReader* underlyingTypeReader;
 	};
 }
 

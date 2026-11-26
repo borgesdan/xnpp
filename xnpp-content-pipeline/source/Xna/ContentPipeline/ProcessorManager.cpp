@@ -9,7 +9,7 @@ namespace Xna {
 		static constexpr std::string_view CantFindProcessor = "Cannot find content processor '{0}'.";
 	};	
 
-	std::shared_ptr<IContentProcessor> ProcessorManager::GetInstance(std::string& processorName, OpaqueDataDictionary const& parameters, ContentIdentity const& contentIdentity, ContentBuildLogger& buildLogger) {
+	IContentProcessor* ProcessorManager::GetInstance(std::string& processorName, OpaqueDataDictionary const& parameters, ContentIdentity const& contentIdentity, ContentBuildLogger& buildLogger) {
 		const auto& registries = App::GetProcessorRegistry().GetRegistries();
 
 		std::optional<std::string> sourceProcessorName;
@@ -48,7 +48,7 @@ namespace Xna {
 		if(!finded)
 			throw std::runtime_error(std::format(Resources::CantFindProcessor, processorName));
 
-		auto instance = App::GetProcessorRegistry().CreateInstance(*sourceProcessorName);
+		auto instance = App::GetProcessorRegistry().CreateInstance(*sourceProcessorName);		
 
 		if (!instance)
 			throw std::runtime_error(std::format(Resources::CantFindProcessor, processorName));
@@ -59,7 +59,7 @@ namespace Xna {
 	}
 
 	void ProcessorManager::SetProcessorParameters(
-		std::shared_ptr<IContentProcessor>& processor,
+		IContentProcessor* processor,
 		OpaqueDataDictionary const& parameters,
 		ContentIdentity const& contentIdentity,
 		ContentBuildLogger& buildLogger) {

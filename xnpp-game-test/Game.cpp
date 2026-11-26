@@ -7,7 +7,7 @@
 #include <Xna/Audio.hpp>
 #include <Xna/Input.hpp>
 #include <Xna/CSharp/TimeSpan.hpp>
-
+#include <crtdbg.h>
 
 using namespace Xna;
 
@@ -65,6 +65,8 @@ private:
 
 int main()
 {
+	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_CHECK_ALWAYS_DF);
+
 	auto game1 = Game1();
 	game1.Run();
 	//game1 = nullptr;

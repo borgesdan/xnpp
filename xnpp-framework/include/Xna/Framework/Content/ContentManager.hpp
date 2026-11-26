@@ -10,6 +10,7 @@
 #include <string>
 #include <unordered_map>
 #include <vector>
+#include <algorithm>
 #include <Xna/CSharp/Attribute.hpp>
 #include <Xna/CSharp/Exception.hpp>
 #include <Xna/CSharp/IO.hpp>
@@ -58,6 +59,8 @@ namespace Xna {
 			return obj3;
 		}
 
+		[[nodiscard]] ContentTypeReaderManager* GetTypeReaderManager() const noexcept { return readerManager.get(); }
+
 	protected:
 		template <typename T> T ReadAsset(std::filesystem::path const& assetName);
 
@@ -69,6 +72,7 @@ namespace Xna {
 		bool isRootDirectoryAbsolute{ false };
 		GameServiceContainer* serviceProvider{ nullptr };
 		std::vector<uint8_t> byteBuffer;
+		std::unique_ptr<ContentTypeReaderManager> readerManager;
 	};
 
 	//////////////////////////////////////////////////////////////////
@@ -102,12 +106,12 @@ namespace Xna {
 
 		//Overloaded. Reads a single managed object from the current stream as an instance of the specified type. 
 		//If a base class of the actual object type is specified only data from the base type will be read.
-		template <typename T> 
+		template <typename T>
 		[[nodiscard]] T ReadRawObject();
 
 		//Overloaded. Reads a single managed object from the current stream as an instance of the specified type. 
 		//If a base class of the actual object type is specified only data from the base type will be read.
-		template <typename T> 
+		template <typename T>
 		[[nodiscard]] T ReadRawObject(T const& existingInstance);
 
 		//Overloaded. Reads a single managed object from the current stream as an instance of the specified type. 
@@ -137,7 +141,7 @@ namespace Xna {
 		[[nodiscard]] Matrix ReadMatrix();
 		//Reads a Quaternion value from the current stream.
 		[[nodiscard]] Quaternion ReadQuaternion();
-		
+
 		//Reads a Color value from the currently open stream.
 		[[nodiscard]] Color ReadColor() {
 			const auto value = ReadUInt32();
@@ -174,8 +178,8 @@ namespace Xna {
 		ContentReader(Xna::ContentManager* contentManager, std::unique_ptr<Stream> input, std::filesystem::path const& assetName);
 		static void PrepareStream(Stream* input, std::filesystem::path const& assetName);
 		[[nodiscard]] int32_t ReadHeader();
-		
-		template <typename T> 
+
+		template <typename T>
 		[[nodiscard]] T ReadObjectInternal(T* existingInstance);
 
 		template <typename T>
@@ -186,18 +190,18 @@ namespace Xna {
 
 	public:
 		[[nodiscard]] std::filesystem::path GetPathToReference(std::filesystem::path const& referenceName);
-		[[nodiscard]] std::filesystem::path GetAbsolutePathToReference(std::filesystem::path const& referenceName);	
-		
+		[[nodiscard]] std::filesystem::path GetAbsolutePathToReference(std::filesystem::path const& referenceName);
+
 
 	private:
 		Xna::ContentManager* contentManager;
 		std::filesystem::path assetName;
-		std::vector<std::shared_ptr<ContentTypeReader>> typeReaders;
+		std::vector<ContentTypeReader*> typeReaders;
 	};
 
 	//////////////////////////////////////////////////////////////////
 	// CONTENT TYPE READER											//
-	//////////////////////////////////////////////////////////////////	
+	//////////////////////////////////////////////////////////////////		
 
 	//Worker for reading a specific managed type from a binary format.
 	class ContentTypeReader {
@@ -224,6 +228,8 @@ namespace Xna {
 			return CSharp::Typeof<ContentTypeReader>();
 		}
 
+		virtual ~ContentTypeReader() = default;
+
 	private:
 		const CSharp::Type targetType;
 
@@ -235,6 +241,8 @@ namespace Xna {
 	class ContentTypeReaderT : public ContentTypeReader {
 	protected:
 		ContentTypeReaderT() : ContentTypeReader(CSharp::Typeof<T>()) {}
+
+		~ContentTypeReaderT() override = default;
 
 		virtual std::any Read(ContentReader& input, std::any& existingInstance) override {
 			if (!existingInstance.has_value()) {
@@ -262,45 +270,60 @@ namespace Xna {
 
 	//////////////////////////////////////////////////////////////////
 	// CONTENT TYPE READER	MANAGER									//
-	//////////////////////////////////////////////////////////////////	
+	//////////////////////////////////////////////////////////////////		
+
+	struct CacheData {
+		CSharp::Type targetType;
+		CSharp::Type readerType;
+		std::string name;
+		ContentTypeReader* value; //Verificar uso de unique_ptr
+	};
 
 	//A manager that constructs and keeps track of type reader objects.
-	class ContentTypeReaderManager {
+	class XNPP_API ContentTypeReaderManager {
 	public:
+		ContentTypeReaderManager() = default;
+
+		void SetContentReader(ContentReader* reader) { _contentReader = reader; }
+
 		//Looks up a reader for the specified type.
-		XNPP_API std::shared_ptr<ContentTypeReader> GetTypeReader(CSharp::Type const& targetType);
+		ContentTypeReader* GetTypeReader(CSharp::Type const& targetType) {
+			return GetTypeReader(targetType, _contentReader);
+		}
+
+		std::vector<ContentTypeReader*> ReadTypeManifest(size_t typeCount, ContentReader* contentReader);
 
 	private:
-		static std::vector<std::shared_ptr<ContentTypeReader>> ReadTypeManifest(size_t typeCount, ContentReader& contentReader);
+		ContentTypeReaderManager(ContentReader* reader) : _contentReader(reader) {}
 
-		ContentTypeReaderManager(ContentReader* contentReader);
+		ContentTypeReader* GetTypeReader(
+			std::string_view readerTypeName,
+			ContentReader* contentReader,
+			std::vector<ContentTypeReader*>& newTypeReaders);
 
-		static std::shared_ptr<ContentTypeReader> GetTypeReader(std::string const& readerTypeName, ContentReader const& contentReader,
-			std::vector<std::shared_ptr<ContentTypeReader>>& newTypeReaders);
+		ContentTypeReader* GetTypeReader(CSharp::Type const& targetType, ContentReader* contentReader);
 
-		static bool InstantiateTypeReader(std::string const& readerTypeName, ContentReader const& contentReader,
-			std::shared_ptr<ContentTypeReader>& reader);
+		bool InstantiateTypeReader(std::string_view readerTypeName, ContentReader* contentReader,
+			ContentTypeReader** reader);
 
-		static void AddTypeReader(std::string const& readerTypeName, ContentReader const& contentReader,
-			std::shared_ptr<ContentTypeReader> const& reader);
+		void AddTypeReader(std::string_view readerTypeName, ContentReader* contentReader,
+			ContentTypeReader* reader);
 
-		static void RoolbackAddReaders(std::vector<ContentTypeReader> const& newTypeReaders);
+		bool ContainsTypeReader(CSharp::Type const& targetType);
 
-		template <typename T>
-		static void RollbackAddReader(std::map<T, std::shared_ptr<ContentTypeReader>>& dictionary, ContentTypeReader const& reader);
+		template <typename Predicate>
+		CacheData* FindCache(Predicate pred) {
+			auto it = std::find_if(typeReadersCache.begin(), typeReadersCache.end(), pred);
 
-		static std::shared_ptr<ContentTypeReader> GetTypeReader(CSharp::Type const& targetType, ContentReader const& contentReader);
+			if (it != typeReadersCache.end())
+				return &*it;
 
-		static bool ContainsTypeReader(CSharp::Type const& targetType);
+			return nullptr;
+		}
 
-	public:
-		ContentReader* contentReader;
-
-		static inline auto nameToReader = std::map<std::string, std::shared_ptr<ContentTypeReader>>();
-		static inline auto targetTypeToReader = std::map<CSharp::Type, std::shared_ptr<ContentTypeReader>>();
-		static inline auto readerTypeToReader = std::map<CSharp::Type, std::shared_ptr<ContentTypeReader>>();
-
-		friend class ContentReader;
+	private:
+		std::vector<CacheData> typeReadersCache = std::vector<CacheData>();
+		ContentReader* _contentReader;
 	};
 
 	//////////////////////////////////////////////////////////////////
@@ -312,7 +335,7 @@ namespace Xna {
 
 		auto contentReader = ContentReader::Create(this, std::move(input), assetName);
 		return contentReader.ReadAsset<T>();
-	}	
+	}
 
 	template <typename T>
 	T ContentReader::ReadObjectInternal(T* existingInstance) {
@@ -357,17 +380,8 @@ namespace Xna {
 
 	template <typename T>
 	T ContentReader::ReadRawObject() {
-		return InvokeReader<T>(ContentTypeReaderManager::GetTypeReader(typeid(T), *this), nullptr);
-	}
-
-	template <typename T>
-	void ContentTypeReaderManager::RollbackAddReader(std::map<T, std::shared_ptr<ContentTypeReader>>& dictionary, ContentTypeReader const& reader) {
-
-		for (auto it = dictionary.begin(); it != dictionary.end();) {
-			if (it->second.get() == &reader)
-				dictionary.erase(it);
-			else
-				++it;
-		}
+		auto readerManager = contentManager->GetTypeReaderManager();
+		auto typeReader = readerManager->GetTypeReader((typeid(T), *this));
+		return InvokeReader<T>(typeReader, nullptr);
 	}
 }

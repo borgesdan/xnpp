@@ -80,7 +80,8 @@ namespace Xna {
 
 	int32_t ContentReader::ReadHeader() {
 		const auto encodedInt = Read7BitEncodedInt();
-		typeReaders = ContentTypeReaderManager::ReadTypeManifest(encodedInt, *this);
+		auto typeReaderManager =  contentManager->GetTypeReaderManager();
+		typeReaders = typeReaderManager->ReadTypeManifest(encodedInt, this);
 
 		const auto length = Read7BitEncodedInt();
 

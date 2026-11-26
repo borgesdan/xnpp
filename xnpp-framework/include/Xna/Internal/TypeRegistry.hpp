@@ -76,25 +76,25 @@ namespace Xna {
 			return true;
 		}
 
-		std::shared_ptr<TBASE> CreateInstance(CSharp::Type const& type) {
+		TBASE* CreateInstance(CSharp::Type const& type) {
 			for (auto& value : values) {
 				if (value.type == type)
-					return value.value;
+					return value.value.get();
 			}
 
 			return nullptr;
 		}
 
-		std::shared_ptr<TBASE> CreateInstance(std::string const& name) {
+		TBASE* CreateInstance(std::string const& name) {
 			for (const auto& value : values) {
 				if (value.type.Name() == name)
-					return value.value;
+					return value.value.get();
 			}
 
 			for (const auto& value : values) {
 				for (const auto& friendly : value.friendlyNames) {
 					if (friendly == name)
-						return value.value;
+						return value.value.get();
 				}
 			}
 

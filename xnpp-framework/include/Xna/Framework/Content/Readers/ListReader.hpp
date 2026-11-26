@@ -23,7 +23,7 @@ namespace Xna {
 		}
 
 	private:
-		std::shared_ptr<ContentTypeReader> elementReader;
+		ContentTypeReader* elementReader;
 
 	public:
 		bool CanDeserializeIntoExistingObject() const override { return true; }
