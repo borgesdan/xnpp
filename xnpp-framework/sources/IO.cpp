@@ -1,6 +1,5 @@
 #include <Xna/CSharp/IO.hpp>
-#include <algorithm>
-#include <bit>
+#include "pch.hpp"
 
 namespace Xna {
 	//////////////////////////////////////////////////////////////////

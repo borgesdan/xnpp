@@ -1,37 +1,41 @@
 #pragma once
 
-
-#include <iostream>
-#include <fstream>
-#include <sstream>
-#include <iomanip>
-#include <filesystem>
-#include <string>
-#include <string_view>
-#include <vector>
+//
+// Std
+//
+#include <algorithm>
+#include <any>
 #include <array>
+#include <bit>
+#include <cassert>
+#include <chrono>
+#include <cmath>
 #include <deque>
+#include <filesystem>
+#include <fstream>
+#include <functional>
+#include <iomanip>
+#include <iostream>
 #include <list>
 #include <map>
-#include <unordered_map>
-#include <set>
-#include <unordered_set>
-#include <span>
 #include <memory>
-#include <utility>
-#include <tuple>
-#include <optional>
-#include <variant>
-#include <any>
-#include <functional>
-#include <chrono>
-#include <random>
-#include <algorithm>
 #include <numeric>
-#include <cmath>
-#include <cassert>
+#include <optional>
+#include <random>
+#include <set>
+#include <span>
+#include <sstream>
 #include <stdexcept>
+#include <cstdio>
+#include <string>
+#include <string_view>
+#include <tuple>
 #include <type_traits>
+#include <unordered_map>
+#include <unordered_set>
+#include <utility>
+#include <variant>
+#include <vector>
 
 // #include <thread>
 // #include <mutex>
@@ -40,6 +44,11 @@
 // #include <condition_variable>
 // #include <future>
 
+//
+// Thirdy Party
+//
+
 // #include <fmt/core.h>
-// #include <spdlog/spdlog.h>
 // #include <nlohmann/json.hpp>
+#include <spdlog/sinks/stdout_color_sinks.h>
+#include <spdlog/spdlog.h>
