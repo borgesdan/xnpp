@@ -2,11 +2,6 @@
 //
 
 #include <Xna/Framework.hpp>
-#include <Xna/Graphics.hpp>
-#include <Xna/Media.hpp>
-#include <Xna/Audio.hpp>
-#include <Xna/Input.hpp>
-#include <Xna/CSharp/TimeSpan.hpp>
 #include <crtdbg.h>
 
 using namespace Xna;
