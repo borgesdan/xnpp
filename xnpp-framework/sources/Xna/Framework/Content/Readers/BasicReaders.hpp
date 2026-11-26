@@ -1,5 +1,4 @@
-#ifndef XNA_BASICREADERS_HPP
-#define XNA_BASICREADERS_HPP
+#pragma once
 
 #include <Xna/CSharp/Exception.hpp>
 #include <Xna/CSharp/IO.hpp>
@@ -17,6 +16,9 @@
 #include <cstdint>
 #include <string>
 #include <vector>
+#include <cstddef>
+#include <optional>
+#include <unordered_map>
 
 namespace Xna {
 	struct BooleanReader : public ContentTypeReaderT<bool> {
@@ -229,6 +231,93 @@ namespace Xna {
 			return input.ReadVector4();
 		}
 	};
-}
 
-#endif
+	template <typename T>
+	struct ArrayReader : public ContentTypeReaderT<std::vector<T>> {
+	protected:
+		void Initialize(ContentTypeReaderManager& manager) override {
+			elementReader = manager.GetTypeReader(CSharp::Typeof<T>());
+		}
+
+		std::vector<T> Read(ContentReader& input, std::vector<T>& existingInstance) override {
+			const auto length = input.ReadInt32();
+			std::vector<T> objArray(static_cast<size_t>(length));
+
+			for (size_t index = 0; index < length; ++index)
+				objArray[index] = input.ReadObject<T>(*elementReader);
+
+			return objArray;
+		}
+
+	private:
+		ContentTypeReader* elementReader;
+	};
+
+	template <typename Key, typename Value>
+	struct DictionaryReader : public ContentTypeReaderT<std::unordered_map<Key, Value>> {
+	protected:
+		void Initialize(ContentTypeReaderManager& manager) override {
+			keyReader = manager.GetTypeReader(CSharp::Typeof<Key>());
+			valueReader = manager.GetTypeReader(CSharp::Typeof<Value>());
+		}
+
+		inline std::unordered_map<Key, Value> Read(ContentReader& input, std::unordered_map<Key, Value>& existingInstance) override {
+			auto capacity = input.ReadInt32();
+			auto& dictionary = existingInstance;
+
+			while (capacity-- > 0)
+			{
+				const auto key = input.ReadObject<Key>(*keyReader);
+				const auto obj = input.ReadObject<Value>(*valueReader);
+				dictionary.emplace(key, obj);
+			}
+			return dictionary;
+		}
+
+	private:
+		ContentTypeReader* keyReader;
+		ContentTypeReader* valueReader;
+	};
+
+	template <typename T>
+	struct ListReader : public ContentTypeReaderT<std::vector<T>> {
+	protected:
+		inline void Initialize(ContentTypeReaderManager& manager) override {
+			elementReader = manager.GetTypeReader(CSharp::Typeof<T>());
+		}
+
+		inline std::vector<T> Read(ContentReader& input, std::vector<T>& existingInstance) override {
+			auto num = input.ReadInt32();
+			auto& objList = existingInstance;
+
+			while (num-- > 0)
+				objList.push_back(input.ReadObject<T>(*elementReader));
+
+			return objList;
+		}
+
+	private:
+		ContentTypeReader* elementReader;
+
+	public:
+		bool CanDeserializeIntoExistingObject() const override { return true; }
+	};
+
+	template <typename T>
+	struct NullableReader : public ContentTypeReaderT<std::optional<T>> {
+	protected:
+		inline void Initialize(ContentTypeReaderManager& manager) override {
+			underlyingTypeReader = manager.GetTypeReader(CSharp::Typeof<T>());
+		}
+
+		inline std::optional<T> Read(ContentReader& input, std::optional<T>& existingInstance) override {
+			if (!input.ReadBoolean())
+				return std::nullopt;
+
+			return input.ReadRawObject<T>(*underlyingTypeReader);
+		}
+
+	private:
+		ContentTypeReader* underlyingTypeReader;
+	};
+}

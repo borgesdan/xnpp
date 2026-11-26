@@ -1,8 +1,4 @@
 #include "Framework/Content/Readers/BasicReaders.hpp"
-#include "Xna/Framework/Content/Readers/ArrayReader.hpp"
-#include "Xna/Framework/Content/Readers/DictionaryReader.hpp"
-#include "Xna/Framework/Content/Readers/ListReader.hpp"
-#include "Xna/Framework/Content/Readers/NullableReader.hpp"
 #include "Xna/Internal/App.hpp"
 
 namespace Xna {

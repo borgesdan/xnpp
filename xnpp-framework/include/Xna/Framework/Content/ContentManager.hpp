@@ -246,7 +246,7 @@ namespace Xna {
 
 		virtual std::any Read(ContentReader& input, std::any& existingInstance) override {
 			if (!existingInstance.has_value()) {
-				//TODO: removido Xna::Misc::ReturnDefaultOrNull<T>();
+				
 				return {};
 			}
 			else if (existingInstance.type() != typeid(T)) {
