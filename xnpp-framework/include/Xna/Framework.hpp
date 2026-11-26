@@ -8,7 +8,6 @@
 #include "Framework/Color.hpp"
 #include "Framework/Curve.hpp"
 #include "Framework/FrameworkDispatcher.hpp"
-#include "Framework/IPackedVector.hpp"
 #include "Framework/MathHelper.hpp"
 #include "Framework/MathTypes.hpp"
 

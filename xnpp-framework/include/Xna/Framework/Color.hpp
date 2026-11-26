@@ -1,22 +1,16 @@
-#ifndef XNA_FRAMEWORK_COLOR_HPP
-#define XNA_FRAMEWORK_COLOR_HPP
-
-#include "IPackedVector.hpp"
-#include "PackUtils.hpp"
+#pragma once
 #include "MathHelper.hpp"
-#include <optional>
+#include "MathTypes.hpp"
 
 namespace Xna {
-	//Represents a four-component color using red, green, blue, and alpha data. 
-	//[!] This struct does not inherit from IPackedVector<uint> or IPackedVector to allow its functions to be constexpr. Part of the implementation is based on MonoGame.
+	//Represents a four-component color using red, green, blue, and alpha data. 	
 	struct Color final {
 		//Creates a new instance of the class.
 		constexpr Color() = default;
 
 		//Creates a new instance of the class.
 		constexpr Color(uint32_t packedValue)
-			: _packedValue(packedValue) {
-		}
+			: _packedValue(packedValue) {}
 
 		//Creates a new instance of the class.
 		constexpr Color(int32_t r, int32_t g, int32_t b, int32_t a = 255U) {
@@ -37,21 +31,15 @@ namespace Xna {
 
 		//Creates a new instance of the class.
 		constexpr Color(float r, float g, float b, float a = 1.0F)
-			: Color(static_cast<int32_t>(r * 255), static_cast<int32_t>(g * 255), static_cast<int32_t>(b * 255), static_cast<int32_t>(a * 255)) {
-		}
+			: Color(static_cast<int32_t>(r * 255), static_cast<int32_t>(g * 255), static_cast<int32_t>(b * 255), static_cast<int32_t>(a * 255)) {}
 
 		//Creates a new instance of the class.
 		constexpr Color(Vector3 const& vector)
-			: Color(static_cast<int32_t>(vector.X * 255), static_cast<int32_t>(vector.Y * 255), static_cast<int32_t>(vector.Z * 255)) {
-		}
+			: Color(static_cast<int32_t>(vector.X * 255), static_cast<int32_t>(vector.Y * 255), static_cast<int32_t>(vector.Z * 255)) {}
 
 		//Creates a new instance of the class.
 		constexpr Color(Vector4 const& vector)
-			: Color(static_cast<int32_t>(vector.X * 255), static_cast<int32_t>(vector.Y * 255), static_cast<int32_t>(vector.Z * 255), static_cast<int32_t>(vector.W * 255)) {
-		}
-
-		//[!]Function removed
-		//void PackFromVector4(Vector4 const& vector);
+			: Color(static_cast<int32_t>(vector.X * 255), static_cast<int32_t>(vector.Y * 255), static_cast<int32_t>(vector.Z * 255), static_cast<int32_t>(vector.W * 255)) {}
 
 		//Converts a non-premultipled alpha color to a color that contains premultiplied alpha.
 		static constexpr  Color FromNonPremultiplied(Vector4 const& vector) {
@@ -67,9 +55,9 @@ namespace Xna {
 		constexpr Vector3 ToVector3() const {
 			Vector3 vector3;
 			const auto byteMax = static_cast<uint32_t>(ByteMaxValue);
-			vector3.X = PackUtils::UnpackUNorm(byteMax, _packedValue);
-			vector3.Y = PackUtils::UnpackUNorm(byteMax, _packedValue >> 8);
-			vector3.Z = PackUtils::UnpackUNorm(byteMax, _packedValue >> 16);
+			vector3.X = UnpackUNorm(byteMax, _packedValue);
+			vector3.Y = UnpackUNorm(byteMax, _packedValue >> 8);
+			vector3.Z = UnpackUNorm(byteMax, _packedValue >> 16);
 			return vector3;
 		}
 
@@ -77,10 +65,10 @@ namespace Xna {
 		constexpr Vector4 ToVector4() const {
 			Vector4 vector4;
 			const auto byteMax = static_cast<uint32_t>(ByteMaxValue);
-			vector4.X = PackUtils::UnpackUNorm(byteMax, _packedValue);
-			vector4.Y = PackUtils::UnpackUNorm(byteMax, _packedValue >> 8);
-			vector4.Z = PackUtils::UnpackUNorm(byteMax, _packedValue >> 16);
-			vector4.W = PackUtils::UnpackUNorm(byteMax, _packedValue >> 24);
+			vector4.X = UnpackUNorm(byteMax, _packedValue);
+			vector4.Y = UnpackUNorm(byteMax, _packedValue >> 8);
+			vector4.Z = UnpackUNorm(byteMax, _packedValue >> 16);
+			vector4.W = UnpackUNorm(byteMax, _packedValue >> 24);
 			return vector4;
 		}
 
@@ -182,9 +170,7 @@ namespace Xna {
 			return color;
 		}
 
-		constexpr bool operator==(Color const& other) const {
-			return _packedValue == other._packedValue;
-		}
+		constexpr bool operator==(Color const& other) const noexcept = default;
 
 		friend constexpr Color operator*(Color const& value, float const& scale) {
 			return Color::Multiply(value, scale);
@@ -192,11 +178,7 @@ namespace Xna {
 
 		constexpr operator uint32_t() const {
 			return _packedValue;
-		}
-
-		constexpr operator std::optional<Color>() const {
-			return std::make_optional<Color>(_packedValue);
-		}
+		}		
 
 	private:
 		uint32_t _packedValue{ 0 };
@@ -208,8 +190,10 @@ namespace Xna {
 			return value > ByteMaxValue ? ByteMaxValue : value;
 		}
 
-		//[!]Function removed
-		//static uint32_t PackHelper(float vectorX, float vectorY, float vectorZ, float vectorW);
+		static constexpr float UnpackUNorm(uint32_t bitmask, uint32_t value) {
+			value &= bitmask;
+			return static_cast<float>(value) / static_cast<float>(bitmask);
+		}
 
 		static constexpr uint8_t ByteMaxValue = (std::numeric_limits<uint8_t>::max)();
 		static constexpr uint32_t UintMaxValue = (std::numeric_limits<uint32_t>::max)();
@@ -503,8 +487,6 @@ namespace Xna {
 		static constexpr Color White{ Color((std::numeric_limits<uint32_t>::max)()) };
 		static constexpr Color WhiteSmoke{ Color(4294309365U) };
 		static constexpr Color Yellow{ Color(4278255615U) };
-		static constexpr Color YellowGreen{ Color(4281519514U) };	
+		static constexpr Color YellowGreen{ Color(4281519514U) };
 	};
 }
-
-#endif
