@@ -1,4 +1,4 @@
-#include "Framework/Content/Readers/BasicReaders.hpp"
+#include "BasicReaders.hpp"
 #include "Xna/Internal/App.hpp"
 
 namespace Xna {

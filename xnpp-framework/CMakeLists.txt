@@ -2,9 +2,7 @@
 set(PROJECT_INCLUDES_DIR "${CMAKE_CURRENT_SOURCE_DIR}/include")
 
 set(XNPP_FRAMEWORK_SRC  
-    "sources/Xna/Framework/FrameworkDispatcher.cpp"       
-    
-    "sources/Xna/Framework/TitleContainer.cpp"
+    "sources/Xna/Framework/FrameworkDispatcher.cpp"          
     "sources/Xna/Framework/Game/Game.cpp"
     "sources/Xna/Framework/Game/GameClock.cpp"
     "sources/Xna/Framework/Game/GraphicsDeviceManager.cpp"
@@ -21,7 +19,7 @@ set(XNPP_FRAMEWORK_SRC
     "sources/Xna/Framework/Graphics/SpriteFont.cpp"
     "sources/Xna/Framework/Graphics/GraphicsContentHelper.cpp"   
     "sources/Xna/Framework/Input/Input.cpp"    
-    "sources/Xna/App.cpp"
+    "sources/App.cpp"
     "sources/Xna/Framework/Audio/AudioFormat.cpp"
     "sources/Xna/Framework/Audio/AudioHelper.cpp"
     "sources/Xna/Framework/Audio/WavFile.cpp"
@@ -31,11 +29,11 @@ set(XNPP_FRAMEWORK_SRC
     "sources/Xna/Framework/Media/Song.cpp" 
     "sources/Xna/Framework/Media/MediaPlayer.cpp"
     "sources/Xna/Framework/Media/MediaQueue.cpp"
-    "sources/Xna/Framework/Content/Readers/BasicReaders.cpp" 
     "sources/Xna/Framework/Graphics/Model.cpp"
     "sources/Xna/Framework/Game/SdlGameHost.cpp"
     "sources/Xna/Framework/Game/SdlGameWindow.cpp"    
     "sources/IO.cpp"
+    "sources/TitleContainer.cpp"
     "sources/Log.cpp" 
     "sources/Content.cpp")
 
