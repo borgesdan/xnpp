@@ -30,6 +30,7 @@
 #include <string>
 #include <string_view>
 #include <tuple>
+#include <typeindex>
 #include <type_traits>
 #include <unordered_map>
 #include <unordered_set>

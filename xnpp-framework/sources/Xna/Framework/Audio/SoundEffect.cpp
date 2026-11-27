@@ -3,11 +3,19 @@
 #include "Xna/Framework/Audio/WavFile.hpp"
 #include "AudioHelper.hpp"
 #include <limits>
-#include "Xna/Internal/Misc.hpp"
 #include <Xna/CSharp/Exception.hpp>
 
 
 namespace Xna {
+	static constexpr bool safe_addition(size_t a, size_t b, size_t& result) {
+		if (a > SIZE_MAX - b) {
+			// Overflow ocorreria
+			return false;
+		}
+		result = a + b;
+		return true;
+	}
+
 	SoundEffect::SoundEffect(std::shared_ptr<Stream> const& stream) {
 		const auto wavFile = WavFile::Open(stream);
 		Create(wavFile.Format()->RawBuffer, *wavFile.Data(), 0, wavFile.Data()->size(), wavFile.LoopStart(), wavFile.LoopLength(), wavFile.Duration());
@@ -57,7 +65,7 @@ namespace Xna {
 			if (audioFormat->IsAligned(offset))
 			{
 				size_t num1;
-				if (!Xna::Misc::safe_addition(offset, count, num1))
+				if (!safe_addition(offset, count, num1))
 					throw CSharp::ArgumentException("DynamicSoundEffectInvalidPlayLength");
 
 				if (num1 <= buffer.size() && count > 0)
@@ -65,7 +73,7 @@ namespace Xna {
 					if (audioFormat->IsAligned(count))
 					{
 						size_t num2;
-						if (!Xna::Misc::safe_addition(loopStart, loopLength, num2))
+						if (!safe_addition(loopStart, loopLength, num2))
 							throw CSharp::ArgumentException("DynamicSoundEffectInvalidLoopRegion");
 
 						const auto num3 = count / static_cast<size_t>(audioFormat->BlockAlign);

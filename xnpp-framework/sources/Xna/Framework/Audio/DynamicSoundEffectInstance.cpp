@@ -1,8 +1,16 @@
 #include "Xna/Framework/Audio/DynamicSoundEffectInstance.hpp"
 #include <Xna/CSharp/Exception.hpp>
-#include "Xna/Internal/Misc.hpp"
 
 namespace Xna {
+	static constexpr bool safe_addition(size_t a, size_t b, size_t& result) {
+		if (a > SIZE_MAX - b) {
+			// Overflow ocorreria
+			return false;
+		}
+		result = a + b;
+		return true;
+	}
+
 	DynamicSoundEffectInstance::DynamicSoundEffectInstance(size_t sampleRate, AudioChannels channels) {
 		if (sampleRate < 8000 || sampleRate > 48000)
 			throw CSharp::ArgumentOutOfRangeException("samplerRate");
@@ -29,7 +37,7 @@ namespace Xna {
 		if (offset >= 0 && offset < buffer.size()) {
 			if (impl->format->IsAligned(offset)) {
 				size_t num;
-				if (!Xna::Misc::safe_addition(offset, count, num)) {
+				if (!safe_addition(offset, count, num)) {
 					throw CSharp::ArgumentException("DynamicSoundEffectInvalidPlayLength");
 				}
 

@@ -8,7 +8,6 @@
 #include <cstddef>
 #include <Xna/CSharp/IO.hpp>
 #include <Xna/CSharp/Exception.hpp>
-#include <Xna/Internal/Misc.hpp>
 #include "_ContentCompiler.hpp"
 #include "ContentTypeWriter.hpp"
 #include "Xna/ContentPipeline/ExternalReference.hpp"

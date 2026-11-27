@@ -4,7 +4,6 @@
 #include <filesystem>
 #include "Shared.hpp"
 #include "OpaqueDataDictionary.hpp"
-#include <Xna/Internal/Misc.hpp>
 #include <cstddef>
 
 namespace Xna {
@@ -34,10 +33,16 @@ namespace Xna {
 }
 
 #include <functional>
-#include <filesystem>
 
 namespace std
 {
+    //Returns a hash reporting input values
+    template <class T>
+    static constexpr void HashCombine(std::size_t& seed, const T& v) {
+        std::hash<T> hasher;
+        seed ^= hasher(v) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
+    }
+
     template <>
     struct hash<Xna::BuildRequest>
     {
@@ -45,27 +50,27 @@ namespace std
         {
             size_t seed = 0;
 
-            Xna::Misc::HashCombine(
+            HashCombine(
                 seed, r.SourceFilename
             );
 
-            Xna::Misc::HashCombine(
+            HashCombine(
                 seed, r.AssetName
             );
 
-            Xna::Misc::HashCombine(
+            HashCombine(
                 seed, r.ImporterName
             );
 
-            Xna::Misc::HashCombine(
+            HashCombine(
                 seed, r.ProcessorName
             );
 
-            Xna::Misc::HashCombine(
+            HashCombine(
                 seed, r.ProcessorParameters
             );
 
-            Xna::Misc::HashCombine(
+            HashCombine(
                 seed, r.BuildOptions
             );
 

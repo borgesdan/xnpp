@@ -1,5 +1,4 @@
-#ifndef CSHARP_TYPE_HPP
-#define CSHARP_TYPE_HPP
+#pragma once
 
 #include <iostream>
 #include <typeinfo>
@@ -141,5 +140,3 @@ namespace std {
     };
 }
 
-
-#endif

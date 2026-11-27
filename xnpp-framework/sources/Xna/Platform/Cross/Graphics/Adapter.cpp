@@ -7,13 +7,51 @@
 #if PLATFORM_WINDOWS
 #include <wrl\client.h>
 #include "dxgi.h"
-#include "Xna/Internal/Misc.hpp"
 #endif
 
 namespace Xna {
 #if PLATFORM_WINDOWS
 	using Microsoft::WRL::ComPtr;
 	struct SdlGraphicsAdapter;
+
+	std::string WCharToString(const WCHAR* wstr) {
+		if (!wstr || wstr[0] == L'\0') {
+			return std::string();
+		}
+
+		// 1. Descobre o tamanho necessário para a string UTF-8 (incluindo o caractere nulo)
+		int size_needed = WideCharToMultiByte(
+			CP_UTF8,            // Página de código de destino (UTF-8)
+			0,                  // Flags de conversão
+			wstr,               // String de origem (WCHAR*)
+			-1,                 // -1 indica que a string termina com '\0'
+			nullptr,            // Buffer de destino nulo para apenas calcular o tamanho
+			0,                  // Tamanho do buffer (0 para calcular)
+			nullptr,            // Caractere padrão (não usado com CP_UTF8)
+			nullptr             // Flag de uso de caractere padrão (não usado com CP_UTF8)
+		);
+
+		if (size_needed <= 0) {
+			return std::string();
+		}
+
+		// 2. Aloca a std::string (descontando o '\0' final, pois std::string já gerencia isso)
+		std::string result(size_needed - 1, '\0');
+
+		// 3. Executa a conversão real
+		WideCharToMultiByte(
+			CP_UTF8,
+			0,
+			wstr,
+			-1,
+			&result[0],         // Em C++17+, pode-se usar result.data()
+			size_needed,
+			nullptr,
+			nullptr
+		);
+
+		return result;
+	}
 
 	struct WindowsGraphicsAdapter {
 		static void SetDesc(Platform::GraphicsAdapterDesc& desc, size_t index) {
@@ -31,7 +69,7 @@ namespace Xna {
 			pAdapter->GetDesc1(&dxDesc);
 
 			
-			desc.description = Xna::Misc::ToString(dxDesc.Description);
+			desc.description = WCharToString(dxDesc.Description);
 			desc.deviceId = static_cast<uint32_t>(dxDesc.DeviceId);
 			desc.revision = static_cast<uint32_t>(dxDesc.Revision);
 			desc.subSystemId = static_cast<uint32_t>(dxDesc.SubSysId);
@@ -44,7 +82,7 @@ namespace Xna {
 				pOutput->GetDesc(&outputDesc);
 
 				desc.monitorHandle = reinterpret_cast<intptr_t>(outputDesc.Monitor);
-				desc.deviceName = Xna::Misc::ToString(outputDesc.DeviceName);
+				desc.deviceName = WCharToString(outputDesc.DeviceName);
 			}
 		}		
 	};

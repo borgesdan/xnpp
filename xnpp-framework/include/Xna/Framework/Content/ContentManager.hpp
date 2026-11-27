@@ -16,7 +16,6 @@
 #include <Xna/Framework/Color.hpp>
 #include <Xna/Framework/Game/GameServiceContainer.hpp>
 #include <Xna/Framework/MathTypes.hpp>
-#include <Xna/Internal/Misc.hpp>
 #include <Xna/Macros/Api.hpp>
 #include <Xna/Macros/CoreAssert.hpp>
 
@@ -327,6 +326,34 @@ namespace Xna {
 	// IMPLS														//
 	//////////////////////////////////////////////////////////////////
 
+	//
+	// Smart Pointer Comparator
+	//
+	template<typename T> struct is_shared_ptr : std::false_type {};
+	template<typename T> struct is_shared_ptr<std::shared_ptr<T>> : std::true_type {};
+	template<typename T> struct is_weak_ptr : std::false_type {};
+	template<typename T> struct is_weak_ptr<std::weak_ptr<T>> : std::true_type {};
+	template<typename T> struct is_unique_ptr : std::false_type {};
+	template<typename T> struct is_unique_ptr<std::unique_ptr<T>> : std::true_type {};
+
+	//Returns true if the type is a smart pointer
+	template <typename T>
+	static constexpr bool IsSmartPointer() {
+		return is_shared_ptr<T>::value || is_unique_ptr<T>::value || is_weak_ptr<T>::value;
+	}
+
+	//Returns null if the type is a smart pointer or default value if the type has a default constructor.
+	//Throws an exception if the object cannot be created
+	template<typename T>
+	static inline auto ReturnDefaultOrNull() {
+		if constexpr (IsSmartPointer<T>() || std::is_pointer<T>::value)
+			return (T)nullptr;
+		else if constexpr (std::is_default_constructible<T>::value)
+			return T();
+		else if constexpr (std::is_constructible_v<T, std::nullptr_t>)
+			return T(nullptr);
+	}
+
 	template <typename T> T ContentManager::ReadAsset(std::filesystem::path const& assetName) {
 		auto input = OpenStream(assetName);
 
@@ -339,7 +366,7 @@ namespace Xna {
 		auto num = Read7BitEncodedInt();
 
 		if (num == 0) {
-			Xna::Misc::ReturnDefaultOrNull<T>();
+			ReturnDefaultOrNull<T>();
 		}
 
 		auto index = num - 1;
@@ -364,7 +391,7 @@ namespace Xna {
 		auto contentTypeReader = dynamic_cast<ContentTypeReaderT<T>*>(&reader);
 
 		if (contentTypeReader != nullptr) {
-			T existingInstance1 = existingInstance == nullptr ? Xna::Misc::ReturnDefaultOrNull<T>() : *existingInstance;
+			T existingInstance1 = existingInstance == nullptr ? ReturnDefaultOrNull<T>() : *existingInstance;
 			return contentTypeReader->Read(*this, existingInstance1);
 		}
 		else {

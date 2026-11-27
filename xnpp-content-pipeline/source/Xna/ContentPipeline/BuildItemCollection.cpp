@@ -2,9 +2,23 @@
 #include "Xna/ContentPipeline/PathUtils.hpp"
 #include <algorithm>
 #include <format>
-#include <Xna/Internal/Misc.hpp>
+#include <vector>
+#include <algorithm>
 
 namespace Xna {
+    template <typename T>
+    static  void Erase(std::vector<T>& v, T const& item) {
+        auto it = std::find(v.begin(), v.end(), item);
+
+        if (it != v.end())
+            v.erase(it);
+    }
+
+    template <typename T>
+    static bool ContainsItem(std::vector<T> const& v, T const& item) {
+        return std::find(v.begin(), v.end(), item) != v.end();
+    }
+
     struct Resources {
         static constexpr std::string_view RebuildBecauseCantLoadCache = "Rebuilding all content because {0} could not be read";
         static constexpr std::string_view RebuildBecauseSettingsChanged = "Rebuilding all content because build settings have changed";
@@ -37,7 +51,7 @@ namespace Xna {
         impl->requestTable.erase(buildItem.BuildRequest());
         impl->outputFilenameTable.erase(buildItem.OutputFilename());
         
-        Xna::Misc::Erase(impl->wantedItems, buildItem);
+        Erase(impl->wantedItems, buildItem);
     }
 
     void BuildItemCollection::ClearItems() {
@@ -200,7 +214,7 @@ namespace Xna {
 
         for(const auto& previousOutput : impl->previousOutputs)
         {
-            if (!Xna::Misc::Contains(stringList, previousOutput))
+            if (!ContainsItem(stringList, previousOutput))
                 PathUtils::SafeDeleteFileAndDirectories(impl->buildSettings.GetAbsolutePath(previousOutput), { impl->buildSettings.IntermediateDirectory, impl->buildSettings.OutputDirectory });
         }
     }
