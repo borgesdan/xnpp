@@ -1,5 +1,4 @@
-#ifndef XNA_FRAMEWORK_TITLECONTAINER_HPP
-#define XNA_FRAMEWORK_TITLECONTAINER_HPP
+#pragma once
 
 #include <Xna/CSharp/IO.hpp>
 #include "Xna/Macros/Api.hpp"
@@ -33,5 +32,3 @@ namespace Xna {
 		friend class ContentReader;
 	};
 }
-
-#endif

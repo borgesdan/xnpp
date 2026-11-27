@@ -1,18 +1,15 @@
 #include "TitleLocation.hpp"
 #include <Xna/CSharp/IO.hpp>
 #include <Xna/CSharp/Path.hpp>
-#include <Xna/CSharp/Exception.hpp>
-#include "Xna/Framework/TitleContainer.hpp"
+#include "TitleContainer.hpp"
 
 namespace Xna {
 	std::unique_ptr<Stream> TitleContainer::OpenStream(std::filesystem::path const& name) {
-		if (name.empty())
-			throw CSharp::ArgumentException("name");
+		XNPP_CORE_ASSERT(!name.empty(), "Name is empty.");
 
-		auto _name = GetCleanPath(name);
+		auto _name = GetCleanPath(name);		
 
-		if (IsCleanPathAbsolute(_name.string()))
-			throw CSharp::ArgumentException("InvalidTitleContainerName");
+		XNPP_CORE_ASSERT(!IsCleanPathAbsolute(_name.string()), "Invalid path.");		
 
 		const auto& location = TitleLocation::Path();
 		auto _location = location;
