@@ -2,7 +2,6 @@
 #include "Xna/Framework/Game/Game.hpp"
 #include "Xna/Platform/Platform.hpp"
 #include <algorithm>
-#include <Xna/CSharp/Thread.hpp>
 #include <Xna/CSharp/Platform.hpp>
 #include <Xna/Macros/CoreAssert.hpp>
 #include <cmath>
@@ -385,11 +384,10 @@ namespace Xna {
 
 		switch (impl->device->GraphicsDeviceStatus()) {
 		case GraphicsDeviceStatus::Lost:
-			CSharp::Thread::Sleep(impl->deviceLostSleepTime.TotalMilliseconds());
+			std::this_thread::sleep_for(std::chrono::seconds(static_cast<long long>(impl->deviceLostSleepTime.TotalMilliseconds())));
 			return false;
 		case GraphicsDeviceStatus::NotReset:
-			CSharp::Thread::Sleep(impl->deviceLostSleepTime.TotalMilliseconds());
-			
+			std::this_thread::sleep_for(std::chrono::seconds(static_cast<long long>(impl->deviceLostSleepTime.TotalMilliseconds())));			
 			try {
 				ChangeDevice(false);
 			}

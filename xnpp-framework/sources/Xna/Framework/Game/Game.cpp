@@ -12,7 +12,6 @@
 #include <exception>
 #include <limits>
 #include <vector>
-#include <Xna/CSharp/Thread.hpp>
 #include <Xna/Macros/CoreAssert.hpp>
 #include <Xna/CSharp/Exception.hpp>
 #include "SdlGameHost.hpp"
@@ -184,7 +183,7 @@ namespace Xna {
 			return;
 
 		if (!impl->isActive)
-			CSharp::Thread::Sleep(static_cast<long long>(impl->inactiveSleepTime.TotalMilliseconds()));
+			std::this_thread::sleep_for(std::chrono::seconds((static_cast<long long>(impl->inactiveSleepTime.TotalMilliseconds()))));
 
 		impl->clock.Step();
 

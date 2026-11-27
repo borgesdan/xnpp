@@ -20,10 +20,7 @@ set(XNPP_FRAMEWORK_SRC
     "sources/Xna/Framework/Graphics/SpriteBatch.cpp"
     "sources/Xna/Framework/Graphics/SpriteFont.cpp"
     "sources/Xna/Framework/Graphics/GraphicsContentHelper.cpp"   
-    "sources/Xna/Framework/Input/Input.cpp"
-    "sources/Xna/Framework/Content/ContentManager.cpp"
-    "sources/Xna/Framework/Content/ContentReader.cpp"
-    "sources/Xna/Framework/Content/ContentTypeReaderManager.cpp"    
+    "sources/Xna/Framework/Input/Input.cpp"    
     "sources/Xna/App.cpp"
     "sources/Xna/Framework/Audio/AudioFormat.cpp"
     "sources/Xna/Framework/Audio/AudioHelper.cpp"
@@ -40,7 +37,7 @@ set(XNPP_FRAMEWORK_SRC
     "sources/Xna/Framework/Game/SdlGameWindow.cpp"    
     "sources/IO.cpp"
     "sources/Log.cpp" 
-)
+    "sources/Content.cpp")
 
 set(XNPP_PLATFORM_SRC
     "sources/Xna/Platform/Cross/System.cpp" 

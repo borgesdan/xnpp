@@ -6,12 +6,10 @@
 #include <cstdint>
 #include <filesystem>
 #include <memory>
-#include <optional>
 #include <string>
 #include <unordered_map>
 #include <vector>
 #include <algorithm>
-#include <Xna/CSharp/Attribute.hpp>
 #include <Xna/CSharp/Exception.hpp>
 #include <Xna/CSharp/IO.hpp>
 #include <Xna/CSharp/Type.hpp>
@@ -189,9 +187,8 @@ namespace Xna {
 		[[nodiscard]] T InvokeReader(ContentTypeReader& reader, T* existingInstance);
 
 	public:
-		[[nodiscard]] std::filesystem::path GetPathToReference(std::filesystem::path const& referenceName);
-		[[nodiscard]] std::filesystem::path GetAbsolutePathToReference(std::filesystem::path const& referenceName);
-
+		[[nodiscard]] std::filesystem::path GetPathToReference(std::filesystem::path const& referenceName) const;
+		[[nodiscard]] std::filesystem::path GetAbsolutePathToReference(std::filesystem::path const& referenceName) const;
 
 	private:
 		Xna::ContentManager* contentManager;

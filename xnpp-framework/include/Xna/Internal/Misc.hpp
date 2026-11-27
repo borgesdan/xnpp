@@ -1,5 +1,4 @@
-#ifndef XNA_MISC_HPP
-#define XNA_MISC_HPP
+#pragma once
 
 //MISC.HPP is a header with useful functions and classes.
 
@@ -183,5 +182,3 @@ namespace Xna::Misc {
 		return std::find(v.begin(), v.end(), item) != v.end();
 	}
 }
-
-#endif
